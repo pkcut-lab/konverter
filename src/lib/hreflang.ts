@@ -40,9 +40,12 @@ export function buildHreflangLinks(
   return [...perLanguage, xDefault];
 }
 
+/**
+ * Strips trailing slash (Astro config `trailingSlash: 'never'`).
+ * Root "/" becomes "" so href ends at `/{lang}`.
+ */
 function normalisePath(path: string): string {
-  if (path === '' || path === '/') return '/';
+  if (path === '' || path === '/') return '';
   const withLeading = path.startsWith('/') ? path : `/${path}`;
-  const withBoth = withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
-  return withBoth;
+  return withLeading.endsWith('/') ? withLeading.slice(0, -1) : withLeading;
 }
