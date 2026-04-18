@@ -1,14 +1,14 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-17 (Session 1, End)
+**Letztes Update:** 2026-04-18 (Session 1, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #1 — Bootstrap
+**Current Session:** #1 — Bootstrap ✅
 
 ## Phase 0 Fortschritt
 
 | Session | Status | Deliverable |
 |---------|--------|-------------|
-| 1 — Bootstrap | 🟡 in progress | Astro-Shell + Rulebooks + Git + CF Pages |
+| 1 — Bootstrap | ✅ done | Astro-Shell + Rulebooks + Git + CF Pages |
 | 2 — Design-System | ⬜ pending | `tokens.css`, Dark/Light |
 | 3 — Layout-Shell | ⬜ pending | BaseLayout, Header, Footer |
 | 4 — Tool-Config-Foundation | ⬜ pending | Zod-Schemas 9 Typen |
