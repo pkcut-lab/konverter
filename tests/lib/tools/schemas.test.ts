@@ -238,7 +238,7 @@ describe('parseToolConfig', () => {
     const r = parseToolConfig({ id: 'x', type: 'banana' });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.error).toContain('banana');
+      expect(r.error).toContain('received type: "banana"');
     }
   });
 });
