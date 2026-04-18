@@ -1,0 +1,23 @@
+---
+/**
+ * Flash-prevention: sets data-theme BEFORE first paint.
+ * Must be rendered synchronously in <head>, before stylesheet links.
+ * Spec Section 5.2.
+ */
+---
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('theme');
+      var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = stored === 'light' || stored === 'dark'
+        ? stored
+        : (systemDark ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+    } catch (e) {
+      document.documentElement.dataset.theme = 'light';
+    }
+  })();
+</script>
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1A1917" media="(prefers-color-scheme: dark)" />
