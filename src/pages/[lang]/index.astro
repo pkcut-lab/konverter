@@ -1,0 +1,18 @@
+---
+export function getStaticPaths() {
+  return [{ params: { lang: 'de' } }];
+}
+const { lang } = Astro.params;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konverter — Bootstrapping</title>
+</head>
+<body>
+  <h1>Konverter</h1>
+  <p>Phase 0 Bootstrap — Shell live. Sprache: {lang}</p>
+</body>
+</html>

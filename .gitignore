@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+.astro/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+*.log
+
+# Pagefind Index (generated)
+public/pagefind/
+
+# Icons pipeline (User drops PNGs here, Build converts to public/icons/tools/)
+pending-icons/*.png
+pending-icons/*.jpg
+!pending-icons/.gitkeep
+
+# Husky runtime
+.husky/_/
+
+# Cloudflare
+.wrangler/
