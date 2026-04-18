@@ -2,8 +2,7 @@ import { defineConfig } from 'astro/config';
 import svelte from '@astrojs/svelte';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
-
-const SUPPORTED_LANGUAGES = ['de'];
+import { ACTIVE_LANGUAGES } from './src/lib/hreflang.ts';
 
 export default defineConfig({
   site: 'https://konverter.pages.dev',
@@ -15,7 +14,7 @@ export default defineConfig({
   ],
   i18n: {
     defaultLocale: 'de',
-    locales: SUPPORTED_LANGUAGES,
+    locales: [...ACTIVE_LANGUAGES],
     routing: {
       prefixDefaultLocale: true,
     },
