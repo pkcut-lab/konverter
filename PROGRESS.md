@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-18 (Session 2, End)
+**Letztes Update:** 2026-04-18 (Session 3, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #2 — Design-System ✅
+**Current Session:** #3 — Layout-Shell ✅
 
 ## Phase 0 Fortschritt
 
@@ -10,7 +10,7 @@
 |---------|--------|-------------|
 | 1 — Bootstrap | ✅ done | Astro-Shell + Rulebooks + Git + CF Pages |
 | 2 — Design-System | ✅ done | `tokens.css`, Dark/Light |
-| 3 — Layout-Shell | ⬜ pending | BaseLayout, Header, Footer |
+| 3 — Layout-Shell | ✅ done | BaseLayout + Header + Footer + ThemeToggle + hreflang |
 | 4 — Tool-Config-Foundation | ⬜ pending | Zod-Schemas 9 Typen |
 | 5 — Meter-zu-Fuß Prototype | ⬜ pending | Converter-Template |
 | 6 — Review #1 | ⬜ pending | Iteration + Lock |
@@ -33,4 +33,4 @@
 Keine.
 
 ## Next-Session-Plan
-Session 3 — Layout-Shell: `BaseLayout.astro` mit Header, Footer, Hreflang-Infrastruktur; Theme-Toggle als Svelte-Runes-Component. Files: `src/layouts/BaseLayout.astro`, `src/components/Header.astro`, `src/components/Footer.astro`, `src/components/ThemeToggle.svelte`, `src/lib/hreflang.ts`. Referenzen: Spec Section 11.3, 11.4, 5.2. Dependencies: Session 2 (Tokens + Fonts live).
+Session 4 — Tool-Config-Foundation: Zod-Schemas für alle 9 Tool-Typen, `slug-map.ts` funktional, Astro Content-Collection-Config live, `CONVENTIONS.md` final befüllt. Files: `src/lib/tools/schemas.ts` (Zod-Schemas für Converter/Calculator/Generator/Formatter/Validator/Analyzer/Comparer/FileTool/Interactive), `src/lib/slug-map.ts`, `src/content/config.ts`, `CONVENTIONS.md`. Referenzen: Spec Section 4.1, 4.2, 4.4, 10.3. Dependencies: Session 1 (Zod 3.24.1 installed).
