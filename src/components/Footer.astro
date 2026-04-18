@@ -1,0 +1,76 @@
+---
+interface Props {
+  lang: string;
+}
+const { lang } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="inner">
+    <section>
+      <h2>Kategorien</h2>
+      <ul>
+        <li><span class="stub">Längen (bald)</span></li>
+        <li><span class="stub">Dateien (bald)</span></li>
+        <li><span class="stub">Text (bald)</span></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Rechtliches</h2>
+      <ul>
+        <li><span class="stub">Impressum (Phase 2)</span></li>
+        <li><span class="stub">Datenschutz (Phase 2)</span></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Meta</h2>
+      <ul>
+        <li lang={lang}>Sprache: {lang.toUpperCase()}</li>
+        <li>© {year} Konverter</li>
+      </ul>
+    </section>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-24);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+  }
+  .inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+  h2 {
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-small);
+  }
+  .stub {
+    color: var(--color-text-subtle);
+    font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+</style>
