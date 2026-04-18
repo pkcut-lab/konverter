@@ -103,4 +103,14 @@ describe('Converter.svelte — meter-zu-fuss', () => {
     expect(output?.getAttribute('aria-live')).toBe('polite');
     unmount(cmp);
   });
+
+  it('swap button exposes aria-pressed reflecting direction', () => {
+    const { target, cmp } = render();
+    const swap = target.querySelector('[data-testid="converter-swap"]') as HTMLButtonElement;
+    expect(swap.getAttribute('aria-pressed')).toBe('false');
+    swap.click();
+    flushSync();
+    expect(swap.getAttribute('aria-pressed')).toBe('true');
+    unmount(cmp);
+  });
 });

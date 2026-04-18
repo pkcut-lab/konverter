@@ -85,6 +85,7 @@
     data-testid="converter-swap"
     onclick={onSwap}
     aria-label="Richtung tauschen"
+    aria-pressed={direction === 'inverse'}
   >
     ⇅ Tauschen
   </button>
