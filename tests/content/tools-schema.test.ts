@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { toolContentFrontmatterSchema } from '../../src/content/tools.schema';
 
 const valid = {
-  slug: 'meter-zu-fuss',
   toolId: 'meter-to-feet',
   language: 'de' as const,
   title: 'Meter zu Fuß Konverter — Schnell & Genau',
@@ -89,11 +88,6 @@ describe('toolContentFrontmatterSchema', () => {
 
   it('rejects language not in ACTIVE_LANGUAGES', () => {
     const r = toolContentFrontmatterSchema.safeParse({ ...valid, language: 'en' });
-    expect(r.success).toBe(false);
-  });
-
-  it('rejects non-kebab-case slug', () => {
-    const r = toolContentFrontmatterSchema.safeParse({ ...valid, slug: 'Meter_zu_Fuß' });
     expect(r.success).toBe(false);
   });
 
