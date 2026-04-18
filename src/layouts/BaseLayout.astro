@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import ThemeScript from '../components/ThemeScript.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { buildHreflangLinks } from '../lib/hreflang';
+
+interface Props {
+  lang: string;
+  title: string;
+  description?: string;
+  pathWithoutLang: string;
+}
+const { lang, title, description, pathWithoutLang } = Astro.props;
+const hreflangs = buildHreflangLinks({ pathWithoutLang });
+---
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+
+    <ThemeScript />
+
+    <link
+      rel="preload"
+      href="/fonts/Inter-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    {hreflangs.map((l) => (
+      <link rel="alternate" hreflang={l.hreflang} href={l.href} />
+    ))}
+  </head>
+  <body>
+    <Header lang={lang} />
+    <main class="site-main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>
+
+<style>
+  .site-main {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+  }
+</style>
