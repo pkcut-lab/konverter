@@ -8,7 +8,9 @@ import { ACTIVE_LANGUAGES } from './hreflang';
  * Shape: { [toolId]: { [lang]: slug } }. Partial per-lang record — a tool
  * may not yet have all active-language slugs filled.
  */
-export const slugMap: Record<string, Partial<Record<Lang, string>>> = {};
+export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
+  'meter-to-feet': { de: 'meter-zu-fuss' },
+};
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
   return slugMap[toolId]?.[lang];

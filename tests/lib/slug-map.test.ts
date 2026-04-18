@@ -38,3 +38,17 @@ describe('round-trip — synthetic fixture', () => {
     }
   });
 });
+
+describe('slug-map — meter-to-feet entry', () => {
+  it('getSlug("meter-to-feet", "de") resolves to "meter-zu-fuss"', () => {
+    expect(getSlug('meter-to-feet', 'de')).toBe('meter-zu-fuss');
+  });
+
+  it('getToolId("de", "meter-zu-fuss") resolves to "meter-to-feet"', () => {
+    expect(getToolId('de', 'meter-zu-fuss')).toBe('meter-to-feet');
+  });
+
+  it('getSupportedLangs("meter-to-feet") returns ["de"]', () => {
+    expect(getSupportedLangs('meter-to-feet')).toEqual(['de']);
+  });
+});
