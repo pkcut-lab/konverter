@@ -1,0 +1,113 @@
+---
+import '../../styles/global.css';
+import ThemeScript from '../../components/ThemeScript.astro';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'de' } }];
+}
+const { lang } = Astro.params;
+
+const colorTokens = [
+  'bg', 'surface', 'border', 'text', 'text-muted', 'text-subtle',
+  'accent', 'accent-hover', 'success', 'error',
+];
+const spaceTokens = [1, 2, 3, 4, 6, 8, 12, 16, 24];
+const shadowTokens = ['sm', 'md', 'lg'];
+---
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Styleguide — Konverter Design System</title>
+  <ThemeScript />
+  <link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin />
+</head>
+<body>
+  <main style="padding: var(--space-8); max-width: 64rem; margin: 0 auto;">
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+      <h1>Styleguide</h1>
+      <div>
+        <button data-theme-set="light" style="padding: var(--space-2) var(--space-4);">Light</button>
+        <button data-theme-set="dark" style="padding: var(--space-2) var(--space-4);">Dark</button>
+        <button data-theme-set="auto" style="padding: var(--space-2) var(--space-4);">Auto</button>
+      </div>
+    </header>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2>Typography</h2>
+      <h1>H1 — 2.25rem, 600</h1>
+      <h2>H2 — 1.75rem, 600</h2>
+      <h3>H3 — 1.375rem, 500</h3>
+      <p>Body — 1rem, 400, line-height 1.6. Der schnelle braune Fuchs springt über den faulen Hund.</p>
+      <p style="font-size: var(--font-size-small); line-height: var(--font-lh-small);">Small — 0.875rem.</p>
+      <p style="font-family: var(--font-family-mono);">JetBrains Mono: const x = 42;</p>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2>Colors</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: var(--space-4);">
+        {colorTokens.map((name) => (
+          <div style={`border: 1px solid var(--color-border); border-radius: var(--r-md); overflow: hidden;`}>
+            <div style={`background: var(--color-${name}); height: 5rem;`}></div>
+            <div style="padding: var(--space-3);">
+              <code style="font-family: var(--font-family-mono); font-size: var(--font-size-small);">--color-{name}</code>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2>Spacing</h2>
+      <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+        {spaceTokens.map((n) => (
+          <div style="display: flex; align-items: center; gap: var(--space-4);">
+            <code style="font-family: var(--font-family-mono); min-width: 6rem;">--space-{n}</code>
+            <div style={`height: var(--space-${n}); background: var(--color-accent); min-width: var(--space-${n});`}></div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2>Shadows</h2>
+      <div style="display: flex; gap: var(--space-8); padding: var(--space-6); background: var(--color-surface);">
+        {shadowTokens.map((size) => (
+          <div style={`background: var(--color-bg); padding: var(--space-6); border-radius: var(--r-md); box-shadow: var(--shadow-${size});`}>
+            <code style="font-family: var(--font-family-mono);">--shadow-{size}</code>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2>Ad-Slot Placeholder (CLS-prevention)</h2>
+      <p style="font-size: var(--font-size-small); color: var(--color-text-muted);">
+        Toggle <code>[data-ads-enabled="true"]</code> on &lt;html&gt; to reveal the slot. The reserved space stays either way.
+      </p>
+      <div class="ad-slot ad-slot--banner" style="display: block; border: 2px dashed var(--color-border);">
+        <div style="padding: var(--space-4); color: var(--color-text-muted); text-align: center;">
+          Ad Slot Banner — min-height locked
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline>
+    document.querySelectorAll('[data-theme-set]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-theme-set');
+        if (mode === 'auto') {
+          localStorage.removeItem('theme');
+          document.documentElement.dataset.theme =
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          localStorage.setItem('theme', mode);
+          document.documentElement.dataset.theme = mode;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
