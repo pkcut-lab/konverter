@@ -1,0 +1,91 @@
+---
+import ThemeToggle from './ThemeToggle.svelte';
+
+interface Props {
+  lang: string;
+}
+const { lang } = Astro.props;
+---
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href={`/${lang}/`}>
+      <span class="wordmark">Konverter</span>
+    </a>
+
+    <div class="search-stub" aria-hidden="true">
+      <input
+        type="search"
+        placeholder="Tools durchsuchen (bald verfügbar)"
+        disabled
+      />
+    </div>
+
+    <div class="right">
+      <span class="lang-stub" aria-label="Aktuelle Sprache">
+        {lang.toUpperCase()}
+      </span>
+      <ThemeToggle client:load />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-6);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .brand {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .wordmark {
+    font-weight: 600;
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+  }
+  .search-stub input {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    color: var(--color-text-muted);
+    font: inherit;
+    font-size: var(--font-size-small);
+  }
+  .right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .lang-stub {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+  }
+
+  @media (max-width: 640px) {
+    .inner {
+      grid-template-columns: auto 1fr;
+      row-gap: var(--space-2);
+    }
+    .search-stub {
+      grid-column: 1 / -1;
+      order: 3;
+    }
+  }
+</style>
