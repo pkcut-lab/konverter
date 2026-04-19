@@ -11,7 +11,9 @@
     "check": "astro check && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "stitch:list": "node --env-file=.env scripts/stitch/list.mjs",
+    "stitch:generate": "node --env-file=.env scripts/stitch/generate.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.2.1",
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.8",
+    "@google/stitch-sdk": "0.1.0",
     "@sveltejs/vite-plugin-svelte": "5.0.3",
     "@types/node": "20.17.9",
     "@vite-pwa/astro": "^1.2.0",
