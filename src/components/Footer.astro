@@ -1,4 +1,6 @@
 ---
+import FooterToolsList from './FooterToolsList.astro';
+import type { Lang } from '../lib/tools/types';
 interface Props {
   lang: string;
 }
@@ -7,14 +9,7 @@ const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="inner">
-    <section>
-      <h2>Kategorien</h2>
-      <ul>
-        <li><span class="stub">Längen (bald)</span></li>
-        <li><span class="stub">Dateien (bald)</span></li>
-        <li><span class="stub">Text (bald)</span></li>
-      </ul>
-    </section>
+    <FooterToolsList lang={lang as Lang} />
     <section>
       <h2>Rechtliches</h2>
       <ul>

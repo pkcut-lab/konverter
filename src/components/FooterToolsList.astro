@@ -1,0 +1,69 @@
+---
+// src/components/FooterToolsList.astro
+import { listToolsForLang } from '../lib/tools/list';
+import type { Lang } from '../lib/tools/types';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const CAP = 8;
+const tools = await listToolsForLang(lang);
+const visible = tools.slice(0, CAP);
+const overflow = Math.max(0, tools.length - CAP);
+---
+<section>
+  <h2>Werkzeuge</h2>
+  <ul>
+    {visible.map((t) => (
+      <li><a href={t.href}>{t.title}</a></li>
+    ))}
+    {overflow > 0 && (
+      <li class="overflow">
+        {/* NBSP zwischen `+` und Zahl damit es nicht umbricht */}
+        <a href={`/${lang}/`}>{`+\u00A0${overflow} weitere Werkzeuge →`}</a>
+      </li>
+    )}
+  </ul>
+</section>
+
+<style>
+  /* h2 muss hier wieder gesetzt werden — Astro scoped-styles in Footer.astro erreichen die h2 dieser Component nicht, da sie zu einem anderen Scope-Tree gehört. Werte = Visual-Parität zu Rechtliches/Meta-Headings (Footer.astro:50-54). */
+  h2 {
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-small);
+  }
+  a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  a:hover,
+  a:focus-visible {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: var(--underline-offset);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+  .overflow {
+    margin-top: var(--space-2);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    a { transition: none; }
+  }
+</style>
