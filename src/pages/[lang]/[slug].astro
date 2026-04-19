@@ -49,109 +49,158 @@ const { Content } = await entry.render();
   description={entry.data.metaDescription}
   pathWithoutLang={`/${slug}`}
 >
-  <header class="tool-hero">
-    <h1>{entry.data.title}</h1>
-    <p class="tagline">{entry.data.tagline}</p>
-    <div class="tool-ui">
+  <div class="tool-page">
+    <header class="tool-hero">
+      <h1>{entry.data.title}</h1>
+      <p class="tagline">{entry.data.tagline}</p>
+    </header>
+
+    <section class="tool-section" aria-label="Konverter">
       <Converter config={config} client:load />
-    </div>
-  </header>
+    </section>
 
-  {/* Phase 2 aktiviert AdSense — der Placeholder reserviert den Platz jetzt
-      schon, damit späteres Einblenden keinen CLS erzeugt. aria-hidden, weil
-      bis dahin keine sinnvolle Information drinsteht. */}
-  <aside class="ad-slot-placeholder" aria-hidden="true">
-    <span>Anzeigenplatz</span>
-  </aside>
+    {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt
+        schon, damit späteres Einblenden keinen CLS erzeugt. aria-hidden, weil
+        bis dahin keine sinnvolle Information drinsteht. */}
+    <aside class="ad-slot-placeholder" aria-hidden="true">
+      <span>Anzeigenplatz</span>
+    </aside>
 
-  <article class="tool-article">
-    <p class="intro">{entry.data.intro}</p>
+    <article class="tool-article">
+      <p class="intro">{entry.data.intro}</p>
 
-    <h2>Wie benutzt du den Konverter?</h2>
-    <ol class="how">
-      {entry.data.howToUse.map((step) => <li>{step}</li>)}
-    </ol>
+      <h2>Wie benutzt du den Konverter?</h2>
+      <ol class="how">
+        {entry.data.howToUse.map((step) => <li>{step}</li>)}
+      </ol>
 
-    <div class="prose">
-      <Content />
-    </div>
-  </article>
+      <div class="prose tool-article__prose">
+        <Content />
+      </div>
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
+  .tool-page {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--space-12);
+  }
+
   .tool-hero {
     max-width: 40rem;
-    margin: 0 auto;
+    margin: 0 auto var(--space-12);
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
   .tool-hero h1 {
     margin: 0;
-    font-size: var(--font-size-h1);
-    line-height: 1.15;
+    letter-spacing: -0.015em;
   }
   .tool-hero .tagline {
     margin: 0;
     color: var(--color-text-muted);
     font-size: var(--font-size-body);
+    line-height: var(--font-lh-body);
   }
-  .tool-ui {
-    margin-top: var(--space-4);
-    text-align: left;
+
+  .tool-section {
+    max-width: 34rem;
+    width: 100%;
+    margin: 0 auto var(--space-24);
   }
 
   .ad-slot-placeholder {
     max-width: 42rem;
-    margin: var(--space-12) auto;
-    min-height: 6rem;
+    width: 100%;
+    margin: 0 auto var(--space-16);
+    min-height: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px dashed var(--color-border);
     border-radius: var(--r-md);
-    color: var(--color-text-muted);
+    background: var(--color-surface);
+    color: var(--color-text-subtle);
     font-size: var(--font-size-small);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
   }
 
   .tool-article {
     max-width: 42rem;
+    width: 100%;
     margin: 0 auto;
-    color: var(--color-text);
-    line-height: 1.65;
-    font-size: var(--font-size-body);
+    padding-bottom: var(--space-24);
   }
   .tool-article .intro {
     font-size: 1.125rem;
+    line-height: 1.55;
     color: var(--color-text);
-    margin: 0 0 var(--space-8) 0;
+    margin: 0 0 var(--space-12) 0;
   }
   .tool-article h2 {
-    margin-top: var(--space-12);
-    margin-bottom: var(--space-3);
-    font-size: var(--font-size-h2);
-    line-height: 1.25;
-  }
-  .tool-article h2:first-of-type {
-    margin-top: 0;
-  }
-  .tool-article .how {
-    padding-left: var(--space-6);
     margin: 0 0 var(--space-6) 0;
+    letter-spacing: -0.01em;
   }
-  .tool-article .how li {
-    margin-bottom: var(--space-2);
+
+  .how {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-16) 0;
+    counter-reset: how-step;
+  }
+  .how li {
+    counter-increment: how-step;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    line-height: 1.6;
+  }
+  .how li::before {
+    content: counter(how-step, decimal-leading-zero);
+    flex: 0 0 auto;
+    min-width: 2.5ch;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.02em;
+  }
+
+  .tool-article__prose {
+    margin-top: var(--space-16);
   }
 
   @media (max-width: 40rem) {
+    .tool-page {
+      padding-top: var(--space-8);
+    }
+    .tool-hero {
+      margin-bottom: var(--space-8);
+    }
     .tool-hero h1 {
       font-size: 1.875rem;
     }
+    .tool-section {
+      margin-bottom: var(--space-16);
+    }
     .ad-slot-placeholder {
-      margin: var(--space-8) auto;
-      min-height: 5rem;
+      margin-bottom: var(--space-12);
+      min-height: 4.5rem;
+    }
+    .tool-article .intro {
+      margin-bottom: var(--space-8);
+      font-size: 1.0625rem;
+    }
+    .how {
+      margin-bottom: var(--space-12);
+    }
+    .tool-article__prose {
+      margin-top: var(--space-12);
     }
   }
 </style>
