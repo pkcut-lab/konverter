@@ -137,7 +137,19 @@ Geteilte Komponente für jeden Lazy-Load- und Long-Running-Work-Status. Keine ko
 - **`data-testid="loader"`** als Default — bei mehreren Loadern pro Seite via Prop überschreibbar.
 - **Kein eigener Spacing-Container** — Konsument (z.B. FileTool preparing-phase) bestimmt Padding/Gap.
 
-## 12. Skill-Integration für Design-Arbeit
+## 12. Header-Search / Pagefind (gelockt Session 10)
+
+Die Tool-Suche sitzt im Header und greift nach dem Build-Step auf den Pagefind-Index zu. Styling-Regeln, damit die Default-Komponente nicht die Graphit-Palette bricht:
+
+- **Mount-Punkt:** `HeaderSearch.svelte` rendert ein neutrales `<div>`, das Pagefind füllt. Keine Inline-Border/Padding in der Komponente — alles kommt aus den CSS-Var-Overrides.
+- **CSS-Overrides leben ausschließlich in `src/styles/global.css`** unter dem `.pagefind-ui {}`-Block. Alle Pagefind-CSS-Variablen werden dort auf Graphit-Tokens remapped (`--pagefind-ui-primary: var(--color-text)`, `--pagefind-ui-background: var(--color-surface)`, `--pagefind-ui-border: var(--color-border)`, `--pagefind-ui-border-radius: var(--r-md)`, `--pagefind-ui-font: var(--font-family-sans)`).
+- **Result-Items** bekommen Hairline-Divider per `border-top: 1px solid var(--color-border)`, Padding `var(--space-3)` — konsistent mit Card-Rhythmus aus Section 9.
+- **Result-Title-Link:** unterstreichungslos (`text-decoration: none`), Hover kippt auf `var(--color-accent)`.
+- **Highlight:** `mark` innerhalb `.pagefind-ui__result-excerpt` bleibt Text-Farbe + `font-weight: 600` statt gelbem Marker-Look.
+- **Mobile:** Grid-Spalte `1 / -1, order: 3` → Search rutscht unter Brand + Toggle auf ≤40rem (siehe `Header.astro`).
+- **Dev-Fallback:** In `astro dev` fehlt `/pagefind/` → disabled Input mit Placeholder `"<Placeholder> (nur im Produktions-Build)"`. Hier ist refined-minimalism auch hier Pflicht: `1px`-Border, `var(--r-md)`, kein Hex.
+
+## 13. Skill-Integration für Design-Arbeit
 
 Bei jeder Session, die UI erstellt oder überarbeitet, ist folgende Skill-Sequenz Pflicht:
 1. **`minimalist-ui`** (leonxlnx/taste-skill) — Form-Fundament (Bento, Borders, Radii, Padding-Zahlen).

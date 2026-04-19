@@ -201,6 +201,25 @@ Außerdem: `tool-registry.ts` (Tool-Existenz) + `slug-map.ts` (Slug pro Lang) �
 - **Neue Tokens:** IMMER in beiden `:root`-Blöcken (light + dark) pflegen. Contrast ≥ 7:1 (WCAG AAA).
 - **Hex-Codes außerhalb tokens.css verboten** — immer `var(--color-*)` / `var(--space-*)` / etc.
 
+## PWA / Service Worker (gelockt Session 10)
+
+- **Manifest ist Source-of-Truth:** `public/manifest.webmanifest` wird von Hand gepflegt. `@vite-pwa/astro` läuft mit `manifest: false`, damit Smoke-Tests feste Felder pinnen können.
+- **Icon-Regeneration:** `node scripts/generate-pwa-icons.mjs` manuell nach SVG-Änderungen. PNGs werden committed; CI rasterisiert nicht (keine `sharp`-Build-Dep).
+- **Maskable Safe-Zone:** 80% innen — zentrale Paths auf `icon-maskable.svg` bleiben im 0.1×0.1→0.9×0.9-Viewbox-Bereich, sonst beißt Android sie ab.
+- **SW Scope:** `registerType: 'autoUpdate'` + `clientsClaim: true` + `skipWaiting: true`. Updates greifen ohne zweiten Refresh.
+- **Precache-Pattern:** Lazy-Chunks (`FileTool.*.js`, `heic2any.*.js`, `onnx*.js`, `*.wasm`) werden via `globIgnores` ausgeschlossen — sonst zahlt jeder Erstbesucher den 1.5 MB ML-Overhead, auch auf reinen Info-Seiten.
+- **Runtime-Caching-Regeln:** neue externe Origins werden hier gepinnt, nicht im Component-Code. Aktuell: `CacheFirst` für `huggingface.co` (immutable Model-Weights, 30 Tage), `StaleWhileRevalidate` für `/pagefind/*`.
+- **registerSW manuell:** Das Plugin injiziert `/registerSW.js` NICHT automatisch — `BaseLayout.astro` referenziert es explizit per `<script is:inline defer src="/registerSW.js">`.
+
+## Pagefind (gelockt Session 10)
+
+- **Build-Step:** `npm run build` = `astro build && pagefind --site dist`. Pagefind ist devDependency, läuft nicht in `astro dev`.
+- **Index-Scoping:** `<main data-pagefind-body>` in `BaseLayout.astro` isoliert den Such-Body — Header/Footer-Chrome (Wordmark, Lang-Toggle-Labels) darf nicht das Ergebnis jeder Query dominieren. `<header data-pagefind-ignore>` als Gürtel-und-Hosenträger.
+- **Multi-Lang:** Pagefind indexiert per `<html lang>` automatisch nach Sprache. Jeder neue Sprach-Shard braucht keine Extra-Konfiguration.
+- **UI-Komponente:** `HeaderSearch.svelte` lädt `/pagefind/pagefind-ui.{js,css}` dynamisch zur Laufzeit. Dev-Fallback: disabled Input ohne Crash, wenn Bundle fehlt.
+- **CSS-Override-Punkt:** Pagefind-Styling geht AUSSCHLIESSLICH über `.pagefind-ui { --pagefind-ui-*: var(--color-*) }` in `src/styles/global.css`. Keine Komponenten-lokalen Overrides, sonst divergiert die Search-Drop-Down-Optik zwischen Layouts.
+- **bundlePath Invariante:** Heute hardcoded `/pagefind/`. Phase-5-Trigger: wenn R2-Proxy für Cloudflare-20k-Limit kommt, wird der Pfad zur build-time-Konstante (Env-Var + Vite `define`). Bis dahin nicht anfassen.
+
 ## Commit-Disziplin (Karpathy-Prinzipien aus CLAUDE.md)
 
 - **Ein Commit = ein logisches Stück.** Keine Mix-Commits (`fix X + refactor Y`).

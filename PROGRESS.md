@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 9, End)
+**Letztes Update:** 2026-04-19 (Session 10, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #9 — Hintergrund-Entferner Prototype ✅ (BG-Remover live, FileTool-Phase-Machine erweitert, Loader-Komponente, JSON-LD für alle Tool-Seiten, Icon-Pipeline gelockt, Homepage-Tool-Index, Rulebooks synchronisiert)
+**Current Session:** #10 — PWA + Pagefind ✅ (Brand-Icon + 4 Manifest-Icon-Variants, Workbox-SW mit Runtime-Caching für HF-Modell-CDN + Pagefind-Index, Pagefind-Build-Step, HeaderSearch-Svelte mit Graphit-Token-Overrides, Rulebook-Sync)
 
 ## Phase 0 Fortschritt
 
@@ -17,7 +17,7 @@
 | 7 — WebP Konverter Prototype | ✅ done | FileTool-Template + Processor-Registry + /de/webp-konverter live |
 | 8 — Review #2 | ✅ done | Smoke-Test passed (Desktop+Mobile, Light+Dark) — kein Feedback, Templates gelockt |
 | 9 — Hintergrund-Entferner Prototype | ✅ done | BG-Remover live + FileTool-Erweiterungen (preparing-Phase, Format-Chooser, Preview, Clipboard/Camera/HEIC) + Loader-Komponente + JSON-LD |
-| 10 — PWA + Pagefind | ⬜ pending | Scaffolding |
+| 10 — PWA + Pagefind | ✅ done | Manifest + 4 Icons + Workbox-SW + Pagefind Build-Step + HeaderSearch |
 | 11 — CI/CD | ⬜ pending | First Production Deploy |
 
 ## Tool-Inventar (Phase 0)
@@ -29,7 +29,7 @@
 | remove-background | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → Drop unter `public/icons/tools/remove-background.webp`) | ✅ |
 
 ## Deploy-History
-(leer bis Session 10)
+(leer bis Session 11 — Production-Deploy)
 
 ## Blockers
 - Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung. BG-Remover (`/de/hintergrund-entfernen`) wartet auf User-Smoke-Test (Checklist unten).
@@ -51,6 +51,27 @@
 - [ ] `/de/webp-konverter` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] `/de/meter-zu-fuss` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] Homepage `/de/` listet alle 3 Tools als Cards (auto-enumeriert, alphabetisch); Hover-Arrow wandert, Dark-Mode invertiert Icons
+
+## Session 10 Deliverables
+
+- **Brand-Icon:** `public/icon.svg` (geometrisches „K" aus drei `stroke-linecap: round`-Paths auf warm-weißem Rounded-Square-Background) + `public/icon-maskable.svg` (Paths im 80%-Safe-Zone, damit Android-Launcher beim Masken nicht die Form anschneidet).
+- **Raster-Pipeline:** `scripts/generate-pwa-icons.mjs` (sharp, Density = Size × 2 für retina-scharfe Kanten) rasterisiert SVG → `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `favicon-32.png`. Manuell nach SVG-Änderungen, NICHT auf CI (spart native sharp-Dep dort).
+- **`public/manifest.webmanifest`:** name/short_name „Konverter", start_url `/de/`, scope `/`, display `standalone`, lang `de`, 4 Icons (SVG any, 192 any, 512 any, 512 maskable). Theme- und Background-Color = `#FFFFFF`.
+- **`src/layouts/BaseLayout.astro`:** Icon-/Manifest-/Apple-Web-App-Meta-Tags, `<link rel="manifest">`, `<script is:inline defer src="/registerSW.js">` (Plugin injiziert ihn nicht automatisch), `<main data-pagefind-body>` zum Index-Scoping.
+- **`@vite-pwa/astro` 1.2.0 + `vite-plugin-pwa` 1.2.0:** registerType `autoUpdate`, clientsClaim + skipWaiting, maximumFileSizeToCacheInBytes 5 MB. `globIgnores`: `FileTool.*.js` (540 KB), `heic2any.*.js` (1.3 MB), `onnx*.js`, `*.wasm` — Lazy-Chunks rausnehmen, sonst zahlt jeder Erstbesucher die ML-Payload.
+- **Runtime-Caching:** CacheFirst für `huggingface.co` / `cdn-lfs.huggingface.co` (30 Tage, maxEntries 20 — BG-Remover-Model-Weights sind immutable pro Version); StaleWhileRevalidate für `/pagefind/*` (Search-Index frisch genug ohne Block).
+- **Pagefind 1.5.2:** `npm run build` = `astro build && pagefind --site dist`. Index scoped auf `<main data-pagefind-body>` (Header/Footer ignoriert). 5 Seiten indexiert, 1046 Wörter, 1 Language-Shard (de).
+- **`src/components/HeaderSearch.svelte`:** Svelte-5-Runes, `$effect` lädt `/pagefind/pagefind-ui.js` + `.css` dynamisch zur Laufzeit. Dev-Fallback: disabled Input ohne Crash wenn Bundle fehlt. bundlePath `/pagefind/` als Invariante kommentiert (Phase-5-Trigger: R2-Proxy bei CF-Pages-20k-Limit).
+- **CSS-Overrides:** `.pagefind-ui { --pagefind-ui-*: var(--color-*) }` in `src/styles/global.css` remapped alle Pagefind-CSS-Variablen auf Graphit-Tokens. Result-Items bekommen Hairline-Divider konsistent mit Card-Rhythmus; Highlight-Marker bleibt Text-Farbe + `font-weight: 600` statt gelbem Default.
+- **Header:** Alter disabled Stub ersetzt durch `<HeaderSearch client:load lang={lang} placeholder=…>`. `<header data-pagefind-ignore>` als Belt-and-Suspenders. Mobile: Search rutscht per Grid auf `1 / -1, order: 3` unter Brand + Toggle.
+- **Rulebooks:** `CONVENTIONS.md` +§PWA + §Pagefind (Manifest-Source-of-Truth, Icon-Regen-Ritual, globIgnores-Regel, bundlePath-Invariante). `STYLE.md` +§12 Header-Search/Pagefind (CSS-Override-Punkt single-source-of-truth, Mobile-Verhalten, Dev-Fallback-Optik).
+- **Tests:** +13 neue (total 239 → 252). Aufteilung: PWA-Smoke 8 (Manifest-Fields, 4 Icon-Variants, Assets-on-Disk, favicon-32, BaseLayout-Wiring, registerSW-Reference, astro.config `@vite-pwa/astro` + autoUpdate + manifestFilename + cache-names + globIgnores-lazy-chunks), Pagefind-Smoke 5 (Build-Script, `data-pagefind-body`, Komponenten-Loader, Header-Mount, CSS-Token-Overrides).
+- **Gates:** 0/0/0 `astro check`, 252/252 vitest, Build grün (`dist/pagefind/` + `dist/sw.js` + `dist/registerSW.js` + `dist/workbox-*.js` emittiert).
+
+### Bekannte Follow-ups (nicht blocking)
+
+- **PagefindUI-Default-CSS-Style-Cascade:** Das Plugin injiziert keine eigenen Styles via JS; unsere Overrides in `global.css` greifen, sobald `/pagefind/pagefind-ui.css` geladen ist. Wenn der Load durch Netzwerk-Flakiness zu spät kommt, kann es einen kurzen Frame mit un-gestyltem Fallback-Input geben. Fix-Kandidat: `<link rel="preload" as="style">` im BaseLayout, wenn das in Prod tatsächlich sichtbar wird.
+- **Session-9-Follow-up-Liste (Bundle-Split `FileTool.*.js` 541 KB via static transformers-Import)** bleibt offen. Session 10 hat das Chunk jetzt explizit aus dem SW-Precache ausgeschlossen, der fundamentalere Split-Fix wartet weiter.
 
 ## Session 9 Deliverables
 
@@ -125,6 +146,7 @@
 - ✅ `[slug].astro` Hydration-Limitation in CONVENTIONS dokumentiert (statische `componentByType`-Map + explizite Conditional-Renders, kein dynamic-component-render).
 
 ## Next-Session-Plan
-Session 10 — PWA + Pagefind (laut Phase-0-Roadmap). Scaffolding für Offline-Capability + Client-side-Search. Danach Session 11 = CI/CD + erster Production-Deploy.
 
-**Parallel-Track abgeschlossen (Session 9):** Hintergrund-Entferner als drittes Phase-0-Tool — FileTool-Template jetzt auch für schwere ML-Modelle verifiziert (Lazy-Loading-Pfad, WebGPU-Detection, WASM-Fallback, Stall-Watchdog). Tech-Wahl validiert: `@huggingface/transformers v4 + onnx-community/BEN2-ONNX`. **R2-Mirror wurde aus V1 gestrichen** — Modell lädt direkt vom Hugging-Face-CDN, mit explizitem Datenschutz-Text in der Content-MD; R2-Mirror kann in Phase 2 nachgereicht werden wenn CDN-Performance oder Privacy-Anforderungen es verlangen.
+Session 11 — CI/CD + erster Production-Deploy auf Cloudflare Pages (Projekt `konverter-7qc.pages.dev` ist seit Session 1 reserviert). Ziel: GitHub-Action für Build + Test + Pagefind-Index + CF-Pages-Push, Branch-Preview-URLs, HTTPS-Redirect, Custom-Domain-Hook offen lassen für die finale Domain.
+
+**Session 10 — PWA + Pagefind (heute) abgeschlossen:** Manifest + 4 Icon-Variants + Workbox-SW (autoUpdate, runtime-caching HF-CDN + Pagefind) + Pagefind-Build-Step + HeaderSearch-Svelte-Komponente mit Graphit-Token-Overrides + Rulebook-Sync (CONVENTIONS §PWA + §Pagefind, STYLE §12). 252/252 Tests. Offline-Capability + Client-side-Search bereit für Production.
