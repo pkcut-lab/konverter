@@ -3,7 +3,7 @@ import { ACTIVE_LANGUAGES } from './hreflang';
 
 /**
  * Tool-ID ↔ Slug mapping per language.
- * Phase 0: empty. Session 5 adds 'meter-to-feet'. Session 7 adds 'webp-konverter'.
+ * Phase 0: empty. Session 5 adds 'meter-to-feet'. Session 7 adds 'webp-konverter'. Session 9 adds 'remove-background'.
  *
  * Shape: { [toolId]: { [lang]: slug } }. Partial per-lang record — a tool
  * may not yet have all active-language slugs filled.
@@ -11,6 +11,7 @@ import { ACTIVE_LANGUAGES } from './hreflang';
 export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'meter-to-feet': { de: 'meter-zu-fuss' },
   'png-jpg-to-webp': { de: 'webp-konverter' },
+  'remove-background': { de: 'hintergrund-entfernen' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

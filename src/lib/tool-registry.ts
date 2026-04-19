@@ -1,6 +1,7 @@
 import type { ToolConfig } from './tools/schemas';
 import { meterZuFuss } from './tools/meter-zu-fuss';
 import { pngJpgToWebp } from './tools/png-jpg-to-webp';
+import { hintergrundEntferner } from './tools/hintergrund-entferner';
 
 /**
  * Single source of truth for tool configurations.
@@ -15,6 +16,7 @@ import { pngJpgToWebp } from './tools/png-jpg-to-webp';
 export const toolRegistry: Record<string, ToolConfig> = {
   'meter-to-feet': meterZuFuss,
   'png-jpg-to-webp': pngJpgToWebp,
+  'remove-background': hintergrundEntferner,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {

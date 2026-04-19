@@ -1,4 +1,11 @@
 import { processWebp } from './process-webp';
+import {
+  removeBackground,
+  prepareBackgroundRemovalModel,
+  reencodeLastResult,
+  clearLastResult,
+  isPrepared,
+} from './remove-background';
 
 /**
  * Client-side runtime registry for FileTools.
@@ -43,6 +50,20 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       processWebp(input, {
         quality: typeof config?.quality === 'number' ? config.quality : 85,
       }),
+  },
+  'remove-background': {
+    process: (input, config) =>
+      removeBackground(input, {
+        format:
+          typeof config?.format === 'string' &&
+          (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
+            ? config.format
+            : 'png',
+      }),
+    prepare: (onProgress) => prepareBackgroundRemovalModel(onProgress),
+    reencode: (format) => reencodeLastResult(format as 'png' | 'webp' | 'jpg'),
+    isPrepared: () => isPrepared(),
+    clearLastResult: () => clearLastResult(),
   },
 };
 
