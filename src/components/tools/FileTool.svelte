@@ -8,6 +8,8 @@
     config: FileToolConfig;
   }
   type Phase = 'idle' | 'preparing' | 'converting' | 'done' | 'error';
+  type Dims = { w: number; h: number } | null;
+  type ClipboardState = 'idle' | 'copied' | 'error';
 
   let { config }: Props = $props();
 
@@ -15,11 +17,14 @@
   let quality = $state<number>(85);
   let sourceName = $state<string>('');
   let sourceSize = $state<number>(0);
+  let sourceUrl = $state<string>('');
   let outputSize = $state<number>(0);
   let outputUrl = $state<string>('');
+  let outputDims = $state<Dims>(null);
   let errorMessage = $state<string>('');
   let outputFormat = $state<string>(config.defaultFormat ?? 'webp');
   let prepareProgress = $state<{ loaded: number; total: number }>({ loaded: 0, total: 0 });
+  let clipboardState = $state<ClipboardState>('idle');
 
   const acceptAttr = $derived(config.accept.join(','));
   const runtime = $derived(getRuntime(config.id));
@@ -30,6 +35,11 @@
   );
   const sizeReduction = $derived(
     sourceSize > 0 ? Math.round((1 - outputSize / sourceSize) * 100) : 0,
+  );
+  const clipboardLabel = $derived(
+    clipboardState === 'copied' ? 'Kopiert'
+    : clipboardState === 'error' ? 'Nicht unterstützt'
+    : 'In Zwischenablage',
   );
 
   function formatToMime(f: string): string {
@@ -63,16 +73,32 @@
     return `${(n / (1024 * 1024)).toFixed(2)}\u00A0MB`;
   }
 
+  async function measureDims(blob: Blob): Promise<Dims> {
+    if (typeof createImageBitmap !== 'function') return null;
+    try {
+      const bmp = await createImageBitmap(blob);
+      const dims = { w: bmp.width, h: bmp.height };
+      bmp.close?.();
+      return dims;
+    } catch {
+      return null;
+    }
+  }
+
   function reset() {
     if (outputUrl) URL.revokeObjectURL(outputUrl);
+    if (sourceUrl) URL.revokeObjectURL(sourceUrl);
     runtime?.clearLastResult?.();
     phase = 'idle';
     sourceName = '';
     sourceSize = 0;
+    sourceUrl = '';
     outputSize = 0;
     outputUrl = '';
+    outputDims = null;
     errorMessage = '';
     prepareProgress = { loaded: 0, total: 0 };
+    clipboardState = 'idle';
   }
 
   async function processFile(file: File) {
@@ -89,6 +115,8 @@
 
     sourceName = file.name;
     sourceSize = file.size;
+    if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+    sourceUrl = URL.createObjectURL(file);
     errorMessage = '';
     outputFormat = config.defaultFormat ?? 'webp';
 
@@ -98,12 +126,11 @@
       return;
     }
 
-    // HEIC pre-decode (static import — lazy-loading of heic2any happens inside decodeHeicIfNeeded)
     let bytes: Uint8Array<ArrayBuffer> = new Uint8Array(await file.arrayBuffer() as ArrayBuffer);
     if (file.type === 'image/heic' || file.type === 'image/heif') {
       try {
         const dec = await decodeHeicIfNeeded(bytes, file.type);
-        bytes = dec.bytes;
+        bytes = dec.bytes as Uint8Array<ArrayBuffer>;
       } catch (err) {
         errorMessage = err instanceof Error ? `HEIC-Decode-Fehler: ${err.message}` : 'HEIC-Decode-Fehler.';
         phase = 'error';
@@ -131,6 +158,7 @@
       outputUrl = URL.createObjectURL(blob);
       outputSize = outBytes.byteLength;
       phase = 'done';
+      void measureDims(blob).then((d) => { outputDims = d; });
     } catch (err) {
       errorMessage =
         err instanceof Error
@@ -166,7 +194,6 @@
               `pasted-image-${Date.now()}.${item.type.split('/')[1] ?? 'png'}`,
               { type: item.type },
             );
-            // Preserve patched arrayBuffer (needed in test envs that lack native File.arrayBuffer)
             if (typeof (file as File & { arrayBuffer?: unknown }).arrayBuffer === 'function' &&
                 typeof synthesized.arrayBuffer !== 'function') {
               Object.defineProperty(synthesized, 'arrayBuffer', {
@@ -194,10 +221,26 @@
       const blob = new Blob([newBytes as BlobPart], { type: formatToMime(newFormat) });
       outputUrl = URL.createObjectURL(blob);
       outputSize = newBytes.byteLength;
+      void measureDims(blob).then((d) => { outputDims = d; });
     } catch (err) {
       errorMessage = err instanceof Error ? err.message : 'Format-Wechsel fehlgeschlagen.';
       phase = 'error';
     }
+  }
+
+  async function copyToClipboard() {
+    if (!outputUrl) return;
+    try {
+      const res = await fetch(outputUrl);
+      const blob = await res.blob();
+      const CI = (globalThis as { ClipboardItem?: typeof ClipboardItem }).ClipboardItem;
+      if (!CI || !navigator.clipboard?.write) throw new Error('Clipboard unsupported');
+      await navigator.clipboard.write([new CI({ [blob.type]: blob })]);
+      clipboardState = 'copied';
+    } catch {
+      clipboardState = 'error';
+    }
+    setTimeout(() => { clipboardState = 'idle'; }, 1800);
   }
 </script>
 
@@ -219,21 +262,21 @@
         data-testid="filetool-input"
         onchange={onFileChange}
       />
-  </label>
-  {#if (config.cameraCapture ?? true) && config.accept.some((m) => m.startsWith('image/'))}
-    <label class="camera">
-      <input
-        type="file"
-        accept="image/*"
-        capture="environment"
-        data-testid="filetool-camera-input"
-        hidden
-        onchange={onFileChange}
-      />
-      <span>Foto aufnehmen</span>
     </label>
+    {#if (config.cameraCapture ?? true) && config.accept.some((m) => m.startsWith('image/'))}
+      <label class="camera">
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          data-testid="filetool-camera-input"
+          hidden
+          onchange={onFileChange}
+        />
+        <span>Foto aufnehmen</span>
+      </label>
+    {/if}
   {/if}
-{/if}
 
   {#if phase === 'preparing'}
     <div class="preparing" data-testid="filetool-preparing" aria-live="polite">
@@ -248,43 +291,98 @@
     </div>
   {/if}
 
-  {#if phase === 'converting' || phase === 'done'}
-    <div class="status" data-testid="filetool-status">
-      <div class="row">
-        <span class="row__label">Quelle</span>
-        <span class="row__value" translate="no">{sourceName}</span>
-        <span class="row__meta">{formatBytes(sourceSize)}</span>
-      </div>
-      {#if phase === 'done'}
-        <div class="row">
-          <span class="row__label">Ergebnis</span>
-          <span class="row__value" translate="no">{downloadName}</span>
-          <span class="row__meta">{formatBytes(outputSize)}</span>
-        </div>
-        {#if sizeReduction > 0}
-          <p class="reduction">
-            <span class="reduction__num" translate="no">−{sizeReduction}%</span>
-            kleiner als das Original
-          </p>
-        {/if}
-      {:else}
-        <p class="converting" aria-live="polite">
-          <span>Konvertiert …</span>
-          <Loader variant="spinner" ariaLabel="Konvertiert" />
-        </p>
-      {/if}
+  {#if phase === 'converting'}
+    <div class="converting" data-testid="filetool-status" aria-live="polite">
+      <Loader variant="spinner" ariaLabel="Konvertiert" />
+      <span>Konvertiert …</span>
     </div>
   {/if}
 
   {#if phase === 'done' && outputUrl}
-    <div class="preview">
-      <img
-        class="preview__img"
-        src={outputUrl}
-        alt="Vorschau des Ergebnisses"
-        data-testid="filetool-preview"
-      />
-    </div>
+    <article class="card" data-testid="filetool-status">
+      <span class="badge" aria-label="Status: fertig">
+        <span class="badge__dot" aria-hidden="true"></span>
+        <span class="badge__text">FERTIG</span>
+      </span>
+
+      <div class="compare">
+        <figure class="compare__col">
+          <figcaption class="compare__cap">ORIGINAL</figcaption>
+          <div class="frame">
+            {#if sourceUrl}
+              <img
+                class="frame__img"
+                src={sourceUrl}
+                alt="Quelldatei"
+              />
+            {/if}
+          </div>
+        </figure>
+
+        <figure class="compare__col">
+          <figcaption class="compare__cap">ERGEBNIS</figcaption>
+          <div class="preview">
+            <img
+              class="preview__img"
+              src={outputUrl}
+              alt="Vorschau des Ergebnisses"
+              data-testid="filetool-preview"
+            />
+          </div>
+        </figure>
+      </div>
+
+      <footer class="card__foot">
+        <p class="meta" translate="no">
+          {#if outputDims}
+            <span class="meta__part">{outputDims.w}×{outputDims.h}</span>
+            <span class="meta__dot" aria-hidden="true">·</span>
+          {/if}
+          <span class="meta__part">{formatToExt(outputFormat).toUpperCase()}</span>
+          <span class="meta__dot" aria-hidden="true">·</span>
+          <span class="meta__part">{formatBytes(outputSize)}</span>
+          {#if sizeReduction > 0}
+            <span class="meta__dot" aria-hidden="true">·</span>
+            <span class="meta__part meta__part--success">−{sizeReduction}%</span>
+          {/if}
+        </p>
+
+        <div class="actions">
+          <button
+            type="button"
+            class="btn btn--ghost"
+            data-testid="filetool-reset"
+            onclick={reset}
+          >Neues Bild</button>
+
+          <button
+            type="button"
+            class="btn btn--ghost"
+            onclick={copyToClipboard}
+            aria-live="polite"
+          >{clipboardLabel}</button>
+
+          <a
+            class="btn btn--primary"
+            href={outputUrl}
+            download={downloadName}
+            data-testid="filetool-download"
+          >
+            <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Herunterladen</span>
+          </a>
+        </div>
+      </footer>
+    </article>
   {/if}
 
   {#if phase === 'done' && reencoder}
@@ -353,37 +451,12 @@
     {#if phase === 'error'}
       <p class="error" data-testid="filetool-error">{errorMessage}</p>
     {/if}
-    {#if phase === 'done'}
-      <a
-        class="download"
-        href={outputUrl}
-        download={downloadName}
-        data-testid="filetool-download"
-      >
-        <svg class="download__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path
-            d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <span>Herunterladen</span>
-      </a>
-      <button
-        type="button"
-        class="reset"
-        data-testid="filetool-reset"
-        onclick={reset}
-      >Neue Datei</button>
-    {/if}
   </div>
 </div>
 
 <style>
   .filetool {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
@@ -401,7 +474,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    padding: var(--space-10) var(--space-6);
+    padding: var(--space-8) var(--space-6);
     border: 1px dashed var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface);
@@ -468,70 +541,20 @@
     pointer-events: none;
   }
 
-  .status {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4) 0;
-  }
-  .row {
-    display: grid;
-    grid-template-columns: 5.5rem 1fr auto;
-    align-items: baseline;
-    gap: var(--space-3);
-    padding: var(--space-2) 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .row:last-of-type {
-    border-bottom: 0;
-  }
-  .row__label {
-    font-size: var(--font-size-small);
-    font-weight: 500;
-    color: var(--color-text-muted);
-    letter-spacing: 0.01em;
-  }
-  .row__value {
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-body);
-    color: var(--color-text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-  }
-  .row__meta {
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-small);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-subtle);
-  }
-
-  .reduction {
-    margin: var(--space-2) 0 0 0;
-    font-size: var(--font-size-small);
-    color: var(--color-text-muted);
-  }
-  .reduction__num {
-    font-family: var(--font-family-mono);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-success);
-    font-weight: 500;
-    margin-right: var(--space-2);
-  }
-
+  /* ---------- Converting state ---------- */
   .converting {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
     margin: 0;
-    padding: var(--space-2) 0;
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
     color: var(--color-text-muted);
     letter-spacing: 0.02em;
   }
 
+  /* ---------- Preparing state ---------- */
   .preparing {
     display: flex;
     flex-direction: column;
@@ -545,6 +568,193 @@
     letter-spacing: 0.01em;
   }
 
+  /* ---------- Done state: result card ---------- */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+
+  .badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+  }
+  .badge__dot {
+    width: var(--space-2);
+    height: var(--space-2);
+    border-radius: 9999px;
+    background: var(--color-success);
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) {
+    .compare {
+      grid-template-columns: 1fr 1fr;
+    }
+    .compare__col + .compare__col {
+      border-left: 1px solid var(--color-border);
+    }
+  }
+  .compare__col + .compare__col {
+    border-top: 1px solid var(--color-border);
+  }
+  @media (min-width: 40rem) {
+    .compare__col + .compare__col {
+      border-top: 0;
+    }
+  }
+
+  .compare__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-5);
+  }
+
+  .compare__cap {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text-subtle);
+    letter-spacing: 0.12em;
+  }
+
+  .frame,
+  .preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    background-color: var(--color-bg);
+  }
+  .preview {
+    /* Checkerboard to reveal alpha channel in ERGEBNIS (transparent PNG/WebP) */
+    background-image:
+      linear-gradient(45deg, var(--color-border) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--color-border) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--color-border) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--color-border) 75%);
+    background-size: 12px 12px;
+    background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+  }
+  .frame__img,
+  .preview__img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .meta__dot {
+    color: var(--color-text-subtle);
+  }
+  .meta__part--success {
+    color: var(--color-success);
+    font-weight: 500;
+  }
+
+  .actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--r-md);
+    font: inherit;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+  .btn--ghost:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-subtle);
+  }
+  .btn--primary {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border: 1px solid var(--color-text);
+    padding: var(--space-3) var(--space-5);
+  }
+  .btn--primary:hover {
+    background: var(--color-text-muted);
+    border-color: var(--color-text-muted);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .btn__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---------- Formats + quality (unchanged layout, below card) ---------- */
   .formats {
     display: flex;
     flex-wrap: wrap;
@@ -651,6 +861,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* ---------- Error container ---------- */
   .result {
     display: flex;
     flex-wrap: wrap;
@@ -661,33 +872,6 @@
   .result:empty {
     display: none;
   }
-
-  .preview {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 200px;
-    max-height: 200px;
-    margin: 0 auto;
-    padding: var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-md);
-    background-color: var(--color-bg);
-    background-image:
-      linear-gradient(45deg, var(--color-border) 25%, transparent 25%),
-      linear-gradient(-45deg, var(--color-border) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, var(--color-border) 75%),
-      linear-gradient(-45deg, transparent 75%, var(--color-border) 75%);
-    background-size: 12px 12px;
-    background-position: 0 0, 0 6px, 6px -6px, -6px 0;
-  }
-  .preview__img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-
   .error {
     margin: 0;
     padding: var(--space-3) var(--space-4);
@@ -700,68 +884,6 @@
     line-height: 1.5;
   }
 
-  .download {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-5);
-    background: var(--color-text);
-    color: var(--color-bg);
-    border: 1px solid var(--color-text);
-    border-radius: var(--r-md);
-    font: inherit;
-    font-size: var(--font-size-body);
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition:
-      background var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
-  }
-  .download:hover {
-    background: var(--color-text-muted);
-    border-color: var(--color-text-muted);
-  }
-  .download:active {
-    transform: scale(0.98);
-  }
-  .download:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-  .download__icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  .reset {
-    flex: 0 0 auto;
-    padding: var(--space-3) var(--space-4);
-    background: transparent;
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-md);
-    font: inherit;
-    font-size: var(--font-size-small);
-    cursor: pointer;
-    touch-action: manipulation;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
-  }
-  .reset:hover {
-    color: var(--color-text);
-    border-color: var(--color-text-subtle);
-  }
-  .reset:active {
-    transform: scale(0.98);
-  }
-  .reset:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-
   @media (max-width: 40rem) {
     .filetool {
       padding: var(--space-6);
@@ -770,20 +892,22 @@
     .dropzone {
       padding: var(--space-8) var(--space-4);
     }
-    .row {
-      grid-template-columns: 4.5rem 1fr auto;
+    .compare__col {
+      padding: var(--space-4);
+    }
+    .card__foot {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .dropzone,
-    .download,
-    .reset,
+    .btn,
     .quality__slider::-webkit-slider-thumb {
       transition: none;
     }
-    .download:active,
-    .reset:active,
+    .btn:active,
     .quality__slider:active::-webkit-slider-thumb {
       transform: none;
     }

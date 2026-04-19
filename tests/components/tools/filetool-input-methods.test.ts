@@ -91,11 +91,14 @@ describe('FileTool — input methods', () => {
     Object.defineProperty(ev1, 'clipboardData', { value: { items: [item] } });
     document.dispatchEvent(ev1);
     await flushAsync();
+    const callsAfterFirst = (URL.createObjectURL as ReturnType<typeof vi.fn>).mock.calls.length;
     const ev2 = new Event('paste') as Event & { clipboardData: DataTransfer };
     Object.defineProperty(ev2, 'clipboardData', { value: { items: [item] } });
     document.dispatchEvent(ev2);
     await flushAsync();
-    expect((URL.createObjectURL as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
+    // Done state creates Object URLs for both source + output preview. A second
+    // paste during done-phase must NOT run the pipeline again.
+    expect((URL.createObjectURL as ReturnType<typeof vi.fn>).mock.calls.length).toBe(callsAfterFirst);
   });
 
   it('camera-capture button is rendered when cameraCapture is not false', () => {
