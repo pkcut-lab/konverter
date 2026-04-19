@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 10, End)
-**Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #10 — PWA + Pagefind ✅ (Brand-Icon + 4 Manifest-Icon-Variants, Workbox-SW mit Runtime-Caching für HF-Modell-CDN + Pagefind-Index, Pagefind-Build-Step, HeaderSearch-Svelte mit Graphit-Token-Overrides, Rulebook-Sync)
+**Letztes Update:** 2026-04-19 (Session 11, End)
+**Aktuelle Phase:** Phase 0 — Foundation ✅ abgeschlossen (11/11 Sessions)
+**Current Session:** #11 — CI/CD + Deploy-Scaffolding ✅ (GitHub-Actions-Workflow mit verify→deploy-Gate, `public/_headers` mit SW-no-cache + immutable hashed assets + Security-Headers, `public/_redirects` für / → /de/ 301, Canonical auf `konverter-7qc.pages.dev` korrigiert, DEPLOY.md Checklist für User)
 
 ## Phase 0 Fortschritt
 
@@ -18,7 +18,7 @@
 | 8 — Review #2 | ✅ done | Smoke-Test passed (Desktop+Mobile, Light+Dark) — kein Feedback, Templates gelockt |
 | 9 — Hintergrund-Entferner Prototype | ✅ done | BG-Remover live + FileTool-Erweiterungen (preparing-Phase, Format-Chooser, Preview, Clipboard/Camera/HEIC) + Loader-Komponente + JSON-LD |
 | 10 — PWA + Pagefind | ✅ done | Manifest + 4 Icons + Workbox-SW + Pagefind Build-Step + HeaderSearch |
-| 11 — CI/CD | ⬜ pending | First Production Deploy |
+| 11 — CI/CD | ✅ scaffolded | GitHub Actions + `_headers` + `_redirects` + DEPLOY.md — First Production Deploy wartet auf User-Secrets |
 
 ## Tool-Inventar (Phase 0)
 
@@ -29,7 +29,7 @@
 | remove-background | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → Drop unter `public/icons/tools/remove-background.webp`) | ✅ |
 
 ## Deploy-History
-(leer bis Session 11 — Production-Deploy)
+- **2026-04-19, Session 11:** CI/CD scaffolded (`.github/workflows/deploy.yml` mit verify→deploy, Wrangler-Action v3, Concurrency-Guard). Edge-Config (`public/_headers` + `public/_redirects`) committed. **Blockiert durch User-Aktion:** Cloudflare-API-Token + Account-ID müssen als GitHub-Repo-Secrets gesetzt werden (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). Checkliste in [DEPLOY.md](DEPLOY.md). Nach Setzen der Secrets → nächster Push auf main → automatischer Production-Deploy auf `konverter-7qc.pages.dev`.
 
 ## Blockers
 - Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung. BG-Remover (`/de/hintergrund-entfernen`) wartet auf User-Smoke-Test (Checklist unten).
@@ -51,6 +51,35 @@
 - [ ] `/de/webp-konverter` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] `/de/meter-zu-fuss` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] Homepage `/de/` listet alle 3 Tools als Cards (auto-enumeriert, alphabetisch); Hover-Arrow wandert, Dark-Mode invertiert Icons
+
+## Session 11 Deliverables
+
+- **`.github/workflows/deploy.yml`** (überschreibt den Session-1-Stub): zwei Jobs `verify` + `deploy`. `verify` = checkout → setup-node (von `.nvmrc` = 20.11.1) → npm ci → `npm run check` → `npm test` → `npm run build` → artifact-upload. `deploy` = artifact-download → `cloudflare/wrangler-action@v3` mit `pages deploy dist --project-name=konverter-7qc --branch=${{ github.head_ref || github.ref_name }}` → dynamisches Branch-Flag macht main-push zu Production, PRs zu `<branch>.konverter-7qc.pages.dev`-Preview. `concurrency: deploy-${ref}, cancel-in-progress: true` verhindert Races auf gleichem Ref. Fork-PRs werden skipped (keine Secrets dort).
+- **`public/_headers`** (Cloudflare-Pages-Syntax): `/sw.js` und `/registerSW.js` → `no-cache` (sonst klemmt Workbox-skipWaiting). `/_astro/*` + `/fonts/*` → `max-age=31536000, immutable` (hashed/benannt-stabil). `/icons/*` → 1 Woche, `/pagefind/*` + `/manifest.webmanifest` → 1 h, `/favicon-32.png` + `/icon.svg` → 1 Tag. Security-Baseline auf `/*`: `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (Kamera self, interest-cohort aus).
+- **`public/_redirects`:** `/ /de/ 301` ersetzt den Astro-Meta-Refresh-Stub durch einen Edge-Level-301 — schneller, SEO-besser (passt Canonical-Signal durch), überlebt Edge-Caches. Phase-3-Trigger: per-Accept-Language-Negotiation, wenn EN/ES/FR/PT-BR live.
+- **Canonical-URL-Fix:** `astro.config.mjs` `site` und `src/lib/site.ts` `SITE_URL` von `konverter.pages.dev` (nie existiert) auf `konverter-7qc.pages.dev` (Session-1-Reservierung) umgestellt. Verifiziert via `dist/sitemap-0.xml` + `dist/sitemap-index.xml` — alle Tool-URLs zeigen jetzt auf den tatsächlichen Deploy-Origin. Kommentar im `site:`-Block dokumentiert den One-Line-Flip bei späterem Custom-Domain-Wechsel.
+- **`DEPLOY.md`** (neu): One-Time-Setup-Checklist für den User. 5 Schritte: (1) CF-API-Token im Dashboard via "Edit Cloudflare Pages"-Template erstellen, (2) Account-ID kopieren, (3) GitHub-Secrets `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` setzen (dash.github.com oder `gh secret set`), (4) CF-Projekt-Settings prüfen (Production-Branch `main`, Build leer), (5) erster Push auf main. Plus: laufender PR-Workflow, Deploy-Status via `gh run list/watch`, Hotfix-Escape via lokalem `npx wrangler pages deploy`, zukünftige Custom-Domain-Flip-Anleitung.
+- **Tests:** +6 neue (total 252 → 258). `tests/smoke/deploy.test.ts`: site-Canonical matcht in astro.config + site.ts, `_headers` pinnt SW-no-cache + _astro-immutable + fonts-immutable + manifest-3600 + Security-Header-Trio, `_redirects` hat `/ /de/ 301`, Workflow hat zwei Jobs mit `needs: verify`, npm-ci/check/test/build-Schritte, wrangler-action@v3 + project-name=konverter-7qc + dynamic-branch-flag + concurrency-guard, DEPLOY.md dokumentiert beide Secret-Namen + Projekt-Name.
+- **Gates:** 0/0/0 `astro check`, 258/258 vitest, Build grün mit `dist/_headers` + `dist/_redirects` + korrektem Sitemap-Canonical.
+
+### Phase 0 insgesamt
+
+Alle 11 Sessions abgeschlossen. Was für Phase 1 (Tool-Skalierung, AdSense, mehr DE-Tools) bereitsteht:
+
+- **Templates gelockt:** Converter (`Converter.svelte`, Session 6), FileTool (`FileTool.svelte`, Session 7 + 9). Drei reale Prototypen validiert (`/de/meter-zu-fuss`, `/de/webp-konverter`, `/de/hintergrund-entfernen`).
+- **Design-System gelockt:** Graphit-Tokens + Inter + JetBrains Mono self-hosted, STYLE.md v1.2, Refined-Minimalism mit Hard-Caps über allen Skills.
+- **Tool-Config-Foundation gelockt:** Zod-Schemas für 9 Typen, slug-map, Content-Collection mit SEO-Content-Regeln, auto-Icon-Pickup via `existsSync`.
+- **PWA + Pagefind live:** Offline-Capability, Client-side-Search. Lazy-Chunks (FileTool, heic2any, transformers) aus Precache, Runtime-Caching für HF-Modell-CDN.
+- **CI/CD scaffolded:** jeder Push auf main → gated Production-Deploy, jeder PR → Preview-URL. Wartet nur noch auf die zwei GitHub-Secrets.
+- **Rulebooks vollständig:** PROJECT (Deps), CONVENTIONS (Code + PWA + Pagefind), STYLE (Tokens + Templates + Pagefind-UI), CONTENT (SEO), TRANSLATION (i18n-Flow).
+- **Non-Negotiables stehen:** Privacy-First (kein Tracking, kein Server-Upload außer 7a), WCAG-AAA-Contrast, Session-Continuity via Rulebooks, pkcut-lab Git-Lock.
+
+### Bekannte Follow-ups (carry-over in Phase 1)
+
+- **Erster Production-Deploy** wartet auf User-Secrets (DEPLOY.md).
+- **`FileTool.*.js`-Chunk 541 KB** (Session 9 → jetzt aus SW-Precache ausgeschlossen, Bundle-Split selbst weiter offen).
+- **Session-9-Smoke-Test-Checklist** hat noch offene Items (Reset-Button, Strg+V, Mobile-Kamera, HEIC, Dark-Mode-Cross-Check, Regression auf andere Tools, Homepage-Cards-Verhalten) — user-executable, kein Agent-Task.
+- **Pagefind-UI-Style-Flash** theoretisch möglich wenn CSS später lädt als JS. Fix-Kandidat: `<link rel="preload" as="style">` in BaseLayout wenn in Prod sichtbar.
 
 ## Session 10 Deliverables
 
@@ -147,6 +176,11 @@
 
 ## Next-Session-Plan
 
-Session 11 — CI/CD + erster Production-Deploy auf Cloudflare Pages (Projekt `konverter-7qc.pages.dev` ist seit Session 1 reserviert). Ziel: GitHub-Action für Build + Test + Pagefind-Index + CF-Pages-Push, Branch-Preview-URLs, HTTPS-Redirect, Custom-Domain-Hook offen lassen für die finale Domain.
+**Phase 0 ist abgeschlossen.** Der erste Production-Deploy wartet nur noch auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Sobald diese gesetzt sind, pusht der nächste Commit auf `main` automatisch auf `konverter-7qc.pages.dev`.
 
-**Session 10 — PWA + Pagefind (heute) abgeschlossen:** Manifest + 4 Icon-Variants + Workbox-SW (autoUpdate, runtime-caching HF-CDN + Pagefind) + Pagefind-Build-Step + HeaderSearch-Svelte-Komponente mit Graphit-Token-Overrides + Rulebook-Sync (CONVENTIONS §PWA + §Pagefind, STYLE §12). 252/252 Tests. Offline-Capability + Client-side-Search bereit für Production.
+**Phase 1 — Skalierung (sobald Deploy live):**
+- Batch-1-DE-Converter: weitere Längen-, Gewichts-, Zeit-, Temperatur-Konverter mit dem gelockten `Converter.svelte`-Template. Ziel: 20–30 Tools schnell auf die Seite bringen, um Sitemap-Dichte + interne Verlinkung aufzubauen.
+- AdSense-Setup (Spec §18 Non-Negotiable 5: erst Phase 2, aber Ad-Slots + CLS-Tokens sind seit Session 2 in `global.css` reserviert). Phase-2-Trigger: ~50 Tools live + stabile Traffic-Basis.
+- Review-Session nach Batch-1: prüfen ob Converter-Template skaliert sauber oder Anpassungen nötig sind (Pattern: Session-6/8/11 nach jedem größeren Schritt).
+
+**Session 11 — CI/CD-Scaffolding (heute) abgeschlossen:** GitHub-Actions-Workflow (verify→deploy, wrangler-action@v3), `public/_headers` (SW no-cache, `_astro`/`fonts` immutable, Security-Baseline), `public/_redirects` (/ → /de/ 301), Canonical korrekt auf `konverter-7qc.pages.dev`, DEPLOY.md mit User-Checklist. 258/258 Tests. 11/11 Phase-0-Sessions ✅.
