@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { FileToolConfig } from '../../lib/tools/schemas';
-  import { getProcessor } from '../../lib/tools/process-registry';
+  import { getRuntime } from '../../lib/tools/tool-runtime-registry';
 
   interface Props {
     config: FileToolConfig;
@@ -66,7 +66,8 @@
     errorMessage = '';
     phase = 'converting';
 
-    const processor = getProcessor(config.id);
+    const runtime = getRuntime(config.id);
+    const processor = runtime?.process;
     if (!processor) {
       errorMessage = `Kein Prozessor registriert für „${config.id}“.`;
       phase = 'error';
