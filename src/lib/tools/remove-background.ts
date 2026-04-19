@@ -14,7 +14,7 @@
  * leaking large bitmaps when the user starts over.
  */
 
-import { pipeline } from '@huggingface/transformers';
+import { pipeline, RawImage } from '@huggingface/transformers';
 
 export type RemoveBackgroundFormat = 'png' | 'webp' | 'jpg';
 
@@ -43,7 +43,15 @@ export class StallError extends Error {
   }
 }
 
-type Pipe = (input: unknown, opts?: unknown) => Promise<{ mask: Float32Array; width?: number; height?: number }>;
+/**
+ * image-segmentation pipeline output shape per Transformers.js v4 docs:
+ * `Array<{ label: string; score: number | null; mask: RawImage }>`.
+ * For BEN2 (binary foreground seg) the array has exactly one entry.
+ * RawImage.data is `Uint8Array | Uint8ClampedArray` in the 0..255 range.
+ */
+type MaskImage = { data: Uint8Array | Uint8ClampedArray; width: number; height: number };
+type SegmentationResult = Array<{ mask: MaskImage }>;
+type Pipe = (input: unknown, opts?: unknown) => Promise<SegmentationResult>;
 
 let pipelinePromise: Promise<Pipe> | null = null;
 let pipelineReady = false;
@@ -199,15 +207,15 @@ export async function removeBackground(
   if (!ctx) throw new Error('OffscreenCanvas 2d context unavailable.');
   ctx.drawImage(bitmap as unknown as CanvasImageSource, 0, 0);
 
-  const segmentation = await pipe(bitmap);
-  const mask = segmentation.mask;
-  const w = canvas.width;
-  const h = canvas.height;
-  const img = ctx.getImageData(0, 0, w, h);
-  // Apply mask to alpha channel. Mask is 0..1 float, stored row-major matching image.
-  for (let i = 0; i < mask.length; i++) {
-    const alpha = mask[i] ?? 0;
-    img.data[i * 4 + 3] = Math.round(alpha * 255);
+  const rawImage = await RawImage.fromBlob(blob);
+  const segmentation = await pipe(rawImage);
+  const maskImage = segmentation[0]?.mask;
+  if (!maskImage) throw new Error('Pipeline returned no mask.');
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  // Mask data is a Uint8Array in 0..255 range, row-major matching the image.
+  // BEN2 returns the mask at the input resolution, so length === w*h.
+  for (let i = 0; i < maskImage.data.length; i++) {
+    img.data[i * 4 + 3] = maskImage.data[i] ?? 0;
   }
   ctx.putImageData(img, 0, 0);
 

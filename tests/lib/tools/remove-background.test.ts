@@ -1,11 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-const mockMask = new Float32Array(64 * 64).fill(0.8);
-const mockPipe = vi.fn(async () => ({ mask: mockMask, width: 64, height: 64 }));
+// Transformers.js v4 image-segmentation returns an array with RawImage masks
+// (data is Uint8Array/Uint8ClampedArray in 0..255 range).
+const mockMaskData = new Uint8Array(64 * 64).fill(204);
+const mockPipe = vi.fn(async () => [
+  { label: 'foreground', score: 1, mask: { data: mockMaskData, width: 64, height: 64 } },
+]);
 const pipelineSpy = vi.fn(async (_task: string, _model: string, _opts: unknown) => mockPipe);
 
 vi.mock('@huggingface/transformers', () => ({
   pipeline: pipelineSpy,
+  RawImage: {
+    fromBlob: vi.fn(async () => ({ data: new Uint8Array(64 * 64 * 4), width: 64, height: 64, channels: 4 })),
+  },
 }));
 
 function makeImageBytes(): Uint8Array {
