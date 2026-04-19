@@ -1408,7 +1408,7 @@ describe('FileTool — dynamic format + format-chooser', () => {
 - [ ] **Step 3: Run tests — verify they fail**
 
 Run: `npx vitest run tests/components/tools/filetool-format.test.ts`
-Expected: 8 failures.
+Expected: 7 failures.
 
 - [ ] **Step 4: Refactor FileTool — add format state, helpers, format-chooser markup**
 
@@ -1516,7 +1516,7 @@ If failures appear, fix tests by aligning with the new state (don't change behav
 - [ ] **Step 6: Run new tests — verify pass**
 
 Run: `npx vitest run tests/components/tools/filetool-format.test.ts`
-Expected: 8/8 pass.
+Expected: 7/7 pass.
 
 - [ ] **Step 7: Full suite + check + commit**
 
@@ -1737,7 +1737,7 @@ Edit `src/components/tools/FileTool.svelte`:
    ```
    This ensures revisits never flash the preparing UI: when the user navigates away and back, the runtime singleton is still ready, `isPrepared()` returns true, and the component skips straight to converting.
 5. Reset path clears `prepareProgress` AND calls `runtime?.clearLastResult?.()` if exposed (so the cached canvas in `remove-background.ts` is dropped). Add `clearLastResult?: () => void` to `ToolRuntime` for this.
-5. Add markup block for preparing-phase (uses `<Loader />`):
+6. Add markup block for preparing-phase (uses `<Loader />`):
    ```svelte
    {#if phase === 'preparing'}
      <div class="preparing" data-testid="filetool-preparing" aria-live="polite">
@@ -1752,9 +1752,9 @@ Edit `src/components/tools/FileTool.svelte`:
      </div>
    {/if}
    ```
-6. Import: `import Loader from '../Loader.svelte';`
-7. Hide dropzone in preparing-phase: change `{#if phase === 'idle' || phase === 'error'}` block check (already excludes preparing).
-8. Add minimal `.preparing` styles (token-only).
+7. Import: `import Loader from '../Loader.svelte';`
+8. Hide dropzone in preparing-phase: change `{#if phase === 'idle' || phase === 'error'}` block check (already excludes preparing).
+9. Add minimal `.preparing` styles (token-only).
 
 - [ ] **Step 4: Run new tests — verify pass**
 
@@ -2451,7 +2451,6 @@ Create `tests/content/hintergrund-entfernen-content.test.ts`:
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { toolsContentSchema } from '../../src/content/tools.schema';
 
 const path = join(process.cwd(), 'src/content/tools/hintergrund-entfernen/de.md');
 const raw = readFileSync(path, 'utf-8');
@@ -2461,7 +2460,8 @@ if (!fmMatch) throw new Error('Content MD missing frontmatter');
 const yaml = fmMatch[1];
 const body = fmMatch[2];
 
-// Tiny YAML-ish parser for our specific shape (toolId, lang, scalars).
+// Tiny YAML-ish parser for our specific shape (toolId, language, scalars).
+// Field names MUST match src/content/tools.schema.ts (language, NOT lang).
 function parseYaml(s: string): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   // Naive — only used in tests; the real parse happens in Astro content collection.
@@ -2479,8 +2479,8 @@ describe('hintergrund-entfernen content (DE)', () => {
     expect(fm.toolId).toBe('remove-background');
   });
 
-  it('lang is de', () => {
-    expect(fm.lang).toBe('de');
+  it('language is de', () => {
+    expect(fm.language).toBe('de');
   });
 
   it('body starts with H2 heading', () => {
@@ -2724,21 +2724,27 @@ export function buildToolJsonLd(content: ToolContentForJsonLd, url: string): Arr
 
 - [ ] **Step 4: Emit JSON-LD in `[slug].astro`**
 
-Edit `src/pages/[lang]/[slug].astro`. Inside the `<BaseLayout>` — or, if BaseLayout exposes a `head` slot, in that slot — emit one `<script type="application/ld+json">` per block:
+Edit `src/pages/[lang]/[slug].astro`. Inside the `<BaseLayout>` — or, if BaseLayout exposes a `head` slot, in that slot — emit one `<script type="application/ld+json">` per block.
+
+**Important mapping:** the actual content frontmatter schema (`src/content/tools.schema.ts`) exposes `howToUse: string[]`, `faq: {q,a}[]`, `language` (not `lang`), and `metaDescription` (not `description`). Map these explicitly so JSON-LD actually emits:
 
 ```astro
 ---
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 // … existing imports
 
+const fm = content.data;           // or however the current page unwraps the entry
 const jsonLd = buildToolJsonLd(
   {
-    toolId: content.toolId,
-    lang: content.lang,
-    title: content.title,
-    description: content.description,
-    faq: content.faq ?? [],
-    steps: content.steps ?? [],
+    toolId: fm.toolId,
+    lang: fm.language,
+    title: fm.title,
+    description: fm.metaDescription,
+    faq: fm.faq ?? [],
+    steps: (fm.howToUse ?? []).map((text, i) => ({
+      title: `Schritt ${i + 1}`,
+      description: text,
+    })),
   },
   Astro.url.href,
 );
@@ -2752,7 +2758,7 @@ const jsonLd = buildToolJsonLd(
 </BaseLayout>
 ```
 
-Adjust field names to match the actual content collection shape (some fields may be `howToSteps` or `relatedTools` — read the existing webp-konverter page + schema first).
+Read the existing `[slug].astro` first to see how `content` is unwrapped — the variable name for the frontmatter may differ (`entry.data`, `content.data`, etc.). Keep the mapping layer in the Astro file, not in the builder, so the builder stays pure.
 
 - [ ] **Step 5: Build-time assertion — JSON-LD renders in HTML**
 
@@ -2776,27 +2782,6 @@ FAQ+steps, not just BG-Remover — webp-konverter + meter-zu-fuss pick up
 the same emission. Required for AEO/voice-search (spec §2.4 B9).
 
 Rulebooks-Read: PROJECT, CONVENTIONS, CONTENT
-
-Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
-EOF
-)"
-```
-
-- [ ] **Step 6: Full suite + check + commit**
-
-Run: `npm test -- --run && npm run check`
-Expected: all green.
-
-```bash
-git add src/content/tools/hintergrund-entfernen/de.md tests/content/hintergrund-entfernen-content.test.ts
-git commit -m "$(cat <<'EOF'
-docs(content): add /de/hintergrund-entfernen SEO content (≥800 words)
-
-Privacy-lead headline + 6 locked H2s + ≥800-word body with use-case
-guidance, datenschutz section explicit about model CDN, NBSP between
-all numeric values and units.
-
-Rulebooks-Read: PROJECT, CONTENT
 
 Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 EOF
@@ -2928,7 +2913,7 @@ Add section:
 - `src/components/tools/FileTool.svelte`: +`preparing`-Phase, dynamisches Output-Format, Format-Chooser-Radio-Group, Clipboard-Paste, Mobile-Kamera-Capture, HEIC-Pre-Decode, Mini-Preview mit Checkerboard-BG. Phase-State-Machine: `idle → preparing → converting → done | error`.
 - `src/lib/tools/hintergrund-entferner.ts`: Tool-Config mit `prepare`, `defaultFormat: 'png'`, `accept: PNG/JPG/WebP/AVIF/HEIC/HEIF`, `maxSizeMb: 15`.
 - `src/content/tools/hintergrund-entfernen/de.md`: ≥800 Wörter SEO-Content, Privacy-Lead-Headline, 6 gelockte H2s.
-- Tests: ~45 neue (Loader: 6, heic-decode: 5, remove-background: 13, tool-runtime-registry: 3, tool-jsonld: 6, filetool-format: 8, filetool-prepare: 5, filetool-input-methods: 7, filetool-preview: 2, hintergrund-entferner-config: 11, content: 7).
+- Tests: ~44 neue (Loader: 6, heic-decode: 5, remove-background: 13, tool-runtime-registry: 3, tool-jsonld: 6, filetool-format: 7, filetool-prepare: 5, filetool-input-methods: 7, filetool-preview: 2, hintergrund-entferner-config: 11, content: 7).
 - Differenzierung: §2.4 mit Subagent-Recherche gefüllt — White-Space „pure-client + HEIC + WebP-transparent + Clipboard + Camera + zero-friction".
 - Gates: 0/0/0 `astro check`, X/X vitest, 5 pages built (`/`, `/de`, `/de/meter-zu-fuss`, `/de/webp-konverter`, `/de/hintergrund-entfernen`).
 ```
