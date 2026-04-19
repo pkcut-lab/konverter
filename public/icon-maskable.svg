@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Konverter">
+  <rect width="512" height="512" fill="#FAFAF9"/>
+  <g fill="none" stroke="#1A1917" stroke-width="56" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 196 152 L 196 360"/>
+    <path d="M 196 256 L 332 152"/>
+    <path d="M 196 256 L 332 360"/>
+  </g>
+</svg>
