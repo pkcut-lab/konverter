@@ -2,7 +2,7 @@
 
 **Letztes Update:** 2026-04-19 (Session 9, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #9 — Hintergrund-Entferner Prototype ✅ (BG-Remover live, FileTool-Phase-Machine erweitert, Loader-Komponente, JSON-LD für alle Tool-Seiten)
+**Current Session:** #9 — Hintergrund-Entferner Prototype ✅ (BG-Remover live, FileTool-Phase-Machine erweitert, Loader-Komponente, JSON-LD für alle Tool-Seiten, Icon-Pipeline gelockt, Homepage-Tool-Index, Rulebooks synchronisiert)
 
 ## Phase 0 Fortschritt
 
@@ -24,9 +24,9 @@
 
 | Tool | Config | Content-DE | Icon | Tests |
 |------|--------|------------|------|-------|
-| meter-zu-fuss | ✅ | ✅ | 🟡 (Recraft-PNG generiert, BG-Removal jetzt via BG-Remover Tool möglich) | ✅ |
-| webp-konverter | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
-| remove-background | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
+| meter-zu-fuss | ✅ | ✅ | ✅ (`public/icons/tools/meter-to-feet.webp`, 313 KB, Alpha) | ✅ |
+| webp-konverter | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → Drop unter `public/icons/tools/png-jpg-to-webp.webp`) | ✅ |
+| remove-background | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → Drop unter `public/icons/tools/remove-background.webp`) | ✅ |
 
 ## Deploy-History
 (leer bis Session 10)
@@ -40,6 +40,9 @@
 - [x] BG entfernt, PNG-Download funktioniert — nach Fix `d0dc00d` (RawImage-Input + Array-Output-Shape für Transformers.js v4)
 - [x] Format-Wechsel zu WebP re-encodet (kein Re-Inference) — nach Fix `8db9816` (JPG-Composite auf Wegwerf-Canvas, sonst bleibt Weiß im Cache)
 - [x] Format-Wechsel zu JPG: weißer Hintergrund statt Alpha
+- [x] Doppel-Hebel: Recraft-PNG von `meter-zu-fuss` durch BG-Remover → PNG mit Alpha (Icon-Pipeline validiert, `meter-to-feet.webp` live) — im Rahmen des Smoke-Tests durchgelaufen; Fix `8db9816` nötig damit JPG-Wechsel den WebP-Cache nicht verschmutzt.
+- [x] Loader dreht auch unter `prefers-reduced-motion` langsam weiter (2.4 s) — sonst wirkt UI abgestürzt (Fix `5ea41e9`, Rulebook-Regel in STYLE.md § 11 und CONVENTIONS.md Loader-Block nachgezogen).
+- [x] Icon-Auto-Pickup (`[slug].astro` + `index.astro`) rendert Hero-Icon bzw. Card-Thumbnail sobald `public/icons/tools/<toolId>.webp` existiert — Fix `84e1584` (process.cwd() statt `new URL('../../../', import.meta.url)`, letzteres bricht unter Pfaden mit Leerzeichen wie „Konverter Webseite").
 - [ ] Reset-Button funktioniert
 - [ ] Strg+V mit Screenshot triggert Process
 - [ ] Mobile: Kamera-Button sichtbar (DevTools-Mobile-Mode oder echtes Smartphone)
@@ -47,7 +50,7 @@
 - [ ] Dark-Mode: Card, Loader, Preview, Format-Chooser sehen korrekt aus
 - [ ] `/de/webp-konverter` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] `/de/meter-zu-fuss` funktioniert immer noch wie vorher (Regression-Check)
-- [ ] Doppel-Hebel: Recraft-PNG von `meter-zu-fuss` durch BG-Remover → PNG mit Alpha (Icon-Pipeline-Validation)
+- [ ] Homepage `/de/` listet alle 3 Tools als Cards (auto-enumeriert, alphabetisch); Hover-Arrow wandert, Dark-Mode invertiert Icons
 
 ## Session 9 Deliverables
 
@@ -59,9 +62,12 @@
 - `src/components/tools/FileTool.svelte`: +`preparing`-Phase, dynamisches Output-Format, Format-Chooser-Radio-Group (PNG/WebP/JPG mit Hint-Mono-Suffixen), Clipboard-Paste (`Strg+V`), Mobile-Kamera-Capture (`capture="environment"`), HEIC-Pre-Decode, Mini-Preview (max 200×200) auf CSS-Checkerboard. Phase-State-Machine: `idle → preparing → converting → done | error`.
 - `src/lib/tools/hintergrund-entferner.ts`: Tool-Config mit `prepare`, `defaultFormat: 'png'`, `accept: PNG/JPG/WebP/AVIF/HEIC/HEIF`, `maxSizeMb: 15`, `showQuality: false`.
 - `src/content/tools/hintergrund-entfernen/de.md`: ≥800 Wörter SEO-Content (Privacy-Lead-Headline, 6 gelockte H2s, Datenschutz-Sektion nennt Hugging Face CDN explizit).
-- Tests: +79 neue (total 159 → 238). Aufteilung: Loader 6, heic-decode 5, remove-background 13, tool-runtime-registry 3, tool-jsonld 6, filetool-format 7, filetool-prepare 5, filetool-input-methods 7, filetool-preview 2, hintergrund-entferner-config 11, content 7 — dazu Preview/Checker-Gegen-Checks.
+- Tests: +80 neue (total 159 → 239). Aufteilung: Loader 6, heic-decode 5, remove-background 13, tool-runtime-registry 3, tool-jsonld 6, filetool-format 7, filetool-prepare 5, filetool-input-methods 7, filetool-preview 2, hintergrund-entferner-config 11, content 7 — dazu Preview/Checker-Gegen-Checks und JPG-Re-Encode-Regression.
 - Differenzierung: Spec §2.4 Subagent-Recherche, White-Space identifiziert ("pure-client + HEIC + WebP-transparent + Clipboard + Camera + zero-friction").
-- Gates: 0/0/0 `astro check`, 238/238 vitest, 5 pages built (`/`, `/de`, `/de/meter-zu-fuss`, `/de/webp-konverter`, `/de/hintergrund-entfernen`).
+- Icon-Pipeline (Recraft → BG-Remover → WebP) an `meter-to-feet` real validiert: PNG mit weißem BG, Durchlauf durch `/de/hintergrund-entfernen`, Commit als `public/icons/tools/meter-to-feet.webp`. Pickup automatisch via `existsSync` in beiden Seiten-Templates. STYLE.md § 8 dokumentiert die Konvention.
+- Homepage `/de/` auto-enumeriert Content-Collection-Tools zu Cards (Icon + Title + Tagline + Arrow), alphabetisch sortiert, Hover-Mikro-Interaktion, Reduced-Motion-Fallback.
+- Rulebooks nachgezogen: STYLE.md § 9.2 (Label-first in Converting), § 10 (tool-hero__icon-Row), § 11 (Reduced-Motion-Spinner-Verhalten); CONVENTIONS.md Loader-Block identisch. Damit sehen Sessions 10+ die heutigen Detail-Regeln ohne den Code rückzulesen.
+- Gates: 0/0/0 `astro check`, 239/239 vitest, 5 pages built (`/`, `/de`, `/de/meter-zu-fuss`, `/de/webp-konverter`, `/de/hintergrund-entfernen`).
 
 ### Bekannte Follow-ups (nicht blocking für V1)
 - **`FileTool.CVNcGKu7.js`-Chunk ist 541 KB** (nicht Hauptbundle, aber shared chunk auf allen Tool-Seiten). Ursache: `tool-runtime-registry.ts` statisch-importiert `remove-background`, wodurch `@huggingface/transformers` in den FileTool-Chunk wandert. `/de/webp-konverter` lädt damit ~530 KB transformers.js ohne sie zu benutzen. Fix-Kandidat: Registry-Einträge könnten selektiv `await import()` verwenden, trade-off gegen Einfachheit der statischen Registry. Verschoben, da `huggingface`-Grep auf "ein einziges Chunk" passt (Plan Step 2 Expected-Case) und Entry-Chunks <25 KB sind.
