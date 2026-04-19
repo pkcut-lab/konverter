@@ -1,23 +1,84 @@
 name: Deploy
+
 on:
   push:
     branches: [main]
   pull_request:
 
+# Never let two CI runs for the same ref fight over a deploy — cancel
+# the older one so only the newest commit on a branch ships.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  # Deployments permission is what lets the wrangler action post a
+  # Cloudflare Pages environment status back onto the commit/PR.
+  deployments: write
+
 jobs:
-  build-and-deploy:
+  verify:
+    name: Verify (typecheck + tests + build)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run check
-      - run: npm run build
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check (astro + tsc)
+        run: npm run check
+
+      - name: Unit + smoke tests (vitest)
+        run: npm test
+
+      - name: Build (astro build && pagefind --site dist)
+        run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-      # Deploy-Step wird in Session 10 final aktiviert (Cloudflare Pages Action).
-      # Bis dahin: Build-Only-CI für PR-Validierung.
+
+      # Handoff to the deploy job — dist/ already contains the Pagefind
+      # index, Workbox SW, and the manifest + icons; nothing else is
+      # regenerated downstream.
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Skip deploy on PRs from forks — secrets aren't available and the
+    # action would fail noisily. Same-repo PRs still get preview URLs.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # `--branch=main` → production deploy on konverter-7qc.pages.dev.
+          # Any other branch name (PRs, feature branches) → preview URL
+          # on <branch>.konverter-7qc.pages.dev, which CF Pages mints
+          # automatically.
+          command: >-
+            pages deploy dist
+            --project-name=konverter-7qc
+            --branch=${{ github.head_ref || github.ref_name }}

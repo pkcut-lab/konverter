@@ -1,0 +1,54 @@
+# Cloudflare Pages response headers.
+# Syntax: https://developers.cloudflare.com/pages/configuration/headers/
+# Files under public/ are copied to the deploy root verbatim — this file
+# lives next to manifest.webmanifest and gets applied at the edge.
+
+# Baseline security posture for every response. HSTS is safe because
+# *.pages.dev is HTTPS-only anyway; the preload list isn't relevant for
+# a subdomain we don't own the apex of.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(), interest-cohort=()
+
+# Service Worker must never be cached by the browser itself — otherwise
+# users get stuck on an old build even after Workbox skipWaiting fires.
+# The SW still caches the app shell internally; the HTML request for
+# /sw.js just needs to always hit the origin.
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/registerSW.js
+  Cache-Control: no-cache
+
+# Astro emits hashed filenames under _astro/ — safe to cache forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Self-hosted fonts are content-hashed-by-name (Inter-Variable.woff2 stays
+# the same file); long cache is fine because the filename changes when
+# we swap families.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Tool icons (WebP, pencil-sketches) change rarely — one week keeps
+# CF edges warm without freezing updates for too long.
+/icons/*
+  Cache-Control: public, max-age=604800
+
+# Pagefind index + UI chunks: the search can tolerate a few-minute stale
+# window; the SW also has StaleWhileRevalidate, so this is belt-and-
+# suspenders for non-SW (first-load) requests.
+/pagefind/*
+  Cache-Control: public, max-age=3600
+
+# Manifest + favicon: short cache so re-branding reaches users fast.
+/manifest.webmanifest
+  Cache-Control: public, max-age=3600
+
+/favicon-32.png
+  Cache-Control: public, max-age=86400
+
+/icon.svg
+  Cache-Control: public, max-age=86400

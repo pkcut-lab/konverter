@@ -1,0 +1,9 @@
+# Cloudflare Pages redirects.
+# Syntax: https://developers.cloudflare.com/pages/configuration/redirects/
+# The first matching rule wins — order matters.
+
+# Root → default locale. Astro emits a 2-second meta-refresh stub at /,
+# but a proper 301 is faster, better for SEO (passes canonical signal),
+# and survives edge caches. Phase 3 will add per-Accept-Language
+# negotiation; for Phase 0 (DE-only) a static redirect is correct.
+/ /de/ 301

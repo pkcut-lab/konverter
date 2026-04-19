@@ -7,7 +7,13 @@ import AstroPWA from '@vite-pwa/astro';
 import { ACTIVE_LANGUAGES } from './src/lib/hreflang.ts';
 
 export default defineConfig({
-  site: 'https://konverter.pages.dev',
+  // Production subdomain reserved in Cloudflare Pages during Session 1 —
+  // plain `konverter.pages.dev` was already taken, so CF appended `-7qc`.
+  // This canonical cascades into @astrojs/sitemap + hreflang links, so
+  // get this right before the first Cloudflare deploy ships SEO signals
+  // that point at a non-existent origin. Flip to the custom domain in
+  // one line when it's in place.
+  site: 'https://konverter-7qc.pages.dev',
   trailingSlash: 'never',
   integrations: [
     svelte({ preprocess: vitePreprocess({ script: true, style: false }) }),

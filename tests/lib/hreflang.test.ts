@@ -25,30 +25,30 @@ describe('buildHreflangLinks', () => {
     const links = buildHreflangLinks({ pathWithoutLang: '/' });
     const xDefault = links.find((l) => l.hreflang === 'x-default');
     expect(xDefault).toBeDefined();
-    expect(xDefault?.href).toBe('https://konverter.pages.dev/de');
+    expect(xDefault?.href).toBe('https://konverter-7qc.pages.dev/de');
   });
 
   it('builds absolute URLs with trailing path (no trailing slash)', () => {
     const links = buildHreflangLinks({ pathWithoutLang: '/styleguide/' });
     const de = links.find((l) => l.hreflang === 'de');
-    expect(de?.href).toBe('https://konverter.pages.dev/de/styleguide');
+    expect(de?.href).toBe('https://konverter-7qc.pages.dev/de/styleguide');
   });
 
   it('normalises path: missing leading slash is added', () => {
     const links = buildHreflangLinks({ pathWithoutLang: 'styleguide/' });
     const de = links.find((l) => l.hreflang === 'de');
-    expect(de?.href).toBe('https://konverter.pages.dev/de/styleguide');
+    expect(de?.href).toBe('https://konverter-7qc.pages.dev/de/styleguide');
   });
 
   it('normalises path: trailing slash is stripped for non-root', () => {
     const links = buildHreflangLinks({ pathWithoutLang: '/styleguide' });
     const de = links.find((l) => l.hreflang === 'de');
-    expect(de?.href).toBe('https://konverter.pages.dev/de/styleguide');
+    expect(de?.href).toBe('https://konverter-7qc.pages.dev/de/styleguide');
   });
 
   it('root path "/" maps to /{lang} (no trailing slash)', () => {
     const links = buildHreflangLinks({ pathWithoutLang: '/' });
     const de = links.find((l) => l.hreflang === 'de');
-    expect(de?.href).toBe('https://konverter.pages.dev/de');
+    expect(de?.href).toBe('https://konverter-7qc.pages.dev/de');
   });
 });
