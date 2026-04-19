@@ -12,6 +12,21 @@ const searchPlaceholder: Record<string, string> = {
   en: 'Search tools',
 };
 const placeholder = searchPlaceholder[lang] ?? searchPlaceholder.en;
+
+type NavItem = { label: string; href: string; disabled?: boolean };
+const navByLang: Record<string, NavItem[]> = {
+  de: [
+    { label: 'Werkzeuge', href: `/${lang}/` },
+    { label: 'Über', href: '#', disabled: true },
+    { label: 'Sprache ▾', href: '#', disabled: true },
+  ],
+  en: [
+    { label: 'Tools', href: `/${lang}/` },
+    { label: 'About', href: '#', disabled: true },
+    { label: 'Language ▾', href: '#', disabled: true },
+  ],
+};
+const nav = navByLang[lang] ?? navByLang.en!;
 ---
 <header class="site-header" data-pagefind-ignore>
   <div class="inner">
@@ -19,14 +34,26 @@ const placeholder = searchPlaceholder[lang] ?? searchPlaceholder.en;
       <span class="wordmark">Konverter</span>
     </a>
 
+    <nav class="nav" aria-label="Hauptnavigation">
+      {nav.map((item) => (
+        item.disabled ? (
+          <a
+            class="nav__link nav__link--disabled"
+            href={item.href}
+            aria-disabled="true"
+            tabindex="-1"
+          >{item.label}</a>
+        ) : (
+          <a class="nav__link" href={item.href}>{item.label}</a>
+        )
+      ))}
+    </nav>
+
     <div class="search-slot">
       <HeaderSearch client:load lang={lang} placeholder={placeholder} />
     </div>
 
-    <div class="right">
-      <span class="lang-stub" aria-label="Aktuelle Sprache">
-        {lang.toUpperCase()}
-      </span>
+    <div class="toggle-slot">
       <ThemeToggle client:load />
     </div>
   </div>
@@ -45,7 +72,7 @@ const placeholder = searchPlaceholder[lang] ?? searchPlaceholder.en;
     margin: 0 auto;
     padding: var(--space-3) var(--space-6);
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto auto 1fr auto;
     align-items: center;
     gap: var(--space-6);
   }
@@ -58,26 +85,47 @@ const placeholder = searchPlaceholder[lang] ?? searchPlaceholder.en;
     font-size: 1.125rem;
     letter-spacing: -0.01em;
   }
+
+  .nav {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .nav__link {
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .nav__link:hover {
+    color: var(--color-text);
+  }
+  .nav__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: var(--space-1);
+    border-radius: var(--r-sm);
+  }
+  .nav__link--disabled {
+    color: var(--color-text-subtle);
+    pointer-events: none;
+    cursor: default;
+  }
+
   .search-slot {
     min-width: 0;
   }
-  .right {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-  }
-  .lang-stub {
-    font-size: var(--font-size-small);
-    color: var(--color-text-muted);
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-sm);
+  .toggle-slot {
+    display: inline-flex;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 40rem) {
     .inner {
-      grid-template-columns: auto 1fr;
+      grid-template-columns: 1fr auto;
       row-gap: var(--space-2);
+    }
+    .nav {
+      display: none;
     }
     .search-slot {
       grid-column: 1 / -1;
