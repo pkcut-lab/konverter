@@ -35,11 +35,11 @@
 - Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung. BG-Remover (`/de/hintergrund-entfernen`) wartet auf User-Smoke-Test (Checklist unten).
 
 ## Session 9 Smoke-Test (vom Menschen auszuführen, `npm run dev`)
-- [ ] `/de/hintergrund-entfernen` lädt
-- [ ] PNG-Upload triggert Modell-Download (Progress sichtbar via Loader)
-- [ ] BG entfernt, PNG-Download funktioniert
-- [ ] Format-Wechsel zu WebP re-encodet (kein Re-Inference; Network-Tab zeigt keinen erneuten Modell-Download)
-- [ ] Format-Wechsel zu JPG: weißer Hintergrund statt Alpha
+- [x] `/de/hintergrund-entfernen` lädt
+- [x] PNG-Upload triggert Modell-Download (Progress sichtbar via Loader)
+- [x] BG entfernt, PNG-Download funktioniert — nach Fix `d0dc00d` (RawImage-Input + Array-Output-Shape für Transformers.js v4)
+- [x] Format-Wechsel zu WebP re-encodet (kein Re-Inference) — nach Fix `8db9816` (JPG-Composite auf Wegwerf-Canvas, sonst bleibt Weiß im Cache)
+- [x] Format-Wechsel zu JPG: weißer Hintergrund statt Alpha
 - [ ] Reset-Button funktioniert
 - [ ] Strg+V mit Screenshot triggert Process
 - [ ] Mobile: Kamera-Button sichtbar (DevTools-Mobile-Mode oder echtes Smartphone)
