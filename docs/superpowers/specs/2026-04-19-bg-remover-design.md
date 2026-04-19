@@ -88,7 +88,7 @@ Diese Story braucht **kein eigenes UI** — sie nutzt das normale User-UI des To
 - Worker-Fallback bedeutet: eigene Sub-Domain `api.konverter.app` + CORS + DSGVO-Eintrag + UI-Hint — Infra, die wir vor CI/CD (Session 10) nicht aufbauen wollen.
 - BEN2 in WebGPU läuft auf modernen Mobile-Browsern (Chrome Android 121+, Safari iOS 18+) mit akzeptabler Performance.
 
-**Phase 2 Re-Evaluation:** Falls Plausible-Analytics zeigen, dass >5 % der Mobile-Sessions an OOM scheitern, triggert das einen separaten Worker-Fallback-Spec.
+**Phase 2 Re-Evaluation:** Falls Analytics (Plausible o.ä., final festgelegt in Phase-2-Setup) zeigen, dass >5 % der Mobile-Sessions an OOM scheitern, triggert das einen separaten Worker-Fallback-Spec.
 
 ---
 
@@ -190,12 +190,25 @@ export function prepareBackgroundRemovalModel(
   onProgress: (e: ProgressEvent) => void,
 ): Promise<void>;
 
-/** Führt die eigentliche BG-Removal aus. Wartet auf prepare, falls nötig. */
+/**
+ * Führt Inference aus + encodet im gewählten Format.
+ * Cached intern den letzten OffscreenCanvas-Snapshot für `reencode()`.
+ */
 export function removeBackground(
   input: Uint8Array,
   opts: RemoveBackgroundOpts,
 ): Promise<Uint8Array>;
+
+/**
+ * Re-encodet den letzten cached Canvas-Snapshot in ein anderes Format
+ * OHNE Re-Inference. Wirft, wenn noch kein removeBackground()-Call gelaufen ist.
+ */
+export function reencodeLastResult(
+  format: RemoveBackgroundFormat,
+): Promise<Uint8Array>;
 ```
+
+**Cache-Lebenszyklus:** Der Canvas-Snapshot lebt im Modul-Scope und wird beim nächsten `removeBackground()`-Call überschrieben. Bei FileTool-Reset (`idle`-Phase) ruft die Komponente `clearLastResult()` (zusätzlicher Export) auf — verhindert Memory-Leak bei großen Bildern.
 
 ### 5.2 Singleton-Pattern
 
@@ -295,7 +308,16 @@ interface Props {
 
 **Tokens-only:** kein Hex, keine arbitrary-px außer 1px (Border-Hairline-Konvention).
 
-### 6.2 `FileTool.svelte` — neue `preparing`-Phase
+### 6.2 `FileTool.svelte` — Erweiterungen (`preparing`-Phase + dynamisches Output-Format)
+
+**Kontext-Refactor (HART):** Das aktuelle `FileTool.svelte` (Session 7) hardcodet die Output-MIME als `'image/webp'` und die Download-Extension als `.webp` (Zeile 79 + Zeile 21). Für den BG-Remover muss beides aus der gewählten Format-Option kommen. Refactor:
+- Neuer Modul-State `outputFormat: $state<'webp' | 'png' | 'jpg'>('webp')` mit Default aus Tool-Config (neues optionales `defaultFormat`-Feld in `FileToolConfig`, default `'webp'` für Backwards-Compat).
+- `formatToMime(format)` und `formatToExt(format)` als kleine Helper.
+- Bei FileTool-Reset-Path bleibt der Default erhalten.
+
+Das gilt **auch** für künftige Multi-Format-Tools — also kein BG-Remover-Spezial-Code.
+
+
 
 **Phase-Machine (erweitert):**
 ```
@@ -469,7 +491,7 @@ related:
 | MIME nicht in `accept` | idle | Inline-Error in Meta-Zeile (Reuse FileTool-bestehende Logik) |
 | Datei > `maxSizeMb` | idle | Inline-Error in Meta-Zeile |
 | Modell-Download abgebrochen (Netz-Fehler) | preparing | `error`-Phase mit Retry-Button → springt zurück zu `preparing` |
-| Modell-Download zu langsam (>2 min ohne Progress) | preparing | `error`-Phase: „Modell-Download dauert ungewöhnlich lange. Bitte Internetverbindung prüfen und erneut versuchen." |
+| Modell-Download zu langsam (>2 min ohne Progress) | preparing | `error`-Phase: „Modell-Download dauert ungewöhnlich lange. Bitte Internetverbindung prüfen und erneut versuchen." Implementierung: Watchdog-Timer in `prepareBackgroundRemovalModel` — `setTimeout(120_000)` wird bei jedem `onProgress`-Tick resettet; läuft er aus, wird die Pipeline-Promise abgebrochen (`AbortController`) und ein typisierter `StallError` geworfen. |
 | WebGPU + WASM beide nicht verfügbar | preparing | `error`-Phase: „Dein Browser unterstützt das nötige Modell nicht. Versuche Chrome/Edge oder Firefox in aktueller Version." |
 | OOM während Inference | converting | `error`-Phase: „Bild zu groß für dieses Gerät. Versuche ein kleineres Bild oder einen Desktop." (Phase-2-Hint: Worker-Fallback siehe §13) |
 | Encoder-Fehler bei WebP/JPG | converting | Fallback auf PNG, Toast „Format nicht unterstützt, PNG verwendet" |
@@ -500,6 +522,7 @@ Folgende Rulebook-Updates werden mit der Implementierung mitgeliefert (nicht vor
 - §Tool-Components: Neue Phase `preparing` zur FileTool-Phase-Machine ergänzen.
 - §File-Tool-Pattern: Neuer Schritt im Drei-Touch-Pattern für ML-Tools (`prepare`-Funktion + prepare-registry).
 - §Components: Neuer Eintrag `Loader.svelte` (geteilte Komponente, Props-Interface dokumentiert).
+- §Tool-Components: Output-Format-Handling im FileTool ist jetzt **dynamisch** (kein hardcoded `'image/webp'`/`'.webp'` mehr). Neues optionales `defaultFormat`-Feld in `FileToolConfig`, plus Multi-Format-Output-Convention.
 
 ### 11.2 STYLE.md
 - §9.2 FileTool: Neue `preparing`-State-Beschreibung.
@@ -526,7 +549,7 @@ Folgende Rulebook-Updates werden mit der Implementierung mitgeliefert (nicht vor
 
 | # | Feature | Trigger / Phase |
 |---|---------|-----------------|
-| 1 | **Worker-Fallback (§7a)** auf eigener Sub-Domain `api.konverter.app` mit DSGVO-Banner + UI-Hint | Phase 2, wenn Plausible-Analytics >5 % Mobile-OOM zeigen |
+| 1 | **Worker-Fallback (§7a)** auf eigener Sub-Domain `api.konverter.app` mit DSGVO-Banner + UI-Hint | Phase 2, wenn Analytics (Plausible o.ä., final festgelegt in Phase-2-Setup) >5 % Mobile-OOM zeigen |
 | 2 | **Hand-drawn-Pencil-animated Loader** (z.B. SVG-Stroke-Animation eines Pencil-Sketches) | Phase 1 Polish, wenn Marken-Identität verstärkt werden soll |
 | 3 | **Edge-Feather-Slider** (Maske weichzeichnen für glattere Übergänge) + **Replace-BG-Color-Picker** | User-Feedback-getrieben — nur einbauen, wenn explizit gefragt |
 | 4 | **CLI Batch-Script** `scripts/icon-pipeline.ts` (Recraft-PNGs aus `pending-icons/raw/` automatisch durch BG-Remover + WebP-Konverter pipen) | Wenn ≥10 Pending-Icons in Queue → Automation lohnt sich |
@@ -553,10 +576,11 @@ V1 gilt als „done", wenn:
 
 ## 15. Offene Fragen für die Plan-Phase
 
-1. **Process-Registry vs. separate Prepare-Registry:** §4.3 nennt zwei Optionen. Plan-Phase entscheidet basierend auf Code-Lesbarkeit.
+1. **Process-Registry vs. separate Prepare-Registry:** §4.3 nennt zwei Optionen. Plan-Phase entscheidet basierend auf Code-Lesbarkeit. Tests in §9 müssen den gewählten Import-Pfad mocken.
 2. **WebGPU-Detection-Robustness:** Manche Browser melden `gpu` als verfügbar, scheitern aber bei `requestAdapter()`. Plan-Phase verifiziert die genaue Detection-Logik aus aktuellen Transformers.js-Best-Practices.
 3. **Format-Chooser-Default je Quelltyp:** Sollte z.B. ein eingehendes JPG default zu PNG (mit Transparenz) gehen, oder zurück zu JPG? V1-Default: **immer PNG**, weil Transparenz der Hauptzweck ist. Plan-Phase: Bestätigen oder umschwenken.
 4. **Mini-Preview-Performance:** Bei sehr großen Bildern (>4000×4000) kann der Browser das Mini-Thumbnail-Rendering verzögern. Plan-Phase: ggf. expliziter Downscale auf 200×200 vor Display.
+5. **Cache-Lifetime von `lastResultCanvas`:** Modul-Scope-State überlebt Hot-Module-Replacement; Plan-Phase prüft, ob ein `WeakRef`-Pattern oder ein expliziter `clearLastResult()` beim FileTool-Reset robuster ist (V1-Default in §5.1: expliziter Clear).
 
 ---
 
