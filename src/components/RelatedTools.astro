@@ -1,0 +1,182 @@
+---
+// src/components/RelatedTools.astro
+//
+// Renders a grid of related tools below a tool page's <article>. Input is a
+// list of LOCALIZED SLUGS (from frontmatter `relatedTools`). Slugs without a
+// matching content/slug-map entry are dropped silently, so forward-looking
+// references (tools planned for future sessions) are safe.
+//
+// Wrap is conditional: if zero slugs resolve, the component renders NOTHING —
+// no heading, no section. See spec §Fallback, §Conditional Render.
+import { resolveRelatedTools } from '../lib/tools/list';
+import type { Lang } from '../lib/tools/types';
+
+interface Props {
+  lang: Lang;
+  relatedSlugs: readonly string[];
+}
+const { lang, relatedSlugs } = Astro.props;
+const tools = await resolveRelatedTools(lang, relatedSlugs);
+---
+{tools.length > 0 && (
+  <section class="related-tools" aria-labelledby="related-heading">
+    <h2 id="related-heading">Verwandte Tools</h2>
+    <ul>
+      {tools.map((t, i) => (
+        <li style={`--index: ${i}`}>
+          <a href={t.href}>
+            {t.hasIcon && (
+              <img
+                src={t.iconRel}
+                alt=""
+                width="48"
+                height="48"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+            <div>
+              <h3>{t.title}</h3>
+              <p>{t.tagline}</p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<script>
+  // Plain IntersectionObserver fade-in. No import, ~30 bytes.
+  // `prefers-reduced-motion` and the CSS-side `@media` handle the no-motion case;
+  // the class flip is safe either way (CSS disables the transition below).
+  const section = document.querySelector<HTMLElement>('.related-tools');
+  if (section) {
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced || typeof IntersectionObserver === 'undefined') {
+      section.classList.add('in-view');
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              section.classList.add('in-view');
+              io.disconnect();
+              break;
+            }
+          }
+        },
+        { rootMargin: '-40px 0px' },
+      );
+      io.observe(section);
+    }
+  }
+</script>
+
+<style>
+  .related-tools {
+    max-width: 60rem;
+    margin: var(--space-16) auto 0;
+    padding: 0 var(--space-6);
+  }
+  .related-tools h2 {
+    margin: 0 0 var(--space-6);
+    letter-spacing: -0.01em;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-4);
+  }
+  li {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .related-tools.in-view li {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--dur-med) var(--ease-out),
+      transform var(--dur-med) var(--ease-out);
+    transition-delay: calc(var(--index) * var(--stagger-step));
+  }
+  a {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out);
+  }
+  a:hover {
+    border-color: var(--color-text-subtle);
+    background: var(--color-bg);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+  img {
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+  /* Graphit pencil-sketch icons are strokes on transparent; invert in dark mode. */
+  :global([data-theme='dark']) .related-tools img {
+    filter: invert(1);
+  }
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+  }
+  p {
+    margin: var(--space-1) 0 0;
+    font-size: var(--font-size-small);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 40rem) {
+    .related-tools {
+      padding: 0 var(--space-4);
+    }
+    ul {
+      grid-template-columns: 1fr;
+    }
+    .related-tools.in-view li {
+      transition-delay: 0ms !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    li {
+      opacity: 1;
+      transform: none;
+    }
+    .related-tools.in-view li {
+      transition: none;
+      transition-delay: 0ms;
+    }
+    a {
+      transition: none;
+    }
+  }
+</style>

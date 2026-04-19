@@ -6,6 +6,7 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
+import RelatedTools from '../../components/RelatedTools.astro';
 import { getToolConfig } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
@@ -128,6 +129,8 @@ const jsonLd = buildToolJsonLd(
         <Content />
       </div>
     </article>
+
+    <RelatedTools lang={entry.data.language} relatedSlugs={entry.data.relatedTools} />
   </div>
 </BaseLayout>
 
