@@ -269,8 +269,8 @@
         {/if}
       {:else}
         <p class="converting" aria-live="polite">
-          <Loader variant="spinner" ariaLabel="Konvertiert" />
           <span>Konvertiert …</span>
+          <Loader variant="spinner" ariaLabel="Konvertiert" />
         </p>
       {/if}
     </div>

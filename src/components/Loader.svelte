@@ -93,8 +93,11 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    /* Loading spinners communicate work-in-progress — fully freezing the
+       animation removes that signal. Slow the rotation instead so the
+       indicator stays calm but still moves. */
     .spinner svg {
-      animation-duration: 0s;
+      animation-duration: 2.4s;
     }
     .progress__fill {
       transition: none;
