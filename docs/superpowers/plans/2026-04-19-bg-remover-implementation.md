@@ -2519,7 +2519,7 @@ Expected: failures, content file doesn't exist.
 
 - [ ] **Step 3: Create content file**
 
-Create `src/content/tools/hintergrund-entfernen/de.md`. Use the frontmatter template from spec §8.1 verbatim. For the body, write ≥800 words that:
+Create `src/content/tools/hintergrund-entfernen/de.md`. **Use the frontmatter shape from the existing `src/content/tools/webp-konverter/de.md` as the canonical template** — the real Astro schema lives in `src/content/tools.schema.ts` (fields: `toolId`, `language`, `title`, `metaDescription`, `tagline`, `intro`, `howToUse` 3–5, `faq` entries `{q, a}` 4–6, `relatedTools` 3–5, `contentVersion`). Spec §8.1's field-name draft is out of sync with the schema and would fail Astro's content-collection validation. For the body, write ≥800 words that:
 
 - Start with `## Wie funktioniert das Tool?` (200–300 words on BEN2 + WebGPU + WASM, in lay-audience German).
 - Continue with `## So entfernst du einen Hintergrund` (~80 words, references the on-page steps).
