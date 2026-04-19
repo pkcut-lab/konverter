@@ -92,8 +92,8 @@ const jsonLd = buildToolJsonLd(
           class="tool-hero__icon"
           src={iconRel}
           alt=""
-          width="80"
-          height="80"
+          width="160"
+          height="160"
           loading="eager"
           decoding="async"
         />
@@ -146,10 +146,16 @@ const jsonLd = buildToolJsonLd(
     gap: var(--space-3);
   }
   .tool-hero__icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: var(--space-2);
+    width: 160px;
+    height: 160px;
+    margin-bottom: var(--space-4);
     object-fit: contain;
+  }
+  @media (max-width: 40rem) {
+    .tool-hero__icon {
+      width: 120px;
+      height: 120px;
+    }
   }
   /* The icons are graphite pencil sketches on transparent — in dark mode the
      strokes vanish against the dark canvas. ThemeScript always stamps
