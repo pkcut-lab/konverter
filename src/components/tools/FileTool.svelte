@@ -268,7 +268,10 @@
           </p>
         {/if}
       {:else}
-        <p class="converting" aria-live="polite">Konvertiert …</p>
+        <p class="converting" aria-live="polite">
+          <Loader variant="spinner" ariaLabel="Konvertiert" />
+          <span>Konvertiert …</span>
+        </p>
       {/if}
     </div>
   {/if}
@@ -518,6 +521,9 @@
   }
 
   .converting {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     margin: 0;
     padding: var(--space-2) 0;
     font-family: var(--font-family-mono);
