@@ -89,6 +89,11 @@ export const fileToolSchema = base.extend({
   accept: z.array(z.string().min(1)).min(1),
   maxSizeMb: z.number().positive(),
   process: z.function(),
+  prepare: z.function().optional(),
+  defaultFormat: z.string().min(1).optional(),
+  cameraCapture: z.boolean().optional(),
+  filenameSuffix: z.string().optional(),
+  showQuality: z.boolean().optional(),
 });
 
 export const interactiveSchema = base.extend({
@@ -142,8 +147,9 @@ export type ComparerConfig = Omit<z.infer<typeof comparerSchema>, 'diff'> & {
   diff: (a: string, b: string) => string;
 };
 
-export type FileToolConfig = Omit<z.infer<typeof fileToolSchema>, 'process'> & {
+export type FileToolConfig = Omit<z.infer<typeof fileToolSchema>, 'process' | 'prepare'> & {
   process: (input: Uint8Array, config?: Record<string, unknown>) => Uint8Array | Promise<Uint8Array>;
+  prepare?: (onProgress: (e: { loaded: number; total: number }) => void) => Promise<void>;
 };
 
 export type InteractiveConfig = z.infer<typeof interactiveSchema>;
