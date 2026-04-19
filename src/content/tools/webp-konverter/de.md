@@ -117,9 +117,3 @@ das Ergebnis visuell.
 Nein. Die Konvertierung läuft vollständig in deinem Browser über die
 Canvas-API. Es gibt weder Upload, noch Server-Verarbeitung, noch Tracking. Du
 kannst diese Seite sogar offline nutzen, sobald sie einmal geladen wurde.
-
-## Verwandte Konverter
-
-- [JPG in PNG umwandeln](/de/jpg-zu-png)
-- [Bild komprimieren](/de/bild-komprimieren)
-- [Bildgröße ändern](/de/bild-groesse-aendern)

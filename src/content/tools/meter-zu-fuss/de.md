@@ -117,9 +117,3 @@ draufschlagen.
 Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder
 25,4 mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
 bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m.
-
-## Verwandte Konverter
-
-- [Zentimeter in Zoll](/de/zentimeter-zu-zoll)
-- [Kilometer in Meilen](/de/kilometer-zu-meilen)
-- [Quadratmeter in Quadratfuß](/de/quadratmeter-zu-quadratfuss)

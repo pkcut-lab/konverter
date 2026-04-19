@@ -166,9 +166,3 @@ rund 110 MB groß und wird nach dem ersten Laden vom Browser gecacht.
 Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der
 Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP
 (kleinere Dateigröße bei vergleichbarer Qualität).
-
-## Verwandte Tools
-
-- [Bild komprimieren](/de/bild-komprimieren)
-- [Bildgröße ändern](/de/bild-groesse-aendern)
-- [WebP-Konverter](/de/webp-konverter)
