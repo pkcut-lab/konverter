@@ -51,7 +51,7 @@ const hreflangs = buildHreflangLinks({ pathWithoutLang });
   </head>
   <body>
     <Header lang={lang} />
-    <main class="site-main">
+    <main class="site-main" data-pagefind-body>
       <slot />
     </main>
     <Footer lang={lang} />
