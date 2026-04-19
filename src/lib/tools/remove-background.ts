@@ -174,19 +174,22 @@ async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
 }
 
 async function encodeCanvas(canvas: OffscreenCanvas, format: RemoveBackgroundFormat): Promise<Uint8Array> {
-  // JPG: composite white background under any alpha pixels before encoding.
+  // JPG can't carry an alpha channel. Composite the transparent cut-out over
+  // white on a THROWAWAY canvas — writing into `canvas` directly would bake
+  // the white background into the cached result, so a subsequent re-encode
+  // to png/webp would still carry the white fill (observed in the wild).
+  let target = canvas;
   if (format === 'jpg') {
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      // Cast: ctx is OffscreenCanvasRenderingContext2D in real browsers.
-      const c = ctx as unknown as CanvasRenderingContext2D;
-      c.globalCompositeOperation = 'destination-over';
-      c.fillStyle = 'white';
-      c.fillRect(0, 0, canvas.width, canvas.height);
-      c.globalCompositeOperation = 'source-over';
+    const copy = new OffscreenCanvas(canvas.width, canvas.height);
+    const cctx = copy.getContext('2d') as unknown as CanvasRenderingContext2D | null;
+    if (cctx) {
+      cctx.fillStyle = 'white';
+      cctx.fillRect(0, 0, copy.width, copy.height);
+      cctx.drawImage(canvas as unknown as CanvasImageSource, 0, 0);
     }
+    target = copy;
   }
-  const blob = await canvas.convertToBlob({ type: formatToMime(format), quality: 0.92 });
+  const blob = await target.convertToBlob({ type: formatToMime(format), quality: 0.92 });
   return blobToUint8Array(blob);
 }
 

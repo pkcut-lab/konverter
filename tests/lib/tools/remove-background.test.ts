@@ -20,11 +20,14 @@ function makeImageBytes(): Uint8Array {
   return new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]);
 }
 
+let canvasInstances = 0;
+
 describe('remove-background pure module', () => {
   beforeEach(() => {
     vi.resetModules();
     pipelineSpy.mockClear();
     mockPipe.mockClear();
+    canvasInstances = 0;
     // Stub createImageBitmap (jsdom 25 lacks it)
     vi.stubGlobal('createImageBitmap', vi.fn(async () => ({
       width: 64, height: 64, close: vi.fn(),
@@ -40,7 +43,7 @@ describe('remove-background pure module', () => {
     };
     class FakeOffscreenCanvas {
       width: number; height: number;
-      constructor(w: number, h: number) { this.width = w; this.height = h; }
+      constructor(w: number, h: number) { this.width = w; this.height = h; canvasInstances++; }
       getContext() { return ctx; }
       async convertToBlob(opts?: { type?: string }) {
         const type = opts?.type ?? 'image/png';
@@ -126,6 +129,25 @@ describe('remove-background pure module', () => {
     const out = await m.reencodeLastResult('webp');
     expect(mockPipe).toHaveBeenCalledTimes(1); // still 1
     expect(out[0]).toBe(0x52);
+  });
+
+  it('encoding JPG does not mutate the cached result (re-encode to webp stays transparent)', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    // First run creates exactly one canvas (the cached result).
+    await m.removeBackground(makeImageBytes(), { format: 'png' });
+    const afterInitial = canvasInstances;
+    // Re-encoding to JPG must allocate a throwaway canvas so the cached one
+    // stays alpha-correct — regression for the "webp after jpg keeps white
+    // background" bug found in live testing.
+    const jpgOut = await m.reencodeLastResult('jpg');
+    expect(jpgOut[0]).toBe(0xFF);
+    expect(canvasInstances).toBe(afterInitial + 1);
+    // A subsequent WebP re-encode uses the still-pristine cached canvas and
+    // must not allocate another.
+    const webpOut = await m.reencodeLastResult('webp');
+    expect(webpOut[0]).toBe(0x52);
+    expect(canvasInstances).toBe(afterInitial + 1);
   });
 
   it('reencodeLastResult throws when no result is cached', async () => {
