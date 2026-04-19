@@ -1,7 +1,9 @@
 # Code-Konventionen
 
-> **Status:** Final ab Session 4. Session 6 (Prototype-Review) kann ergänzen,
-> darf aber keine Signaturen ändern, die bereits in `src/` gelockt sind.
+> **Status:** Final ab Session 4. Sessions 5–7 (Prototypen-Lock) ergänzen die
+> Tool-Component-, File-Tool- und Astro-Hydration-Sektionen. Signaturen in
+> `src/` sind ab Session 7 für Phase-1-Skalierung gelockt — Änderungen brauchen
+> einen expliziten Spec-Update + Test-Migration.
 
 ## Verbindlich ab Session 1
 
@@ -80,11 +82,76 @@ Exportiert aus `src/lib/tools/types.ts` via `ok()` / `err()` Konstruktoren. Alle
 - **Svelte-Components:** `mount`, `unmount`, `flushSync` aus `svelte`; `client:load`-Hydration wird im jsdom-Env simuliert.
 - **KEINE Astro-Runtime-Tests** in Vitest — Astro-Integration verifiziert `npm run build` + `npm run check`.
 
+### jsdom-25 Workarounds (gelockt Session 7)
+
+- **`Blob/File.prototype.arrayBuffer` ist nicht implementiert** in jsdom 25. Bei File-Tool-Tests per-instance patchen, NICHT global stubben:
+  ```ts
+  function makeFile(name: string, type: string, sizeBytes: number): File {
+    const buf = new Uint8Array(sizeBytes);
+    const file = new File([buf], name, { type });
+    Object.defineProperty(file, 'arrayBuffer', {
+      value: () => Promise.resolve(buf.buffer),
+      configurable: true,
+    });
+    return file;
+  }
+  ```
+- **`URL.createObjectURL` / `revokeObjectURL`** mit `vi.stubGlobal('URL', { ...URL, createObjectURL: vi.fn(() => 'blob:mock-url'), revokeObjectURL: vi.fn() })` in `beforeEach`. Nach jedem Test `vi.unstubAllGlobals()`.
+- **Async-Flush:** Promise-Chains aus `processor()` brauchen mehrere Microtask-Ticks. Helper `flushAsync(ticks=6)`: `for (i…) { await Promise.resolve(); flushSync(); }`. Einfaches `await`-`flushSync` reicht nicht, sobald `arrayBuffer()` + `processor()` + `createObjectURL()` in derselben Promise-Kette liegen.
+- **`processRegistry`-Spy:** Test-Prozessor unter `processRegistry['test-file-tool']` registrieren und in `beforeEach` mit `delete` aufräumen — den echten Production-Eintrag (`'png-jpg-to-webp'`) NICHT überschreiben.
+
 ## Svelte
 
 - **Runes-only** (`$state`, `$derived`, `$effect`). Kein `writable`/`readable` aus `svelte/store`.
 - **Hydration:** `client:load` für alles mit Theme/Locale-Abhängigkeit (Flash-Prevention, Section 5.2 Spec). `client:idle` nur nach expliziter Spec-Referenz.
 - **Props:** TypeScript-Interface `interface Props { ... }`, via `let { foo }: Props = $props()` destructured.
+- **State-Generics:** `$state<T>()` immer typisiert (`let phase = $state<Phase>('idle')`, nicht `let phase = $state('idle')`). Inferenz auf String-Literal-Union geht sonst verloren.
+- **`data-testid`-Pflicht:** Jedes interaktive Element + Status-Region kriegt ein `data-testid="<componenttype>-<role>"` (z.B. `filetool-input`, `filetool-error`, `converter-output`). Tests wählen ausschließlich darüber, nie über CSS-Klassen.
+
+## Tool-Components (gelockt Session 5–7)
+
+Zwei Templates decken alle 9 Tool-Typen aus `schemas.ts` ab:
+
+| Template | Type-Discriminator | Use-Case |
+|----------|--------------------|----------|
+| `Converter.svelte` | `converter` | Numeric/Text-In → Numeric/Text-Out (Längen, Währung, Code-Format) |
+| `FileTool.svelte`  | `file-tool`  | Binary-In → Binary-Out (Bilder, PDFs, Audio — alles client-side) |
+
+**Generische Komponente, Tool-spezifisches Verhalten kommt aus der Config.** Komponenten dürfen NICHT auf `config.id` switchen — alles Tool-spezifische lebt in der Config (Formel, Units, Decimals, Examples) oder in einem registrierten Pure-Module.
+
+**Routing:** Beide Templates werden in `src/pages/[lang]/[slug].astro` über eine **statische** `componentByType`-Map dispatched:
+
+```astro
+const componentByType = {
+  converter: Converter,
+  'file-tool': FileTool,
+} as const;
+
+// ...
+
+{config.type === 'converter' && <Converter config={config} client:load />}
+{config.type === 'file-tool' && <FileTool config={config} client:load />}
+```
+
+**Astro-Hydration-Limitation (HART):** `client:load` wird **silent gedroppt**, wenn die Component-Referenz dynamisch ist (`<DynamicCmp client:load />`). Immer explizite Conditional-Renders mit statisch importierten Component-Namen verwenden. Beim Hinzufügen eines neuen Tool-Typs MUSS sowohl `componentByType` als auch der Conditional-Block ergänzt werden — fehlt einer, schlägt der `if (!(config.type in componentByType))`-Guard im Frontmatter zur Build-Zeit zu.
+
+## File-Tool-Pattern (gelockt Session 7)
+
+**Astro-SSR-Limitation (HART):** Astro serialisiert Island-Props zu JSON. Functions in der Tool-Config (`FileToolConfig.process`) überleben nur server-seitig — auf dem Client landen sie als `null`. Daher: Client-Dispatch läuft über `src/lib/tools/process-registry.ts`, keyed by `config.id`.
+
+**Drei-Touch-Pattern für neue File-Tools:**
+
+1. **Pure Processor-Module** unter `src/lib/tools/<verb>-<format>.ts` — exportiert `(input: Uint8Array, opts?: …) => Promise<Uint8Array>`. Keine DOM-, Window- oder Canvas-Imports im Top-Level (jsdom verträgt das nicht); Worker-Boundary darunter ist OK.
+2. **Tool-Config** unter `src/lib/tools/<tool-id>.ts` — `FileToolConfig` mit `id`, `accept[]`, `maxSizeMb`, `iconPrompt` JSDoc, `process` (verweist aufs Pure-Module für Server-Seite).
+3. **Dispatch-Eintrag** in `src/lib/tools/process-registry.ts` — neuer Key `'<tool-id>'` der dasselbe Pure-Module mit Config-Optionen ruft.
+
+Außerdem: `tool-registry.ts` (Tool-Existenz) + `slug-map.ts` (Slug pro Lang) — gleiche Schritte wie bei `converter`.
+
+## Astro Routes (gelockt Session 5)
+
+- **Dynamic-Route:** `src/pages/[lang]/[slug].astro` ist die einzige Tool-Route. `getStaticPaths()` enumeriert Content-Collection × Slug-Map.
+- **Frontmatter-Guards:** `getToolConfig()` + `componentByType[config.type]` werfen explizit, wenn ein Tool keine Registry-/Map-Einträge hat — niemals silent fallback.
+- **`.prose` Utility** lebt in `src/styles/global.css`. Keine `:global()`-Duplikate in Page-Scoped-Styles.
 
 ## CSS
 
