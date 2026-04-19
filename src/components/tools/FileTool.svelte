@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { FileToolConfig } from '../../lib/tools/schemas';
   import { getRuntime } from '../../lib/tools/tool-runtime-registry';
+  import Loader from '../Loader.svelte';
 
   interface Props {
     config: FileToolConfig;
   }
-  type Phase = 'idle' | 'converting' | 'done' | 'error';
+  type Phase = 'idle' | 'preparing' | 'converting' | 'done' | 'error';
 
   let { config }: Props = $props();
 
@@ -17,6 +18,7 @@
   let outputUrl = $state<string>('');
   let errorMessage = $state<string>('');
   let outputFormat = $state<string>(config.defaultFormat ?? 'webp');
+  let prepareProgress = $state<{ loaded: number; total: number }>({ loaded: 0, total: 0 });
 
   const acceptAttr = $derived(config.accept.join(','));
   const runtime = $derived(getRuntime(config.id));
@@ -62,12 +64,14 @@
 
   function reset() {
     if (outputUrl) URL.revokeObjectURL(outputUrl);
+    runtime?.clearLastResult?.();
     phase = 'idle';
     sourceName = '';
     sourceSize = 0;
     outputSize = 0;
     outputUrl = '';
     errorMessage = '';
+    prepareProgress = { loaded: 0, total: 0 };
   }
 
   async function onFileChange(e: Event) {
@@ -89,7 +93,6 @@
     sourceName = file.name;
     sourceSize = file.size;
     errorMessage = '';
-    phase = 'converting';
     outputFormat = config.defaultFormat ?? 'webp';
 
     if (!processor) {
@@ -97,6 +100,20 @@
       phase = 'error';
       return;
     }
+
+    const alreadyReady = runtime?.isPrepared?.() ?? false;
+    if (runtime?.prepare && !alreadyReady) {
+      phase = 'preparing';
+      try {
+        await runtime.prepare((e) => { prepareProgress = e; });
+      } catch (err) {
+        errorMessage = err instanceof Error ? `Modell-Lade-Fehler: ${err.message}` : 'Modell-Lade-Fehler.';
+        phase = 'error';
+        return;
+      }
+    }
+
+    phase = 'converting';
 
     try {
       const inputBytes = new Uint8Array(await file.arrayBuffer());
@@ -150,6 +167,19 @@
         onchange={onFileChange}
       />
     </label>
+  {/if}
+
+  {#if phase === 'preparing'}
+    <div class="preparing" data-testid="filetool-preparing" aria-live="polite">
+      <p class="preparing__title">Lädt einmalig Modell …</p>
+      <Loader
+        variant="progress"
+        value={prepareProgress.total > 0 ? prepareProgress.loaded / prepareProgress.total : 0}
+        label={prepareProgress.total > 0
+          ? `${Math.round(prepareProgress.loaded / 1024 / 1024)}\u00A0/\u00A0${Math.round(prepareProgress.total / 1024 / 1024)}\u00A0MB`
+          : ''}
+      />
+    </div>
   {/if}
 
   {#if phase === 'converting' || phase === 'done'}
@@ -217,7 +247,7 @@
   {/if}
 
   {#if config.showQuality ?? true}
-    <div class="quality" hidden={phase === 'converting' || phase === 'done'}>
+    <div class="quality" hidden={phase === 'preparing' || phase === 'converting' || phase === 'done'}>
       <div class="quality__head">
         <label for="filetool-quality" class="quality__label">Qualität</label>
         <span class="quality__value" translate="no">{quality}</span>
@@ -392,6 +422,19 @@
     font-size: var(--font-size-small);
     color: var(--color-text-muted);
     letter-spacing: 0.02em;
+  }
+
+  .preparing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+  }
+  .preparing__title {
+    margin: 0;
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    letter-spacing: 0.01em;
   }
 
   .formats {

@@ -33,6 +33,8 @@ export interface ToolRuntime {
   process: ProcessFn;
   prepare?: PrepareFn;
   reencode?: ReencodeFn;
+  isPrepared?: () => boolean;
+  clearLastResult?: () => void;
 }
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
