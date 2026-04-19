@@ -33,7 +33,7 @@
 - User-Verifikation offen: `http://localhost:4321/de/meter-zu-fuss` lokal im Browser testen (Desktop + Mobile, Light + Dark). Spec-Reviewer hat Build bestätigt; interaktive Verifikation delegiert.
 
 ## Session-6-Prerequisites (Code-Review-Carry-Overs aus Session 5)
-- `astro.config.mjs` um `vitePreprocess` erweitern, damit Svelte-Komponenten `interface`-/`type`-Deklarationen nutzen können (Workaround derzeit: `$props<T>()` Generic-Form). Quelle: Code-Review Issue 4.
+- `astro.config.mjs` um `vitePreprocess` erweitern, damit Svelte-Komponenten `interface`-/`type`-Deklarationen nutzen können (Workaround derzeit: `$props<T>()` Generic-Form). Nachdem `vitePreprocess` aktiv ist: Parameter-Typen in `Converter.svelte` wiederherstellen — `formatDecimal(n: number, decimals: number)`, `onInput(e: Event)`, `onQuickValue(n: number)`; `$state<T>()` Generics bei `inputValue`/`direction`/`copyState` wieder typisieren. Quelle: Code-Review Issue 4 + Final-Review Important.
 - `.prose` Utility in `src/styles/global.css` einführen und `src/pages/[lang]/[slug].astro` `.tool-seo :global(...)` ersetzen — spart 150+ duplizierte CSS-Regeln. Quelle: Code-Review Issue 3, TODO-Marker in der Datei.
 - `src/lib/tool-registry.ts` extrahieren, damit neue Tools nur an zwei Stellen (Registry + slug-map) gepflegt werden müssen. Quelle: Code-Review Issue 2, JSDoc-Marker in der Datei.
 
