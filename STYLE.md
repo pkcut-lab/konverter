@@ -1,9 +1,27 @@
 # STYLE — Visual Design Rulebook
 
-**Status:** v1 final (Session 2 locked).
-**Last reviewed:** 2026-04-18.
+**Status:** v1 final (Session 2 locked) + v1.1 Skill-Integration (2026-04-19).
+**Last reviewed:** 2026-04-19.
 
 ---
+
+## 0. Aesthetic Direction (Locked)
+
+**Refined Minimalism.** Ruhige Flächen, großzügige Weißräume, klare Typografie-Hierarchie, präzise Spacing-Rhythmen, dezente Mikro-Interaktionen. Schönheit entsteht aus Restraint und Detail-Präzision — nicht aus Farbe, Ornament, Asymmetrie.
+
+**Hard Don'ts** (auch wenn ein Design-Skill es vorschlägt):
+- Keine bunten Gradienten (insbesondere keine Purple-on-White AI-Gradients)
+- Keine Asymmetrie-/Grid-Breaking-Layouts, keine diagonalen Kompositionen
+- Keine Noise-Texturen, Grain-Overlays, Gradient-Meshes, dekorative Borders
+- Keine "unerwarteten Fonts" — Inter + JetBrains Mono sind gelockt (Session 2)
+- Keine maximalistische Visual-Density
+
+**Do's (das ist der Qualitäts-Hebel):**
+- Typografie-Hierarchie über Size/Weight/Color, nicht über Farbakzente
+- Whitespace als aktives Gestaltungselement (eher mehr als weniger)
+- Dezente Micro-Copy-Details, tabular-nums bei Zahlen, präzise Focus-Ringe
+- Karten/Flächen mit 1px-Border + subtilem Shadow statt Farb-Füllung
+- Einzelner Fokus-Punkt pro Seite, nicht konkurrierende Call-to-Actions
 
 ## 1. Color Usage
 
@@ -57,3 +75,20 @@
 - Pencil-Sketch monochromatic PNGs in `public/icons/tools/<slug>.png`.
 - Display with `filter: var(--icon-filter);` so they auto-invert in dark mode.
 - Icon-generation pipeline (Recraft.ai + `pending-icons/` drop folder) is locked down in Session 5+.
+
+## 9. Skill-Integration für Design-Arbeit
+
+Bei jeder Session, die UI erstellt oder überarbeitet, ist folgende Skill-Sequenz Pflicht:
+1. **`minimalist-ui`** (leonxlnx/taste-skill) — Form-Fundament (Bento, Borders, Radii, Padding-Zahlen).
+2. **`frontend-design`** (anthropics/skills) — Hierarchie, Whitespace, Detail-Politur.
+3. **Code schreiben.**
+4. **`web-design-guidelines`** (vercel-labs) — Audit-Pass nach Fertigstellung.
+
+**Hard-Caps (überstimmen alle Skills):**
+- Ästhetik = "refined minimalism" (Section 0).
+- Palette = Graphit-Tokens (Section 1) — Pastell-Akzente aus `minimalist-ui` werden NICHT übernommen.
+- Fonts = Inter + JetBrains Mono gelockt (Section 2) — Skill-Defaults "avoid Inter" werden überstimmt.
+- Konkrete px/Hex-Werte aus Skills auf Tokens mappen, niemals direkt übernehmen.
+- Stack = Astro + Svelte-Runes — React/Next.js-Syntax wird umgeschrieben.
+
+**CLAUDE.md Section 5** ist die authoritative Quelle dieses Prozesses — falls Konflikt, gilt dort.
