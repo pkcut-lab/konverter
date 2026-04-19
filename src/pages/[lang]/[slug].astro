@@ -1,4 +1,7 @@
 ---
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -50,6 +53,14 @@ if (!(config.type in componentByType)) {
 
 const { Content } = await entry.render();
 
+// Convention (Session 9): if `public/icons/tools/<toolId>.webp` exists, the
+// hero renders it above the H1. Auto-picks up new icons as they land —
+// no config flag required. The icon file is the 160×160 WebP output of the
+// Recraft → BG-Remover pipeline; CSS caps it at 80×80 for optical balance.
+const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
+const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
+const hasIcon = existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, '')));
+
 const jsonLd = buildToolJsonLd(
   {
     toolId: entry.data.toolId,
@@ -76,6 +87,17 @@ const jsonLd = buildToolJsonLd(
   ))}
   <div class="tool-page">
     <header class="tool-hero">
+      {hasIcon && (
+        <img
+          class="tool-hero__icon"
+          src={iconRel}
+          alt=""
+          width="80"
+          height="80"
+          loading="eager"
+          decoding="async"
+        />
+      )}
       <h1>{entry.data.title}</h1>
       <p class="tagline">{entry.data.tagline}</p>
     </header>
@@ -120,7 +142,20 @@ const jsonLd = buildToolJsonLd(
     text-align: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--space-3);
+  }
+  .tool-hero__icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: var(--space-2);
+    object-fit: contain;
+  }
+  /* The icons are graphite pencil sketches on transparent — in dark mode the
+     strokes vanish against the dark canvas. ThemeScript always stamps
+     `data-theme` before first paint, so a plain selector is enough. */
+  :global([data-theme='dark']) .tool-hero__icon {
+    filter: invert(1);
   }
   .tool-hero h1 {
     margin: 0;

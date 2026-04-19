@@ -6,11 +6,13 @@ import type { ConverterConfig } from './schemas';
  * werden pro Tool ausgetauscht; alle Stil-Sätze bleiben WORTGLEICH zwischen
  * Tools, damit die Icon-Familie visuell kohärent ist.
  *
- * Status: [x] Generated (PNG, white background)  [ ] Background-Removed  [ ] Delivered
+ * Status: [x] Generated  [x] Background-Removed  [x] Delivered (2026-04-19)
  *
- * Target: public/icons/tools/meter-to-feet.webp (160x160, CSS 80x80).
- * Pipeline: Recraft → BG-Remover-Tool (Session 9/10) → pending-icons/meter-to-feet.png
- *           → Build-Script konvertiert zu WebP.
+ * File: public/icons/tools/meter-to-feet.webp (313 KB, transparent alpha,
+ * CSS 80x80). Picked up automatically by [slug].astro via the
+ * `public/icons/tools/<toolId>.webp` convention — no config flag needed.
+ * Pipeline used: Recraft → BG-Remover-Tool (/de/hintergrund-entfernen) →
+ * WebP mit Alpha.
  */
 export const meterZuFuss: ConverterConfig = {
   id: 'meter-to-feet',
