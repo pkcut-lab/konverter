@@ -67,15 +67,17 @@
   <div class="panel">
     <label class="panel__label" for="converter-input" data-testid="converter-label-from">
       <span class="panel__label-text">{fromLabel}</span>
-      <span class="panel__label-unit">({fromUnit})</span>
+      <span class="panel__label-unit" translate="no">({fromUnit})</span>
     </label>
     <input
       class="panel__field panel__field--input"
       id="converter-input"
+      name="converter-input"
       type="number"
       inputmode="decimal"
       step="any"
       min="0"
+      autocomplete="off"
       value={inputValue}
       oninput={onInput}
     />
@@ -107,7 +109,7 @@
   <div class="panel">
     <span class="panel__label" data-testid="converter-label-to">
       <span class="panel__label-text">{toLabel}</span>
-      <span class="panel__label-unit">({toUnit})</span>
+      <span class="panel__label-unit" translate="no">({toUnit})</span>
     </span>
     <div class="panel__output-row">
       <output
@@ -215,6 +217,7 @@
     border-radius: 0;
     appearance: textfield;
     -moz-appearance: textfield;
+    touch-action: manipulation;
     transition: border-color var(--dur-fast) var(--ease-out);
   }
   .panel__field--input::-webkit-outer-spin-button,
@@ -273,6 +276,7 @@
     font: inherit;
     font-size: var(--font-size-small);
     cursor: pointer;
+    touch-action: manipulation;
     transition:
       color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out);
@@ -311,6 +315,7 @@
     font: inherit;
     font-size: var(--font-size-small);
     cursor: pointer;
+    touch-action: manipulation;
     transition:
       color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out);
@@ -367,6 +372,7 @@
     font-size: var(--font-size-small);
     font-variant-numeric: tabular-nums;
     cursor: pointer;
+    touch-action: manipulation;
     transition:
       color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out),

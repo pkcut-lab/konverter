@@ -3,6 +3,8 @@
    WCAG AAA contrast locked by tests/design-system/contrast.test.ts. */
 
 :root {
+  color-scheme: light;
+
   /* Colors — Light Mode (default) */
   --color-bg: #FFFFFF;
   --color-surface: #FAFAF9;
@@ -80,6 +82,7 @@
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --color-bg: #1A1917;
   --color-surface: #252320;
   --color-border: #3A3733;
