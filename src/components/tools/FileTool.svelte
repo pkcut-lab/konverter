@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { FileToolConfig } from '../../lib/tools/schemas';
   import { getRuntime } from '../../lib/tools/tool-runtime-registry';
+  import { decodeHeicIfNeeded } from '../../lib/tools/heic-decode';
   import Loader from '../Loader.svelte';
 
   interface Props {
@@ -74,11 +75,7 @@
     prepareProgress = { loaded: 0, total: 0 };
   }
 
-  async function onFileChange(e: Event) {
-    const input = e.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
-
+  async function processFile(file: File) {
     if (!config.accept.includes(file.type)) {
       errorMessage = `Dateityp nicht unterstützt. Erlaubt: ${config.accept.join(', ')}.`;
       phase = 'error';
@@ -96,9 +93,22 @@
     outputFormat = config.defaultFormat ?? 'webp';
 
     if (!processor) {
-      errorMessage = `Kein Prozessor registriert für „${config.id}“.`;
+      errorMessage = `Kein Prozessor registriert für „${config.id}”.`;
       phase = 'error';
       return;
+    }
+
+    // HEIC pre-decode (static import — lazy-loading of heic2any happens inside decodeHeicIfNeeded)
+    let bytes: Uint8Array<ArrayBuffer> = new Uint8Array(await file.arrayBuffer() as ArrayBuffer);
+    if (file.type === 'image/heic' || file.type === 'image/heif') {
+      try {
+        const dec = await decodeHeicIfNeeded(bytes, file.type);
+        bytes = dec.bytes;
+      } catch (err) {
+        errorMessage = err instanceof Error ? `HEIC-Decode-Fehler: ${err.message}` : 'HEIC-Decode-Fehler.';
+        phase = 'error';
+        return;
+      }
     }
 
     const alreadyReady = runtime?.isPrepared?.() ?? false;
@@ -114,10 +124,8 @@
     }
 
     phase = 'converting';
-
     try {
-      const inputBytes = new Uint8Array(await file.arrayBuffer());
-      const outBytes = await processor(inputBytes, { quality });
+      const outBytes = await processor(bytes, { quality });
       const blob = new Blob([outBytes as BlobPart], { type: formatToMime(outputFormat) });
       if (outputUrl) URL.revokeObjectURL(outputUrl);
       outputUrl = URL.createObjectURL(blob);
@@ -131,6 +139,51 @@
       phase = 'error';
     }
   }
+
+  async function onFileChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    await processFile(file);
+  }
+
+  $effect(() => {
+    function onPaste(e: ClipboardEvent) {
+      if (phase !== 'idle' && phase !== 'error') return;
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.kind !== 'file') continue;
+        if (!item.type.startsWith('image/')) continue;
+        const file = item.getAsFile();
+        if (file) {
+          let finalFile: File;
+          if (file.name) {
+            finalFile = file;
+          } else {
+            const synthesized = new File(
+              [file],
+              `pasted-image-${Date.now()}.${item.type.split('/')[1] ?? 'png'}`,
+              { type: item.type },
+            );
+            // Preserve patched arrayBuffer (needed in test envs that lack native File.arrayBuffer)
+            if (typeof (file as File & { arrayBuffer?: unknown }).arrayBuffer === 'function' &&
+                typeof synthesized.arrayBuffer !== 'function') {
+              Object.defineProperty(synthesized, 'arrayBuffer', {
+                value: (file as File).arrayBuffer.bind(file),
+                configurable: true,
+              });
+            }
+            finalFile = synthesized;
+          }
+          void processFile(finalFile);
+          return;
+        }
+      }
+    }
+    document.addEventListener('paste', onPaste);
+    return () => document.removeEventListener('paste', onPaste);
+  });
 
   async function onFormatChange(newFormat: string) {
     if (!reencoder) return;
@@ -157,7 +210,7 @@
     >
       <span class="dropzone__title">Datei wählen</span>
       <span class="dropzone__hint" data-testid="filetool-meta">
-        PNG oder JPG · max. {config.maxSizeMb}&nbsp;MB
+        {config.accept.join(', ')} · max. {config.maxSizeMb}&nbsp;MB · oder Strg+V
       </span>
       <input
         class="dropzone__input"
@@ -166,6 +219,19 @@
         data-testid="filetool-input"
         onchange={onFileChange}
       />
+      {#if (config.cameraCapture ?? true) && config.accept.some((m) => m.startsWith('image/'))}
+        <label class="camera">
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            data-testid="filetool-camera-input"
+            hidden
+            onchange={onFileChange}
+          />
+          <span>Foto aufnehmen</span>
+        </label>
+      {/if}
     </label>
   {/if}
 
@@ -361,6 +427,31 @@
     height: 100%;
     opacity: 0;
     cursor: pointer;
+  }
+
+  .camera {
+    display: none;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .camera {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: var(--space-3);
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: var(--r-md);
+      font-size: var(--font-size-small);
+      color: var(--color-text-muted);
+      cursor: pointer;
+    }
+  }
+  .camera input[type='file'] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .status {
