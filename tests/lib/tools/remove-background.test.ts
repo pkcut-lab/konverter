@@ -1,0 +1,184 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+const mockMask = new Float32Array(64 * 64).fill(0.8);
+const mockPipe = vi.fn(async () => ({ mask: mockMask, width: 64, height: 64 }));
+const pipelineSpy = vi.fn(async (_task: string, _model: string, _opts: unknown) => mockPipe);
+
+vi.mock('@huggingface/transformers', () => ({
+  pipeline: pipelineSpy,
+}));
+
+function makeImageBytes(): Uint8Array {
+  // Minimal PNG header so createImageBitmap doesn't reject in jsdom mocks.
+  return new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]);
+}
+
+describe('remove-background pure module', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    pipelineSpy.mockClear();
+    mockPipe.mockClear();
+    // Stub createImageBitmap (jsdom 25 lacks it)
+    vi.stubGlobal('createImageBitmap', vi.fn(async () => ({
+      width: 64, height: 64, close: vi.fn(),
+    })));
+    // Stub OffscreenCanvas
+    const ctx = {
+      drawImage: vi.fn(),
+      getImageData: vi.fn(() => ({ data: new Uint8ClampedArray(64 * 64 * 4).fill(255), width: 64, height: 64 })),
+      putImageData: vi.fn(),
+      fillRect: vi.fn(),
+      set fillStyle(_v: string) { /* no-op */ },
+      set globalCompositeOperation(_v: string) { /* no-op */ },
+    };
+    class FakeOffscreenCanvas {
+      width: number; height: number;
+      constructor(w: number, h: number) { this.width = w; this.height = h; }
+      getContext() { return ctx; }
+      async convertToBlob(opts?: { type?: string }) {
+        const type = opts?.type ?? 'image/png';
+        const bytes =
+          type === 'image/png' ? new Uint8Array([137, 80, 78, 71]) :
+          type === 'image/webp' ? new Uint8Array([0x52, 0x49, 0x46, 0x46]) :
+          new Uint8Array([0xFF, 0xD8, 0xFF, 0xE0]);
+        return new Blob([bytes as BlobPart], { type });
+      }
+    }
+    vi.stubGlobal('OffscreenCanvas', FakeOffscreenCanvas);
+    // navigator.gpu absent → forces wasm path in detectDevice
+    vi.stubGlobal('navigator', { ...globalThis.navigator, gpu: undefined });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('prepareBackgroundRemovalModel calls pipeline once on first invocation', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    expect(pipelineSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('prepareBackgroundRemovalModel is idempotent on second invocation', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    expect(pipelineSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('prepareBackgroundRemovalModel forwards progress events to onProgress', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    const onProgress = vi.fn();
+    // Intercept the pipeline call to synchronously fire a progress event from the callback.
+    pipelineSpy.mockImplementationOnce(async (_t, _m, opts) => {
+      const cb = (opts as { progress_callback: (e: ProgressEvent) => void }).progress_callback;
+      cb({ loaded: 42, total: 100 });
+      return mockPipe;
+    });
+    await m.prepareBackgroundRemovalModel(onProgress);
+    expect(onProgress).toHaveBeenCalledWith({ loaded: 42, total: 100 });
+    const opts = pipelineSpy.mock.calls[0][2] as Record<string, unknown>;
+    expect(typeof opts.progress_callback).toBe('function');
+  });
+
+  it('removeBackground throws when not prepared', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await expect(m.removeBackground(makeImageBytes(), { format: 'png' })).rejects.toThrow(/prepare/i);
+  });
+
+  it('removeBackground returns PNG bytes after prepare', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    const out = await m.removeBackground(makeImageBytes(), { format: 'png' });
+    expect(out[0]).toBe(137);
+    expect(out[1]).toBe(80);
+  });
+
+  it('removeBackground returns WebP bytes when format=webp', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    const out = await m.removeBackground(makeImageBytes(), { format: 'webp' });
+    expect(out[0]).toBe(0x52); // 'R'
+    expect(out[1]).toBe(0x49); // 'I'
+  });
+
+  it('removeBackground returns JPG bytes when format=jpg', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    const out = await m.removeBackground(makeImageBytes(), { format: 'jpg' });
+    expect(out[0]).toBe(0xFF);
+    expect(out[1]).toBe(0xD8);
+  });
+
+  it('reencodeLastResult re-encodes without re-running inference', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    await m.removeBackground(makeImageBytes(), { format: 'png' });
+    expect(mockPipe).toHaveBeenCalledTimes(1);
+    const out = await m.reencodeLastResult('webp');
+    expect(mockPipe).toHaveBeenCalledTimes(1); // still 1
+    expect(out[0]).toBe(0x52);
+  });
+
+  it('reencodeLastResult throws when no result is cached', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await expect(m.reencodeLastResult('png')).rejects.toThrow(/no.*result/i);
+  });
+
+  it('clearLastResult removes the cached canvas', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    await m.removeBackground(makeImageBytes(), { format: 'png' });
+    m.clearLastResult();
+    await expect(m.reencodeLastResult('png')).rejects.toThrow(/no.*result/i);
+  });
+
+  it('isPrepared returns false before prepare and true after', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    expect(m.isPrepared()).toBe(false);
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    expect(m.isPrepared()).toBe(true);
+  });
+
+  it('prepareBackgroundRemovalModel rejects with StallError when no progress for stallTimeoutMs', async () => {
+    vi.useFakeTimers();
+    // Replace pipelineSpy with one that hangs and never calls onProgress
+    pipelineSpy.mockImplementationOnce(
+      () => new Promise(() => undefined) as Promise<typeof mockPipe>,
+    );
+    const m = await import('../../../src/lib/tools/remove-background');
+    const p = m.prepareBackgroundRemovalModel(() => undefined, { stallTimeoutMs: 1000 });
+    // Attach a catch handler synchronously so the watchdog-driven rejection
+    // (fired under fake timers inside advanceTimersByTimeAsync) never looks
+    // transiently unhandled to Node between tick and awaiter microtask.
+    p.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(1100);
+    await expect(p).rejects.toThrow(/stall/i);
+    vi.useRealTimers();
+  });
+
+  it('progress events reset the stall watchdog', async () => {
+    vi.useFakeTimers();
+    let onProgressCb: ((e: ProgressEvent) => void) | undefined;
+    pipelineSpy.mockImplementationOnce(async (_t, _m, opts) => {
+      onProgressCb = (opts as { progress_callback: (e: ProgressEvent) => void }).progress_callback;
+      // Resolve only after we get a tick
+      await new Promise<void>((resolve) => {
+        const interval = setInterval(() => {
+          if (onProgressCb) onProgressCb({ loaded: 50, total: 100 });
+        }, 500);
+        setTimeout(() => { clearInterval(interval); resolve(); }, 2500);
+      });
+      return mockPipe;
+    });
+    const m = await import('../../../src/lib/tools/remove-background');
+    const onProgress = vi.fn();
+    const p = m.prepareBackgroundRemovalModel(onProgress, { stallTimeoutMs: 1000 });
+    await vi.advanceTimersByTimeAsync(3000);
+    await expect(p).resolves.toBeUndefined();
+    vi.useRealTimers();
+  });
+});
+
+type ProgressEvent = { loaded: number; total: number };
