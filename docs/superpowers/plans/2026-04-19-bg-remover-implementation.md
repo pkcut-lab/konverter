@@ -4,7 +4,7 @@
 
 **Goal:** Build the third Phase-0-Tool — `/de/hintergrund-entfernen` — a fully client-side Background-Remover using Transformers.js + BEN2-ONNX, while extending the `FileTool` template with reusable building blocks (Loader component, prepare-phase, multi-format output, clipboard paste, mobile camera, HEIC support).
 
-**Architecture:** Pure-client only. ML model lazy-loaded on first upload via `@huggingface/transformers` v4 + `onnx-community/BEN2-ONNX` (~110 MB, MIT, WebGPU + WASM fallback). Singleton-cached after first load. `FileToolConfig` gets three optional fields (`prepare?`, `defaultFormat?`, `cameraCapture?`) — fully backwards-compatible with the existing `webp-konverter`. Output Canvas snapshot is module-cached so format switches re-encode without re-inference.
+**Architecture:** Pure-client only. ML model lazy-loaded on first upload via `@huggingface/transformers` v4 + `onnx-community/BEN2-ONNX` (~110 MB, MIT, WebGPU + WASM fallback). Singleton-cached after first load. `FileToolConfig` gets five optional fields (`prepare?`, `defaultFormat?`, `cameraCapture?`, `filenameSuffix?`, `showQuality?`) — fully backwards-compatible with the existing `webp-konverter`. Output Canvas snapshot is module-cached so format switches re-encode without re-inference.
 
 **Tech Stack:** Astro 5 SSG · Svelte 5 Runes · Tailwind 3.4 · TypeScript strict · Zod 3.24 · vitest 2.1.8 + jsdom 25 · `@huggingface/transformers` v4 · `heic2any` (HEIC decode polyfill).
 
@@ -16,31 +16,33 @@
 
 ## File Structure (Decomposition Lock-in)
 
-### New files (8 source + 7 test)
+### New files (9 source + 8 test)
 
 | File | Responsibility |
 |------|----------------|
 | `src/components/Loader.svelte` | Shared 2-variant loader (spinner / progress); used by every future tool that needs lazy-loading or long-running work. |
 | `src/lib/tools/heic-decode.ts` | Tiny wrapper around `heic2any` lazy-import — converts HEIC/HEIF Blob → PNG Blob. Safari short-circuits (returns input). |
-| `src/lib/tools/remove-background.ts` | Pure ML module: `prepareBackgroundRemovalModel`, `removeBackground`, `reencodeLastResult`, `clearLastResult`. Singleton-cached pipeline + canvas snapshot. |
+| `src/lib/tools/remove-background.ts` | Pure ML module: `prepareBackgroundRemovalModel`, `removeBackground`, `reencodeLastResult`, `clearLastResult`, `isPrepared`, `StallError`. Singleton-cached pipeline + canvas snapshot + watchdog timer. |
 | `src/lib/tools/hintergrund-entferner.ts` | Tool config (FileToolConfig). |
-| `src/lib/tools/tool-runtime-registry.ts` | Replaces `process-registry.ts` — one registry holding `{ process, prepare? }` per tool-id. (Renamed because shape grew.) |
+| `src/lib/tools/tool-runtime-registry.ts` | Replaces `process-registry.ts` — one registry holding `{ process, prepare?, reencode?, isPrepared?, clearLastResult? }` per tool-id. (Renamed because shape grew.) |
+| `src/lib/seo/tool-jsonld.ts` | JSON-LD builder: SoftwareApplication + FAQPage + HowTo. Pure function, applies to every tool page (not just BG-Remover). |
 | `src/content/tools/hintergrund-entfernen/de.md` | SEO content. |
 | `tests/components/Loader.test.ts` | Loader-component tests. |
 | `tests/lib/tools/heic-decode.test.ts` | HEIC-decode wrapper tests (mocked heic2any). |
-| `tests/lib/tools/remove-background.test.ts` | Pure-module tests (mocked transformers.js). |
+| `tests/lib/tools/remove-background.test.ts` | Pure-module tests (mocked transformers.js + watchdog). |
 | `tests/lib/tools/tool-runtime-registry.test.ts` | Registry shape + dispatch tests. |
-| `tests/components/tools/filetool-format.test.ts` | Dynamic-format-output + format-chooser tests. |
-| `tests/components/tools/filetool-prepare.test.ts` | Preparing-phase tests. |
+| `tests/lib/seo/tool-jsonld.test.ts` | JSON-LD builder tests. |
+| `tests/components/tools/filetool-format.test.ts` | Dynamic-format-output + format-chooser + filenameSuffix + showQuality tests. |
+| `tests/components/tools/filetool-prepare.test.ts` | Preparing-phase + isPrepared cache tests. |
 | `tests/components/tools/filetool-input-methods.test.ts` | Clipboard + camera + HEIC tests. |
 | `tests/components/tools/filetool-preview.test.ts` | Mini-preview rendering test. |
-| `tests/content/hintergrund-entfernen-content.test.ts` | Content frontmatter + body tests. |
+| `tests/content/hintergrund-entfernen-content.test.ts` | Content frontmatter + body + Datenschutz-CDN-disclosure tests. |
 
 ### Modified files
 
 | File | Change |
 |------|--------|
-| `src/lib/tools/schemas.ts` | Add 3 optional fields to `fileToolSchema` + `FileToolConfig` type: `prepare?`, `defaultFormat?`, `cameraCapture?`. |
+| `src/lib/tools/schemas.ts` | Add 5 optional fields to `fileToolSchema` + `FileToolConfig` type: `prepare?`, `defaultFormat?`, `cameraCapture?`, `filenameSuffix?`, `showQuality?`. |
 | `src/components/tools/FileTool.svelte` | Major refactor: phase-machine adds `preparing`, dynamic output MIME/extension, format chooser, clipboard paste, camera button, HEIC pre-decode, mini-preview. |
 | `src/lib/tools/tool-registry.ts` | Register `hintergrundEntferner`. |
 | `src/lib/slug-map.ts` | Add `remove-background` → `hintergrund-entfernen` slug for DE. |
@@ -51,6 +53,7 @@
 | `CONVENTIONS.md` | §Tool-Components: new `preparing` phase. §File-Tool-Pattern: prepare-step + clipboard/camera defaults + HEIC pre-decode. §Components: Loader.svelte. |
 | `STYLE.md` | §9.2: preparing-state + format-chooser + mini-preview. New §11: Loader visual spec. |
 | `PROGRESS.md` | Mark Session 9 (or whichever) as Hintergrund-Entferner complete. |
+| `src/pages/[lang]/[slug].astro` | Emit JSON-LD blocks per Task 12b (applies to every tool page). |
 
 ### Locked design decisions (resolves spec §15 open questions)
 
@@ -575,6 +578,16 @@ describe('FileToolConfig — extended fields', () => {
     expect(r.ok).toBe(true);
   });
 
+  it('accepts config with filenameSuffix string', () => {
+    const r = parseToolConfig({ ...valid, filenameSuffix: '_no-bg' });
+    expect(r.ok).toBe(true);
+  });
+
+  it('accepts config with showQuality boolean', () => {
+    const r = parseToolConfig({ ...valid, showQuality: false });
+    expect(r.ok).toBe(true);
+  });
+
   it('rejects non-callable prepare', () => {
     const r = parseToolConfig({ ...valid, prepare: 'not-a-function' });
     expect(r.ok).toBe(false);
@@ -600,6 +613,8 @@ export const fileToolSchema = base.extend({
   prepare: z.function().optional(),
   defaultFormat: z.string().min(1).optional(),
   cameraCapture: z.boolean().optional(),
+  filenameSuffix: z.string().optional(),
+  showQuality: z.boolean().optional(),
 });
 ```
 
@@ -625,11 +640,13 @@ Expected: 0/0/0.
 ```bash
 git add src/lib/tools/schemas.ts tests/lib/tools/
 git commit -m "$(cat <<'EOF'
-feat(schemas): extend FileToolConfig with optional prepare/defaultFormat/cameraCapture
+feat(schemas): extend FileToolConfig with 5 optional fields
 
-Additive — webp-konverter and any future file-tool without ML lazy-load
-are unaffected. Enables BG-Remover (prepare = model load) and multi-format
-output tools (defaultFormat).
+prepare/defaultFormat/cameraCapture/filenameSuffix/showQuality.
+Additive — webp-konverter and any future file-tool without these fields
+are unaffected. Enables BG-Remover (prepare = model load,
+filenameSuffix = '_no-bg', showQuality = false) and multi-format output
+tools (defaultFormat).
 
 Rulebooks-Read: PROJECT, CONVENTIONS
 
@@ -926,13 +943,57 @@ describe('remove-background pure module', () => {
     m.clearLastResult();
     await expect(m.reencodeLastResult('png')).rejects.toThrow(/no.*result/i);
   });
+
+  it('isPrepared returns false before prepare and true after', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    expect(m.isPrepared()).toBe(false);
+    await m.prepareBackgroundRemovalModel(() => undefined);
+    expect(m.isPrepared()).toBe(true);
+  });
+
+  it('prepareBackgroundRemovalModel rejects with StallError when no progress for stallTimeoutMs', async () => {
+    vi.useFakeTimers();
+    // Replace pipelineSpy with one that hangs and never calls onProgress
+    pipelineSpy.mockImplementationOnce(
+      () => new Promise(() => undefined) as Promise<typeof mockPipe>,
+    );
+    const m = await import('../../../src/lib/tools/remove-background');
+    const p = m.prepareBackgroundRemovalModel(() => undefined, { stallTimeoutMs: 1000 });
+    await vi.advanceTimersByTimeAsync(1100);
+    await expect(p).rejects.toThrow(/stall/i);
+    vi.useRealTimers();
+  });
+
+  it('progress events reset the stall watchdog', async () => {
+    vi.useFakeTimers();
+    let onProgressCb: ((e: ProgressEvent) => void) | undefined;
+    pipelineSpy.mockImplementationOnce(async (_t, _m, opts) => {
+      onProgressCb = (opts as { progress_callback: (e: ProgressEvent) => void }).progress_callback;
+      // Resolve only after we get a tick
+      await new Promise<void>((resolve) => {
+        const interval = setInterval(() => {
+          if (onProgressCb) onProgressCb({ loaded: 50, total: 100 });
+        }, 500);
+        setTimeout(() => { clearInterval(interval); resolve(); }, 2500);
+      });
+      return mockPipe;
+    });
+    const m = await import('../../../src/lib/tools/remove-background');
+    const onProgress = vi.fn();
+    const p = m.prepareBackgroundRemovalModel(onProgress, { stallTimeoutMs: 1000 });
+    await vi.advanceTimersByTimeAsync(3000);
+    await expect(p).resolves.toBeUndefined();
+    vi.useRealTimers();
+  });
 });
+
+type ProgressEvent = { loaded: number; total: number };
 ```
 
 - [ ] **Step 2: Run tests — verify they fail**
 
 Run: `npx vitest run tests/lib/tools/remove-background.test.ts`
-Expected: 10 failures (module doesn't exist).
+Expected: 13 failures (module doesn't exist).
 
 - [ ] **Step 3: Implement `remove-background.ts`**
 
@@ -962,9 +1023,26 @@ export interface ProgressEvent {
   total: number;
 }
 
+export interface PrepareOpts {
+  /**
+   * Watchdog timeout in ms. If no progress event arrives within this window
+   * the pipeline-promise rejects with `StallError`. Defaults to 120_000.
+   * Spec §10.
+   */
+  stallTimeoutMs?: number;
+}
+
+export class StallError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'StallError';
+  }
+}
+
 type Pipe = (input: unknown, opts?: unknown) => Promise<{ mask: Float32Array; width?: number; height?: number }>;
 
 let pipelinePromise: Promise<Pipe> | null = null;
+let pipelineReady = false;
 let lastResultCanvas: OffscreenCanvas | null = null;
 
 async function detectDevice(): Promise<'webgpu' | 'wasm'> {
@@ -978,23 +1056,68 @@ async function detectDevice(): Promise<'webgpu' | 'wasm'> {
   }
 }
 
+export function isPrepared(): boolean {
+  return pipelineReady;
+}
+
 export async function prepareBackgroundRemovalModel(
   onProgress: (e: ProgressEvent) => void,
+  opts: PrepareOpts = {},
 ): Promise<void> {
   if (pipelinePromise) {
     await pipelinePromise;
     return;
   }
+  const stallTimeoutMs = opts.stallTimeoutMs ?? 120_000;
+
   pipelinePromise = (async () => {
     const { pipeline } = await import('@huggingface/transformers');
     const device = await detectDevice();
-    const pipe = await pipeline('image-segmentation', 'onnx-community/BEN2-ONNX', {
-      progress_callback: onProgress,
-      device,
-    });
-    return pipe as unknown as Pipe;
+
+    let watchdog: ReturnType<typeof setTimeout> | null = null;
+    let stallReject: ((err: Error) => void) | null = null;
+
+    const wrappedProgress = (e: ProgressEvent) => {
+      if (watchdog) clearTimeout(watchdog);
+      watchdog = setTimeout(() => {
+        stallReject?.(new StallError(
+          `Model download stalled — no progress for ${stallTimeoutMs}ms.`,
+        ));
+      }, stallTimeoutMs);
+      onProgress(e);
+    };
+    // Start the watchdog before the first progress event arrives.
+    watchdog = setTimeout(() => {
+      stallReject?.(new StallError(
+        `Model download stalled — no progress for ${stallTimeoutMs}ms.`,
+      ));
+    }, stallTimeoutMs);
+
+    try {
+      const pipe = await new Promise<Pipe>((resolve, reject) => {
+        stallReject = reject;
+        pipeline('image-segmentation', 'onnx-community/BEN2-ONNX', {
+          progress_callback: wrappedProgress,
+          device,
+        })
+          .then((p) => resolve(p as unknown as Pipe))
+          .catch(reject);
+      });
+      return pipe;
+    } finally {
+      if (watchdog) clearTimeout(watchdog);
+    }
   })();
-  await pipelinePromise;
+
+  try {
+    await pipelinePromise;
+    pipelineReady = true;
+  } catch (err) {
+    // Reset so a subsequent retry actually retries.
+    pipelinePromise = null;
+    pipelineReady = false;
+    throw err;
+  }
 }
 
 function formatToMime(format: RemoveBackgroundFormat): string {
@@ -1071,7 +1194,7 @@ export function clearLastResult(): void {
 - [ ] **Step 4: Run tests — verify they pass**
 
 Run: `npx vitest run tests/lib/tools/remove-background.test.ts`
-Expected: 10/10 pass.
+Expected: 13/13 pass.
 
 If JPG test fails because the per-instance canvas mock's getContext returns the same mock for all instances (so the destination-over fillRect call doesn't change behaviour), confirm the test still asserts `bytes[0] === 0xFF` based on the mocked `convertToBlob` returning JPG-magic for that type — it should pass independent of fillRect logic.
 
@@ -1090,6 +1213,10 @@ feat(tools): add remove-background pure module (Transformers.js + BEN2)
 Singleton-cached pipeline with WebGPU detection + WASM fallback. Format
 chooser (PNG/WebP/JPG) re-encodes from cached canvas — no re-inference.
 Module-scope lastResultCanvas; explicit clearLastResult() on reset.
+Stall watchdog (default 120s, configurable via stallTimeoutMs) rejects
+the prepare-promise with typed StallError if no progress event arrives
+within the window — spec §10. isPrepared() exposed for component-mount
+state-restoration (no UI flash on revisit).
 
 Rulebooks-Read: PROJECT, CONVENTIONS
 
@@ -1108,7 +1235,7 @@ EOF
 
 **Reference:** Spec §6.2 (Kontext-Refactor block).
 
-**Goal:** Replace hardcoded `'image/webp'` MIME and `.webp` extension with state driven by `config.defaultFormat` (default `'webp'` for backwards-compat). Render a Format-Chooser radio-group in `done`-phase that re-encodes via runtime's optional `reencodeLastResult` (only used by tools that expose one — for now, only `remove-background`; the dispatch is generalized via the runtime registry's optional `reencode` field).
+**Goal:** Replace hardcoded `'image/webp'` MIME and `.webp` extension with state driven by `config.defaultFormat` (default `'webp'` for backwards-compat). Render a Format-Chooser radio-group in `done`-phase that re-encodes via runtime's optional `reencodeLastResult` (only used by tools that expose one — for now, only `remove-background`; the dispatch is generalized via the runtime registry's optional `reencode` field). Apply `config.filenameSuffix` (e.g. `'_no-bg'`) to download name when set. Hide quality slider when `config.showQuality === false`.
 
 - [ ] **Step 1: Extend `ToolRuntime` with optional reencode field**
 
@@ -1242,13 +1369,46 @@ describe('FileTool — dynamic format + format-chooser', () => {
     await flushAsync();
     expect(host.querySelector('[data-testid="filetool-format-chooser"]')).toBeNull();
   });
+
+  it('applies filenameSuffix to download name when set', async () => {
+    const suffixCfg: FileToolConfig = { ...FORMATS_CFG, filenameSuffix: '_no-bg' };
+    cmp = mount(FileTool, { target: host, props: { config: suffixCfg } });
+    flushSync();
+    const input = host.querySelector('[data-testid="filetool-input"]') as HTMLInputElement;
+    Object.defineProperty(input, 'files', { value: [makeFile('photo.png', 'image/png', 100)] });
+    input.dispatchEvent(new Event('change'));
+    await flushAsync();
+    const dl = host.querySelector('[data-testid="filetool-download"]') as HTMLAnchorElement;
+    expect(dl.getAttribute('download')).toBe('photo_no-bg.png');
+  });
+
+  it('hides quality slider when showQuality is false', async () => {
+    const noQCfg: FileToolConfig = { ...FORMATS_CFG, showQuality: false };
+    cmp = mount(FileTool, { target: host, props: { config: noQCfg } });
+    flushSync();
+    const input = host.querySelector('[data-testid="filetool-input"]') as HTMLInputElement;
+    Object.defineProperty(input, 'files', { value: [makeFile('photo.png', 'image/png', 100)] });
+    input.dispatchEvent(new Event('change'));
+    await flushAsync();
+    expect(host.querySelector('[data-testid="filetool-quality"]')).toBeNull();
+  });
+
+  it('renders quality slider by default (showQuality omitted)', async () => {
+    cmp = mount(FileTool, { target: host, props: { config: FORMATS_CFG } });
+    flushSync();
+    const input = host.querySelector('[data-testid="filetool-input"]') as HTMLInputElement;
+    Object.defineProperty(input, 'files', { value: [makeFile('photo.png', 'image/png', 100)] });
+    input.dispatchEvent(new Event('change'));
+    await flushAsync();
+    expect(host.querySelector('[data-testid="filetool-quality"]')).not.toBeNull();
+  });
 });
 ```
 
 - [ ] **Step 3: Run tests — verify they fail**
 
 Run: `npx vitest run tests/components/tools/filetool-format.test.ts`
-Expected: 4 failures.
+Expected: 8 failures.
 
 - [ ] **Step 4: Refactor FileTool — add format state, helpers, format-chooser markup**
 
@@ -1266,8 +1426,9 @@ Concrete edit sketch (apply by reading current file and editing the relevant blo
 // Replace existing 'image/webp' literal at line 79 with:
 const blob = new Blob([outBytes as BlobPart], { type: formatToMime(outputFormat) });
 
-// Replace `replaceExt(sourceName, '.webp')` derived (line 21) with:
-const downloadName = $derived(replaceExt(sourceName, '.' + formatToExt(outputFormat)));
+// Replace `replaceExt(sourceName, '.webp')` derived (line 21) with one that
+// applies the optional filenameSuffix (e.g. '_no-bg' → 'photo_no-bg.png'):
+const downloadName = $derived(buildDownloadName(sourceName, outputFormat, config.filenameSuffix));
 
 // Add at top:
 let outputFormat = $state<string>(config.defaultFormat ?? 'webp');
@@ -1276,6 +1437,12 @@ function formatToMime(f: string): string {
 }
 function formatToExt(f: string): string {
   switch (f) { case 'png': return 'png'; case 'jpg': return 'jpg'; case 'webp': return 'webp'; default: return 'webp'; }
+}
+function buildDownloadName(name: string, format: string, suffix?: string): string {
+  const ext = '.' + formatToExt(format);
+  const dot = name.lastIndexOf('.');
+  const stem = dot > 0 ? name.slice(0, dot) : name;
+  return `${stem}${suffix ?? ''}${ext}`;
 }
 
 // In script, also resolve runtime once:
@@ -1327,6 +1494,18 @@ Markup additions in `done`-phase block (after the size-rows, before `.result`):
 
 Add minimal CSS (token-only) for `.formats`, `.formats__legend`, `.formats__opt`, `.formats__hint` — keep consistent with existing `.row` / `.quality` styles (small font, mono for hints, no rounded-full).
 
+Also wrap the existing `.quality` slider markup in a conditional so it disappears when a tool opts out:
+
+```svelte
+{#if (config.showQuality ?? true)}
+  <div class="quality" data-testid="filetool-quality">
+    <!-- existing slider markup unchanged -->
+  </div>
+{/if}
+```
+
+Add `data-testid="filetool-quality"` to the wrapper if not already present so the new tests can assert presence/absence.
+
 - [ ] **Step 5: Update existing FileTool tests if needed**
 
 Run: `npx vitest run tests/components/tools/filetool.test.ts`
@@ -1337,7 +1516,7 @@ If failures appear, fix tests by aligning with the new state (don't change behav
 - [ ] **Step 6: Run new tests — verify pass**
 
 Run: `npx vitest run tests/components/tools/filetool-format.test.ts`
-Expected: 4/4 pass.
+Expected: 8/8 pass.
 
 - [ ] **Step 7: Full suite + check + commit**
 
@@ -1347,11 +1526,14 @@ Expected: all green.
 ```bash
 git add src/components/tools/FileTool.svelte src/lib/tools/tool-runtime-registry.ts tests/components/tools/filetool-format.test.ts
 git commit -m "$(cat <<'EOF'
-feat(filetool): dynamic output format + format-chooser
+feat(filetool): dynamic output format + format-chooser + filename suffix + quality opt-out
 
 Replaces hardcoded image/webp with config.defaultFormat-driven state.
 Format-chooser radio-group renders only when the runtime exposes a
-reencode function (BG-Remover yes, webp-konverter no). Tokens-only.
+reencode function (BG-Remover yes, webp-konverter no). Optional
+filenameSuffix appended to download stem (e.g. 'photo_no-bg.png').
+Quality slider hidden when config.showQuality === false (tools that
+hardcode quality, like BG-Remover, opt out). Tokens-only.
 
 Rulebooks-Read: PROJECT, CONVENTIONS, STYLE
 
@@ -1411,13 +1593,17 @@ describe('FileTool — preparing phase', () => {
     vi.stubGlobal('URL', { ...URL, createObjectURL: vi.fn(() => 'blob:mock'), revokeObjectURL: vi.fn() });
     prepareCalls = 0;
     prepareImpl = async () => undefined;
+    let preparedFlag = false;
     toolRuntimeRegistry['test-prepare-tool'] = {
       process: async () => new Uint8Array([1]),
       prepare: async (onProgress) => {
         prepareCalls++;
         onProgress({ loaded: 50, total: 110 });
-        return prepareImpl();
+        await prepareImpl();
+        preparedFlag = true;
       },
+      isPrepared: () => preparedFlag,
+      clearLastResult: () => undefined,
     };
   });
 
@@ -1521,16 +1707,26 @@ Edit `src/components/tools/FileTool.svelte`:
 1. Add `'preparing'` to `Phase` union.
 2. Add module-scope state:
    ```typescript
-   let prepared = $state<boolean>(false);
    let prepareProgress = $state<{ loaded: number; total: number }>({ loaded: 0, total: 0 });
    ```
-3. In `onFileChange`, after MIME/Size validation but before `phase = 'converting'`:
+   No component-local `prepared` flag — the runtime is the source of truth via its optional `isPrepared()` selector. The runtime registry exposes this for tools that have it (BG-Remover does); generic tools without lazy-load skip preparing entirely because `runtime.prepare` is undefined.
+3. Extend `ToolRuntime` with optional `isPrepared` selector:
    ```typescript
-   if (runtime?.prepare && !prepared) {
+   export interface ToolRuntime {
+     process: ProcessFn;
+     prepare?: PrepareFn;
+     reencode?: ReencodeFn;
+     isPrepared?: () => boolean;
+   }
+   ```
+   The BG-Remover runtime entry exposes `isPrepared: () => isPrepared()` (re-exported from `remove-background.ts`). webp-konverter has none.
+4. In `processFile`, after MIME/Size validation but before `phase = 'converting'`:
+   ```typescript
+   const alreadyReady = runtime?.isPrepared?.() ?? false;
+   if (runtime?.prepare && !alreadyReady) {
      phase = 'preparing';
      try {
        await runtime.prepare((e) => { prepareProgress = e; });
-       prepared = true;
      } catch (err) {
        errorMessage = err instanceof Error ? `Modell-Lade-Fehler: ${err.message}` : 'Modell-Lade-Fehler.';
        phase = 'error';
@@ -1539,7 +1735,8 @@ Edit `src/components/tools/FileTool.svelte`:
    }
    phase = 'converting';
    ```
-4. Reset path also clears `prepareProgress` (but NOT `prepared` — singleton stays cached).
+   This ensures revisits never flash the preparing UI: when the user navigates away and back, the runtime singleton is still ready, `isPrepared()` returns true, and the component skips straight to converting.
+5. Reset path clears `prepareProgress` AND calls `runtime?.clearLastResult?.()` if exposed (so the cached canvas in `remove-background.ts` is dropped). Add `clearLastResult?: () => void` to `ToolRuntime` for this.
 5. Add markup block for preparing-phase (uses `<Loader />`):
    ```svelte
    {#if phase === 'preparing'}
@@ -1701,6 +1898,22 @@ describe('FileTool — input methods', () => {
     expect(host.querySelector('[data-testid="filetool-camera-input"]')).toBeNull();
   });
 
+  it('clipboard paste with unnamed File synthesizes pasted-image-<ts>.png', async () => {
+    cmp = mount(FileTool, { target: host, props: { config: CFG } });
+    flushSync();
+    const buf = new Uint8Array([1, 2, 3]);
+    // File with empty name (real browsers may emit this from getAsFile())
+    const file = patch(new File([buf], '', { type: 'image/png' }), buf);
+    const item = { kind: 'file', type: 'image/png', getAsFile: () => file } as unknown as DataTransferItem;
+    const ev = new Event('paste') as Event & { clipboardData: DataTransfer };
+    Object.defineProperty(ev, 'clipboardData', { value: { items: [item] } });
+    document.dispatchEvent(ev);
+    await flushAsync();
+    const dl = host.querySelector('[data-testid="filetool-download"]') as HTMLAnchorElement;
+    expect(dl).not.toBeNull();
+    expect(dl.getAttribute('download')).toMatch(/^pasted-image-\d+\.webp$/);
+  });
+
   it('HEIC upload triggers heic-decode lazy-load before process', async () => {
     const decodeSpy = vi.fn(async (bytes: Uint8Array, _mime: string) => ({ bytes, mime: 'image/png' }));
     vi.doMock('../../../src/lib/tools/heic-decode', () => ({ decodeHeicIfNeeded: decodeSpy }));
@@ -1721,7 +1934,7 @@ describe('FileTool — input methods', () => {
 - [ ] **Step 2: Run tests — verify they fail**
 
 Run: `npx vitest run tests/components/tools/filetool-input-methods.test.ts`
-Expected: 6 failures.
+Expected: 7 failures.
 
 - [ ] **Step 3: Implement input methods in FileTool**
 
@@ -1817,7 +2030,7 @@ Edit `src/components/tools/FileTool.svelte`:
 - [ ] **Step 4: Run new tests — verify pass**
 
 Run: `npx vitest run tests/components/tools/filetool-input-methods.test.ts`
-Expected: 6/6 pass.
+Expected: 7/7 pass.
 
 - [ ] **Step 5: Full suite + check + commit**
 
@@ -2060,6 +2273,14 @@ describe('hintergrund-entferner config + registry', () => {
     expect(hintergrundEntferner.defaultFormat).toBe('png');
   });
 
+  it('filenameSuffix is _no-bg', () => {
+    expect(hintergrundEntferner.filenameSuffix).toBe('_no-bg');
+  });
+
+  it('showQuality is false (quality slider hidden)', () => {
+    expect(hintergrundEntferner.showQuality).toBe(false);
+  });
+
   it('exposes prepare function', () => {
     expect(typeof hintergrundEntferner.prepare).toBe('function');
   });
@@ -2072,12 +2293,14 @@ describe('hintergrund-entferner config + registry', () => {
     expect(slugMap['remove-background']?.de).toBe('hintergrund-entfernen');
   });
 
-  it('is registered in tool-runtime-registry with process + prepare + reencode', () => {
+  it('is registered in tool-runtime-registry with process + prepare + reencode + isPrepared + clearLastResult', () => {
     const r = getRuntime('remove-background');
     expect(r).toBeDefined();
     expect(typeof r?.process).toBe('function');
     expect(typeof r?.prepare).toBe('function');
     expect(typeof r?.reencode).toBe('function');
+    expect(typeof r?.isPrepared).toBe('function');
+    expect(typeof r?.clearLastResult).toBe('function');
   });
 });
 ```
@@ -2085,7 +2308,7 @@ describe('hintergrund-entferner config + registry', () => {
 - [ ] **Step 3: Run tests — verify they fail**
 
 Run: `npx vitest run tests/lib/tools/hintergrund-entferner-config.test.ts`
-Expected: 9 failures.
+Expected: 11 failures.
 
 - [ ] **Step 4: Create the tool config**
 
@@ -2126,6 +2349,12 @@ export const hintergrundEntferner: FileToolConfig = {
   accept: ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/heic', 'image/heif'],
   maxSizeMb: 15,
   defaultFormat: 'png',
+  filenameSuffix: '_no-bg',
+  showQuality: false,
+  // NOTE: `prepare` and `process` here are never invoked at runtime — Astro
+  // strips functions from island props. The runtime-registry below is the
+  // single source of truth for execution. These stay here only to satisfy
+  // the Zod schema and make the config self-describing.
   prepare: (onProgress) => prepareBackgroundRemovalModel(onProgress),
   process: (input, config) =>
     removeBackground(input, {
@@ -2156,6 +2385,8 @@ import {
   removeBackground,
   prepareBackgroundRemovalModel,
   reencodeLastResult,
+  clearLastResult,
+  isPrepared,
 } from './remove-background';
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
@@ -2169,6 +2400,8 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       }),
     prepare: (onProgress) => prepareBackgroundRemovalModel(onProgress),
     reencode: (format) => reencodeLastResult(format as 'png' | 'webp' | 'jpg'),
+    isPrepared: () => isPrepared(),
+    clearLastResult: () => clearLastResult(),
   },
 };
 ```
@@ -2176,7 +2409,7 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
 - [ ] **Step 8: Run tests — verify pass**
 
 Run: `npx vitest run tests/lib/tools/hintergrund-entferner-config.test.ts && npm test -- --run`
-Expected: 9/9 pass + full suite green.
+Expected: 11/11 pass + full suite green.
 
 - [ ] **Step 9: Type-check + commit**
 
@@ -2307,6 +2540,248 @@ Expected: all pass. If word-count fails, expand the body.
 Run: `npm run build`
 Expected: build succeeds, log mentions `/de/hintergrund-entfernen` page generation.
 
+- [ ] **Step 6: Datenschutz-Disclosure in Content MD (conscious-gap note)**
+
+The global Datenschutzerklärung page is a Phase-2 stub (`src/components/Footer.astro:22` — `<span class="stub">Datenschutz (Phase 2)</span>`). Spec §14.6 expects an entry there. Until the Datenschutz page exists, the in-page `## Datenschutz — 100 % im Browser` section in `de.md` IS the user-facing disclosure. Ensure the content explicitly names:
+
+- "Hugging Face" as CDN provider (USA, non-EU jurisdiction)
+- That the CDN request contains NO image data and NO personal data
+- That the download is one-time and cached by the browser afterwards
+- Link-placeholder to the future `/de/datenschutz` page (use `<a href="/de/datenschutz">Datenschutzerklärung</a>` — will 404 until Phase 2, but the anchor is stable)
+
+Add a dedicated test to `tests/content/hintergrund-entfernen-content.test.ts`:
+
+```typescript
+it('datenschutz section mentions Hugging Face CDN + no image upload', () => {
+  const section = body.slice(
+    body.indexOf('## Datenschutz'),
+    body.indexOf('## Wann liefert das Tool gute Ergebnisse?'),
+  );
+  expect(section).toMatch(/hugging\s*face/i);
+  expect(section).toMatch(/kein.*upload|nicht.*hochgeladen|100.*%.*im\s*browser/i);
+  expect(section).toMatch(/\/de\/datenschutz/);
+});
+```
+
+Re-run: `npx vitest run tests/content/hintergrund-entfernen-content.test.ts`. Expected: pass.
+
+- [ ] **Step 7: Commit content**
+
+```bash
+git add src/content/tools/hintergrund-entfernen/de.md tests/content/hintergrund-entfernen-content.test.ts
+git commit -m "$(cat <<'EOF'
+feat(content): add hintergrund-entfernen DE content (>=800 words)
+
+Privacy-Lead headline + locked H2 sequence. Datenschutz-Sektion explicitly
+names Hugging Face CDN (USA, no image data) per spec §10.1 condition (e)
+and links to /de/datenschutz (stub page; becomes live in Phase 2).
+
+Rulebooks-Read: PROJECT, CONTENT
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+EOF
+)"
+```
+
+---
+
+## Task 12b: Schema.org structured data (SoftwareApplication + FAQPage + HowTo)
+
+**Files:**
+- Modify: `src/pages/[lang]/[slug].astro` (add JSON-LD emission)
+- Create: `src/lib/seo/tool-jsonld.ts` (builder — one module, tested)
+- Test: `tests/lib/seo/tool-jsonld.test.ts`
+
+**Reference:** Spec §2.4 differentiation B9. Currently zero JSON-LD output in the codebase (verified via grep). Required for AEO/voice-search feature.
+
+- [ ] **Step 1: Write failing tests**
+
+Create `tests/lib/seo/tool-jsonld.test.ts`:
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { buildToolJsonLd } from '../../../src/lib/seo/tool-jsonld';
+
+describe('buildToolJsonLd', () => {
+  const content = {
+    toolId: 'remove-background',
+    lang: 'de',
+    title: 'Hintergrund entfernen',
+    description: 'Beschreibung',
+    faq: [
+      { q: 'Funktioniert das offline?', a: 'Ja, nach dem ersten Modell-Download.' },
+      { q: 'Ist es kostenlos?', a: 'Ja.' },
+    ],
+    steps: [
+      { title: 'Bild hochladen', description: 'Drag-&-Drop oder Click.' },
+      { title: 'Warten', description: 'KI arbeitet 100–200 ms lokal.' },
+      { title: 'Download', description: 'PNG mit Transparenz.' },
+    ],
+  };
+
+  it('emits an array with SoftwareApplication + FAQPage + HowTo @types', () => {
+    const out = buildToolJsonLd(content, 'https://example.com/de/hintergrund-entfernen');
+    const types = out.map((x) => x['@type']);
+    expect(types).toContain('SoftwareApplication');
+    expect(types).toContain('FAQPage');
+    expect(types).toContain('HowTo');
+  });
+
+  it('SoftwareApplication includes name, applicationCategory, offers free', () => {
+    const [soft] = buildToolJsonLd(content, 'https://example.com/de/hintergrund-entfernen');
+    expect(soft.name).toBe('Hintergrund entfernen');
+    expect(soft.applicationCategory).toBe('MultimediaApplication');
+    expect((soft.offers as { price: string }).price).toBe('0');
+  });
+
+  it('FAQPage mainEntity matches faq length and shape', () => {
+    const out = buildToolJsonLd(content, 'https://example.com/x');
+    const faq = out.find((x) => x['@type'] === 'FAQPage');
+    expect((faq?.mainEntity as unknown[]).length).toBe(2);
+  });
+
+  it('HowTo step count matches steps length', () => {
+    const out = buildToolJsonLd(content, 'https://example.com/x');
+    const howTo = out.find((x) => x['@type'] === 'HowTo');
+    expect((howTo?.step as unknown[]).length).toBe(3);
+  });
+
+  it('omits FAQPage when faq is empty', () => {
+    const out = buildToolJsonLd({ ...content, faq: [] }, 'https://example.com/x');
+    expect(out.find((x) => x['@type'] === 'FAQPage')).toBeUndefined();
+  });
+
+  it('omits HowTo when steps are empty', () => {
+    const out = buildToolJsonLd({ ...content, steps: [] }, 'https://example.com/x');
+    expect(out.find((x) => x['@type'] === 'HowTo')).toBeUndefined();
+  });
+});
+```
+
+- [ ] **Step 2: Run tests — verify they fail**
+
+Run: `npx vitest run tests/lib/seo/tool-jsonld.test.ts`
+Expected: 6 failures (module does not exist).
+
+- [ ] **Step 3: Implement `buildToolJsonLd`**
+
+Create `src/lib/seo/tool-jsonld.ts`:
+
+```typescript
+export interface ToolContentForJsonLd {
+  toolId: string;
+  lang: string;
+  title: string;
+  description: string;
+  faq: Array<{ q: string; a: string }>;
+  steps: Array<{ title: string; description: string }>;
+}
+
+export function buildToolJsonLd(content: ToolContentForJsonLd, url: string): Array<Record<string, unknown>> {
+  const out: Array<Record<string, unknown>> = [];
+
+  out.push({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: content.title,
+    description: content.description,
+    url,
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    inLanguage: content.lang,
+  });
+
+  if (content.faq.length > 0) {
+    out.push({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: content.faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    });
+  }
+
+  if (content.steps.length > 0) {
+    out.push({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: content.title,
+      step: content.steps.map((s, i) => ({
+        '@type': 'HowToStep',
+        position: i + 1,
+        name: s.title,
+        text: s.description,
+      })),
+    });
+  }
+
+  return out;
+}
+```
+
+- [ ] **Step 4: Emit JSON-LD in `[slug].astro`**
+
+Edit `src/pages/[lang]/[slug].astro`. Inside the `<BaseLayout>` — or, if BaseLayout exposes a `head` slot, in that slot — emit one `<script type="application/ld+json">` per block:
+
+```astro
+---
+import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
+// … existing imports
+
+const jsonLd = buildToolJsonLd(
+  {
+    toolId: content.toolId,
+    lang: content.lang,
+    title: content.title,
+    description: content.description,
+    faq: content.faq ?? [],
+    steps: content.steps ?? [],
+  },
+  Astro.url.href,
+);
+---
+…
+<BaseLayout …>
+  {jsonLd.map((block) => (
+    <script type="application/ld+json" set:html={JSON.stringify(block)} />
+  ))}
+  <!-- rest of page -->
+</BaseLayout>
+```
+
+Adjust field names to match the actual content collection shape (some fields may be `howToSteps` or `relatedTools` — read the existing webp-konverter page + schema first).
+
+- [ ] **Step 5: Build-time assertion — JSON-LD renders in HTML**
+
+Run: `npm run build && grep -c 'application/ld+json' dist/de/hintergrund-entfernen/index.html || true`
+Expected: count ≥ 1.
+
+Also verify webp-konverter and meter-zu-fuss pages pick up the same emission (they have FAQ + steps; SoftwareApplication should also appear). This is a side-effect improvement, not a regression.
+
+- [ ] **Step 6: Full suite + check + commit**
+
+Run: `npm test -- --run && npm run check`
+Expected: all green.
+
+```bash
+git add src/lib/seo/tool-jsonld.ts src/pages/[lang]/[slug].astro tests/lib/seo/tool-jsonld.test.ts
+git commit -m "$(cat <<'EOF'
+feat(seo): emit SoftwareApplication + FAQPage + HowTo JSON-LD for tool pages
+
+One builder module, tested with 6 cases. Applies to every tool with
+FAQ+steps, not just BG-Remover — webp-konverter + meter-zu-fuss pick up
+the same emission. Required for AEO/voice-search (spec §2.4 B9).
+
+Rulebooks-Read: PROJECT, CONVENTIONS, CONTENT
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+EOF
+)"
+```
+
 - [ ] **Step 6: Full suite + check + commit**
 
 Run: `npm test -- --run && npm run check`
@@ -2343,6 +2818,14 @@ Expected: build succeeds, `dist/de/hintergrund-entfernen/index.html` exists. Lis
 
 Run: `du -sh dist/_astro/*.js | sort -rh | head -10`
 Expected: largest individual JS chunk < 200 KB. Transformers.js + heic2any chunks should NOT appear in the entry chunks.
+
+Also assert that `huggingface` / `transformers` code is isolated to a dynamic-import chunk, never the entry bundle:
+
+```bash
+find dist/_astro -name '*.js' | xargs grep -l 'huggingface' 2>/dev/null || echo "not in any chunk"
+```
+
+Expected: either a single matching file (the dynamic-import chunk) or `not in any chunk`. If it appears in multiple chunks — especially the entry chunk — the lazy-import is broken.
 
 - [ ] **Step 3: Check 0/0/0**
 
@@ -2398,14 +2881,19 @@ EOF
 
 Add to `§Tool-Components`:
 - New `preparing` phase to FileTool phase machine.
-- `defaultFormat` and `cameraCapture` config-flags.
+- Five new optional FileToolConfig fields: `prepare`, `defaultFormat`, `cameraCapture`, `filenameSuffix`, `showQuality`. Document defaults: `cameraCapture` defaults to `true` for any tool whose `accept[]` contains an `image/*` MIME; `showQuality` defaults to `true`; others default to undefined.
 
 Add to `§File-Tool-Pattern`:
-- Drei-Touch-Pattern updated: `process-registry` → `tool-runtime-registry` (single registry, `{ process, prepare?, reencode? }` shape).
+- Drei-Touch-Pattern updated: `process-registry` → `tool-runtime-registry` (single registry, `{ process, prepare?, reencode?, isPrepared?, clearLastResult? }` shape).
+- ML-lazy-load tools expose `isPrepared()` so the component can skip the preparing UI flash on revisit. The runtime is source of truth; no component-local `prepared` flag.
 - New entry-points (clipboard paste + camera capture + HEIC pre-decode) are now FileTool-Defaults.
+- Stall-watchdog pattern: long-running `prepare` implementations should accept a `{ stallTimeoutMs }` option and throw a typed `StallError` when no progress event arrives within the window (default 120 s).
 
 Add new sub-section `§Components`:
 - `Loader.svelte` — shared component, two variants (`spinner` indeterminate / `progress` determinate). Used by any tool with lazy-loading or long-running work.
+
+Add new sub-section `§SEO/JSON-LD`:
+- `buildToolJsonLd()` in `src/lib/seo/tool-jsonld.ts` — emits `SoftwareApplication` + `FAQPage` + `HowTo` blocks. Wired into `[slug].astro`; applies to every tool page that exposes FAQ + steps frontmatter.
 
 - [ ] **Step 2: Update STYLE.md**
 
@@ -2440,7 +2928,7 @@ Add section:
 - `src/components/tools/FileTool.svelte`: +`preparing`-Phase, dynamisches Output-Format, Format-Chooser-Radio-Group, Clipboard-Paste, Mobile-Kamera-Capture, HEIC-Pre-Decode, Mini-Preview mit Checkerboard-BG. Phase-State-Machine: `idle → preparing → converting → done | error`.
 - `src/lib/tools/hintergrund-entferner.ts`: Tool-Config mit `prepare`, `defaultFormat: 'png'`, `accept: PNG/JPG/WebP/AVIF/HEIC/HEIF`, `maxSizeMb: 15`.
 - `src/content/tools/hintergrund-entfernen/de.md`: ≥800 Wörter SEO-Content, Privacy-Lead-Headline, 6 gelockte H2s.
-- Tests: ~30 neue (Loader: 6, heic-decode: 5, remove-background: 10, tool-runtime-registry: 3, filetool-format: 4, filetool-prepare: 5, filetool-input-methods: 6, filetool-preview: 2, hintergrund-entferner-config: 9, content: 6).
+- Tests: ~45 neue (Loader: 6, heic-decode: 5, remove-background: 13, tool-runtime-registry: 3, tool-jsonld: 6, filetool-format: 8, filetool-prepare: 5, filetool-input-methods: 7, filetool-preview: 2, hintergrund-entferner-config: 11, content: 7).
 - Differenzierung: §2.4 mit Subagent-Recherche gefüllt — White-Space „pure-client + HEIC + WebP-transparent + Clipboard + Camera + zero-friction".
 - Gates: 0/0/0 `astro check`, X/X vitest, 5 pages built (`/`, `/de`, `/de/meter-zu-fuss`, `/de/webp-konverter`, `/de/hintergrund-entfernen`).
 ```
