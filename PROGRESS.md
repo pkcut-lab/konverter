@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 7, End)
+**Letztes Update:** 2026-04-19 (Session 7, End + Phase-1-Lock-ins)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #7 — WebP Konverter Prototype ✅
+**Current Session:** #7 — WebP Konverter Prototype ✅ + Carry-over Rulebook-Locks ✅
 
 ## Phase 0 Fortschritt
 
@@ -72,10 +72,10 @@
   - Trigger: Execution startet, sobald Phase 0 Sessions 5–10 + Phase-1-Converter-Batch abgeschlossen sind UND mindestens ein anderer Interactive-Tool-Prototyp gelaufen ist.
   - Pickup: Der ausführende Agent arbeitet zuerst die **Pre-Execution Checklist (B1–B9)** im Plan ab und holt explizites User-Go ein (B9), bevor Task 1 startet.
 
-## Next-Session-Plan
-Session 8 — Prototype-Review #2 + Iteration-Lock: User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss`, `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark. Iterations-Feedback einarbeiten. Danach Lock der zwei Tool-Templates (Converter + FileTool) für Phase-1-Skalierung.
+## Phase-1-Lock-ins ✅ alle abgearbeitet (2026-04-19, post-Session-7)
+- ✅ `CONVENTIONS.md` v2: Svelte-5-Runes-Pattern (`$state<T>()`-Generics, `data-testid`-Konvention) + neue §Tool-Components (Converter + FileTool als zwei Templates) + neue §File-Tool-Pattern (Drei-Touch) + neue §Astro-Routes + jsdom-25-Workarounds in §Testing.
+- ✅ `STYLE.md` v1.2: NBSP-Typography-Rule + neue §9 Tool-Component Layouts (Converter Two-Panel, FileTool Single-Card-Morph) + neue §10 Page-Layout-Rhythmus (40/34/42rem).
+- ✅ `[slug].astro` Hydration-Limitation in CONVENTIONS dokumentiert (statische `componentByType`-Map + explizite Conditional-Renders, kein dynamic-component-render).
 
-**Offener Lock-in vor Tool-Skalierung in Phase 1** (carry-over aus Session 6, jetzt um File-Tool-Pattern ergänzt):
-- `CONVENTIONS.md`: Svelte-5-Runes-Pattern für Tools (`interface Props`, typisierte `$state<T>()`, `data-testid`-Konvention) + Drei-Touch-Pattern für File-Tools (pure Module unter `src/lib/tools/` + `tool-registry`-Eintrag + `process-registry`-Dispatch-Eintrag) + jsdom-25-File-arrayBuffer-Workaround.
-- `STYLE.md`: Converter-Box-Layout (Two-Panel + Hairline-Divider + zentrierte Swap-Pill) + FileTool-Single-Card-Morph (idle/converting/done/error), Quick-Value-Chip-Stil, Page-Layout-Rhythmus (Hero 40rem / Tool 34rem / Ad+Article 42rem).
-- `[slug].astro`: `componentByType` als statische Map mit expliziten Conditional-Renders dokumentieren — dynamische Component-Refs droppen `client:load` silent.
+## Next-Session-Plan
+Session 8 — Prototype-Review #2 + Iteration-Lock: User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss`, `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark. Iterations-Feedback einarbeiten. Mit den jetzt gelockten Rulebooks ist die Session ausschließlich auf visuelle/funktionale Iteration fokussiert — keine Architektur-Drift mehr offen.
