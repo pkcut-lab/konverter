@@ -1,0 +1,174 @@
+---
+toolId: remove-background
+language: de
+title: "Hintergrund entfernen — direkt im Browser"
+metaDescription: "Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert mit BEN2, WebGPU-beschleunigt."
+tagline: "Freisteller in Sekunden — das Bild bleibt auf deinem Gerät."
+intro: "Das Tool trennt ein Motiv vom Hintergrund und speichert das Ergebnis als transparente PNG-Datei. Die Analyse läuft vollständig auf deinem Gerät über ein KI-Modell, das einmalig ins Browser-Cache geladen wird. Danach funktioniert alles offline — kein Server, keine Anmeldung, kein Tracking. Ideal für Produktfotos, Porträts, Tiere und alles, was einen sauberen Freisteller braucht."
+howToUse:
+  - "Datei wählen (PNG, JPG, WebP, AVIF oder HEIC, bis 15 MB)"
+  - "Einmalig wartet das Tool auf den Modell-Download (ca. 110 MB, danach gecacht)"
+  - "Freigestelltes Bild als PNG, WebP oder JPG herunterladen"
+faq:
+  - q: "Muss ich meine Datei hochladen?"
+    a: "Nein. Die Bildanalyse läuft vollständig in deinem Browser über WebGPU oder WebAssembly. Das Bild verlässt dein Gerät zu keinem Zeitpunkt. Lediglich das KI-Modell wird einmalig von einem CDN geladen — dabei werden keine Bilddaten übertragen."
+  - q: "Wie lange dauert die Verarbeitung?"
+    a: "Nach dem einmaligen Modell-Download dauert die eigentliche Freistellung pro Bild typischerweise 100 bis 500 Millisekunden auf Geräten mit WebGPU-Unterstützung. Ohne WebGPU fällt das Tool auf WebAssembly zurück, was etwa zwei- bis viermal langsamer ist, aber immer noch flüssig nutzbar bleibt."
+  - q: "Welche Bilder eignen sich am besten?"
+    a: "Gute Ergebnisse gibt es bei Motiven mit klarer Trennung vom Hintergrund: Produktfotos, Porträts, Tiere, Alltagsgegenstände. Schwieriger wird es bei transparenten Objekten wie Glas oder bei sehr feinen Strukturen wie einzelnen Haaren vor unruhigem Hintergrund."
+  - q: "Welches Modell wird verwendet?"
+    a: "Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist rund 110 MB groß und wird nach dem ersten Laden vom Browser gecacht."
+  - q: "Kann ich das Ergebnis als JPG speichern?"
+    a: "Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP (kleinere Dateigröße bei vergleichbarer Qualität)."
+relatedTools:
+  - bild-komprimieren
+  - bild-groesse-aendern
+  - webp-konverter
+contentVersion: 1
+---
+
+## Wie funktioniert das Tool?
+
+Das Tool nutzt ein vortrainiertes neuronales Netz namens BEN2 — kurz für Binary
+Enhanced Network v2 —, das speziell für die Trennung von Vordergrund und
+Hintergrund auf Fotografien entwickelt wurde. Das Modell ist in das
+ONNX-Format konvertiert, ein offener Standard, der direkt im Browser ausgeführt
+werden kann. Dafür wird die Bibliothek Transformers.js von Hugging Face
+eingesetzt, die WebGPU und WebAssembly als Ausführungsziele unterstützt.
+
+Beim ersten Aufruf lädt der Browser die Modell-Datei (rund 110 MB) einmalig
+vom Hugging-Face-CDN und legt sie im internen Cache ab. Alle weiteren
+Freistellungen laufen vollständig offline. Unterstützt dein Gerät WebGPU —
+das gilt für die meisten aktuellen Chrome-, Edge- und Safari-Versionen —,
+läuft die Inferenz auf der Grafikkarte und dauert typischerweise 100 bis 500
+Millisekunden pro Bild. Ohne WebGPU springt automatisch ein
+WebAssembly-Fallback ein, der etwa zwei- bis viermal länger braucht, aber auf
+allen modernen Browsern funktioniert.
+
+Das Modell erzeugt eine sogenannte Alpha-Maske: eine Graustufen-Matrix, in der
+jeder Pixel beschreibt, wie stark er zum Vordergrund gehört. Diese Maske wird
+dann auf das Originalbild angewendet — Pixel außerhalb des Motivs werden
+transparent, Pixel innerhalb bleiben unverändert. Bei weichen Kanten wie
+Haaren oder Fell sorgt die Graustufen-Maske für einen fließenden Übergang
+statt harter Pixelkanten.
+
+## So entfernst du einen Hintergrund
+
+Lade eine Datei über die Auswahl, per Drag-and-Drop oder mit Strg&nbsp;+&nbsp;V
+aus der Zwischenablage. Auf dem Smartphone steht zusätzlich eine
+Kamera-Aufnahme zur Verfügung. Unterstützte Formate sind PNG, JPG, WebP, AVIF
+sowie HEIC und HEIF — also auch iPhone-Fotos. Nach der einmaligen
+Modell-Ladephase erscheint das freigestellte Bild direkt im Browser, mit
+Karo-Hintergrund als Transparenz-Indikator. Über den Format-Wechsler kannst du
+zwischen PNG, WebP und JPG umschalten, ohne das Modell erneut auszuführen.
+
+## Datenschutz — 100 % im Browser
+
+Die Bildanalyse passiert ausschließlich lokal auf deinem Gerät. Weder das
+Original noch das Ergebnis werden an einen Server gesendet, gespeichert oder
+analysiert. Es gibt kein Cookie-Banner für Drittanbieter, keine Anmeldung und
+kein Tracking — auch keine anonymen Nutzungsstatistiken.
+
+Eine Ausnahme ist der einmalige Modell-Download beim ersten Aufruf: Die
+BEN2-Datei (rund 110 MB) wird vom Content-Delivery-Network von Hugging Face
+geladen, einem US-Unternehmen mit Sitz in New York. Dieser Request enthält
+ausschließlich die URL der Modell-Datei. Es werden keine Bilddaten, keine
+Nutzer-IDs und keine personenbezogenen Informationen übertragen. Technisch
+bedingt kennt Hugging Face die IP-Adresse und den User-Agent des Browsers,
+aus dem der Download stammt — dieselben Daten also, die auch dein
+Internetanbieter beim Aufruf jeder beliebigen Webseite sieht. Nach dem ersten
+Laden liegt das Modell im Browser-Cache und wird für alle weiteren Aufrufe
+dort abgerufen; die CDN wird dann nicht mehr kontaktiert.
+
+Wer diese CDN-Verbindung vermeiden möchte, kann den Seitenaufruf abbrechen,
+sobald der Modell-Download startet — das Tool ist dann nicht nutzbar, aber es
+wurden auch keine Daten übertragen. Für sensible Bilder wie Ausweis-Scans,
+medizinische Aufnahmen oder vertrauliche Firmenunterlagen ist genau das der
+entscheidende Vorteil gegenüber den meisten webbasierten Freisteller-Diensten,
+die das Bild zwingend hochladen müssen. Weitere Details stehen in der
+<a href="/de/datenschutz">Datenschutzerklärung</a>.
+
+## Wann liefert das Tool gute Ergebnisse?
+
+BEN2 ist auf natürliche Fotografien trainiert und liefert in vielen typischen
+Situationen sehr saubere Freisteller. Die folgenden Kategorien decken den
+Alltag gut ab:
+
+**Produktfotos** mit einfarbigem oder unscharfem Hintergrund sind der
+klassische Anwendungsfall. Ob Schuhe auf Holztisch, Schmuck auf Stoff oder
+Flaschen vor einer Wand — das Modell erkennt das Motiv fast immer korrekt.
+Leichte Reflexionen und Schatten werden meist sauber entfernt, solange der
+Motivkörper selbst keine spiegelnden Flächen hat.
+
+**Porträts** funktionieren ausgezeichnet, wenn das Gesicht gut ausgeleuchtet
+und der Hintergrund nicht zu bunt ist. Einzelne Haarsträhnen vor einfarbigem
+Hintergrund werden mit weichem Übergang freigestellt. Schwierig wird es bei
+sehr feinen Einzelhaaren vor unruhigen Hintergründen — hier entstehen
+gelegentlich kleine Artefakte. Ein zweiter Durchlauf nach manueller Nachbearbeitung
+hilft in solchen Fällen.
+
+**Tiere** — Hunde, Katzen, Pferde, Vögel — werden zuverlässig erkannt. Bei
+langhaarigen Tieren gilt dasselbe wie bei Porträts: je einfarbiger der
+Hintergrund, desto sauberer der Freisteller.
+
+**Alltagsgegenstände** wie Möbelstücke, Werkzeuge, Bücher oder Lebensmittel
+sind meistens unproblematisch. Bei stark spiegelnden Oberflächen (Chrom,
+poliertes Metall) kann es vorkommen, dass Teile der Reflexion als
+Hintergrund interpretiert und entfernt werden.
+
+**Schwieriger** wird es bei stark transparenten oder halbtransparenten
+Objekten: Glas, Wassergläser, Plastikverpackungen. Hier verliert das Modell
+häufig die feinen Konturen, weil der Hintergrund durch das Objekt durchscheint.
+Auch bei sehr hohen Auflösungen über 4096 × 4096 Pixel wird das Bild vor der
+Analyse intern herunterskaliert, was bei feinsten Details zu leichter
+Unschärfe an den Kanten führen kann.
+
+Ein praktischer Tipp: Bei unbefriedigendem Ergebnis einmal das Format wechseln
+— beim erneuten Durchlauf werden leicht andere Pixel markiert, und manchmal
+reicht das, um eine problematische Kante zu retten. Alternativ das Motiv vor
+dem Upload manuell zuschneiden, sodass der Hintergrund bereits stark reduziert
+ist.
+
+## Häufige Fragen
+
+Die häufigsten Rückfragen zur Nutzung und zum Datenschutz des Tools:
+
+### Muss ich meine Datei hochladen?
+
+Nein. Die Bildanalyse läuft vollständig in deinem Browser über WebGPU oder
+WebAssembly. Das Bild verlässt dein Gerät zu keinem Zeitpunkt. Lediglich das
+KI-Modell wird einmalig von einem CDN geladen — dabei werden keine Bilddaten
+übertragen.
+
+### Wie lange dauert die Verarbeitung?
+
+Nach dem einmaligen Modell-Download dauert die eigentliche Freistellung pro
+Bild typischerweise 100 bis 500 Millisekunden auf Geräten mit
+WebGPU-Unterstützung. Ohne WebGPU fällt das Tool auf WebAssembly zurück, was
+etwa zwei- bis viermal langsamer ist, aber immer noch flüssig nutzbar bleibt.
+
+### Welche Bilder eignen sich am besten?
+
+Gute Ergebnisse gibt es bei Motiven mit klarer Trennung vom Hintergrund:
+Produktfotos, Porträts, Tiere, Alltagsgegenstände. Schwieriger wird es bei
+transparenten Objekten wie Glas oder bei sehr feinen Strukturen wie einzelnen
+Haaren vor unruhigem Hintergrund.
+
+### Welches Modell wird verwendet?
+
+Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes
+neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist
+MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist
+rund 110 MB groß und wird nach dem ersten Laden vom Browser gecacht.
+
+### Kann ich das Ergebnis als JPG speichern?
+
+Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der
+Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP
+(kleinere Dateigröße bei vergleichbarer Qualität).
+
+## Verwandte Tools
+
+- [Bild komprimieren](/de/bild-komprimieren)
+- [Bildgröße ändern](/de/bild-groesse-aendern)
+- [WebP-Konverter](/de/webp-konverter)
