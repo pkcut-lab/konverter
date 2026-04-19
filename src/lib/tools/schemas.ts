@@ -25,11 +25,25 @@ const base = z.object({
   iconPrompt: z.string().optional(),
 });
 
+/**
+ * Converter formula as pure data — must cross the Astro Islands JSON boundary
+ * intact. Functions can NOT: Astro serialises props as JSON and strips them to
+ * null. `linear` covers m↔ft, km↔mi, kg↔lb, etc. (~95% of converters).
+ * `affine` covers °C↔°F, °C↔K. Extend with `power` (m²↔ft²) when needed.
+ */
+export const formulaSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('linear'), factor: z.number() }),
+  z.object({
+    type: z.literal('affine'),
+    factor: z.number(),
+    offset: z.number(),
+  }),
+]);
+
 export const converterSchema = base.extend({
   type: z.literal('converter'),
   units: z.object({ from: idLabelPair, to: idLabelPair }),
-  convert: z.function(),
-  convertInverse: z.function(),
+  formula: formulaSchema,
   decimals: z.number().int().min(0).max(10),
   examples: z.array(z.number()),
 });
@@ -97,14 +111,14 @@ export const toolSchema = z.discriminatedUnion('type', [
 
 /**
  * Author-facing TS types.
- * Function-fields override z.infer<>'s (...args: unknown[]) => unknown with
- * the signature the tool's Svelte component will actually call.
- * Refining later (e.g. narrower input type) is non-breaking; widening is.
+ * Most configs infer directly from Zod. The remaining function-valued fields
+ * (calculator.compute, generator.generate, formatter.format, validator.validate,
+ * comparer.diff, file-tool.process) override z.infer<>'s (...args: unknown[])
+ * => unknown with the signature the tool's Svelte component will actually call.
+ * Converter is pure data now (see formulaSchema) so no override needed.
  */
-export type ConverterConfig = Omit<z.infer<typeof converterSchema>, 'convert' | 'convertInverse'> & {
-  convert: (value: number) => number;
-  convertInverse: (value: number) => number;
-};
+export type ConverterFormula = z.infer<typeof formulaSchema>;
+export type ConverterConfig = z.infer<typeof converterSchema>;
 
 export type CalculatorConfig = Omit<z.infer<typeof calculatorSchema>, 'compute'> & {
   compute: (inputs: Record<string, number>) => Record<string, number>;
@@ -147,8 +161,9 @@ export type ToolConfig =
 
 export function parseToolConfig(input: unknown): Result<ToolConfig, string> {
   const r = toolSchema.safeParse(input);
-  // Cast: Zod validated shape + non-function fields. Function-fields are guaranteed
-  // callable via z.function(); their typed signatures come from the override types.
+  // Cast: Zod validated shape. Remaining function-valued fields on non-converter
+  // tools are guaranteed callable via z.function(); their typed signatures come
+  // from the override types above.
   if (r.success) return ok(r.data as ToolConfig);
   const base = r.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
   // Append the received type value so callers can identify which tool type failed.

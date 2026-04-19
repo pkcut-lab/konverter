@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ConverterConfig } from '../../lib/tools/schemas';
+  import { computeConversion, type Direction } from '../../lib/tools/compute';
 
   let { config } = $props<{ config: ConverterConfig }>();
 
@@ -29,9 +30,7 @@
   }
 
   const outputValue = $derived(
-    direction === 'forward'
-      ? config.convert(inputValue)
-      : config.convertInverse(inputValue),
+    computeConversion(config.formula, inputValue, direction as Direction),
   );
   const outputFormatted = $derived(formatDecimal(outputValue, config.decimals));
 

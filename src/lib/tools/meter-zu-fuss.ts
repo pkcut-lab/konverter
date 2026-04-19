@@ -24,8 +24,7 @@ export const meterZuFuss: ConverterConfig = {
     from: { id: 'm', label: 'Meter' },
     to: { id: 'ft', label: 'Fuß' },
   },
-  convert: (m: number) => m * 3.28084,
-  convertInverse: (ft: number) => ft / 3.28084,
+  formula: { type: 'linear', factor: 3.28084 },
   decimals: 4,
   examples: [1, 10, 100, 1000],
 };

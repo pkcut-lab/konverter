@@ -20,15 +20,27 @@ const baseValid = {
 };
 
 describe('converterSchema', () => {
-  it('accepts a minimal valid converter', () => {
+  it('accepts a minimal valid converter with linear formula', () => {
     const parsed = converterSchema.safeParse({
       ...baseValid,
       type: 'converter',
       units: { from: { id: 'm', label: 'Meter' }, to: { id: 'ft', label: 'Fuß' } },
-      convert: () => 0,
-      convertInverse: () => 0,
+      formula: { type: 'linear', factor: 3.28084 },
       decimals: 4,
       examples: [1, 10, 100],
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it('accepts an affine formula for temperature-style conversions', () => {
+    const parsed = converterSchema.safeParse({
+      ...baseValid,
+      id: 'celsius-to-fahrenheit',
+      type: 'converter',
+      units: { from: { id: 'c', label: 'Celsius' }, to: { id: 'f', label: 'Fahrenheit' } },
+      formula: { type: 'affine', factor: 1.8, offset: 32 },
+      decimals: 2,
+      examples: [0, 100],
     });
     expect(parsed.success).toBe(true);
   });
@@ -42,8 +54,19 @@ describe('converterSchema', () => {
     const parsed = converterSchema.safeParse({
       ...baseValid,
       type: 'converter',
-      convert: () => 0,
-      convertInverse: () => 0,
+      formula: { type: 'linear', factor: 2 },
+      decimals: 2,
+      examples: [],
+    });
+    expect(parsed.success).toBe(false);
+  });
+
+  it('rejects a converter with unknown formula type', () => {
+    const parsed = converterSchema.safeParse({
+      ...baseValid,
+      type: 'converter',
+      units: { from: { id: 'a', label: 'A' }, to: { id: 'b', label: 'B' } },
+      formula: { type: 'polynomial', factor: 2 },
       decimals: 2,
       examples: [],
     });
@@ -206,8 +229,7 @@ describe('toolSchema (discriminated union)', () => {
       ...baseValid,
       type: 'converter',
       units: { from: { id: 'm', label: 'Meter' }, to: { id: 'ft', label: 'Fuß' } },
-      convert: () => 0,
-      convertInverse: () => 0,
+      formula: { type: 'linear', factor: 3.28084 },
       decimals: 4,
       examples: [1],
     });
@@ -226,8 +248,7 @@ describe('parseToolConfig', () => {
       ...baseValid,
       type: 'converter',
       units: { from: { id: 'm', label: 'Meter' }, to: { id: 'ft', label: 'Fuß' } },
-      convert: () => 0,
-      convertInverse: () => 0,
+      formula: { type: 'linear', factor: 3.28084 },
       decimals: 4,
       examples: [1],
     });
