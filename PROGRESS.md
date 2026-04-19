@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 7, End + Phase-1-Lock-ins)
+**Letztes Update:** 2026-04-19 (Session 8, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #7 — WebP Konverter Prototype ✅ + Carry-over Rulebook-Locks ✅
+**Current Session:** #8 — Prototype-Review #2 ✅ (User-Smoke-Test passed, kein Iteration-Feedback, Templates gelockt)
 
 ## Phase 0 Fortschritt
 
@@ -15,7 +15,7 @@
 | 5 — Meter-zu-Fuß Prototype | ✅ done | Converter-Template + Dynamic Route + SEO-Content |
 | 6 — Review #1 + Redesign | ✅ done | Refined-Minimalism-Redesign + Prereqs + Audit-Pass |
 | 7 — WebP Konverter Prototype | ✅ done | FileTool-Template + Processor-Registry + /de/webp-konverter live |
-| 8 — Review #2 | ⬜ pending | Iteration + Lock |
+| 8 — Review #2 | ✅ done | Smoke-Test passed (Desktop+Mobile, Light+Dark) — kein Feedback, Templates gelockt |
 | 9 — PWA + Pagefind | ⬜ pending | Scaffolding |
 | 10 — CI/CD | ⬜ pending | First Production Deploy |
 
@@ -23,14 +23,21 @@
 
 | Tool | Config | Content-DE | Icon | Tests |
 |------|--------|------------|------|-------|
-| meter-zu-fuss | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
+| meter-zu-fuss | ✅ | ✅ | 🟡 (Recraft-PNG generiert, BG-Removal pending Session 9/10) | ✅ |
 | webp-konverter | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
 
 ## Deploy-History
 (leer bis Session 10)
 
 ## Blockers
-- Keine. User testet `http://localhost:4321/de/webp-konverter` im Browser (PNG/JPG hochladen → WebP-Download verifizieren, Quality-Slider, Reset, Error-Pfad). Meter-zu-Fuß-Hydration parallel verifiziert (kein Regress).
+- Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung.
+
+## Session 8 Deliverables (informell, kein Code-Change)
+- Smoke-Test Converter (`/de/meter-zu-fuss`) auf Desktop + Mobile + Light + Dark — alle Achsen ✅
+- Smoke-Test FileTool (`/de/webp-konverter`) inkl. Quality-Slider 100 % vs 85 % Vergleich (3.49 MB vs 335 KB) — Slider-Effekt korrekt ✅
+- Recraft "premium editorial pencil sketch"-Prompt-Template etabliert nach 2 Versuchen (Generic-Editorial-Prompt → falsches Subjekt; spezifisch adaptierter Template → korrektes Subjekt + Layout)
+- `meterZuFuss.iconPrompt` + `pngJpgToWebp.iconPrompt` in src/lib/tools/ auf das Template umgestellt; JSDoc-Pipeline um BG-Removal-Schritt erweitert
+- Erkenntnis: Recraft liefert nur weißen Hintergrund → BG-Remover-Tool ist Voraussetzung für die Icon-Pipeline und wird gleichzeitig ein eigenständiges Konverter-Tool auf der Webseite (doppelter Hebel)
 
 ## Session 7 Deliverables
 - `src/components/tools/FileTool.svelte` (~500 LOC): Single-Card-Morph mit Phase-State-Machine `idle → converting → done | error`. Quality-Slider 40–100, Drag-&-Drop-Dropzone, MIME- + Size-Validierung vor Process-Aufruf, `aria-live="polite"` auf Result-Region, `prefers-reduced-motion`-Fallbacks auf Dropzone/Download/Reset/Slider-Thumb. Tokens-only — kein Hex/arbitrary-px.
@@ -78,4 +85,6 @@
 - ✅ `[slug].astro` Hydration-Limitation in CONVENTIONS dokumentiert (statische `componentByType`-Map + explizite Conditional-Renders, kein dynamic-component-render).
 
 ## Next-Session-Plan
-Session 8 — Prototype-Review #2 + Iteration-Lock: User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss`, `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark. Iterations-Feedback einarbeiten. Mit den jetzt gelockten Rulebooks ist die Session ausschließlich auf visuelle/funktionale Iteration fokussiert — keine Architektur-Drift mehr offen.
+Session 9 — PWA + Pagefind (laut Phase-0-Roadmap). Scaffolding für Offline-Capability + Client-side-Search. Danach Session 10 = CI/CD + erster Production-Deploy.
+
+**Parallel-Track entschieden (post-Session-8):** Hintergrund-Entferner als drittes Phase-0-Tool — verifiziert das `FileTool`-Template auch für schwere ML-Modelle (Lazy-Loading-Pfad, R2-Mirror, WebGPU-Detection). Tech-Wahl: `@huggingface/transformers v4 + onnx-community/BEN2-ONNX` (beide MIT, ~110 MB Modell, WebGPU + WASM-Fallback). Spec-Brainstorming startet auf User-Anstoß; Execution voraussichtlich Session 10 oder 11 — nach CI/CD-Foundation, damit der R2-Mirror direkt deploybar ist.
