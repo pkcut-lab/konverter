@@ -219,21 +219,21 @@
         data-testid="filetool-input"
         onchange={onFileChange}
       />
-      {#if (config.cameraCapture ?? true) && config.accept.some((m) => m.startsWith('image/'))}
-        <label class="camera">
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            data-testid="filetool-camera-input"
-            hidden
-            onchange={onFileChange}
-          />
-          <span>Foto aufnehmen</span>
-        </label>
-      {/if}
+  </label>
+  {#if (config.cameraCapture ?? true) && config.accept.some((m) => m.startsWith('image/'))}
+    <label class="camera">
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        data-testid="filetool-camera-input"
+        hidden
+        onchange={onFileChange}
+      />
+      <span>Foto aufnehmen</span>
     </label>
   {/if}
+{/if}
 
   {#if phase === 'preparing'}
     <div class="preparing" data-testid="filetool-preparing" aria-live="polite">
