@@ -7,6 +7,10 @@ import { meterZuFuss } from '../../lib/tools/meter-zu-fuss';
 import { getSlug } from '../../lib/slug-map';
 import type { ToolConfig } from '../../lib/tools/schemas';
 
+/**
+ * Add every new tool here alongside its slug-map entry. Session 6 extracts
+ * this to `src/lib/tool-registry.ts` so adding a tool is a single-file change.
+ */
 const toolRegistry: Record<string, ToolConfig> = {
   'meter-to-feet': meterZuFuss,
 };
@@ -100,6 +104,8 @@ const { Content } = await entry.render();
   .tool-how li {
     margin-bottom: var(--space-2);
   }
+  /* TODO(session-6): extract `.prose` utility to global.css — these rules
+     duplicate across every tool page (150+ by Phase 1). */
   .tool-seo :global(h2) {
     margin-top: var(--space-8);
   }
