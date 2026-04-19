@@ -3,8 +3,14 @@ import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
+import FileTool from '../../components/tools/FileTool.svelte';
 import { getToolConfig } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
+
+const componentByType = {
+  converter: Converter,
+  'file-tool': FileTool,
+} as const;
 
 export async function getStaticPaths() {
   const entries = await getCollection('tools');
@@ -34,10 +40,11 @@ if (!config) {
   );
 }
 
-if (config.type !== 'converter') {
+const ToolComponent = componentByType[config.type as keyof typeof componentByType];
+if (!ToolComponent) {
   throw new Error(
-    `Session 5 only supports type="converter", got type="${config.type}" ` +
-      `for toolId="${entry.data.toolId}". Add a branch in [slug].astro.`,
+    `[slug].astro has no component mapped for type="${config.type}" ` +
+      `(toolId="${entry.data.toolId}"). Add an entry to componentByType.`,
   );
 }
 
@@ -56,7 +63,7 @@ const { Content } = await entry.render();
     </header>
 
     <section class="tool-section" aria-label="Konverter">
-      <Converter config={config} client:load />
+      <ToolComponent config={config} client:load />
     </section>
 
     {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt
