@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Phase 1 Session 2, End)
-**Aktuelle Phase:** Phase 1 — Skalierung (läuft)
-**Current Session:** Phase-1 Session 2 — Homepage-Refactor + Batch-1-DE-Converter ✅ (Homepage `[lang]/index.astro` konsumiert jetzt den Session-1-`listToolsForLang`-Helper; 5 neue Converter live: `zentimeter-zu-zoll`, `kilometer-zu-meilen`, `kilogramm-zu-pfund`, `celsius-zu-fahrenheit`, `quadratmeter-zu-quadratfuss` — alle mit Config + DE-SEO-Content + Registry/Slug-Map + Unit-Tests + Content-Tests, 329/329 Tests, keine Design-Surface-Änderungen damit paralleler Design-Agent ungestört refinieren kann)
+**Letztes Update:** 2026-04-20 (Design-Alignment Runde 2a Integration, End)
+**Aktuelle Phase:** Phase 1 — Skalierung (läuft) · parallel Design-Alignment Runden
+**Current Session:** Design-Alignment Runde 2a — Integration (Phase-1 × Runde-1 × LF-Normalisierung) ✅ · Branch `design/alignment-2a-integration` von `phase-1/session-2-batch-1-converters`, Merges: `tooling/stitch-integration` + `chore/git-line-endings`; Cherry-Picks: DESIGN.md-Spec-Fix + Header + Converter (ohne alten statischen Footer); neuer Kombi-Footer (Phase-1-Live-Liste × Runde-1-Styling); 1 stale Phase-1-Test gefixt (`meter-zu-fuss` rendert jetzt 3 Längen-Tools durch Batch-1); 329/329 Tests grün; `/de/meter-zu-fuss` + `/de/celsius-zu-fahrenheit` browser-verifiziert
 
 ## Phase 0 Fortschritt
 
@@ -26,6 +26,14 @@
 |---------|--------|-------------|
 | 1 — Tool-Cross-Links | ✅ done | `<FooterToolsList>` ersetzt Kategorien-Stubs, `<RelatedTools>` am Fuß jeder Tool-Seite, shared `src/lib/tools/list.ts` Helper, STYLE §14 + CONVENTIONS-§Content-Collection-Enumeration |
 | 2 — Homepage-Refactor + Batch-1-DE-Converter | ✅ done | Homepage konsumiert `listToolsForLang`; 5 neue Converter live (cm-to-inch, km-to-mile, kg-to-lb, celsius-to-fahrenheit, sqm-to-sqft) — Config + Content + Registry + Tests, keine Design-Änderungen |
+
+## Design-Alignment (parallel zu Phase 1)
+
+| Runde | Status | Branch | Deliverable |
+|-------|--------|--------|-------------|
+| 1 — Chrome + Converter | ✅ done | `design/alignment-1-chrome-and-converter` (73b65ce) | Header.astro + Footer.astro (statisch) + Converter.svelte auf Runde-1-Stitch-Baselines; DESIGN.md §4/§8 Spec-Fixes |
+| 2a — Integration | ✅ done | `design/alignment-2a-integration` | Merge Phase-1 × Runde-1 × LF-Normalisierung; Kombi-Footer (Live-Liste × Baseline-Styling); stale meter-zu-fuss-Test gefixt |
+| 2b — Expansion | ⬜ geplant | folgt | FileTool.svelte auf Result-State-Baseline (`97e004f1*`); Homepage-Cards auf Tool-Listing-Baseline (Stitch-Run pending); RelatedTools.svelte Card-Idiom-Angleichung |
 
 ## Tool-Inventar
 
@@ -97,6 +105,33 @@
 - **YAML-Quoting-Fix:** zwei Hot-Fixes nach erstem Test-Run — German-Quote-Style „...\" innerhalb double-quoted YAML-Strings braucht `\"` Escape (sonst terminiert das innere `"` den YAML-String vorzeitig). Betraf `kilometer-zu-meilen` (`„26.2"` Marathon-FAQ) und `celsius-zu-fahrenheit` (`„high fever"` Fieber-FAQ). Konvention für künftige Inhalte: deutsche Anführungszeichen mit `\"` als Schluss-Token escapen. Pattern aus zentimeter-zu-zoll (`5'11\"`) extrapoliert.
 - **Gates:** 0/0/0 `astro check`, 329/329 vitest, Build grün — `dist/de/{zentimeter-zu-zoll,kilometer-zu-meilen,kilogramm-zu-pfund,celsius-zu-fahrenheit,quadratmeter-zu-quadratfuss}` rendern, 10 Pages total (5 alte + 5 neue), Pagefind-Index 1 Sprache / 10 Pages / 1.732 Wörter (vorher 1.046 Wörter → +66 % Index-Wachstum), Sitemap enthält die 5 neuen URLs.
 - **Bewusst nicht angefasst:** Templates (Converter.svelte unverändert), Design-Tokens, Layout-Komponenten, Style-Files. User hat parallelen Design-Agenten am Laufen, der die Optik refiniert — diese Session bleibt strikt im Daten-Layer (Configs, Markdown-Inhalte, Slug-Map, Registry, Tests). Wenn der Design-Agent fertig ist, wird sich die Optik der 5 neuen Tools automatisch mit-updaten, ohne Re-Touch der Configs/Inhalte.
+
+## Design-Alignment Runde 2a Deliverables (2026-04-20)
+
+- **Branch-Strategie:** `design/alignment-2a-integration` von `phase-1/session-2-batch-1-converters`. Zwei Merges (`tooling/stitch-integration` für DESIGN.md + Stitch-SDK; `chore/git-line-endings` für `.gitattributes`-LF-Enforcement). Drei Cherry-Picks aus Runde 1: `d5a509a` (DESIGN.md-Spec-Fix Header/Converter/ThemeToggle), `b80eca6` (Header 5-Slot-Grid + 3-DE-Nav), `77cefe9` (Converter.svelte horizontal two-column mit `=`-Separator). Explizit **nicht** cherry-gepickt: `3bca688` (alter statischer Runde-1-Footer) — durch Kombi-Footer ersetzt.
+- **LF-Normalisierung:** `.gitattributes` greift per Merge; Working-Tree-Re-Checkout über `git reset --hard HEAD` erzwingt LF auf bereits getrackte Files mit CRLF (z.B. `src/content/tools/hintergrund-entfernen/de.md` — Root-Cause für die pre-existing `hintergrund-entfernen-content.test.ts`-Failure ist damit erledigt).
+- **Kombi-Footer (`src/components/Footer.astro`):** Phase-1-Live-Liste bleibt in Spalte 1 (Sub-Component `<FooterToolsList lang={lang as Lang}>` — unangetastet, weil Tests die Source asserten). Spalten 2 (Rechtliches) und 3 (Meta) übernehmen das Runde-1-Class-Idiom: `.col / .col__heading / .col__list / .col__link / .col__link--disabled` statt `<span class="stub">`, `aria-disabled="true"` + `tabindex="-1"` + `pointer-events: none`, `<span translate="no">` um Sprachcode in Meta. `background: transparent` (statt `--color-surface`) — Hairline-Top als einzige Struktur per DESIGN.md §6. Mobile-Breakpoint auf 40rem vereinheitlicht. Focus-Visible mit `--color-accent` + `--space-1`-Offset + `--r-sm`.
+- **Stale-Test-Fix (`tests/smoke/build.test.ts`):** `meter-zu-fuss suppresses the section` war valid als nur 3 DE-Tools existierten (Session-1, `b29ad95`). Phase-1 Session-2 (`5abc442`) lieferte `zentimeter-zu-zoll`, `kilometer-zu-meilen`, `quadratmeter-zu-quadratfuss` — ab da resolven alle drei relatedSlugs von meter-zu-fuss. Test geflippt auf "renders 3 resolvable Längen-Tools". `webp-konverter`-Assertion bleibt (`jpg-zu-png`, `bild-komprimieren`, `bild-groesse-aendern` weiter forward-looking).
+- **Automatische Runde-1-Vererbung auf die 5 Phase-1-Converter:** Weil alle `Converter.svelte` reusen, greift die Runde-1-Alignment automatisch. Browser-verifiziert via `npm run preview` auf `/de/meter-zu-fuss` + `/de/celsius-zu-fahrenheit` — beide zeigen `converter-label-from/to`, `converter-output`, `converter-swap`, `converter-copy`, `.converter__separator`, 4× `.kbd-chip`, Runde-2a-Footer (2× `.col`, 2× `.col__heading`, 2× `.col__link--disabled`), Runde-1-Header + FooterToolsList + `translate="no"` auf Lang-Codes. Keine neuen Tests nötig — Datei-Level-Tests decken durch Converter-Dispatch alle 6 DE-Converter ab.
+- **Audit-Pass (web-design-guidelines-Prinzipien):** Footer.astro + FooterToolsList.astro clean bis auf zwei pre-existing Token-Inkonsistenzen in FooterToolsList.astro (`outline-offset: 2px` statt `var(--space-1)`, `outline: ... var(--color-text)` statt `var(--color-accent)`). Projekt-weit uneinheitlich (7× `2px`, 4× `var(--space-1)`), daher kein klarer Hard-Cap-Verstoß — verschoben nach Runde 2b als Codebase-Token-Cleanup-Kandidat.
+- **Gates:** 329/329 vitest (+7 gegen Phase-1-Session-2-Stand — stale `suppresses`-Test wurde zu drei Slug-Checks, plus CRLF-Failure eliminiert), 0/0/0 `astro check`, `npm run build` grün, Preview-Verifikation sauber.
+
+### Runde 2a Commits
+
+- `022da31` merge: tooling/stitch-integration into 2a-integration
+- `be397d5` docs(design): resolve Header, Converter, and ThemeToggle spec mismatches *(cherry-pick)*
+- `b80eca6` feat(header): align to DESIGN.md §4 — 3 DE-nav + 5-slot grid *(cherry-pick)*
+- `77cefe9` feat(converter): align card to DESIGN.md §4 — two-column desktop with = separator *(cherry-pick)*
+- `96f9116` merge: chore/git-line-endings into 2a-integration
+- `e157d06` feat(footer): combine Phase-1 live tools list with Runde-1 baseline styling
+- `493c753` test(smoke): meter-zu-fuss renders RelatedTools after Phase-1 Batch-1
+
+### Carry-over nach Runde 2b
+
+- FileTool.svelte auf Baseline `stitch-output/2026-04-19T20-46-42-97e004f183ed4b5f8b42bb47e82457e1/` (Hintergrund-Entferner Result-State: Bento-Sidebar mit 01/02/03-Steps, Status-Badge "FERTIG", Meta-Zeile `WIDTH×HEIGHT · FORMAT · SIZE`, Vorher/Nachher-Grid mit Schachbrett-Transparenz, DSGVO-Banner)
+- Homepage-Cards (`src/pages/[lang]/index.astro`) auf Tool-Listing-Baseline — Stitch-Run steht aus
+- `RelatedTools.astro` Card-Idiom-Angleichung an DESIGN.md §4 (aktuell inline grid, soll auf Baseline-Card-Pattern)
+- FooterToolsList.astro Token-Cleanup (`outline-offset: 2px` → `var(--space-1)`, `outline: ... var(--color-text)` → `var(--color-accent)`) — optional, im Zuge einer codebase-weiten Token-Konsistenz-Session
 
 ### Bekannte Follow-ups (nicht blocking)
 - **Recraft-Icons für die 5 neuen Tools** stehen aus. Pipeline ist live (`Recraft → /de/hintergrund-entfernen → public/icons/tools/<toolId>.webp`). Auto-Pickup via `existsSync` in beiden Templates greift sobald die WebP-Datei droppt — keine Code-Änderung nötig. Reihenfolge offen, üblicherweise nach Search-Volume.
