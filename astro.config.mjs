@@ -3,6 +3,7 @@ import svelte from '@astrojs/svelte';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
+import AstroPWA from '@vite-pwa/astro';
 import { ACTIVE_LANGUAGES } from './src/lib/hreflang.ts';
 
 export default defineConfig({
@@ -12,6 +13,55 @@ export default defineConfig({
     svelte({ preprocess: vitePreprocess({ script: true, style: false }) }),
     tailwind({ applyBaseStyles: false }),
     sitemap(),
+    AstroPWA({
+      registerType: 'autoUpdate',
+      // We ship `manifest.webmanifest` manually so the build tests can pin
+      // its fields; the plugin just points `<link rel="manifest">` at the
+      // same file instead of generating its own.
+      manifest: false,
+      manifestFilename: 'manifest.webmanifest',
+      workbox: {
+        // Precache the build output that Astro emits (HTML + JS + CSS +
+        // hashed assets). runtimeCaching handles everything else.
+        globPatterns: ['**/*.{html,css,js,woff2,svg,png,webp,webmanifest}'],
+        // Skip the Transformers.js bundle (540 KB) and heic2any chunk
+        // (1.3 MB) — they lazy-load only when needed, no point precaching
+        // them for every visitor.
+        globIgnores: [
+          '**/FileTool.*.js',
+          '**/heic2any.*.js',
+          '**/onnx*.js',
+          '**/*.wasm',
+        ],
+        // SW update flow: claim clients + skipWaiting so autoUpdate works
+        // without the user needing a second refresh.
+        clientsClaim: true,
+        skipWaiting: true,
+        // The default 2 MB limit would drop the sitemap + a handful of
+        // generated chunks in Phase 1 as tool count grows.
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        runtimeCaching: [
+          {
+            // Hugging Face CDN — model weights for BG-Remover. Cache-first
+            // with long expiration because these immutable artifacts never
+            // change per version.
+            urlPattern: /^https:\/\/(?:huggingface\.co|cdn-lfs\.huggingface\.co)\/.*$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'hf-model-cache',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /\/pagefind\/.*$/,
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'pagefind-index' },
+          },
+        ],
+      },
+      devOptions: { enabled: false },
+    }),
   ],
   i18n: {
     defaultLocale: 'de',

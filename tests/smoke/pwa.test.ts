@@ -75,4 +75,27 @@ describe('PWA — Manifest + Icons', () => {
     expect(layout).toMatch(/name="apple-mobile-web-app-title"\s+content="Konverter"/);
     expect(layout).toMatch(/name="application-name"\s+content="Konverter"/);
   });
+
+  it('BaseLayout references /registerSW.js so the Workbox SW gets claimed', () => {
+    const layout = readFileSync(join(root, 'src', 'layouts', 'BaseLayout.astro'), 'utf8');
+    expect(layout).toMatch(/src="\/registerSW\.js"/);
+  });
+
+  it('astro.config wires @vite-pwa/astro with autoUpdate + runtime caching', () => {
+    const config = readFileSync(join(root, 'astro.config.mjs'), 'utf8');
+
+    expect(config).toMatch(/@vite-pwa\/astro/);
+    expect(config).toMatch(/registerType:\s*['"]autoUpdate['"]/);
+    expect(config).toMatch(/manifestFilename:\s*['"]manifest\.webmanifest['"]/);
+    // Model + pagefind runtime caching are the two non-precache paths
+    // that matter for offline BG-Remover + search latency.
+    // Cache names are the stable anchor — regex literals escape the dot
+    // as `\.` in source, so we assert on the name, not the hostname.
+    expect(config).toMatch(/cacheName:\s*['"]hf-model-cache['"]/);
+    expect(config).toMatch(/cacheName:\s*['"]pagefind-index['"]/);
+    // Lazy chunks must be excluded — otherwise precache balloons and
+    // every visitor pays the transformers.js download even on /styleguide.
+    expect(config).toMatch(/FileTool\.\*\.js/);
+    expect(config).toMatch(/heic2any\.\*\.js/);
+  });
 });
