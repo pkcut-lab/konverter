@@ -3,17 +3,8 @@ import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
-import { meterZuFuss } from '../../lib/tools/meter-zu-fuss';
+import { getToolConfig } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
-import type { ToolConfig } from '../../lib/tools/schemas';
-
-/**
- * Add every new tool here alongside its slug-map entry. Session 6 extracts
- * this to `src/lib/tool-registry.ts` so adding a tool is a single-file change.
- */
-const toolRegistry: Record<string, ToolConfig> = {
-  'meter-to-feet': meterZuFuss,
-};
 
 export async function getStaticPaths() {
   const entries = await getCollection('tools');
@@ -34,12 +25,12 @@ export async function getStaticPaths() {
 
 type Props = { entry: CollectionEntry<'tools'>; slug: string };
 const { entry, slug } = Astro.props;
-const config = toolRegistry[entry.data.toolId];
+const config = getToolConfig(entry.data.toolId);
 
 if (!config) {
   throw new Error(
     `No tool config registered for toolId="${entry.data.toolId}". ` +
-      `Add an entry to src/pages/[lang]/[slug].astro:toolRegistry.`,
+      `Add an entry to src/lib/tool-registry.ts.`,
   );
 }
 
