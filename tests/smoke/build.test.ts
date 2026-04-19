@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 describe('Phase 0 Bootstrap — Smoke', () => {
@@ -20,5 +20,53 @@ describe('Phase 0 Bootstrap — Smoke', () => {
 
   it('CLAUDE.md exists at workspace root', () => {
     expect(existsSync(join(process.cwd(), 'CLAUDE.md'))).toBe(true);
+  });
+});
+
+describe('Cross-Links — Footer + RelatedTools', () => {
+  const readDist = (path: string) =>
+    readFileSync(join(process.cwd(), 'dist', path), 'utf8');
+
+  const PAGES = [
+    'de/index.html',
+    'de/hintergrund-entfernen/index.html',
+    'de/meter-zu-fuss/index.html',
+    'de/webp-konverter/index.html',
+  ];
+
+  describe('Footer Werkzeuge section (global, on every DE page)', () => {
+    for (const page of PAGES) {
+      it(`${page} has Footer <h2>Werkzeuge</h2> + ≥1 tool link`, () => {
+        const html = readDist(page);
+        // Astro injects scoped `data-astro-cid-*` attributes on the <h2>,
+        // so we allow arbitrary attributes but require the exact text.
+        expect(html).toMatch(/<h2[^>]*>\s*Werkzeuge\s*<\/h2>/);
+        expect(html).toMatch(/href="\/de\/(hintergrund-entfernen|meter-zu-fuss|webp-konverter)"/);
+      });
+    }
+  });
+
+  describe('RelatedTools render matrix', () => {
+    it('hintergrund-entfernen renders the section with 1 card → webp-konverter', () => {
+      const html = readDist('de/hintergrund-entfernen/index.html');
+      expect(html).toMatch(/<h2[^>]*id="related-heading"[^>]*>\s*Verwandte\s+Tools\s*<\/h2>/);
+      expect(html).toContain('aria-labelledby="related-heading"');
+      // Scope to the related-tools section so we don't count footer links.
+      // Forward-looking slugs (bild-komprimieren, bild-groesse-aendern) are
+      // dropped silently — only webp-konverter resolves today.
+      const section = html.split('class="related-tools"')[1] ?? '';
+      const links = section.match(/href="\/de\/webp-konverter"/g) ?? [];
+      expect(links.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('meter-zu-fuss suppresses the section (all slugs forward-looking)', () => {
+      const html = readDist('de/meter-zu-fuss/index.html');
+      expect(html).not.toMatch(/id="related-heading"/);
+    });
+
+    it('webp-konverter suppresses the section (all slugs forward-looking)', () => {
+      const html = readDist('de/webp-konverter/index.html');
+      expect(html).not.toMatch(/id="related-heading"/);
+    });
   });
 });
