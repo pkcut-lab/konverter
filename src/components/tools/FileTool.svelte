@@ -273,6 +273,17 @@
     </div>
   {/if}
 
+  {#if phase === 'done' && outputUrl}
+    <div class="preview">
+      <img
+        class="preview__img"
+        src={outputUrl}
+        alt="Vorschau des Ergebnisses"
+        data-testid="filetool-preview"
+      />
+    </div>
+  {/if}
+
   {#if phase === 'done' && reencoder}
     <fieldset class="formats" data-testid="filetool-format-chooser">
       <legend class="formats__legend">Format</legend>
@@ -643,6 +654,32 @@
   }
   .result:empty {
     display: none;
+  }
+
+  .preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 200px;
+    max-height: 200px;
+    margin: 0 auto;
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background-color: var(--color-bg);
+    background-image:
+      linear-gradient(45deg, var(--color-border) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--color-border) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--color-border) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--color-border) 75%);
+    background-size: 12px 12px;
+    background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+  }
+  .preview__img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
   }
 
   .error {
