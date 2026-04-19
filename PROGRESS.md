@@ -186,6 +186,29 @@ Alle 11 Sessions abgeschlossen. Was für Phase 1 (Tool-Skalierung, AdSense, mehr
 
 ---
 
+## Paperclip-Preparation (Phase-1 Vorarbeit für Phase-2-Aktivierung)
+
+**Status:** Pickup-ready. Aktivierungs-Trigger = Phase 2 Session 1 (sobald AdSense + 20-Tool-Batches starten).
+
+**Kontext:** NotebookLM-Research am 2026-04-19 im Notebook *"Paperclip: The Orchestration Layer for Zero Human Companies"* hat die vorherige "Phase 5"-Memory-Version revidiert — Paperclip-ROI setzt bei ~10–20 Tools/Woche ein, also sobald Templates gelockt + Deploy grün + AdSense-Readiness steht.
+
+**Artefakte unter `docs/paperclip/` (13 Dateien):**
+
+- `README.md` — Index + 6 Hard-Prerequisites (Template-Stability, Eval-Rubric, Rulebooks fixed, Git-Lock, Test-Gate, Budget-Cap $0 Tripwire) + Activation-Checklist + Abgrenzung zu Claude-Code-Subagenten.
+- `ONBOARDING.md` — 10-Schritt-Bootstrap-Runbook. CEO-Hiring → Smoke-Test → Tool-Builder → QA → Visual-QA → Translator gestaffelt. Rollback-Trigger (QA-Failure-Rate > 20 %, DennisJedlicka-Commits, Spec-Drift).
+- `BRAND_GUIDE.md` — Agent-readable Konsolidierung von STYLE.md + CONTENT.md + tokens.css. §4 = 11-Punkte-QA-Eval-Rubrik mit konkreten Commands (grep, wc, axe-core, Playwright).
+- `TICKET_TEMPLATE.md` — YAML-Schema + Workflow-Steps 1–7 + Atomicity-Regeln + gefülltes Beispiel `kilometer-zu-meilen`.
+- `HEARTBEAT.md` — 30-min-Default-Intervall, 10-Schritt-Checklist, Lock-File-Mechanik (Stale-Lock > 2 h → Recovery).
+- `SKILLS.md` — installierte 5 Paperclip-Skills, 6 explizit nicht-installierte (mit Rationale), 2 Phase-2-Evaluation-Kandidaten (`prcheckloop`, `pr-report`), Security-Scan-Ergebnisse.
+- `souls/` — Identity-Layer für 7 Rollen: `ceo.md`, `tool-builder.md`, `qa.md`, `cto.md`, `visual-qa.md`, `translator.md`, `seo-audit.md`.
+- `agents/` — Prozedur-Layer mit Bash- und Code-Beispielen: `ceo.md` (Heartbeat-Pseudo-Code + Ticket-Selection), `tool-builder.md` (Build-Sequenz + Commit-HEREDOC), `qa.md` (11-Punkte-Commands + Flakiness-Retry).
+
+**Global installierte Skills (via `npx skills add -g`):** `paperclip`, `paperclip-create-agent`, `para-memory-files`, `company-creator`, `design-guide`. Security-Scans akzeptiert (paperclip Med/Gen, vier Safe via Snyk-Low).
+
+**Aktivierungs-Pickup:** Agent startet in Phase 2 Session 1 mit `docs/paperclip/README.md` → `ONBOARDING.md` 10-Schritt-Runbook. Keine Aktion nötig bis dahin — die Artefakte sind Single-Source-of-Truth und referenzieren existierende Rulebooks, statt sie zu duplizieren.
+
+---
+
 ## Parked Plans (eingefroren, warten auf Foundation-Abschluss)
 - **Persönlichkeitstest-Tool (Big Five) — Phase 2**
   - Plan: [docs/superpowers/plans/2026-04-18-persoenlichkeitstest-tool.md](docs/superpowers/plans/2026-04-18-persoenlichkeitstest-tool.md)
