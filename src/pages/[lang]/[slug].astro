@@ -6,6 +6,7 @@ import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
 import { getToolConfig } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
+import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 
 const componentByType = {
   converter: Converter,
@@ -48,6 +49,21 @@ if (!(config.type in componentByType)) {
 }
 
 const { Content } = await entry.render();
+
+const jsonLd = buildToolJsonLd(
+  {
+    toolId: entry.data.toolId,
+    lang: entry.data.language,
+    title: entry.data.title,
+    description: entry.data.metaDescription,
+    faq: entry.data.faq ?? [],
+    steps: (entry.data.howToUse ?? []).map((text, i) => ({
+      title: `Schritt ${i + 1}`,
+      description: text,
+    })),
+  },
+  Astro.url.href,
+);
 ---
 <BaseLayout
   lang={entry.data.language}
@@ -55,6 +71,9 @@ const { Content } = await entry.render();
   description={entry.data.metaDescription}
   pathWithoutLang={`/${slug}`}
 >
+  {jsonLd.map((block) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+  ))}
   <div class="tool-page">
     <header class="tool-hero">
       <h1>{entry.data.title}</h1>
