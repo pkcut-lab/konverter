@@ -1,6 +1,6 @@
 # STYLE — Visual Design Rulebook
 
-**Status:** v1 final (Session 2 locked) + v1.1 Skill-Integration (2026-04-19).
+**Status:** v1 final (Session 2 locked) + v1.1 Skill-Integration (2026-04-19) + v1.2 Tool-Layouts (2026-04-19, Sessions 5–7).
 **Last reviewed:** 2026-04-19.
 
 ---
@@ -38,6 +38,10 @@
 - `font-family: var(--font-family-mono);` only for code, numeric results in converters, and technical identifiers.
 - Use the `--font-size-*` / `--font-lh-*` / `--font-fw-*` token trio for H1-body-small. Do not invent intermediate sizes.
 - Never use Google Fonts CDN or any external font host (DSGVO + Non-Negotiable #7).
+- **NBSP (U+00A0) zwischen Zahl und Einheit** — Pflicht in deutschem Content und in jeder generierten Anzeige (`10\u00A0MB`, `5\u00A0Min`, `100\u00A0m`). Verhindert Wrap-Break zwischen Wert und Unit. In TS/JS-Strings als `\u00A0`, in MD-Content als `&nbsp;`.
+- **`text-wrap: balance`** auf H1/H2 setzen — verhindert Waisen-Wörter in der letzten Zeile.
+- **`tabular-nums`** auf Numeric-Outputs (Mono-Schrift schon vorgegeben, aber `font-variant-numeric: tabular-nums` zusätzlich für saubere Spalten).
+- **`translate="no"`** auf Unit-Spans (z.B. „Fuß", „MB"), damit Browser-Auto-Translate die Einheit nicht verwürfelt.
 
 ## 3. Spacing
 
@@ -76,7 +80,45 @@
 - Display with `filter: var(--icon-filter);` so they auto-invert in dark mode.
 - Icon-generation pipeline (Recraft.ai + `pending-icons/` drop folder) is locked down in Session 5+.
 
-## 9. Skill-Integration für Design-Arbeit
+## 9. Tool-Component Layouts (gelockt Sessions 5–7)
+
+Beide Templates folgen denselben Form-Prinzipien: **eine Card pro Tool**, `1px`-Border in `var(--color-border)`, `var(--r-md)` Radien, `var(--space-6)`–`var(--space-8)` Innen-Padding. Hairline-Divider als `1px solid var(--color-border)`, niemals als gefärbter Trenner.
+
+### 9.1 Converter (`Converter.svelte`, gelockt Session 6)
+
+- **Two-Panel-Stack** vertikal: Input-Panel oben, Output-Panel unten, dazwischen Hairline-Divider.
+- **Zentrierte Swap-Pill** sitzt auf dem Divider — `position: absolute`, kreisförmig (`var(--r-lg)`), `1px`-Border, mit inline-SVG-Swap-Icon das per CSS `rotate(180deg)` auf Hover dreht.
+- **Output-Wert** in `font-size-h1`, Mono, `tabular-nums`. Unit-Span daneben in `font-size-body`, `var(--color-text-muted)`, `translate="no"`.
+- **Quick-Value-Chips** liegen **außerhalb** der Card (vertikaler Abstand `var(--space-4)`), Pill-Shape (`var(--r-sm)`), Mono-Schrift, `1px`-Border, klickbar zum Direkt-Set des Input-Werts.
+- **Copy-Button** rechts neben dem Output, `:active scale(0.98)`, `:focus-visible` mit 2px-Outline; `copy--copied`-State färbt für `var(--dur-med)` zu `var(--color-success)`.
+
+### 9.2 FileTool (`FileTool.svelte`, gelockt Session 7)
+
+- **Single-Card-Morph** mit Phase-State-Machine `idle → converting → done | error`. Die Card wechselt ihren Innenraum, NICHT ihre Position oder Größe (verhindert CLS).
+- **Idle:** Dropzone mit `2px dashed var(--color-border)`, `var(--space-12)` Padding, zentrierter Hint-Copy + Browse-Button. Drag-Over-State: Border solid, `--color-accent`. Meta-Zeile darunter zeigt MIME-Liste (lesbar formatiert) + Max-Size mit NBSP (`10\u00A0MB`).
+- **Converting:** dieselbe Card, ersetzt durch Spinner + Status-Text (`aria-live="polite"`). Quality-Slider bleibt sichtbar und disabled.
+- **Done:** dieselbe Card, ersetzt durch Filename + Größen-Vergleich (`vorher → nachher`, beide mit NBSP-Einheit) + Download-`<a>` (Primary-Button-Styling, `download="<name>.webp"`) + sekundärer Reset-Button.
+- **Error:** dieselbe Card, ersetzt durch Error-Message in `var(--color-error)`, plus Reset-Button.
+- **Quality-Slider** (`<input type="range">`, `min=40 max=100 step=1`) mit Mono-Wert-Anzeige rechts (`tabular-nums`). Slider-Thumb hat eigene Hover-/Active-Transition; **alle Slider-Übergänge** unter `prefers-reduced-motion: reduce` deaktivieren.
+- **`data-testid`-Konvention:** `filetool-dropzone`, `filetool-input`, `filetool-meta`, `filetool-quality`, `filetool-status`, `filetool-result`, `filetool-error`, `filetool-download`, `filetool-reset`. (Konvention generalisiert auf alle 9 Tool-Templates.)
+- **`formatBytes()`-Output** verwendet immer NBSP zwischen Zahl und Unit (`KB`, `MB`, `B`).
+
+## 10. Page-Layout-Rhythmus (gelockt Session 6)
+
+Tool-Detail-Seiten (`/[lang]/[slug]`) folgen einer dreistufigen Breiten-Hierarchie. Die Tool-Card ist visuell der Hauptanker, deshalb das schmalste Element.
+
+| Block | `max-width` | Begründung |
+|-------|-------------|------------|
+| `.tool-hero` (H1 + Tagline) | `40rem` | Editorial Lesefluss, zentriert |
+| `.tool-section` (Tool-Card) | `34rem` | Tool dominiert visuell — engste Spalte |
+| `.ad-slot-placeholder` | `42rem` | CLS-safe `min-height` aus Token, `dashed 1px` Ghost bis Phase 2 |
+| `.tool-article` (Intro + How + Prose) | `42rem` | Prose-optimale Lesebreite |
+
+- Vertikaler Rhythmus: `var(--space-12)` zwischen Hero ↔ Tool, `var(--space-24)` zwischen Tool ↔ Ad-Slot ↔ Article (auf Mobile `var(--space-8)` / `var(--space-16)`).
+- **How-To-Liste** verwendet `counter(how-step, decimal-leading-zero)` für editoriale `01 / 02 / 03`-Nummerierung in Mono, `var(--color-text-subtle)`. Kein `<ol>`-Default-Styling.
+- Hero-H1 bekommt `text-wrap: balance` und `letter-spacing: -0.015em`; Tagline unter dem H1 ist `var(--color-text-muted)`, `var(--font-size-body)`.
+
+## 11. Skill-Integration für Design-Arbeit
 
 Bei jeder Session, die UI erstellt oder überarbeitet, ist folgende Skill-Sequenz Pflicht:
 1. **`minimalist-ui`** (leonxlnx/taste-skill) — Form-Fundament (Bento, Borders, Radii, Padding-Zahlen).
