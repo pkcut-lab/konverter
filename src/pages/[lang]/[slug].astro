@@ -1,0 +1,124 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Converter from '../../components/tools/Converter.svelte';
+import { meterZuFuss } from '../../lib/tools/meter-zu-fuss';
+import { getSlug } from '../../lib/slug-map';
+import type { ToolConfig } from '../../lib/tools/schemas';
+
+const toolRegistry: Record<string, ToolConfig> = {
+  'meter-to-feet': meterZuFuss,
+};
+
+export async function getStaticPaths() {
+  const entries = await getCollection('tools');
+  return entries.map((entry) => {
+    const slug = getSlug(entry.data.toolId, entry.data.language);
+    if (!slug) {
+      throw new Error(
+        `No slug-map entry for toolId="${entry.data.toolId}", ` +
+          `lang="${entry.data.language}". Add it to src/lib/slug-map.ts.`,
+      );
+    }
+    return {
+      params: { lang: entry.data.language, slug },
+      props: { entry, slug },
+    };
+  });
+}
+
+type Props = { entry: CollectionEntry<'tools'>; slug: string };
+const { entry, slug } = Astro.props;
+const config = toolRegistry[entry.data.toolId];
+
+if (!config) {
+  throw new Error(
+    `No tool config registered for toolId="${entry.data.toolId}". ` +
+      `Add an entry to src/pages/[lang]/[slug].astro:toolRegistry.`,
+  );
+}
+
+if (config.type !== 'converter') {
+  throw new Error(
+    `Session 5 only supports type="converter", got type="${config.type}" ` +
+      `for toolId="${entry.data.toolId}". Add a branch in [slug].astro.`,
+  );
+}
+
+const { Content } = await entry.render();
+---
+<BaseLayout
+  lang={entry.data.language}
+  title={entry.data.title}
+  description={entry.data.metaDescription}
+  pathWithoutLang={`/${slug}`}
+>
+  <article class="tool-page">
+    <header class="tool-header">
+      <h1>{entry.data.title}</h1>
+      <p class="tagline">{entry.data.tagline}</p>
+    </header>
+
+    <section class="tool-ui">
+      <Converter config={config} client:load />
+    </section>
+
+    <section class="tool-intro">
+      <p>{entry.data.intro}</p>
+    </section>
+
+    <section class="tool-how">
+      <h2>Wie benutzt du den Konverter?</h2>
+      <ol>
+        {entry.data.howToUse.map((step) => <li>{step}</li>)}
+      </ol>
+    </section>
+
+    <section class="tool-seo">
+      <Content />
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .tool-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .tool-header h1 {
+    margin: 0 0 var(--space-2) 0;
+  }
+  .tool-header .tagline {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .tool-how ol {
+    padding-left: var(--space-6);
+  }
+  .tool-how li {
+    margin-bottom: var(--space-2);
+  }
+  .tool-seo :global(h2) {
+    margin-top: var(--space-8);
+  }
+  .tool-seo :global(h3) {
+    margin-top: var(--space-6);
+  }
+  .tool-seo :global(table) {
+    border-collapse: collapse;
+    margin: var(--space-4) 0;
+  }
+  .tool-seo :global(th),
+  .tool-seo :global(td) {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+  }
+  .tool-seo :global(code) {
+    font-family: var(--font-family-mono);
+    background: var(--color-surface);
+    padding: 0 var(--space-1);
+    border-radius: var(--r-sm);
+  }
+</style>
