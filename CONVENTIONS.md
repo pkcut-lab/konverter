@@ -108,6 +108,24 @@ Exportiert aus `src/lib/tools/types.ts` via `ok()` / `err()` Konstruktoren. Alle
 - **State-Generics:** `$state<T>()` immer typisiert (`let phase = $state<Phase>('idle')`, nicht `let phase = $state('idle')`). Inferenz auf String-Literal-Union geht sonst verloren.
 - **`data-testid`-Pflicht:** Jedes interaktive Element + Status-Region kriegt ein `data-testid="<componenttype>-<role>"` (z.B. `filetool-input`, `filetool-error`, `converter-output`). Tests wählen ausschließlich darüber, nie über CSS-Klassen.
 
+## Components (gelockt Session 9)
+
+- **`Loader.svelte`** (`src/components/Loader.svelte`) — geteilte Komponente mit zwei Varianten:
+  - `variant="spinner"` — indeterminiert, 24×24, 1px-Hairline-Arc, `var(--color-text-subtle)`.
+  - `variant="progress"` — determiniert, `value: 0..1`, optionales `label`, 1px-Hairline-Bar mit Mono-Tabular-Label rechts.
+  - `prefers-reduced-motion: reduce` deaktiviert Spin + Width-Transition.
+  - Verwendung: Jede Tool-Komponente mit Lazy-Loading oder Long-Running-Work nutzt `Loader` — keine Komponenten-eigenen Spinner.
+
+## SEO / JSON-LD (gelockt Session 9)
+
+- **`buildToolJsonLd()`** in `src/lib/seo/tool-jsonld.ts` — pure Builder, emittiert drei Schema.org-Blöcke:
+  - `SoftwareApplication` (immer, `applicationCategory: 'MultimediaApplication'`, `offers.price: '0'`, `priceCurrency: 'EUR'`, `inLanguage`-Feld).
+  - `FAQPage` nur wenn `faq.length > 0`.
+  - `HowTo` nur wenn `steps.length > 0` (steps mit 1-indexierter `position`).
+- Wired in `src/pages/[lang]/[slug].astro`: Mapping `entry.data.language → lang`, `metaDescription → description`, `howToUse → steps` (Title `"Schritt N"`, DE-only bis Phase 3).
+- Emission als `<script is:inline type="application/ld+json" set:html=...>` — ein Script-Block pro Schema.
+- Greift auf jeder Tool-Seite (meter-zu-fuss, webp-konverter, hintergrund-entfernen) — nicht BG-Remover-spezifisch.
+
 ## Tool-Components (gelockt Session 5–7)
 
 Zwei Templates decken alle 9 Tool-Typen aus `schemas.ts` ab:
@@ -135,17 +153,40 @@ const componentByType = {
 
 **Astro-Hydration-Limitation (HART):** `client:load` wird **silent gedroppt**, wenn die Component-Referenz dynamisch ist (`<DynamicCmp client:load />`). Immer explizite Conditional-Renders mit statisch importierten Component-Namen verwenden. Beim Hinzufügen eines neuen Tool-Typs MUSS sowohl `componentByType` als auch der Conditional-Block ergänzt werden — fehlt einer, schlägt der `if (!(config.type in componentByType))`-Guard im Frontmatter zur Build-Zeit zu.
 
-## File-Tool-Pattern (gelockt Session 7)
+## File-Tool-Pattern (gelockt Session 7, erweitert Session 9)
 
-**Astro-SSR-Limitation (HART):** Astro serialisiert Island-Props zu JSON. Functions in der Tool-Config (`FileToolConfig.process`) überleben nur server-seitig — auf dem Client landen sie als `null`. Daher: Client-Dispatch läuft über `src/lib/tools/process-registry.ts`, keyed by `config.id`.
+**Astro-SSR-Limitation (HART):** Astro serialisiert Island-Props zu JSON. Functions in der Tool-Config (`FileToolConfig.process`, `prepare`, `reencode`) überleben nur server-seitig — auf dem Client landen sie als `null`. Daher: Client-Dispatch läuft über `src/lib/tools/tool-runtime-registry.ts`, keyed by `config.id`.
+
+**Registry-Shape (Session 9):**
+
+```typescript
+interface ToolRuntime {
+  process: ProcessFn;            // required
+  prepare?: PrepareFn;           // optional — lazy-load step (ML-Modell etc.)
+  reencode?: ReencodeFn;         // optional — z.B. Format-Wechsel ohne Re-Inference
+  isPrepared?: () => boolean;    // lazy-load-Flag; Runtime ist source of truth, kein Component-local flag
+  clearLastResult?: () => void;  // Reset-Pfad — befreit Bitmap-Caches
+}
+```
 
 **Drei-Touch-Pattern für neue File-Tools:**
 
 1. **Pure Processor-Module** unter `src/lib/tools/<verb>-<format>.ts` — exportiert `(input: Uint8Array, opts?: …) => Promise<Uint8Array>`. Keine DOM-, Window- oder Canvas-Imports im Top-Level (jsdom verträgt das nicht); Worker-Boundary darunter ist OK.
-2. **Tool-Config** unter `src/lib/tools/<tool-id>.ts` — `FileToolConfig` mit `id`, `accept[]`, `maxSizeMb`, `iconPrompt` JSDoc, `process` (verweist aufs Pure-Module für Server-Seite).
-3. **Dispatch-Eintrag** in `src/lib/tools/process-registry.ts` — neuer Key `'<tool-id>'` der dasselbe Pure-Module mit Config-Optionen ruft.
+2. **Tool-Config** unter `src/lib/tools/<tool-id>.ts` — `FileToolConfig` mit `id`, `accept[]`, `maxSizeMb`, `iconPrompt` JSDoc, `process` (verweist aufs Pure-Module für Server-Seite). Session-9-neue optionale Felder: `prepare`, `defaultFormat`, `cameraCapture`, `filenameSuffix`, `showQuality`.
+3. **Dispatch-Eintrag** in `src/lib/tools/tool-runtime-registry.ts` — neuer Key `'<tool-id>'` mit `{ process, prepare?, reencode?, isPrepared?, clearLastResult? }`.
 
 Außerdem: `tool-registry.ts` (Tool-Existenz) + `slug-map.ts` (Slug pro Lang) — gleiche Schritte wie bei `converter`.
+
+**Session-9-Defaults für `FileToolConfig`:**
+- `cameraCapture` defaulted auf `true`, wenn `accept[]` irgendeinen `image/*`-MIME enthält.
+- `showQuality` defaulted auf `true`.
+- `prepare`, `defaultFormat`, `filenameSuffix` haben keine Defaults und sind nur für Tools nötig, die sie aktiv brauchen.
+
+**FileTool-Phase-Machine (erweitert Session 9):** `idle → preparing → converting → done | error`. `preparing` ist der neue Lazy-Load-Pfad für ML-Tools — sichtbar als `Loader variant="progress"` mit "Lädt einmalig Modell …"-Status. Auf Revisit (`isPrepared() === true`) wird `preparing` übersprungen, um UI-Flash zu vermeiden.
+
+**FileTool-Eingabekanäle (Session 9):** Clipboard-Paste (`Strg+V`) + Mobile-Kamera-Capture (`capture="environment"`) + HEIC-Pre-Decode via `src/lib/tools/heic-decode.ts` sind FileTool-Defaults. `heic-decode.ts` lazy-importiert `heic2any` nur in Non-Safari-Browsern (~30 KB gzip gespart auf iOS/macOS).
+
+**Stall-Watchdog-Pattern (Session 9):** `prepare`-Implementierungen mit langer Laufzeit (Modell-Download) akzeptieren ein `{ stallTimeoutMs }` (Default `120_000`) und werfen einen typisierten `StallError`, wenn kein Progress-Event im Window ankommt. Implementation-Referenz: `src/lib/tools/remove-background.ts`.
 
 ## Astro Routes (gelockt Session 5)
 

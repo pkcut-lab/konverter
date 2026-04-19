@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 8, End)
+**Letztes Update:** 2026-04-19 (Session 9, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #8 — Prototype-Review #2 ✅ (User-Smoke-Test passed, kein Iteration-Feedback, Templates gelockt)
+**Current Session:** #9 — Hintergrund-Entferner Prototype ✅ (BG-Remover live, FileTool-Phase-Machine erweitert, Loader-Komponente, JSON-LD für alle Tool-Seiten)
 
 ## Phase 0 Fortschritt
 
@@ -16,21 +16,55 @@
 | 6 — Review #1 + Redesign | ✅ done | Refined-Minimalism-Redesign + Prereqs + Audit-Pass |
 | 7 — WebP Konverter Prototype | ✅ done | FileTool-Template + Processor-Registry + /de/webp-konverter live |
 | 8 — Review #2 | ✅ done | Smoke-Test passed (Desktop+Mobile, Light+Dark) — kein Feedback, Templates gelockt |
-| 9 — PWA + Pagefind | ⬜ pending | Scaffolding |
-| 10 — CI/CD | ⬜ pending | First Production Deploy |
+| 9 — Hintergrund-Entferner Prototype | ✅ done | BG-Remover live + FileTool-Erweiterungen (preparing-Phase, Format-Chooser, Preview, Clipboard/Camera/HEIC) + Loader-Komponente + JSON-LD |
+| 10 — PWA + Pagefind | ⬜ pending | Scaffolding |
+| 11 — CI/CD | ⬜ pending | First Production Deploy |
 
 ## Tool-Inventar (Phase 0)
 
 | Tool | Config | Content-DE | Icon | Tests |
 |------|--------|------------|------|-------|
-| meter-zu-fuss | ✅ | ✅ | 🟡 (Recraft-PNG generiert, BG-Removal pending Session 9/10) | ✅ |
+| meter-zu-fuss | ✅ | ✅ | 🟡 (Recraft-PNG generiert, BG-Removal jetzt via BG-Remover Tool möglich) | ✅ |
 | webp-konverter | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
+| remove-background | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
 
 ## Deploy-History
 (leer bis Session 10)
 
 ## Blockers
-- Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung.
+- Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung. BG-Remover (`/de/hintergrund-entfernen`) wartet auf User-Smoke-Test (Checklist unten).
+
+## Session 9 Smoke-Test (vom Menschen auszuführen, `npm run dev`)
+- [ ] `/de/hintergrund-entfernen` lädt
+- [ ] PNG-Upload triggert Modell-Download (Progress sichtbar via Loader)
+- [ ] BG entfernt, PNG-Download funktioniert
+- [ ] Format-Wechsel zu WebP re-encodet (kein Re-Inference; Network-Tab zeigt keinen erneuten Modell-Download)
+- [ ] Format-Wechsel zu JPG: weißer Hintergrund statt Alpha
+- [ ] Reset-Button funktioniert
+- [ ] Strg+V mit Screenshot triggert Process
+- [ ] Mobile: Kamera-Button sichtbar (DevTools-Mobile-Mode oder echtes Smartphone)
+- [ ] HEIC-Upload (echte iPhone-Datei) triggert heic2any-Lazy-Load
+- [ ] Dark-Mode: Card, Loader, Preview, Format-Chooser sehen korrekt aus
+- [ ] `/de/webp-konverter` funktioniert immer noch wie vorher (Regression-Check)
+- [ ] `/de/meter-zu-fuss` funktioniert immer noch wie vorher (Regression-Check)
+- [ ] Doppel-Hebel: Recraft-PNG von `meter-zu-fuss` durch BG-Remover → PNG mit Alpha (Icon-Pipeline-Validation)
+
+## Session 9 Deliverables
+
+- `src/lib/tools/remove-background.ts` (~230 LOC): Singleton-Pipeline (BEN2 + WebGPU/WASM-Auto-Detection), `removeBackground` + `reencodeLastResult` + `clearLastResult` + `isPrepared` + typed `StallError` + Watchdog-Pattern (Default 120 s).
+- `src/lib/tools/heic-decode.ts` (~65 LOC): Lazy-Loader für `heic2any`, Safari-skip via UA-Check (spart ~30 KB gzip auf iOS/macOS).
+- `src/components/Loader.svelte`: Geteilte Spinner/Progress-Komponente, Tokens-only, `prefers-reduced-motion`-Fallbacks.
+- `src/lib/tools/tool-runtime-registry.ts` (ersetzt `process-registry.ts`): Single Registry mit `{ process, prepare?, reencode?, isPrepared?, clearLastResult? }` pro Tool-ID.
+- `src/lib/seo/tool-jsonld.ts`: Pure Builder für SoftwareApplication + FAQPage + HowTo JSON-LD. Wired in `[slug].astro` — greift auf ALLEN Tool-Seiten (Spec §2.4 B9 AEO/Voice-Search).
+- `src/components/tools/FileTool.svelte`: +`preparing`-Phase, dynamisches Output-Format, Format-Chooser-Radio-Group (PNG/WebP/JPG mit Hint-Mono-Suffixen), Clipboard-Paste (`Strg+V`), Mobile-Kamera-Capture (`capture="environment"`), HEIC-Pre-Decode, Mini-Preview (max 200×200) auf CSS-Checkerboard. Phase-State-Machine: `idle → preparing → converting → done | error`.
+- `src/lib/tools/hintergrund-entferner.ts`: Tool-Config mit `prepare`, `defaultFormat: 'png'`, `accept: PNG/JPG/WebP/AVIF/HEIC/HEIF`, `maxSizeMb: 15`, `showQuality: false`.
+- `src/content/tools/hintergrund-entfernen/de.md`: ≥800 Wörter SEO-Content (Privacy-Lead-Headline, 6 gelockte H2s, Datenschutz-Sektion nennt Hugging Face CDN explizit).
+- Tests: +79 neue (total 159 → 238). Aufteilung: Loader 6, heic-decode 5, remove-background 13, tool-runtime-registry 3, tool-jsonld 6, filetool-format 7, filetool-prepare 5, filetool-input-methods 7, filetool-preview 2, hintergrund-entferner-config 11, content 7 — dazu Preview/Checker-Gegen-Checks.
+- Differenzierung: Spec §2.4 Subagent-Recherche, White-Space identifiziert ("pure-client + HEIC + WebP-transparent + Clipboard + Camera + zero-friction").
+- Gates: 0/0/0 `astro check`, 238/238 vitest, 5 pages built (`/`, `/de`, `/de/meter-zu-fuss`, `/de/webp-konverter`, `/de/hintergrund-entfernen`).
+
+### Bekannte Follow-ups (nicht blocking für V1)
+- **`FileTool.CVNcGKu7.js`-Chunk ist 541 KB** (nicht Hauptbundle, aber shared chunk auf allen Tool-Seiten). Ursache: `tool-runtime-registry.ts` statisch-importiert `remove-background`, wodurch `@huggingface/transformers` in den FileTool-Chunk wandert. `/de/webp-konverter` lädt damit ~530 KB transformers.js ohne sie zu benutzen. Fix-Kandidat: Registry-Einträge könnten selektiv `await import()` verwenden, trade-off gegen Einfachheit der statischen Registry. Verschoben, da `huggingface`-Grep auf "ein einziges Chunk" passt (Plan Step 2 Expected-Case) und Entry-Chunks <25 KB sind.
 
 ## Session 8 Deliverables (informell, kein Code-Change)
 - Smoke-Test Converter (`/de/meter-zu-fuss`) auf Desktop + Mobile + Light + Dark — alle Achsen ✅
@@ -85,6 +119,6 @@
 - ✅ `[slug].astro` Hydration-Limitation in CONVENTIONS dokumentiert (statische `componentByType`-Map + explizite Conditional-Renders, kein dynamic-component-render).
 
 ## Next-Session-Plan
-Session 9 — PWA + Pagefind (laut Phase-0-Roadmap). Scaffolding für Offline-Capability + Client-side-Search. Danach Session 10 = CI/CD + erster Production-Deploy.
+Session 10 — PWA + Pagefind (laut Phase-0-Roadmap). Scaffolding für Offline-Capability + Client-side-Search. Danach Session 11 = CI/CD + erster Production-Deploy.
 
-**Parallel-Track entschieden (post-Session-8):** Hintergrund-Entferner als drittes Phase-0-Tool — verifiziert das `FileTool`-Template auch für schwere ML-Modelle (Lazy-Loading-Pfad, R2-Mirror, WebGPU-Detection). Tech-Wahl: `@huggingface/transformers v4 + onnx-community/BEN2-ONNX` (beide MIT, ~110 MB Modell, WebGPU + WASM-Fallback). Spec-Brainstorming startet auf User-Anstoß; Execution voraussichtlich Session 10 oder 11 — nach CI/CD-Foundation, damit der R2-Mirror direkt deploybar ist.
+**Parallel-Track abgeschlossen (Session 9):** Hintergrund-Entferner als drittes Phase-0-Tool — FileTool-Template jetzt auch für schwere ML-Modelle verifiziert (Lazy-Loading-Pfad, WebGPU-Detection, WASM-Fallback, Stall-Watchdog). Tech-Wahl validiert: `@huggingface/transformers v4 + onnx-community/BEN2-ONNX`. **R2-Mirror wurde aus V1 gestrichen** — Modell lädt direkt vom Hugging-Face-CDN, mit explizitem Datenschutz-Text in der Content-MD; R2-Mirror kann in Phase 2 nachgereicht werden wenn CDN-Performance oder Privacy-Anforderungen es verlangen.

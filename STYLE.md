@@ -92,15 +92,16 @@ Beide Templates folgen denselben Form-Prinzipien: **eine Card pro Tool**, `1px`-
 - **Quick-Value-Chips** liegen **außerhalb** der Card (vertikaler Abstand `var(--space-4)`), Pill-Shape (`var(--r-sm)`), Mono-Schrift, `1px`-Border, klickbar zum Direkt-Set des Input-Werts.
 - **Copy-Button** rechts neben dem Output, `:active scale(0.98)`, `:focus-visible` mit 2px-Outline; `copy--copied`-State färbt für `var(--dur-med)` zu `var(--color-success)`.
 
-### 9.2 FileTool (`FileTool.svelte`, gelockt Session 7)
+### 9.2 FileTool (`FileTool.svelte`, gelockt Session 7, erweitert Session 9)
 
-- **Single-Card-Morph** mit Phase-State-Machine `idle → converting → done | error`. Die Card wechselt ihren Innenraum, NICHT ihre Position oder Größe (verhindert CLS).
-- **Idle:** Dropzone mit `2px dashed var(--color-border)`, `var(--space-12)` Padding, zentrierter Hint-Copy + Browse-Button. Drag-Over-State: Border solid, `--color-accent`. Meta-Zeile darunter zeigt MIME-Liste (lesbar formatiert) + Max-Size mit NBSP (`10\u00A0MB`).
-- **Converting:** dieselbe Card, ersetzt durch Spinner + Status-Text (`aria-live="polite"`). Quality-Slider bleibt sichtbar und disabled.
-- **Done:** dieselbe Card, ersetzt durch Filename + Größen-Vergleich (`vorher → nachher`, beide mit NBSP-Einheit) + Download-`<a>` (Primary-Button-Styling, `download="<name>.webp"`) + sekundärer Reset-Button.
+- **Single-Card-Morph** mit Phase-State-Machine `idle → preparing → converting → done | error`. Die Card wechselt ihren Innenraum, NICHT ihre Position oder Größe (verhindert CLS).
+- **Idle:** Dropzone mit `2px dashed var(--color-border)`, `var(--space-12)` Padding, zentrierter Hint-Copy + Browse-Button. Drag-Over-State: Border solid, `--color-accent`. Meta-Zeile darunter zeigt MIME-Liste (lesbar formatiert) + Max-Size mit NBSP (`10\u00A0MB`). Clipboard-Hint („oder Strg+V") als dezente Zeile unter der Dropzone; Kamera-Capture-Button nur auf Mobile sichtbar (CSS-Media-Query).
+- **Preparing (Session 9):** `<Loader variant="progress">` mit Status-Text „Lädt einmalig Modell …" (`aria-live="polite"`). Wird übersprungen wenn `isPrepared()` bereits `true` liefert (kein UI-Flash auf Revisit).
+- **Converting:** dieselbe Card, ersetzt durch `<Loader variant="spinner">` + Status-Text (`aria-live="polite"`). Quality-Slider bleibt sichtbar und disabled (falls `showQuality`).
+- **Done:** dieselbe Card, ersetzt durch **Mini-Preview (max 200×200) auf Transparenz-Checkerboard via CSS-`repeating-linear-gradient`** + Filename + Größen-Vergleich (`vorher → nachher`, beide mit NBSP-Einheit) + **Format-Chooser-Radio-Group** (PNG / WebP / JPG) mit Hint-Mono-Suffixen („verlustfrei" / „kleiner" / „kein Alpha") + Download-`<a>` (Primary-Button-Styling, `download="<name>.<ext>"`) + sekundärer Reset-Button. Format-Wechsel triggert `reencode()` ohne Re-Inference wenn verfügbar.
 - **Error:** dieselbe Card, ersetzt durch Error-Message in `var(--color-error)`, plus Reset-Button.
-- **Quality-Slider** (`<input type="range">`, `min=40 max=100 step=1`) mit Mono-Wert-Anzeige rechts (`tabular-nums`). Slider-Thumb hat eigene Hover-/Active-Transition; **alle Slider-Übergänge** unter `prefers-reduced-motion: reduce` deaktivieren.
-- **`data-testid`-Konvention:** `filetool-dropzone`, `filetool-input`, `filetool-meta`, `filetool-quality`, `filetool-status`, `filetool-result`, `filetool-error`, `filetool-download`, `filetool-reset`. (Konvention generalisiert auf alle 9 Tool-Templates.)
+- **Quality-Slider** (`<input type="range">`, `min=40 max=100 step=1`) mit Mono-Wert-Anzeige rechts (`tabular-nums`). Slider-Thumb hat eigene Hover-/Active-Transition; **alle Slider-Übergänge** unter `prefers-reduced-motion: reduce` deaktivieren. Slider ist nur sichtbar wenn `config.showQuality !== false`.
+- **`data-testid`-Konvention:** `filetool-dropzone`, `filetool-input`, `filetool-meta`, `filetool-quality`, `filetool-status`, `filetool-result`, `filetool-error`, `filetool-download`, `filetool-reset`, `filetool-preview`, `filetool-format-chooser`, `filetool-camera`. (Konvention generalisiert auf alle 9 Tool-Templates.)
 - **`formatBytes()`-Output** verwendet immer NBSP zwischen Zahl und Unit (`KB`, `MB`, `B`).
 
 ## 10. Page-Layout-Rhythmus (gelockt Session 6)
@@ -118,7 +119,21 @@ Tool-Detail-Seiten (`/[lang]/[slug]`) folgen einer dreistufigen Breiten-Hierarch
 - **How-To-Liste** verwendet `counter(how-step, decimal-leading-zero)` für editoriale `01 / 02 / 03`-Nummerierung in Mono, `var(--color-text-subtle)`. Kein `<ol>`-Default-Styling.
 - Hero-H1 bekommt `text-wrap: balance` und `letter-spacing: -0.015em`; Tagline unter dem H1 ist `var(--color-text-muted)`, `var(--font-size-body)`.
 
-## 11. Skill-Integration für Design-Arbeit
+## 11. Loader (`Loader.svelte`, gelockt Session 9)
+
+Geteilte Komponente für jeden Lazy-Load- und Long-Running-Work-Status. Keine komponenten-eigenen Spinner.
+
+- **`<Loader variant="spinner" />`** — indeterminiert.
+  - 24×24, 1px-Hairline-Arc (`stroke: var(--color-text-subtle)`), `var(--dur-med)` × 3 Rotations-Cycle.
+  - Rotation via `@keyframes spin { to { transform: rotate(360deg); } }`, `animation-duration: 0.9s`, linear.
+- **`<Loader variant="progress" value={0..1} label="…" />`** — determiniert.
+  - 1px-Hairline-Bar (Höhe `2px`), Hintergrund `var(--color-border)`, Füllung `var(--color-text-subtle)`, `width`-Transition `var(--dur-med) var(--ease-out)`.
+  - Mono-Tabular-Label rechts (`font-family: var(--font-family-mono)`, `font-variant-numeric: tabular-nums`), NBSP zwischen Wert und Unit.
+- **`prefers-reduced-motion: reduce`** deaktiviert Spin-Animation und Width-Transition (`animation: none; transition: none;`).
+- **`data-testid="loader"`** als Default — bei mehreren Loadern pro Seite via Prop überschreibbar.
+- **Kein eigener Spacing-Container** — Konsument (z.B. FileTool preparing-phase) bestimmt Padding/Gap.
+
+## 12. Skill-Integration für Design-Arbeit
 
 Bei jeder Session, die UI erstellt oder überarbeitet, ist folgende Skill-Sequenz Pflicht:
 1. **`minimalist-ui`** (leonxlnx/taste-skill) — Form-Fundament (Bento, Borders, Radii, Padding-Zahlen).
