@@ -74,11 +74,14 @@
 - **CSS variable** for colors, typography, spacing scale values, radii, shadows, motion. (Tailwind's `bg-bg`, `text-accent` etc. are ok — they resolve to the vars.)
 - For component-internal styles: either approach. Prefer utilities for one-liners, `<style>` blocks with vars for anything non-trivial.
 
-## 8. Icons (Preview)
+## 8. Icons (gelockt Session 9)
 
-- Pencil-Sketch monochromatic PNGs in `public/icons/tools/<slug>.png`.
-- Display with `filter: var(--icon-filter);` so they auto-invert in dark mode.
-- Icon-generation pipeline (Recraft.ai + `pending-icons/` drop folder) is locked down in Session 5+.
+- **Datei-Format:** Freigestellte WebP-Dateien unter `public/icons/tools/<toolId>.webp` (nicht `<slug>`, damit die Pfad-Auflösung stabil bleibt wenn Slugs pro Sprache variieren). Native Größe: 160×160.
+- **Pipeline:** Recraft.ai (PNG mit weißem Hintergrund) → `/de/hintergrund-entfernen` (Alpha-Freisteller) → Download als WebP → Commit unter `public/icons/tools/<toolId>.webp`.
+- **Auto-Pickup:** `[slug].astro` rendert das Icon automatisch, wenn die Datei existiert (Frontmatter-Check via `node:fs existsSync` zur Build-Zeit). Kein Config-Flag in der Tool-Config nötig — neue Icons erscheinen beim nächsten Build ohne Code-Änderung.
+- **CSS-Größe:** 160×160 auf Desktop, 120×120 auf ≤40rem (Mobile). Native 1:1 auf Desktop gibt retina-scharfe Kanten ohne zweite Asset-Version.
+- **Dark-Mode:** Graphit-Pencil-Sketches verschwinden vor dunklem Canvas → `:global([data-theme='dark']) .tool-hero__icon { filter: invert(1); }`. ThemeScript stampt `data-theme` vor First-Paint, also keine Flash-Prevention-Sonderfälle nötig.
+- **Alt-Text:** `alt=""` — der H1 daneben beschreibt das Tool bereits. Das Icon ist dekorativ.
 
 ## 9. Tool-Component Layouts (gelockt Sessions 5–7)
 
@@ -97,7 +100,7 @@ Beide Templates folgen denselben Form-Prinzipien: **eine Card pro Tool**, `1px`-
 - **Single-Card-Morph** mit Phase-State-Machine `idle → preparing → converting → done | error`. Die Card wechselt ihren Innenraum, NICHT ihre Position oder Größe (verhindert CLS).
 - **Idle:** Dropzone mit `2px dashed var(--color-border)`, `var(--space-12)` Padding, zentrierter Hint-Copy + Browse-Button. Drag-Over-State: Border solid, `--color-accent`. Meta-Zeile darunter zeigt MIME-Liste (lesbar formatiert) + Max-Size mit NBSP (`10\u00A0MB`). Clipboard-Hint („oder Strg+V") als dezente Zeile unter der Dropzone; Kamera-Capture-Button nur auf Mobile sichtbar (CSS-Media-Query).
 - **Preparing (Session 9):** `<Loader variant="progress">` mit Status-Text „Lädt einmalig Modell …" (`aria-live="polite"`). Wird übersprungen wenn `isPrepared()` bereits `true` liefert (kein UI-Flash auf Revisit).
-- **Converting:** dieselbe Card, ersetzt durch `<Loader variant="spinner">` + Status-Text (`aria-live="polite"`). Quality-Slider bleibt sichtbar und disabled (falls `showQuality`).
+- **Converting:** dieselbe Card, ersetzt durch Status-Label + `<Loader variant="spinner">` (`aria-live="polite"`). **Reihenfolge: Label zuerst, Spinner rechts davon** — das Auge liest zuerst die Aktion („Konvertiert …"), der Spinner bestätigt visuell. `inline-flex` mit `gap: var(--space-2)`, zentriert. Quality-Slider bleibt sichtbar und disabled (falls `showQuality`).
 - **Done:** dieselbe Card, ersetzt durch **Mini-Preview (max 200×200) auf Transparenz-Checkerboard via CSS-`repeating-linear-gradient`** + Filename + Größen-Vergleich (`vorher → nachher`, beide mit NBSP-Einheit) + **Format-Chooser-Radio-Group** (PNG / WebP / JPG) mit Hint-Mono-Suffixen („verlustfrei" / „kleiner" / „kein Alpha") + Download-`<a>` (Primary-Button-Styling, `download="<name>.<ext>"`) + sekundärer Reset-Button. Format-Wechsel triggert `reencode()` ohne Re-Inference wenn verfügbar.
 - **Error:** dieselbe Card, ersetzt durch Error-Message in `var(--color-error)`, plus Reset-Button.
 - **Quality-Slider** (`<input type="range">`, `min=40 max=100 step=1`) mit Mono-Wert-Anzeige rechts (`tabular-nums`). Slider-Thumb hat eigene Hover-/Active-Transition; **alle Slider-Übergänge** unter `prefers-reduced-motion: reduce` deaktivieren. Slider ist nur sichtbar wenn `config.showQuality !== false`.
@@ -111,6 +114,7 @@ Tool-Detail-Seiten (`/[lang]/[slug]`) folgen einer dreistufigen Breiten-Hierarch
 | Block | `max-width` | Begründung |
 |-------|-------------|------------|
 | `.tool-hero` (H1 + Tagline) | `40rem` | Editorial Lesefluss, zentriert |
+| `.tool-hero__icon` | `160×160` Desktop, `120×120` ≤40rem | Native 1:1 ohne zweite Asset-Version; `margin-bottom: var(--space-4)` unter dem Icon |
 | `.tool-section` (Tool-Card) | `34rem` | Tool dominiert visuell — engste Spalte |
 | `.ad-slot-placeholder` | `42rem` | CLS-safe `min-height` aus Token, `dashed 1px` Ghost bis Phase 2 |
 | `.tool-article` (Intro + How + Prose) | `42rem` | Prose-optimale Lesebreite |
@@ -129,7 +133,7 @@ Geteilte Komponente für jeden Lazy-Load- und Long-Running-Work-Status. Keine ko
 - **`<Loader variant="progress" value={0..1} label="…" />`** — determiniert.
   - 1px-Hairline-Bar (Höhe `2px`), Hintergrund `var(--color-border)`, Füllung `var(--color-text-subtle)`, `width`-Transition `var(--dur-med) var(--ease-out)`.
   - Mono-Tabular-Label rechts (`font-family: var(--font-family-mono)`, `font-variant-numeric: tabular-nums`), NBSP zwischen Wert und Unit.
-- **`prefers-reduced-motion: reduce`** deaktiviert Spin-Animation und Width-Transition (`animation: none; transition: none;`).
+- **`prefers-reduced-motion: reduce`**: Spinner behält langsame Rotation (`animation-duration: 2.4s`) statt zu frieren — ein eingefrorener Spinner sieht aus wie abgestürzte UI und entfernt das Loading-State-Signal. Progress-Bar deaktiviert nur die Width-`transition: none;` (Wert-Sprünge sind ok, Width-Tween nicht).
 - **`data-testid="loader"`** als Default — bei mehreren Loadern pro Seite via Prop überschreibbar.
 - **Kein eigener Spacing-Container** — Konsument (z.B. FileTool preparing-phase) bestimmt Padding/Gap.
 

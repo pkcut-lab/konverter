@@ -113,7 +113,7 @@ Exportiert aus `src/lib/tools/types.ts` via `ok()` / `err()` Konstruktoren. Alle
 - **`Loader.svelte`** (`src/components/Loader.svelte`) — geteilte Komponente mit zwei Varianten:
   - `variant="spinner"` — indeterminiert, 24×24, 1px-Hairline-Arc, `var(--color-text-subtle)`.
   - `variant="progress"` — determiniert, `value: 0..1`, optionales `label`, 1px-Hairline-Bar mit Mono-Tabular-Label rechts.
-  - `prefers-reduced-motion: reduce` deaktiviert Spin + Width-Transition.
+  - `prefers-reduced-motion: reduce`: Spinner dreht langsam weiter (`animation-duration: 2.4s`) — nicht einfrieren, sonst verschwindet das Loading-State-Signal und die UI wirkt abgestürzt. Progress-Bar entfernt nur die Width-`transition`.
   - Verwendung: Jede Tool-Komponente mit Lazy-Loading oder Long-Running-Work nutzt `Loader` — keine Komponenten-eigenen Spinner.
 
 ## SEO / JSON-LD (gelockt Session 9)
