@@ -227,6 +227,19 @@ Außerdem: `tool-registry.ts` (Tool-Existenz) + `slug-map.ts` (Slug pro Lang) �
 - **GitHub Flow:** ein Tool / eine Tool-Familie pro Branch.
 - **Session-Ende:** `PROGRESS.md` updaten + Commit mit Trailer + stop.
 
+## Content-Collection-Enumeration (gelockt Phase-1 Session 1)
+
+**Regel (Single-Source-of-Truth):** Jeder Code-Pfad, der Tool-Listen oder Tool-Resolutions bildet, muss `src/lib/tools/list.ts` nutzen. Kein Copy-Paste des `getCollection → map → filter → sort`-Patterns in neue Pages.
+
+**API:**
+
+- `listToolsForLang(lang)` → alle Tools einer Sprache, alphabetisch nach `title` sortiert, mit `href` + `iconRel` + `hasIcon` vorkomputiert. Konsumenten: `FooterToolsList.astro` (Footer-Cross-Links), Homepage (post-MVP-Refactor-Kandidat — aktuell `src/pages/[lang]/index.astro` hat noch inline-Enumerator).
+- `resolveRelatedTools(lang, localizedSlugs)` → resolved eine Slug-Liste aus `frontmatter.relatedTools` auf Render-Items. Input-Order bleibt erhalten, Forward-References (nicht-existente Slugs) werden still gefiltert. Konsument: `RelatedTools.astro`.
+
+**Wichtig:** `frontmatter.relatedTools` enthält **lokalisierte URL-Slugs**, nicht `toolId`s. Das Schema erzwingt kebab-case, nicht die Domain.
+
+**Refactor-Kandidat (nicht Pflicht):** `src/pages/[lang]/index.astro` (inline `getCollection`-Enumerator, Zeile 17–40) — bei nächster Berührung auf `listToolsForLang` umstellen.
+
 ## Build-Gates
 
 - `npm run build` muss grün sein vor Commit

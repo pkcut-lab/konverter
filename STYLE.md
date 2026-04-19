@@ -165,3 +165,24 @@ Bei jeder Session, die UI erstellt oder überarbeitet, ist folgende Skill-Sequen
 - Stack = Astro + Svelte-Runes — React/Next.js-Syntax wird umgeschrieben.
 
 **CLAUDE.md Section 5** ist die authoritative Quelle dieses Prozesses — falls Konflikt, gilt dort.
+
+## 14. Cross-Link-Muster (gelockt Phase-1 Session 1)
+
+Zwei Cross-Link-Kanäle, beide refined-minimalism, beide Datenquelle `src/lib/tools/list.ts`.
+
+### 14.1 Footer-„Werkzeuge"-Section
+
+- Heading `Werkzeuge` (DE-Wort, matcht Homepage `<h2>Alle Werkzeuge</h2>`). Ersetzt die früheren per-Session-Kategorien-Stubs.
+- Max 8 sichtbare Tool-Links. Bei >8: Überlauf-Link `+ N weitere Werkzeuge →` zur Homepage (`/<lang>/`).
+- Plain-Text-Links, kein Icon. Hover/Focus: `color: var(--color-text)`, `text-decoration: underline`, `text-underline-offset: var(--underline-offset)`.
+- Datenquelle: `listToolsForLang(lang)` aus `src/lib/tools/list.ts`.
+
+### 14.2 Verwandte-Tools-Block auf Tool-Seiten
+
+- Gemountet als Sibling von `<article class="tool-article">` innerhalb `.tool-page`.
+- Max-Breite `60rem`, `margin-top: var(--space-16)`.
+- Conditional-Render: leere Auflösung → keine Section (dokumentiert in Spec §4.3).
+- Card-Layout: `auto 1fr`-Grid, Icon `var(--icon-size-md)` (48px), `border: 1px solid var(--color-border)`, `border-radius: var(--r-md)`.
+- Motion: IntersectionObserver-Fade-In-Stagger, `var(--dur-med) var(--ease-out)`, Delay-Step `var(--stagger-step)` (60ms). `prefers-reduced-motion: reduce`: Fade-In komplett deaktiviert (sofort sichtbar).
+- Dark-Theme: globales `[data-theme='dark'] .related-tools img { filter: invert(1); }` matcht Homepage-Konvention (Section 8).
+- Datenquelle: `resolveRelatedTools(lang, frontmatter.relatedTools)` aus `src/lib/tools/list.ts` — **lokalisierte URL-Slugs**, nicht `toolId`s.
