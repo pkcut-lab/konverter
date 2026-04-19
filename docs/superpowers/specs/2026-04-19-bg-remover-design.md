@@ -44,7 +44,14 @@ Relevante Constraints für dieses Tool:
 ### 2.2 MVP-Scope (V1) — „MVP-Plus"
 
 **Drin:**
-- Upload via Drag-&-Drop oder Click-Browse (`accept: image/png, image/jpeg, image/webp`, max 10 MB).
+- **Vier Upload-Wege** (Differenzierung gg. Konkurrenz):
+  1. Drag-&-Drop auf die Card.
+  2. Click-Browse via Button.
+  3. **Clipboard-Paste (Ctrl/Cmd+V)** — `paste`-Event-Listener auf der Tool-Card; akzeptiert nur Image-Items.
+  4. **Mobile-Kamera direkt** — sekundärer Button „Foto aufnehmen" mit `<input type="file" accept="image/*" capture="environment">`. Wird auf Desktop ausgeblendet via Pointer/Hover-Media-Query.
+- **Format-Liste:** `accept: image/png, image/jpeg, image/webp, image/avif, image/heic, image/heif`. Max **15 MB** (iPhone-HEIC-Fotos liegen oft bei 5–12 MB).
+  - **HEIC/HEIF-Decode:** `heic2any` (~30 KB gzip, MIT) wird **dynamisch** importiert nur wenn die Datei eine HEIC/HEIF-MIME oder Endung hat → konvertiert intern zu PNG-Blob, ab da läuft der normale Pfad. Safari kann HEIC nativ via `createImageBitmap` — Library wird dort übersprungen.
+  - **AVIF:** kein Polyfill nötig — Chrome/Firefox/Safari 16+ dekodieren nativ via `createImageBitmap`.
 - Auto-Process bei Upload (kein „Start"-Button) — exakt wie bei `webp-konverter`.
 - **Format-Chooser** vor Download: `PNG (mit Alpha)` als Default · `WebP (mit Alpha)` · `JPG (mit weißem Hintergrund)`.
 - Download-Button mit korrektem Filename (Original-Stem + Suffix `_no-bg` + Extension).
@@ -52,7 +59,7 @@ Relevante Constraints für dieses Tool:
 - Vor-/Nach-Vergleich: Größen-Differenz wie bei FileTool, plus Mini-Preview-Thumbnail des Ergebnisses (transparent-checkerboard-Hintergrund per CSS, damit Transparenz sichtbar ist).
 
 **Draußen (Out of Scope — siehe §13):**
-- Edge-Feather-Slider, Replace-Background-Color-Picker, Worker-Fallback, Batch-Processing, History.
+- URL-Input (CORS-Problem → Phase 2 mit eigenem R2-Proxy), Edge-Feather-Slider, Replace-Background-Color-Picker, Worker-Fallback, Batch-Processing, History.
 
 ### 2.3 Sekundäre Story (intern)
 
@@ -125,8 +132,8 @@ export const hintergrundEntferner: FileToolConfig = {
     'pencil. Centered, modern artistic execution, bespoke and unique appearance. ' +
     'Subtle dotted outline around the silhouette indicating selection, ' +
     'background square anchored at the bottom, balanced asymmetrical composition.',
-  accept: ['image/png', 'image/jpeg', 'image/webp'],
-  maxSizeMb: 10,
+  accept: ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/heic', 'image/heif'],
+  maxSizeMb: 15,
   prepare: (onProgress) => prepareBackgroundRemovalModel(onProgress),
   process: (input, config) =>
     removeBackground(input, {
@@ -317,6 +324,20 @@ interface Props {
 
 Das gilt **auch** für künftige Multi-Format-Tools — also kein BG-Remover-Spezial-Code.
 
+**Clipboard-Paste (für ALLE FileTools, nicht nur BG-Remover):**
+- `$effect`-Listener auf Document-Level `paste`-Event, aktiv nur wenn Phase = `idle`.
+- Filtert `event.clipboardData.items` auf `kind === 'file'` und `type.startsWith('image/')`. Nimmt das erste Match.
+- Validiert MIME gegen `config.accept` und Size gegen `config.maxSizeMb` (gleiche Logik wie File-Drop).
+- Synthetisches `File`-Objekt (Clipboard liefert kein Filename) bekommt Default-Name `pasted-image-${Date.now()}.<ext>` mit aus MIME abgeleiteter Extension.
+- `prefers-reduced-motion`-irrelevant.
+- Hint-Copy in Dropzone-Meta-Zeile: „… oder Bild aus Zwischenablage einfügen (Strg+V)".
+
+**Mobile-Kamera-Capture (für ALLE FileTools, nicht nur BG-Remover):**
+- Sekundärer Button neben „Durchsuchen": `<label><input type="file" accept="image/*" capture="environment" hidden /> Foto aufnehmen</label>`.
+- Sichtbar nur via `@media (hover: none) and (pointer: coarse)` — Desktop-Browser sehen ihn nicht.
+- Feature-Flag (Tool-Config-Level) `cameraCapture?: boolean` mit Default `true` für File-Tools mit Image-MIMEs in `accept`. Der Spec-Author kann es per Tool deaktivieren.
+- Resultierendes File-Objekt durchläuft denselben Validate+Process-Pfad wie File-Drop.
+
 
 
 **Phase-Machine (erweitert):**
@@ -454,6 +475,11 @@ related:
 | 4 | `prepare`-Reject → `error`-Phase mit Retry-Button | Retry-Button vorhanden, Klick triggert wieder `preparing` |
 | 5 | `prepare`-Reject + Retry → erfolgreicher 2. Versuch funktioniert | Phase erreicht `done` |
 | 6 | Format-Chooser-Wechsel triggert Re-Encode, NICHT Re-Inference | `removeBackground`-Spy wird nur 1× gerufen, aber Download-Blob-MIME wechselt |
+| 7 | Clipboard-Paste in `idle`-Phase mit Image-Item → Upload-Pfad läuft | `paste`-Event mit Fake-`ClipboardEvent` → `removeBackground` wird gerufen |
+| 8 | Clipboard-Paste ohne Image-Item → stille Ignorierung | Kein State-Wechsel, kein Error |
+| 9 | Clipboard-Paste in `preparing`/`converting`/`done`-Phase → ignoriert | `paste`-Event während Non-Idle-Phase hat keinen Effekt |
+| 10 | HEIC-Upload triggert Lazy-Load von `heic2any` + konvertiert vor Inference | `heic2any`-Spy wird genau 1× gerufen, dann läuft normaler Pfad |
+| 11 | Camera-Capture-Input liefert File → Upload-Pfad läuft | Change-Event auf `data-testid="filetool-camera-input"` triggert Process |
 
 ### 9.3 `tests/components/Loader.test.ts`
 
@@ -490,6 +516,9 @@ related:
 |--------------|-------|-----------|
 | MIME nicht in `accept` | idle | Inline-Error in Meta-Zeile (Reuse FileTool-bestehende Logik) |
 | Datei > `maxSizeMb` | idle | Inline-Error in Meta-Zeile |
+| HEIC/HEIF-Decode schlägt fehl (`heic2any`-Reject) | idle | Inline-Error: „HEIC-Datei konnte nicht gelesen werden. Versuche, sie auf dem Smartphone als JPG zu speichern." Bestehender Pfad bleibt unberührt. |
+| Clipboard-Paste enthält kein Bild | idle | Stille (kein Error-Toast — Paste eines Text-Items ist kein User-Fehler) |
+| Camera-Capture liefert leeres File-Objekt (User bricht Aufnahme ab) | idle | Stille (kein Error) |
 | Modell-Download abgebrochen (Netz-Fehler) | preparing | `error`-Phase mit Retry-Button → springt zurück zu `preparing` |
 | Modell-Download zu langsam (>2 min ohne Progress) | preparing | `error`-Phase: „Modell-Download dauert ungewöhnlich lange. Bitte Internetverbindung prüfen und erneut versuchen." Implementierung: Watchdog-Timer in `prepareBackgroundRemovalModel` — `setTimeout(120_000)` wird bei jedem `onProgress`-Tick resettet; läuft er aus, wird die Pipeline-Promise abgebrochen (`AbortController`) und ein typisierter `StallError` geworfen. |
 | WebGPU + WASM beide nicht verfügbar | preparing | `error`-Phase: „Dein Browser unterstützt das nötige Modell nicht. Versuche Chrome/Edge oder Firefox in aktueller Version." |
@@ -523,6 +552,8 @@ Folgende Rulebook-Updates werden mit der Implementierung mitgeliefert (nicht vor
 - §File-Tool-Pattern: Neuer Schritt im Drei-Touch-Pattern für ML-Tools (`prepare`-Funktion + prepare-registry).
 - §Components: Neuer Eintrag `Loader.svelte` (geteilte Komponente, Props-Interface dokumentiert).
 - §Tool-Components: Output-Format-Handling im FileTool ist jetzt **dynamisch** (kein hardcoded `'image/webp'`/`'.webp'` mehr). Neues optionales `defaultFormat`-Feld in `FileToolConfig`, plus Multi-Format-Output-Convention.
+- §File-Tool-Pattern: FileTool-Template bekommt **zwei neue Upload-Methoden als Default** (Clipboard-Paste + Mobile-Kamera-Capture) — gelten für ALLE File-Tools, nicht nur BG-Remover. Opt-out per Tool-Config-Flag `cameraCapture: false`.
+- §File-Tool-Pattern: Neuer optionaler Pre-Decode-Step im FileTool-Validierungspfad (HEIC/HEIF → PNG via `heic2any` Lazy-Load). Pattern: wenn MIME in `accept` aber nicht von `createImageBitmap` dekodierbar ist, führt das Tool erst einen Format-Normalisierungs-Step aus.
 
 ### 11.2 STYLE.md
 - §9.2 FileTool: Neue `preparing`-State-Beschreibung.
@@ -535,10 +566,12 @@ Folgende Rulebook-Updates werden mit der Implementierung mitgeliefert (nicht vor
 
 **Neu:**
 - `@huggingface/transformers` (~v4.x, MIT) — peer-dep `onnxruntime-web` (auto-installiert).
+- `heic2any` (~v0.0.4, MIT) — HEIC/HEIF-Decode für Chrome/Firefox.
 
 **Bundle-Impact:**
-- Hauptbundle: **+0 KB** (dynamic import).
+- Hauptbundle: **+0 KB** (alle dynamic imports).
 - Lazy-Chunk `transformers.js`: ~80 KB gzip.
+- Lazy-Chunk `heic2any`: ~30 KB gzip (nur geladen bei HEIC/HEIF-Upload + nicht-Safari).
 - Modell `BEN2-ONNX`: ~110 MB (NICHT im npm-Bundle — wird bei Runtime von HF-CDN geladen).
 
 **Total npm-install-Impact:** ~250 MB `node_modules`-Größenwachstum (wegen onnxruntime-web's WASM-Binaries und ONNX-Tooling).
