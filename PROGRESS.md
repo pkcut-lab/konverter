@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 6, End)
+**Letztes Update:** 2026-04-19 (Session 7, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #6 — Prototype-Review #1 + Redesign ✅
+**Current Session:** #7 — WebP Konverter Prototype ✅
 
 ## Phase 0 Fortschritt
 
@@ -14,7 +14,7 @@
 | 4 — Tool-Config-Foundation | ✅ done | Zod-Schemas 9 Typen + slug-map + Content-Collection + CONVENTIONS final |
 | 5 — Meter-zu-Fuß Prototype | ✅ done | Converter-Template + Dynamic Route + SEO-Content |
 | 6 — Review #1 + Redesign | ✅ done | Refined-Minimalism-Redesign + Prereqs + Audit-Pass |
-| 7 — WebP Konverter Prototype | ⬜ pending | FileTool-Template |
+| 7 — WebP Konverter Prototype | ✅ done | FileTool-Template + Processor-Registry + /de/webp-konverter live |
 | 8 — Review #2 | ⬜ pending | Iteration + Lock |
 | 9 — PWA + Pagefind | ⬜ pending | Scaffolding |
 | 10 — CI/CD | ⬜ pending | First Production Deploy |
@@ -24,24 +24,24 @@
 | Tool | Config | Content-DE | Icon | Tests |
 |------|--------|------------|------|-------|
 | meter-zu-fuss | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
-| webp-konverter | ⬜ | ⬜ | ⬜ | ⬜ |
+| webp-konverter | ✅ | ✅ | ⬜ (Pending Recraft) | ✅ |
 
 ## Deploy-History
 (leer bis Session 10)
 
 ## Blockers
-- Keine. User testet `http://localhost:4321/de/meter-zu-fuss` im Browser und gibt ggf. Iterations-Feedback (Desktop + Mobile, Light + Dark).
+- Keine. User testet `http://localhost:4321/de/webp-konverter` im Browser (PNG/JPG hochladen → WebP-Download verifizieren, Quality-Slider, Reset, Error-Pfad). Meter-zu-Fuß-Hydration parallel verifiziert (kein Regress).
 
-## Session-6-Prerequisites ✅ alle abgearbeitet
-- ✅ `vitePreprocess({ script: true, style: false })` in `astro.config.mjs` + `vitest.config.ts` — TS-Annotationen in `Converter.svelte` wiederhergestellt (`interface Props`, `$state<T>()` Generics, typisierte Handler).
-- ✅ `.prose` Utility in `src/styles/global.css` — alle `:global()`-Duplikate aus `[slug].astro` entfernt.
-- ✅ `src/lib/tool-registry.ts` extrahiert — neue Tools brauchen nur noch Registry + slug-map-Edit.
-
-## Session 6 Deliverables
-- Redesign `src/components/tools/Converter.svelte`: zweispaltiger Stack mit Hairline-Divider + zentrierte Swap-Pill, inline SVG-Icons (Swap rotiert 180°, Copy), Chips außerhalb der Card, `font-size-h1` Mono Tabular-Nums Output, `:focus-visible` 2px Outline, `:active scale(0.98)`, `copy--copied` Color-Shift via `--color-success`.
-- Redesign `src/pages/[lang]/[slug].astro`: `.tool-hero` (max-w 40rem zentriert), `.tool-section` (max-w 34rem — Tool dominiert), Ad-Slot-Ghost (dashed 1px, min-h 5rem, CLS-safe), `.tool-article` mit `counter(how-step, decimal-leading-zero)` für editorial "01/02/03" Listing.
-- Audit-Pass via `web-design-guidelines` angewandt: `translate="no"` auf Unit-Spans, `touch-action: manipulation` auf Interaktiv-Elementen, `text-wrap: balance` auf H1/H2, `color-scheme` auf `:root`/`[data-theme="dark"]`, `a:focus-visible` Outline-Ring.
-- Gates: 0/0/0 `astro check`, 133/133 vitest, 3 pages built.
+## Session 7 Deliverables
+- `src/components/tools/FileTool.svelte` (~500 LOC): Single-Card-Morph mit Phase-State-Machine `idle → converting → done | error`. Quality-Slider 40–100, Drag-&-Drop-Dropzone, MIME- + Size-Validierung vor Process-Aufruf, `aria-live="polite"` auf Result-Region, `prefers-reduced-motion`-Fallbacks auf Dropzone/Download/Reset/Slider-Thumb. Tokens-only — kein Hex/arbitrary-px.
+- `src/lib/tools/process-registry.ts`: Client-side Dispatch-Tabelle keyed by `config.id`. Löst Astro-SSR-Function-Stripping (Functions in Island-Props serialisieren als `null`). Drei-Touch-Pattern für neue File-Tools dokumentiert (Pure Module + tool-registry-Eintrag + Dispatch-Eintrag).
+- `src/pages/[lang]/[slug].astro`: `componentByType`-Map + explizite Conditional-Renders pro Type. Astro droppt `client:load` bei dynamischen Component-Refs silent — Fix verifiziert via Smoke-Test (curl + DOM-Inspektion).
+- `src/content/tools/webp-konverter/de.md`: SEO-Content (Title 44 Z., Meta-Desc ~151 Z., Tagline, Intro, 3 How-To-Steps, 5 FAQ, 3 Related, 6 gelockte H2-Headings).
+- `tests/components/tools/filetool.test.ts` (10 Tests): MIME-/Size-Reject, Quality-Slider-Pass-Through, .webp-Download, Reset-Pfad, aria-live, Process-Failure. jsdom-25-Workaround dokumentiert (`Blob/File.prototype.arrayBuffer` per-instance gepatcht).
+- `tests/content/webp-konverter-content.test.ts` (4 Tests): Frontmatter-Schema, toolId/lang, Body startet mit H2, gelockte H2-Reihenfolge.
+- Audit-Pass via `web-design-guidelines`: NBSP (U+00A0) zwischen Zahl und Einheit in `formatBytes()` (`10 MB` statt `10 MB` mit Wrap-Risiko); `prefers-reduced-motion`-Coverage auf Slider-Thumb-Transition ergänzt.
+- Recraft-Icon-Prompt im Tool-Config als JSDoc gelockt (siehe `tool-registry.ts`).
+- Gates: 0/0/0 `astro check`, 159/159 vitest, 4 pages built (`/`, `/de`, `/de/meter-zu-fuss`, `/de/webp-konverter`).
 
 ## Phase-Kickoff-Reminders (Setup-Aufgaben bei Phase-Start)
 
@@ -73,8 +73,9 @@
   - Pickup: Der ausführende Agent arbeitet zuerst die **Pre-Execution Checklist (B1–B9)** im Plan ab und holt explizites User-Go ein (B9), bevor Task 1 startet.
 
 ## Next-Session-Plan
-Session 7 — WebP Konverter Prototype: Erster File-Tool-Konverter (Client-only WebP-Kompression, Browser-Canvas-API, Worker-Fallback). Liefert das `FileTool`-Template analog zum Converter-Template aus Session 5/6.
+Session 8 — Prototype-Review #2 + Iteration-Lock: User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss`, `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark. Iterations-Feedback einarbeiten. Danach Lock der zwei Tool-Templates (Converter + FileTool) für Phase-1-Skalierung.
 
-**Offener Lock-in nach User-Review der Session-6-Arbeit** (nicht blockierend für Session 7, aber vor Tool-Skalierung in Phase 1):
-- `CONVENTIONS.md`: Svelte-5-Runes-Pattern für Tools (`interface Props`, typisierte `$state<T>()`, `data-testid`-Konvention) — Vorlage liegt in `Converter.svelte` fertig.
-- `STYLE.md`: Converter-Box-Layout (Two-Panel + Hairline-Divider + zentrierte Swap-Pill), Quick-Value-Chip-Stil (außerhalb der Card, `--r-sm`), Page-Layout-Rhythmus (Hero 40rem / Tool 34rem / Ad+Article 42rem).
+**Offener Lock-in vor Tool-Skalierung in Phase 1** (carry-over aus Session 6, jetzt um File-Tool-Pattern ergänzt):
+- `CONVENTIONS.md`: Svelte-5-Runes-Pattern für Tools (`interface Props`, typisierte `$state<T>()`, `data-testid`-Konvention) + Drei-Touch-Pattern für File-Tools (pure Module unter `src/lib/tools/` + `tool-registry`-Eintrag + `process-registry`-Dispatch-Eintrag) + jsdom-25-File-arrayBuffer-Workaround.
+- `STYLE.md`: Converter-Box-Layout (Two-Panel + Hairline-Divider + zentrierte Swap-Pill) + FileTool-Single-Card-Morph (idle/converting/done/error), Quick-Value-Chip-Stil, Page-Layout-Rhythmus (Hero 40rem / Tool 34rem / Ad+Article 42rem).
+- `[slug].astro`: `componentByType` als statische Map mit expliziten Conditional-Renders dokumentieren — dynamische Component-Refs droppen `client:load` silent.
