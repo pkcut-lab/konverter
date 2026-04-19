@@ -1,18 +1,266 @@
 ---
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getSlug } from '../../lib/slug-map';
+import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
 
-export function getStaticPaths() {
-  return [{ params: { lang: 'de' } }];
+export async function getStaticPaths() {
+  return ACTIVE_LANGUAGES.map((lang) => ({ params: { lang } }));
 }
-const { lang } = Astro.params;
+
+const { lang } = Astro.params as { lang: ActiveLanguage };
+
+// Auto-index: every content entry in this language that has a registered
+// slug becomes a card. New tools show up without touching this file.
+// process.cwd() is the project root during `astro build`; more reliable than
+// `new URL('../../../', import.meta.url)` when a folder name contains spaces.
+const projectRoot = process.cwd();
+const entries = await getCollection('tools', (e) => e.data.language === lang);
+
+const tools = entries
+  .map((entry) => {
+    const slug = getSlug(entry.data.toolId, entry.data.language);
+    if (!slug) return null;
+    const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
+    const hasIcon = existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, '')));
+    return {
+      toolId: entry.data.toolId,
+      title: entry.data.title,
+      tagline: entry.data.tagline,
+      href: `/${lang}/${slug}`,
+      iconRel,
+      hasIcon,
+    };
+  })
+  .filter((t): t is NonNullable<typeof t> => t !== null)
+  .sort((a, b) => a.title.localeCompare(b.title, lang));
 ---
 <BaseLayout
-  lang={lang!}
-  title="Konverter — Phase 0 Design System"
-  description="Multilinguale Konverter-Webseite. Phase 0 Foundation."
+  lang={lang}
+  title="Konverter — Werkzeuge, die im Browser bleiben"
+  description="Konverter, Freisteller und Datei-Tools — alle arbeiten direkt im Browser, ohne Upload, ohne Anmeldung, ohne Tracking."
   pathWithoutLang="/"
 >
-  <h1>Konverter</h1>
-  <p>Phase 0 — Design-System live. Sprache: {lang}</p>
-  <p>Styleguide: <a href={`/${lang}/styleguide`}>/{lang}/styleguide</a></p>
+  <div class="home">
+    <header class="home-hero">
+      <p class="eyebrow">Konverter</p>
+      <h1>Werkzeuge, die im Browser bleiben.</h1>
+      <p class="lede">
+        Freisteller, Format-Umwandlung, Umrechnungen. Alles läuft auf deinem Gerät —
+        keine Uploads, keine Anmeldung, kein Tracking.
+      </p>
+    </header>
+
+    <section class="tools" aria-labelledby="tools-heading">
+      <div class="tools-head">
+        <h2 id="tools-heading">Alle Werkzeuge</h2>
+        <span class="count" aria-label={`${tools.length} Werkzeuge verfügbar`}>
+          {String(tools.length).padStart(2, '0')}
+        </span>
+      </div>
+
+      <ul class="tool-grid" role="list">
+        {tools.map((tool) => (
+          <li class="tool-card">
+            <a class="tool-card__link" href={tool.href}>
+              {tool.hasIcon && (
+                <img
+                  class="tool-card__icon"
+                  src={tool.iconRel}
+                  alt=""
+                  width="72"
+                  height="72"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div class="tool-card__body">
+                <h3 class="tool-card__title">{tool.title}</h3>
+                <p class="tool-card__tagline">{tool.tagline}</p>
+              </div>
+              <span class="tool-card__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
+
+<style>
+  .home {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding-top: var(--space-12);
+  }
+
+  .home-hero {
+    max-width: 44rem;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .eyebrow {
+    margin: 0;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .home-hero h1 {
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: var(--space-2) auto 0;
+    max-width: 36rem;
+    color: var(--color-text-muted);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    text-wrap: balance;
+  }
+
+  .tools {
+    max-width: 60rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .tools-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+  .tools-head h2 {
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .count {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+  }
+
+  .tool-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .tool-card {
+    display: block;
+  }
+  .tool-card__link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+    min-height: 5.5rem;
+  }
+  .tool-card__link:hover {
+    border-color: var(--color-text-subtle);
+    background: var(--color-bg);
+  }
+  .tool-card__link:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+  .tool-card__link:active {
+    transform: scale(0.995);
+  }
+
+  .tool-card__icon {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+  :global([data-theme='dark']) .tool-card__icon {
+    filter: invert(1);
+  }
+
+  .tool-card__body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .tool-card__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+  }
+  .tool-card__tagline {
+    margin: 0;
+    font-size: var(--font-size-small);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .tool-card__arrow {
+    font-family: var(--font-family-mono);
+    color: var(--color-text-subtle);
+    transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .tool-card__link:hover .tool-card__arrow {
+    transform: translateX(2px);
+    color: var(--color-text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tool-card__link,
+    .tool-card__arrow {
+      transition: none;
+    }
+    .tool-card__link:active {
+      transform: none;
+    }
+    .tool-card__link:hover .tool-card__arrow {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .home {
+      gap: var(--space-12);
+      padding-top: var(--space-8);
+    }
+    .home-hero h1 {
+      font-size: 1.875rem;
+    }
+    .tool-card__link {
+      padding: var(--space-4) var(--space-5);
+      gap: var(--space-3);
+    }
+    .tool-card__icon {
+      width: 48px;
+      height: 48px;
+    }
+  }
+</style>

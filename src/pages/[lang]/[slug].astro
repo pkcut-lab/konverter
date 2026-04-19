@@ -1,6 +1,5 @@
 ---
 import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
@@ -56,8 +55,11 @@ const { Content } = await entry.render();
 // Convention (Session 9): if `public/icons/tools/<toolId>.webp` exists, the
 // hero renders it above the H1. Auto-picks up new icons as they land —
 // no config flag required. The icon file is the 160×160 WebP output of the
-// Recraft → BG-Remover pipeline; CSS caps it at 80×80 for optical balance.
-const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
+// Recraft → BG-Remover pipeline; CSS renders it at 160 (Desktop) / 120 (Mobile).
+// process.cwd() is the project root during `astro build`; more reliable than
+// `new URL('../../../', import.meta.url)`, which can point into compiled
+// output when Vite relocates chunks (and when a folder name contains spaces).
+const projectRoot = process.cwd();
 const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
 const hasIcon = existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, '')));
 
