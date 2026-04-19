@@ -1,26 +1,59 @@
 ---
 import FooterToolsList from './FooterToolsList.astro';
 import type { Lang } from '../lib/tools/types';
+
 interface Props {
   lang: string;
 }
 const { lang } = Astro.props;
 const year = new Date().getFullYear();
+
+type FooterLink = { label: string; href: string; disabled?: boolean };
+type LegalColumn = { heading: string; links: FooterLink[] };
+
+const legalByLang: Record<string, LegalColumn> = {
+  de: {
+    heading: 'Rechtliches',
+    links: [
+      { label: 'Datenschutz', href: '#', disabled: true },
+      { label: 'Impressum', href: '#', disabled: true },
+    ],
+  },
+  en: {
+    heading: 'Legal',
+    links: [
+      { label: 'Privacy', href: '#', disabled: true },
+      { label: 'Imprint', href: '#', disabled: true },
+    ],
+  },
+};
+const legal = legalByLang[lang] ?? legalByLang.en!;
+const metaHeading = 'Meta';
 ---
 <footer class="site-footer">
   <div class="inner">
     <FooterToolsList lang={lang as Lang} />
-    <section>
-      <h2>Rechtliches</h2>
-      <ul>
-        <li><span class="stub">Impressum (Phase 2)</span></li>
-        <li><span class="stub">Datenschutz (Phase 2)</span></li>
+
+    <section class="col">
+      <h2 class="col__heading">{legal.heading}</h2>
+      <ul class="col__list">
+        {legal.links.map((link) => (
+          <li>
+            <a
+              class="col__link col__link--disabled"
+              href={link.href}
+              aria-disabled="true"
+              tabindex="-1"
+            >{link.label}</a>
+          </li>
+        ))}
       </ul>
     </section>
-    <section>
-      <h2>Meta</h2>
-      <ul>
-        <li lang={lang}>Sprache: {lang.toUpperCase()}</li>
+
+    <section class="col">
+      <h2 class="col__heading">{metaHeading}</h2>
+      <ul class="col__list">
+        <li lang={lang}>Sprache: <span translate="no">{lang.toUpperCase()}</span></li>
         <li>© {year} Konverter</li>
       </ul>
     </section>
@@ -31,7 +64,7 @@ const year = new Date().getFullYear();
   .site-footer {
     margin-top: var(--space-24);
     border-top: 1px solid var(--color-border);
-    background: var(--color-surface);
+    background: transparent;
     color: var(--color-text-muted);
   }
   .inner {
@@ -42,13 +75,13 @@ const year = new Date().getFullYear();
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-8);
   }
-  h2 {
+  .col__heading {
     font-size: var(--font-size-small);
     font-weight: 600;
     color: var(--color-text);
     margin: 0 0 var(--space-3);
   }
-  ul {
+  .col__list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -57,12 +90,26 @@ const year = new Date().getFullYear();
     gap: var(--space-2);
     font-size: var(--font-size-small);
   }
-  .stub {
+  .col__link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .col__link:hover {
+    color: var(--color-text);
+  }
+  .col__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: var(--space-1);
+    border-radius: var(--r-sm);
+  }
+  .col__link--disabled {
     color: var(--color-text-subtle);
-    font-style: italic;
+    pointer-events: none;
+    cursor: default;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 40rem) {
     .inner {
       grid-template-columns: 1fr;
       gap: var(--space-6);
