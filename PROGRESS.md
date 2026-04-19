@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 5, End)
+**Letztes Update:** 2026-04-19 (Session 6, End)
 **Aktuelle Phase:** Phase 0 — Foundation
-**Current Session:** #5 — Meter-zu-Fuß Prototype ✅
+**Current Session:** #6 — Prototype-Review #1 + Redesign ✅
 
 ## Phase 0 Fortschritt
 
@@ -13,7 +13,7 @@
 | 3 — Layout-Shell | ✅ done | BaseLayout + Header + Footer + ThemeToggle + hreflang |
 | 4 — Tool-Config-Foundation | ✅ done | Zod-Schemas 9 Typen + slug-map + Content-Collection + CONVENTIONS final |
 | 5 — Meter-zu-Fuß Prototype | ✅ done | Converter-Template + Dynamic Route + SEO-Content |
-| 6 — Review #1 | ⬜ pending | Iteration + Lock |
+| 6 — Review #1 + Redesign | ✅ done | Refined-Minimalism-Redesign + Prereqs + Audit-Pass |
 | 7 — WebP Konverter Prototype | ⬜ pending | FileTool-Template |
 | 8 — Review #2 | ⬜ pending | Iteration + Lock |
 | 9 — PWA + Pagefind | ⬜ pending | Scaffolding |
@@ -30,12 +30,18 @@
 (leer bis Session 10)
 
 ## Blockers
-- User-Verifikation offen: `http://localhost:4321/de/meter-zu-fuss` lokal im Browser testen (Desktop + Mobile, Light + Dark). Spec-Reviewer hat Build bestätigt; interaktive Verifikation delegiert.
+- Keine. User testet `http://localhost:4321/de/meter-zu-fuss` im Browser und gibt ggf. Iterations-Feedback (Desktop + Mobile, Light + Dark).
 
-## Session-6-Prerequisites (Code-Review-Carry-Overs aus Session 5)
-- `astro.config.mjs` um `vitePreprocess` erweitern, damit Svelte-Komponenten `interface`-/`type`-Deklarationen nutzen können (Workaround derzeit: `$props<T>()` Generic-Form). Nachdem `vitePreprocess` aktiv ist: Parameter-Typen in `Converter.svelte` wiederherstellen — `formatDecimal(n: number, decimals: number)`, `onInput(e: Event)`, `onQuickValue(n: number)`; `$state<T>()` Generics bei `inputValue`/`direction`/`copyState` wieder typisieren. Quelle: Code-Review Issue 4 + Final-Review Important.
-- `.prose` Utility in `src/styles/global.css` einführen und `src/pages/[lang]/[slug].astro` `.tool-seo :global(...)` ersetzen — spart 150+ duplizierte CSS-Regeln. Quelle: Code-Review Issue 3, TODO-Marker in der Datei.
-- `src/lib/tool-registry.ts` extrahieren, damit neue Tools nur an zwei Stellen (Registry + slug-map) gepflegt werden müssen. Quelle: Code-Review Issue 2, JSDoc-Marker in der Datei.
+## Session-6-Prerequisites ✅ alle abgearbeitet
+- ✅ `vitePreprocess({ script: true, style: false })` in `astro.config.mjs` + `vitest.config.ts` — TS-Annotationen in `Converter.svelte` wiederhergestellt (`interface Props`, `$state<T>()` Generics, typisierte Handler).
+- ✅ `.prose` Utility in `src/styles/global.css` — alle `:global()`-Duplikate aus `[slug].astro` entfernt.
+- ✅ `src/lib/tool-registry.ts` extrahiert — neue Tools brauchen nur noch Registry + slug-map-Edit.
+
+## Session 6 Deliverables
+- Redesign `src/components/tools/Converter.svelte`: zweispaltiger Stack mit Hairline-Divider + zentrierte Swap-Pill, inline SVG-Icons (Swap rotiert 180°, Copy), Chips außerhalb der Card, `font-size-h1` Mono Tabular-Nums Output, `:focus-visible` 2px Outline, `:active scale(0.98)`, `copy--copied` Color-Shift via `--color-success`.
+- Redesign `src/pages/[lang]/[slug].astro`: `.tool-hero` (max-w 40rem zentriert), `.tool-section` (max-w 34rem — Tool dominiert), Ad-Slot-Ghost (dashed 1px, min-h 5rem, CLS-safe), `.tool-article` mit `counter(how-step, decimal-leading-zero)` für editorial "01/02/03" Listing.
+- Audit-Pass via `web-design-guidelines` angewandt: `translate="no"` auf Unit-Spans, `touch-action: manipulation` auf Interaktiv-Elementen, `text-wrap: balance` auf H1/H2, `color-scheme` auf `:root`/`[data-theme="dark"]`, `a:focus-visible` Outline-Ring.
+- Gates: 0/0/0 `astro check`, 133/133 vitest, 3 pages built.
 
 ## Phase-Kickoff-Reminders (Setup-Aufgaben bei Phase-Start)
 
@@ -67,4 +73,8 @@
   - Pickup: Der ausführende Agent arbeitet zuerst die **Pre-Execution Checklist (B1–B9)** im Plan ab und holt explizites User-Go ein (B9), bevor Task 1 startet.
 
 ## Next-Session-Plan
-Session 6 — Prototype-Review #1: User testet `http://localhost:4321/de/meter-zu-fuss` lokal (Desktop + Mobile, Light + Dark). Feedback zu Layout, Typografie, Converter-Interaktion, Mobile-Scroll-Verhalten. Iteration bis 100%. Session-6-Prerequisites (oben) abarbeiten: vitePreprocess-Config, `.prose`-Utility-Extraktion, `tool-registry.ts`-Extraktion. Danach lock in `CONVENTIONS.md` (Svelte-5-Runes-Pattern für Tools, `data-testid`-Konvention) und `STYLE.md` (Converter-Box-Layout, Quick-Value-Button-Look). Kein neuer Converter, kein WebP — das ist Session 7.
+Session 7 — WebP Konverter Prototype: Erster File-Tool-Konverter (Client-only WebP-Kompression, Browser-Canvas-API, Worker-Fallback). Liefert das `FileTool`-Template analog zum Converter-Template aus Session 5/6.
+
+**Offener Lock-in nach User-Review der Session-6-Arbeit** (nicht blockierend für Session 7, aber vor Tool-Skalierung in Phase 1):
+- `CONVENTIONS.md`: Svelte-5-Runes-Pattern für Tools (`interface Props`, typisierte `$state<T>()`, `data-testid`-Konvention) — Vorlage liegt in `Converter.svelte` fertig.
+- `STYLE.md`: Converter-Box-Layout (Two-Panel + Hairline-Divider + zentrierte Swap-Pill), Quick-Value-Chip-Stil (außerhalb der Card, `--r-sm`), Page-Layout-Rhythmus (Hero 40rem / Tool 34rem / Ad+Article 42rem).
