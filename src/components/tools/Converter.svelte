@@ -1,11 +1,7 @@
 <script lang="ts">
   import type { ConverterConfig } from '../../lib/tools/schemas';
 
-  interface Props {
-    config: ConverterConfig;
-  }
-
-  let { config }: Props = $props();
+  let { config } = $props<{ config: ConverterConfig }>();
 
   let inputValue = $state(config.examples[0] ?? 1);
   let direction = $state('forward');
