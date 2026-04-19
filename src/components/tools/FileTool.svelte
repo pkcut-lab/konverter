@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { FileToolConfig } from '../../lib/tools/schemas';
+  import { getProcessor } from '../../lib/tools/process-registry';
 
   interface Props {
     config: FileToolConfig;
@@ -27,10 +28,11 @@
     return dot >= 0 ? name.slice(0, dot) + ext : name + ext;
   }
 
+  // U+00A0 NO-BREAK SPACE between number and unit per typography rules.
   function formatBytes(n: number): string {
-    if (n < 1024) return `${n} B`;
-    if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
-    return `${(n / (1024 * 1024)).toFixed(2)} MB`;
+    if (n < 1024) return `${n}\u00A0B`;
+    if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)}\u00A0KB`;
+    return `${(n / (1024 * 1024)).toFixed(2)}\u00A0MB`;
   }
 
   function reset() {
@@ -54,7 +56,7 @@
       return;
     }
     if (file.size > config.maxSizeMb * 1024 * 1024) {
-      errorMessage = `Datei zu groß. Maximal ${config.maxSizeMb} MB erlaubt.`;
+      errorMessage = `Datei zu groß. Maximal ${config.maxSizeMb}\u00A0MB erlaubt.`;
       phase = 'error';
       return;
     }
@@ -64,10 +66,17 @@
     errorMessage = '';
     phase = 'converting';
 
+    const processor = getProcessor(config.id);
+    if (!processor) {
+      errorMessage = `Kein Prozessor registriert für „${config.id}“.`;
+      phase = 'error';
+      return;
+    }
+
     try {
       const inputBytes = new Uint8Array(await file.arrayBuffer());
-      const outBytes = await config.process(inputBytes, { quality });
-      const blob = new Blob([outBytes], { type: 'image/webp' });
+      const outBytes = await processor(inputBytes, { quality });
+      const blob = new Blob([outBytes as BlobPart], { type: 'image/webp' });
       if (outputUrl) URL.revokeObjectURL(outputUrl);
       outputUrl = URL.createObjectURL(blob);
       outputSize = outBytes.byteLength;
@@ -91,7 +100,7 @@
     >
       <span class="dropzone__title">Datei wählen</span>
       <span class="dropzone__hint" data-testid="filetool-meta">
-        PNG oder JPG · max. {config.maxSizeMb} MB
+        PNG oder JPG · max. {config.maxSizeMb}&nbsp;MB
       </span>
       <input
         class="dropzone__input"
@@ -473,10 +482,16 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .dropzone,
     .download,
     .reset,
     .quality__slider::-webkit-slider-thumb {
       transition: none;
+    }
+    .download:active,
+    .reset:active,
+    .quality__slider:active::-webkit-slider-thumb {
+      transform: none;
     }
   }
 </style>

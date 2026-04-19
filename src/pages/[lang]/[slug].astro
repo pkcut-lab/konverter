@@ -40,8 +40,7 @@ if (!config) {
   );
 }
 
-const ToolComponent = componentByType[config.type as keyof typeof componentByType];
-if (!ToolComponent) {
+if (!(config.type in componentByType)) {
   throw new Error(
     `[slug].astro has no component mapped for type="${config.type}" ` +
       `(toolId="${entry.data.toolId}"). Add an entry to componentByType.`,
@@ -63,7 +62,8 @@ const { Content } = await entry.render();
     </header>
 
     <section class="tool-section" aria-label="Konverter">
-      <ToolComponent config={config} client:load />
+      {config.type === 'converter' && <Converter config={config} client:load />}
+      {config.type === 'file-tool' && <FileTool config={config} client:load />}
     </section>
 
     {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt

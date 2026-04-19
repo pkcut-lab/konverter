@@ -2,12 +2,18 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { flushSync, mount, unmount } from 'svelte';
 import FileTool from '../../../src/components/tools/FileTool.svelte';
 import type { FileToolConfig } from '../../../src/lib/tools/schemas';
+import { processRegistry } from '../../../src/lib/tools/process-registry';
+
+const TEST_ID = 'test-file-tool';
 
 function makeConfig(
   process: FileToolConfig['process'] = vi.fn(async () => new Uint8Array([1, 2, 3])),
 ): FileToolConfig {
+  // The registry is the actual call site at runtime; install our spy under
+  // a test-only id and reference it by config.id.
+  processRegistry[TEST_ID] = process;
   return {
-    id: 'png-jpg-to-webp',
+    id: TEST_ID,
     type: 'file-tool',
     categoryId: 'bilder',
     iconPrompt: 'pencil sketch',
@@ -47,6 +53,7 @@ describe('FileTool.svelte — png-jpg-to-webp', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
     vi.unstubAllGlobals();
+    delete processRegistry[TEST_ID];
     vi.stubGlobal('URL', {
       ...URL,
       createObjectURL: vi.fn(() => 'blob:mock-url'),
