@@ -2,11 +2,16 @@
   import type { ConverterConfig } from '../../lib/tools/schemas';
   import { computeConversion, type Direction } from '../../lib/tools/compute';
 
-  let { config } = $props<{ config: ConverterConfig }>();
+  interface Props {
+    config: ConverterConfig;
+  }
+  type CopyState = 'idle' | 'copied';
 
-  let inputValue = $state(config.examples[0] ?? 1);
-  let direction = $state('forward');
-  let copyState = $state('idle');
+  let { config }: Props = $props();
+
+  let inputValue = $state<number>(config.examples[0] ?? 1);
+  let direction = $state<Direction>('forward');
+  let copyState = $state<CopyState>('idle');
 
   const fromLabel = $derived(
     direction === 'forward' ? config.units.from.label : config.units.to.label,
@@ -20,7 +25,8 @@
   const toUnit = $derived(
     direction === 'forward' ? config.units.to.id : config.units.from.id,
   );
-  function formatDecimal(n, decimals) {
+
+  function formatDecimal(n: number, decimals: number): string {
     if (!Number.isFinite(n)) return '–';
     return n.toLocaleString('de-DE', {
       maximumFractionDigits: decimals,
@@ -29,13 +35,12 @@
     });
   }
 
-  const outputValue = $derived(
-    computeConversion(config.formula, inputValue, direction as Direction),
-  );
+  const outputValue = $derived(computeConversion(config.formula, inputValue, direction));
   const outputFormatted = $derived(formatDecimal(outputValue, config.decimals));
 
-  function onInput(e) {
-    const v = e.target.valueAsNumber;
+  function onInput(e: Event) {
+    const target = e.target as HTMLInputElement;
+    const v = target.valueAsNumber;
     if (Number.isFinite(v) && v >= 0) inputValue = v;
   }
 
@@ -53,7 +58,7 @@
     }
   }
 
-  function onQuickValue(n) {
+  function onQuickValue(n: number) {
     inputValue = n;
   }
 </script>
