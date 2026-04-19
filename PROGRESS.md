@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Phase 1 Session 1, End)
+**Letztes Update:** 2026-04-19 (Phase 1 Session 2, End)
 **Aktuelle Phase:** Phase 1 — Skalierung (läuft)
-**Current Session:** Phase-1 Session 1 — Tool-Cross-Links ✅ (Footer-„Werkzeuge"-Section ersetzt die Kategorien-Stubs, `<RelatedTools>` mountet am Fuß jeder Tool-Seite, shared `src/lib/tools/list.ts`-Helper als Single-Source-of-Truth für Content-Collection-Enumeration, 289/289 Tests, Hard-Caps & web-design-guidelines clean)
+**Current Session:** Phase-1 Session 2 — Homepage-Refactor + Batch-1-DE-Converter ✅ (Homepage `[lang]/index.astro` konsumiert jetzt den Session-1-`listToolsForLang`-Helper; 5 neue Converter live: `zentimeter-zu-zoll`, `kilometer-zu-meilen`, `kilogramm-zu-pfund`, `celsius-zu-fahrenheit`, `quadratmeter-zu-quadratfuss` — alle mit Config + DE-SEO-Content + Registry/Slug-Map + Unit-Tests + Content-Tests, 329/329 Tests, keine Design-Surface-Änderungen damit paralleler Design-Agent ungestört refinieren kann)
 
 ## Phase 0 Fortschritt
 
@@ -25,14 +25,20 @@
 | Session | Status | Deliverable |
 |---------|--------|-------------|
 | 1 — Tool-Cross-Links | ✅ done | `<FooterToolsList>` ersetzt Kategorien-Stubs, `<RelatedTools>` am Fuß jeder Tool-Seite, shared `src/lib/tools/list.ts` Helper, STYLE §14 + CONVENTIONS-§Content-Collection-Enumeration |
+| 2 — Homepage-Refactor + Batch-1-DE-Converter | ✅ done | Homepage konsumiert `listToolsForLang`; 5 neue Converter live (cm-to-inch, km-to-mile, kg-to-lb, celsius-to-fahrenheit, sqm-to-sqft) — Config + Content + Registry + Tests, keine Design-Änderungen |
 
-## Tool-Inventar (Phase 0)
+## Tool-Inventar
 
-| Tool | Config | Content-DE | Icon | Tests |
-|------|--------|------------|------|-------|
-| meter-zu-fuss | ✅ | ✅ | ✅ (`public/icons/tools/meter-to-feet.webp`, 313 KB, Alpha) | ✅ |
-| webp-konverter | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → Drop unter `public/icons/tools/png-jpg-to-webp.webp`) | ✅ |
-| remove-background | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → Drop unter `public/icons/tools/remove-background.webp`) | ✅ |
+| Tool | Phase | Config | Content-DE | Icon | Tests |
+|------|-------|--------|------------|------|-------|
+| meter-zu-fuss | 0 | ✅ | ✅ | ✅ (`public/icons/tools/meter-to-feet.webp`, 313 KB, Alpha) | ✅ |
+| webp-konverter | 0 | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → `public/icons/tools/png-jpg-to-webp.webp`) | ✅ |
+| remove-background | 0 | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → `public/icons/tools/remove-background.webp`) | ✅ |
+| zentimeter-zu-zoll | 1 | ✅ | ✅ | ⬜ (Pending Recraft `cm-to-inch` ruler-mit-Inch-Marken) | ✅ |
+| kilometer-zu-meilen | 1 | ✅ | ✅ | ⬜ (Pending Recraft `km-to-mile` road-with-marker) | ✅ |
+| kilogramm-zu-pfund | 1 | ✅ | ✅ | ⬜ (Pending Recraft `kg-to-lb` balance-scale) | ✅ |
+| celsius-zu-fahrenheit | 1 | ✅ | ✅ | ⬜ (Pending Recraft `celsius-to-fahrenheit` thermometer) | ✅ |
+| quadratmeter-zu-quadratfuss | 1 | ✅ | ✅ | ⬜ (Pending Recraft `sqm-to-sqft` floor-plan) | ✅ |
 
 ## Deploy-History
 - **2026-04-19, Session 11:** CI/CD scaffolded (`.github/workflows/deploy.yml` mit verify→deploy, Wrangler-Action v3, Concurrency-Guard). Edge-Config (`public/_headers` + `public/_redirects`) committed. **Blockiert durch User-Aktion:** Cloudflare-API-Token + Account-ID müssen als GitHub-Repo-Secrets gesetzt werden (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). Checkliste in [DEPLOY.md](DEPLOY.md). Nach Setzen der Secrets → nächster Push auf main → automatischer Production-Deploy auf `konverter-7qc.pages.dev`.
@@ -73,8 +79,28 @@
 - **Workflow-Dokumentation:** Plan `docs/superpowers/plans/2026-04-19-tool-cross-links-implementation.md` (nach 4 plan-document-reviewer-Fixes final), 7 Tasks via subagent-driven-development ausgeführt, je zwei-Stage-Review (spec-compliance + code-quality) pro Task, finaler Code-Review fand Content-Duplication-Regression (siehe oben).
 
 ### Bekannte Follow-ups (nicht blocking)
-- **Homepage `src/pages/[lang]/index.astro`-Enumerator** (Session 9 eingeführt) kann jetzt den `listToolsForLang`-Helper aus `src/lib/tools/list.ts` konsumieren, statt `getCollection('tools')` lokal zu filtern. Non-blocking — beide Pfade liefern identische Ergebnisse und beide bleiben durch eigene Tests abgedeckt. Refactor-Kandidat für die nächste Session, die die Homepage ohnehin anfasst.
+- **Homepage `src/pages/[lang]/index.astro`-Enumerator** ✅ erledigt in Phase-1 Session 2 — Datei konsumiert jetzt `listToolsForLang`. Eintrag bleibt zur Historie.
 - **`RelatedTools.astro` `<style>`-Block** liegt technisch außerhalb des Conditional-Wraps `{tools.length > 0 && (...)}`. Kosmetisch: CSS wird auch dann emittiert, wenn der Block gar nicht rendert. Impact ≈ 1 KB, Astro scoped CSS bleibt ohne Match-Target inert. Advisory, kein Fix nötig.
+
+## Phase-1 Session 2 Deliverables
+
+- **Homepage-Refactor (`src/pages/[lang]/index.astro`):** ersetzt den Session-9-Inline-Enumerator (lokales `getCollection('tools')` + `.filter(lang)` + `.map(...)` + `.sort(tagline)`, ~22 LOC) durch `const tools = await listToolsForLang(lang)` (1 LOC) — derselbe Single-Source-of-Truth-Helper, den Session 1 für FooterToolsList + RelatedTools eingeführt hat. JSX und Styles unverändert. Damit erfüllt die Homepage die in Session 1 angelegte CONVENTIONS-§Content-Collection-Enumeration-Regel und der dort als „nicht blocking" notierte Refactor-Kandidat ist erledigt.
+- **5 neue DE-Konverter (Batch-1) — alle nach gelocktem Tool-Add-Pattern:**
+  - **`zentimeter-zu-zoll`** (`cm-to-inch`): linear `factor: 0,3937007874`, `decimals: 4`, examples `[1, 10, 30, 100]`. Content nennt 1959er Yard-und-Pfund-Abkommen + 5'11"-Konvertierung + 15"-Display-Diagonale. relatedTools `[meter-zu-fuss, kilometer-zu-meilen, quadratmeter-zu-quadratfuss]`.
+  - **`kilometer-zu-meilen`** (`km-to-mile`): linear `factor: 0,6213711922`, `decimals: 4`, examples `[1, 5, 42.195, 100]` (Marathon explizit als example-Wert). Content erklärt nautische-Meile-Distinktion, mph-Tacho-Umrechnung, Yard-Referenz. relatedTools `[meter-zu-fuss, zentimeter-zu-zoll, quadratmeter-zu-quadratfuss]`.
+  - **`kilogramm-zu-pfund`** (`kg-to-lb`): linear `factor: 2,2046226218`, `decimals: 4`, examples `[1, 5, 70, 100]`. Content erklärt avoirdupois-Pfund vs deutsches-500-g-Pfund, Stone-Mention, US-Body-Weight-Kontext. relatedTools `[meter-zu-fuss, zentimeter-zu-zoll, celsius-zu-fahrenheit]`.
+  - **`celsius-zu-fahrenheit`** (`celsius-to-fahrenheit`): **affine** `formula: { type: 'affine', factor: 1.8, offset: 32 }` — erstes Phase-1-Tool das die affine Formel-Variante der Session-4-Discriminated-Union nutzt; `decimals: 2`, examples `[-40, 0, 20, 37, 100]` (inkl. negativem Wert + −40-Schnittpunkt). Content erklärt Daniel Fahrenheits Nullpunkt-Wahl, −40-Schnittpunkt als Sanity-Check, Fieber- und Ofen-Schwellen. relatedTools `[kilogramm-zu-pfund, meter-zu-fuss, zentimeter-zu-zoll]`.
+  - **`quadratmeter-zu-quadratfuss`** (`sqm-to-sqft`): linear `factor: 10.7639104` (vorquadriert: 3,28084²), `decimals: 4`, examples `[1, 10, 50, 100]`. Comment im Config-File dokumentiert, dass der Faktor das Quadrat des linearen Fuß-zu-Meter-Faktors ist. Content erklärt Zwei-Dimensionen-Regel, deutsche WoFlV vs ANSI Z765, Mietvertrags-10%-Toleranz. relatedTools `[meter-zu-fuss, zentimeter-zu-zoll, kilometer-zu-meilen]`.
+- **Registry/Slug-Map-Updates:** `src/lib/slug-map.ts` +5 Einträge (`cm-to-inch`/`km-to-mile`/`kg-to-lb`/`celsius-to-fahrenheit`/`sqm-to-sqft` → DE-Slug); `src/lib/tool-registry.ts` +5 Imports + 5 Registry-Einträge passend zu slug-map. Keine Touch an `tool-runtime-registry.ts` (rein Converter-Tools, kein File-Tool-Process-Pfad nötig).
+- **Tests:** +40 neue (total 289 → 329, +40). Aufteilung: 5× Tool-Config (`tests/lib/tools/<slug>.test.ts`, je 4 Tests = Schema, Identity, Formula-Shape, iconPrompt) = 20; 5× Content (`tests/content/<slug>-content.test.ts`, je 4 Tests = Schema, toolId/lang, Body-startet-mit-H2, gelockte-5-H2-Reihenfolge) = 20.
+- **Content-Pattern-Lock:** alle 5 neuen Inhalte folgen exakt dem 5-H2-Pattern (Was/Formel/Anwendungsbeispiele/Häufige Einsatzgebiete/Häufige Fragen), 4–5 FAQ-Einträge, Tabelle mit zweispaltigem Hin-/Rückweg, Faustregel-Sektion in `## Umrechnungsformel`. metaDescription strikt im 140–160-Zeichen-Korridor (Zod-Schema-Constraint), title 30–60 Zeichen.
+- **YAML-Quoting-Fix:** zwei Hot-Fixes nach erstem Test-Run — German-Quote-Style „...\" innerhalb double-quoted YAML-Strings braucht `\"` Escape (sonst terminiert das innere `"` den YAML-String vorzeitig). Betraf `kilometer-zu-meilen` (`„26.2"` Marathon-FAQ) und `celsius-zu-fahrenheit` (`„high fever"` Fieber-FAQ). Konvention für künftige Inhalte: deutsche Anführungszeichen mit `\"` als Schluss-Token escapen. Pattern aus zentimeter-zu-zoll (`5'11\"`) extrapoliert.
+- **Gates:** 0/0/0 `astro check`, 329/329 vitest, Build grün — `dist/de/{zentimeter-zu-zoll,kilometer-zu-meilen,kilogramm-zu-pfund,celsius-zu-fahrenheit,quadratmeter-zu-quadratfuss}` rendern, 10 Pages total (5 alte + 5 neue), Pagefind-Index 1 Sprache / 10 Pages / 1.732 Wörter (vorher 1.046 Wörter → +66 % Index-Wachstum), Sitemap enthält die 5 neuen URLs.
+- **Bewusst nicht angefasst:** Templates (Converter.svelte unverändert), Design-Tokens, Layout-Komponenten, Style-Files. User hat parallelen Design-Agenten am Laufen, der die Optik refiniert — diese Session bleibt strikt im Daten-Layer (Configs, Markdown-Inhalte, Slug-Map, Registry, Tests). Wenn der Design-Agent fertig ist, wird sich die Optik der 5 neuen Tools automatisch mit-updaten, ohne Re-Touch der Configs/Inhalte.
+
+### Bekannte Follow-ups (nicht blocking)
+- **Recraft-Icons für die 5 neuen Tools** stehen aus. Pipeline ist live (`Recraft → /de/hintergrund-entfernen → public/icons/tools/<toolId>.webp`). Auto-Pickup via `existsSync` in beiden Templates greift sobald die WebP-Datei droppt — keine Code-Änderung nötig. Reihenfolge offen, üblicherweise nach Search-Volume.
+- **Differenzierungs-Sektion (CLAUDE.md §6)** wurde für diese Standard-Lineare-Konverter-Batch nicht eigens formuliert. Begründung: §6 ist auf Spec-Level für neue Tool-Typen verfasst; einfache Maßeinheits-Konverter folgen dem Meter-zu-Fuß-Vorbild und teilen denselben Differenzierungs-Acl (pure-client + zero-friction + ohne-Tracking). Re-Evaluation-Trigger: erstes Phase-1-Tool das aus dem Standard-Converter-Pattern ausbricht (z. B. ein Generator oder Validator).
 
 ## Session 11 Deliverables
 
@@ -223,13 +249,17 @@ Alle 11 Sessions abgeschlossen. Was für Phase 1 (Tool-Skalierung, AdSense, mehr
 
 ## Next-Session-Plan
 
-**Phase 0 abgeschlossen, Phase 1 Session 1 (Tool-Cross-Links) ✅ abgeschlossen.** Erster Production-Deploy wartet weiter auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Cross-Link-Fundament steht — jede neue Tool-Seite aus Phase-1-Batch-1 mountet automatisch `<RelatedTools>` am Fuß und erscheint in der Footer-Werkzeuge-Sektion (bei ≤8) oder trägt zum Overflow-Counter bei.
+**Phase 0 abgeschlossen, Phase 1 Session 1 (Tool-Cross-Links) + Session 2 (Homepage-Refactor + Batch-1-DE-Converter) ✅ abgeschlossen.** Erster Production-Deploy wartet weiter auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Inventar steht jetzt bei 8 Tools live (3 aus Phase 0 + 5 aus Phase-1 Session 2). FooterToolsList rendert alle 8 (Cap = 8 → kein Overflow-Link aktiv); ab Tool 9 schlägt der Overflow-Counter zu.
 
-**Phase 1 Session 2 Kandidaten (prioritätsfrei, entscheidet Session-Start):**
-- **Batch-1-DE-Converter:** weitere Längen-, Gewichts-, Zeit-, Temperatur-Konverter mit dem gelockten `Converter.svelte`-Template. Ziel: 20–30 Tools, Sitemap-Dichte + interne Verlinkung (FooterToolsList + RelatedTools greifen automatisch). Review-Session nach Batch-1 (Pattern: Session-6/8/11).
-- **Homepage-Refactor:** `src/pages/[lang]/index.astro` auf `listToolsForLang`-Helper umstellen (derzeit eigener `getCollection`-Filter) — kleine, chirurgische Änderung. Macht Sinn als Aufwärmer vor Batch-1-DE-Converter, wenn die Homepage-Grid ohnehin angefasst wird.
-- **AdSense-Setup:** Spec §18 Non-Negotiable 5 erlaubt erst Phase 2, aber Ad-Slots + CLS-Tokens sind seit Session 2 in `global.css` reserviert. Phase-2-Trigger: ~50 Tools live + stabile Traffic-Basis.
+**Phase 1 Session 3 Kandidaten (prioritätsfrei, entscheidet Session-Start):**
+- **Batch-2-DE-Converter:** weitere Standard-Konverter (Volumen: liter↔gallone, milliliter↔fl-oz; Zeit: stunden↔minuten, sekunden↔millisekunden; Geschwindigkeit: km/h↔mph, m/s↔km/h; Daten: bit↔byte, megabyte↔gigabyte). Ziel: 8–12 weitere Tools mit demselben Add-Pattern wie Session 2. Sobald Tool 9 live ist, triggert die FooterToolsList den Overflow-Link — Smoke-Check ob `+\u00A0${overflow} weitere Werkzeuge →` korrekt rendert.
+- **Recraft-Icon-Batch:** für die 5 Session-2-Konverter Icons generieren + via BG-Remover droppen (Auto-Pickup greift). Macht visuell den größten Sprung pro Aufwand.
+- **Phase-1 Mini-Review (Pattern Session 6/8/11):** Smoke-Check der 5 neuen Tool-Seiten auf Desktop+Mobile×Light+Dark, Regression-Check der Phase-0-Tools, Bestätigung dass `<RelatedTools>` zwischen den 5 neuen + 3 alten korrekt resolvt (alle Slugs sind in beiden Richtungen real).
+- **Design-Agent-Sync:** sobald der parallele Design-Agent seine Refinements gemerged hat, einen Visual-Audit-Pass über die 5 neuen Tool-Seiten laufen lassen — weil alle Tool-Templates geshared sind, propagieren Design-Änderungen automatisch, aber der Audit-Pass bestätigt es Tool-für-Tool.
+- **AdSense-Setup:** Spec §18 Non-Negotiable 5 erlaubt erst Phase 2 (Trigger ~50 Tools live + stabile Traffic-Basis). Aktuell 8/50.
 
-**Phase-1 Session 1 Summary (heute) abgeschlossen:** `<FooterToolsList>` ersetzt Kategorien-Stubs mit 8-Tool-Cap + Overflow-Link, `<RelatedTools>` mountet am Fuß jeder Tool-Seite mit Stagger-Fade-In + Dark-Mode-Icon-Inversion, Single-Source `src/lib/tools/list.ts` eliminiert parallele Content-Collection-Aufrufe. Content-Cleanup entfernte duplizierte Markdown-Sektionen aus 3 de.md-Files. 289/289 Tests (258 → 289, +31). Rulebooks: STYLE §14 + CONVENTIONS §Content-Collection-Enumeration.
+**Phase-1 Session 2 Summary (heute) abgeschlossen:** Homepage-Refactor (`getCollection`-Inline-Enumerator → `listToolsForLang`-Konsument, −22 LOC), 5 neue DE-Konverter (zentimeter-zu-zoll, kilometer-zu-meilen, kilogramm-zu-pfund, celsius-zu-fahrenheit als erstes affines Tool, quadratmeter-zu-quadratfuss mit vorquadriertem Faktor), je Config + DE-SEO-Content + Slug-Map + Registry + Unit-Test + Content-Test. 329/329 Tests (289 → 329, +40). Build grün, 10 Pages, Pagefind-Index +66 % Wörter. Keine Touches an Templates/Tokens/Layout — paralleler Design-Agent ungestört.
+
+**Phase-1 Session 1 Summary (gestern) abgeschlossen:** `<FooterToolsList>` ersetzt Kategorien-Stubs mit 8-Tool-Cap + Overflow-Link, `<RelatedTools>` mountet am Fuß jeder Tool-Seite mit Stagger-Fade-In + Dark-Mode-Icon-Inversion, Single-Source `src/lib/tools/list.ts` eliminiert parallele Content-Collection-Aufrufe. 289/289 Tests. Rulebooks: STYLE §14 + CONVENTIONS §Content-Collection-Enumeration.
 
 **Session 11 — CI/CD-Scaffolding abgeschlossen:** GitHub-Actions-Workflow (verify→deploy, wrangler-action@v3), `public/_headers` (SW no-cache, `_astro`/`fonts` immutable, Security-Baseline), `public/_redirects` (/ → /de/ 301), Canonical korrekt auf `konverter-7qc.pages.dev`, DEPLOY.md mit User-Checklist. 258/258 Tests. 11/11 Phase-0-Sessions ✅.
