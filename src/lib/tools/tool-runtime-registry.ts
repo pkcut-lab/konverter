@@ -27,9 +27,12 @@ export type PrepareFn = (
   onProgress: (e: { loaded: number; total: number }) => void,
 ) => Promise<void>;
 
+export type ReencodeFn = (format: string) => Promise<Uint8Array>;
+
 export interface ToolRuntime {
   process: ProcessFn;
   prepare?: PrepareFn;
+  reencode?: ReencodeFn;
 }
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
