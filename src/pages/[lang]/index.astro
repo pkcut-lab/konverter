@@ -1,9 +1,6 @@
 ---
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getSlug } from '../../lib/slug-map';
+import { listToolsForLang } from '../../lib/tools/list';
 import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
 
 export async function getStaticPaths() {
@@ -14,28 +11,8 @@ const { lang } = Astro.params as { lang: ActiveLanguage };
 
 // Auto-index: every content entry in this language that has a registered
 // slug becomes a card. New tools show up without touching this file.
-// process.cwd() is the project root during `astro build`; more reliable than
-// `new URL('../../../', import.meta.url)` when a folder name contains spaces.
-const projectRoot = process.cwd();
-const entries = await getCollection('tools', (e) => e.data.language === lang);
-
-const tools = entries
-  .map((entry) => {
-    const slug = getSlug(entry.data.toolId, entry.data.language);
-    if (!slug) return null;
-    const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
-    const hasIcon = existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, '')));
-    return {
-      toolId: entry.data.toolId,
-      title: entry.data.title,
-      tagline: entry.data.tagline,
-      href: `/${lang}/${slug}`,
-      iconRel,
-      hasIcon,
-    };
-  })
-  .filter((t): t is NonNullable<typeof t> => t !== null)
-  .sort((a, b) => a.title.localeCompare(b.title, lang));
+// Source-of-truth enumerator — see CONVENTIONS §Content-Collection-Enumeration.
+const tools = await listToolsForLang(lang);
 ---
 <BaseLayout
   lang={lang}
