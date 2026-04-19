@@ -1,5 +1,6 @@
 import type { ToolConfig } from './tools/schemas';
 import { meterZuFuss } from './tools/meter-zu-fuss';
+import { pngJpgToWebp } from './tools/png-jpg-to-webp';
 
 /**
  * Single source of truth for tool configurations.
@@ -13,6 +14,7 @@ import { meterZuFuss } from './tools/meter-zu-fuss';
  */
 export const toolRegistry: Record<string, ToolConfig> = {
   'meter-to-feet': meterZuFuss,
+  'png-jpg-to-webp': pngJpgToWebp,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {

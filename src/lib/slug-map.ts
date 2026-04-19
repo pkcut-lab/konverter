@@ -10,6 +10,7 @@ import { ACTIVE_LANGUAGES } from './hreflang';
  */
 export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'meter-to-feet': { de: 'meter-zu-fuss' },
+  'png-jpg-to-webp': { de: 'webp-konverter' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
