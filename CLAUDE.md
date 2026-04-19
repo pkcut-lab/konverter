@@ -49,6 +49,32 @@ Sobald eine Session UI erstellt oder überarbeitet (neue Komponente, Tool-Templa
 
 Die Skills liefern Qualität (Form, Hierarchie, Detail) — die Rulebooks liefern die Leitplanken (Palette, Fonts, Tokens, Stack). Beides gleichzeitig.
 
+### 6. Differenzierungs-Check (HART)
+
+Jede Tool-Spec (egal welcher Größe) **muss** vor dem Architektur-Block eine Sektion `§2.4 Differenzierung` enthalten. Sie wird nach einer dreistufigen Recherche ausgefüllt — die Recherche delegiert der Agent an einen Subagenten via `Agent`-Tool, damit die Konkurrenz-/Nutzer-/Trend-Daten parallel zur Spec-Arbeit erhoben werden und der Hauptkontext frei bleibt.
+
+**Pflicht-Recherche-Output (vom Subagenten geliefert, in §2.4 zitiert):**
+
+1. **Competitor Feature Matrix** — Top 5–7 Konkurrenten (URL + 1-Zeilen-USP). Pro Konkurrent: Input-Methoden, Input/Output-Formate, Free-Tier-Limits, Privacy-Posture, Quality/Modell-Info, Differentiating Extras. Daraus ableiten:
+   - **Baseline-Pflicht:** Features, die JEDER Konkurrent hat → unser Mindest-Scope.
+   - **White-Space:** Features, die KEINER gut macht → unsere Kandidaten.
+
+2. **User Wishes (jetzt)** — Aus Reddit, Hacker News, Trustpilot, G2, Capterra, ProductHunt: Was beschweren sich Nutzer aktuell? Mindestens 3 wörtlich zitierte Pain-Points. Kategorisiert in Quality / UX / Privacy / Missing-Features.
+
+3. **2026-Trends & Future Importance** — Was kommt? Browser-ML-Reife, neue Modell-Architekturen, Format-Adoption (HEIC/AVIF/etc.), Mobile-First, AI-Workflow-Integration, Privacy-as-a-Feature, AEO/Voice-Search-Patterns. Filter: nur Trends, die mit unseren Hard-Constraints (pure-client, MIT, AdSense, multilingual, Refined-Minimalism) kompatibel sind.
+
+**§2.4 Spec-Pflichtfelder (knapp, zitierfähig):**
+- A. **Baseline-Features** (was wir mindestens liefern müssen) — ≤6 Bullet-Punkte.
+- B. **Differenzierungs-Features** (was uns hebt) — 3–5 Bullet-Punkte mit Begründung „weil keiner / weil Trend X".
+- C. **Bewusste Lücken** (was wir NICHT bauen + warum) — verhindert künftige Scope-Diskussionen.
+- D. **Re-Evaluation-Trigger** — wann (Phase 2 Analytics, User-Feedback-Threshold) checken wir, ob die Differenzierungs-Wahl noch stimmt.
+
+**Hard-Caps gegen Differenzierungs-Eifer:**
+- Kein Feature, das die Non-Negotiables verletzt (kein Server-Upload, kein Tracking-without-Consent, kein Hex-Code).
+- Kein Feature, das den Refined-Minimalism-Look bricht (keine Maximalismus-Effekte, keine Animation-Spektakel).
+- YAGNI bleibt: Differenzierungs-Features brauchen einen klaren User-Pain oder Trend-Beleg — nicht „könnte cool sein".
+- Recherche-Subagent läuft parallel zur Brainstorming-Phase, NICHT als Blocker davor — Spec-Iteration startet mit Best-Guess-Annahmen, Subagent-Report patcht §2.4 nach.
+
 ## Git-Account-Lock (HART)
 
 Nur `pkcut-lab` darf in diesem Workspace committen. Vor jedem Commit:

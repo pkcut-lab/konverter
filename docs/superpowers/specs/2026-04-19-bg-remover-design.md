@@ -68,6 +68,67 @@ Relevante Constraints für dieses Tool:
 
 Diese Story braucht **kein eigenes UI** — sie nutzt das normale User-UI des Tools.
 
+### 2.4 Differenzierung (HART, gemäß CLAUDE.md §6)
+
+> **Recherche-Quellen:** Subagent-Report 2026-04-19 (Top 7 Konkurrenten + User-Wünsche aus Reddit/HN/Trustpilot/ProductHunt 2024–2026 + 2026-Trends). Vollständige Matrix im Subagent-Output (extern dokumentiert).
+
+#### Wettbewerbs-Befund (Kurz)
+
+| Konkurrent | Modell | Privacy | Free-Tier-Schmerz |
+|------------|--------|---------|-------------------|
+| [remove.bg](https://www.remove.bg) | Server-side U2-Net | Server-Upload, Retention opaque | 1 HD/Tag mit Account, Preview-Paywall |
+| [Adobe Express](https://www.adobe.com/express/feature/image/remove-background) | Server-side Sensei | Adobe-ID Pflicht | Lock-in |
+| [Canva](https://www.canva.com/features/background-remover/) | Server-side | Account, server | Pro-only Paywall |
+| [Photoroom](https://www.photoroom.com/tools/background-remover) | Server + AI Scenes | GDPR-claim, Server | Watermark auf Batch |
+| [Slazzer](https://www.slazzer.com) | Server | Server | 2 HD/Monat free |
+| [Cleanup.pictures](https://cleanup.pictures) | Server (Stability AI) | Server | Res-Cap |
+| [Pixian.ai](https://pixian.ai) | Server, Quality-Focus | Server, "no permanent storage" | Preview-Res free, HD paid |
+
+**Schlüsselbefund:** ALLE Mainstream-Player sind serverseitig. Kein dominanter Privacy-First-Pure-Browser-Player im DE/EN/ES/FR/PT-BR-Markt. Das ist unser **strategisches White-Space-Window**.
+
+#### A. Baseline-Features (Mindest-Scope — was JEDER Konkurrent hat)
+
+1. Drag-&-Drop + Click-Browse-Upload.
+2. PNG-Output mit Alpha.
+3. JPG-Input (Pflicht — am häufigsten).
+4. Vor-/Nach-Vergleich.
+5. Direct-Download ohne Reload.
+6. Mobile-fähige Touch-Drop-Zone.
+
+→ Alle in V1 enthalten (siehe §2.2).
+
+#### B. Differenzierungs-Features (Hebel — was KEINER der 7 Konkurrenten gut macht)
+
+1. **100 % client-side, kein Server-Upload** — Privacy-as-a-Feature. Subagent-Quote: *„Ich lade kein Foto meines Kindes auf irgendeinen Server, damit die ihr nächstes Modell darauf trainieren."* Wedge, den große Konkurrenten nur durch Komplettrebuild kopieren könnten.
+2. **HEIC/HEIF-Direkt-Support** — ~70 % aller Smartphone-Fotos sind 2026 HEIC; Konkurrenten lehnen ab oder konvertieren still. Wir lesen direkt via `heic2any` Lazy-Load.
+3. **WebP-Transparent-Output** — kleinerer File-Size als PNG mit Alpha. Konkurrenz bietet meist nur PNG. (AVIF-Transparent für später, siehe §13.)
+4. **Clipboard-Paste (Strg+V)** als First-Class-Upload — Power-User-Wedge gegen Click-only-Konkurrenz.
+5. **Mobile-Kamera-Capture-Button** — `<input capture="environment">` in 2 Taps zum Ergebnis. Kein Konkurrent außer Photoroom (deren Mobile-App, nicht Web) bietet das im Web.
+6. **Null Friktion:** kein Watermark, kein Limit, keine Registrierung, kein Cookie-Banner-Pflicht-Klick (DSGVO-Default-deny). Spricht 100 % der „Bait-and-Switch-Paywall"-Trustpilot-Beschwerden direkt an.
+7. **Privacy-Lead-Headline** im H1 + Meta-Description: „Hintergrund entfernen — dein Bild verlässt nie deinen Browser." Differenzierende SEO-Position für AEO/Voice-Search („wie kann ich Hintergrund entfernen ohne hochzuladen?").
+8. **DE-Long-Tail-Slug-Strategie:** Tool antwortet auf `/de/hintergrund-entfernen` (Hauptslug) — zusätzliche Content-Variant-Slugs `/de/hintergrund-entfernen-ohne-anmeldung` und `/de/png-transparent-machen` werden in Phase 1 als 301 oder eigene Content-Pages mit Canonical aufgebaut (Plan-Phase 2 entscheidet, je nach AEO-Strategie).
+9. **Schema.org-Markup:** `SoftwareApplication` + `HowTo` + `FAQPage` mit expliziter „kein Upload"-Antwort-String — optimiert für Perplexity/ChatGPT-Citations.
+10. **Tool-Chain-Hint:** Done-State zeigt Link „Jetzt zu WebP konvertieren →" zum existierenden `/de/webp-konverter`. Skaliert mit dem 1000-Tool-Ökosystem als Moat.
+
+#### C. Bewusste Lücken (NICHT bauen + Begründung)
+
+| Feature | Warum NICHT in V1 |
+|---------|-------------------|
+| AI-Background-Replacement (DALL-E-Stil) | Benötigt Server-API → bricht Privacy-Promise. Kein Workaround in pure-client. |
+| Batch-Upload (mehrere Bilder gleichzeitig) | Pain-Point in User-Reviews bestätigt, aber V1-Scope-Schutz. **Re-evaluiert in Phase 3.** |
+| Edge-Refine-Brush (Canvas-basiert) | User-Wunsch bestätigt; technisch ohne ML machbar; aber doppelter UI-Stack (Brush + Tool-Layout) → V1.1. |
+| URL-Input | CORS-Komplexität, Phase 2 mit R2-Proxy. |
+| AVIF-Transparent-Output | Browser-Encoder-Unterstützung 2026 noch uneinheitlich (Chromium teils mit Flag). Re-evaluiert wenn `canvas.convertToBlob('image/avif')` in 90 % der Ziel-Browser stable ist. |
+| EXIF/Color-Profile-Preserve | Photographen-Wunsch; Pure-Client-Pfad mit `createImageBitmap` verliert EXIF. Lösbar mit `piexifjs`-Lazy-Load — V1.1 wenn Photo-Pro-Segment Traffic zeigt. |
+| Manuelle Eraser-Tools | „Konkurrenz hat das, aber bricht den Refined-Minimalism-Look + USP „schnell + privat"." |
+
+#### D. Re-Evaluation-Trigger
+
+- **Phase 2 Analytics:** Bounce-Rate >50 % auf `/de/hintergrund-entfernen` → Konkurrenz-Vergleich erneut, Headline + Above-the-Fold-Copy schärfen.
+- **User-Feedback-Threshold:** ≥5 unabhängige Anfragen nach einem C-Listen-Feature (z.B. Batch) → in V1.1 evaluieren.
+- **Modell-Refresh:** Alle 6 Monate prüfen, ob neue Modelle (`<50 MB SOTA` erwartet EOY 2026) BEN2 in Bandwidth + Quality ablösen — dann Lazy-Migration ohne Code-Änderung am Tool, nur Config-Tausch.
+- **Trend-Refresh:** Alle 6 Monate Sub-Sektion C/D auf Aktualität prüfen (Browser-AVIF-Encoder, neue Format-Standards, AEO-Patterns).
+
 ---
 
 ## 3. Tech-Stack-Entscheidungen (gelockt)
@@ -391,9 +452,9 @@ Neue Test-IDs:
 ---
 toolId: remove-background
 lang: de
-title: "Hintergrund entfernen — kostenlos online im Browser"
-metaDescription: "Entferne Bildhintergründe automatisch im Browser. KI-basiert, kostenlos, ohne Upload. PNG, WebP oder JPG ausgeben — 100 % datenschutzfreundlich."
-tagline: "Bildhintergrund in Sekunden entfernen — direkt in deinem Browser."
+title: "Hintergrund entfernen — dein Bild verlässt nie deinen Browser"
+metaDescription: "Entferne Bildhintergründe komplett im Browser — kein Upload, kein Konto, keine Wartezeit. PNG, WebP oder JPG ausgeben. KI läuft lokal auf deinem Gerät."
+tagline: "Bildhintergrund in Sekunden entfernen — 100 % auf deinem Gerät, ohne Upload."
 intro: "Lade ein Foto hoch und erhalte ein freigestelltes Bild mit transparentem Hintergrund. Die KI läuft komplett auf deinem Gerät — dein Bild wird nie hochgeladen."
 howToSteps:
   - "Bild per Drag-&-Drop auf das Feld ziehen oder „Durchsuchen" klicken (PNG, JPG oder WebP, max 10 MB)."
@@ -619,6 +680,7 @@ V1 gilt als „done", wenn:
 
 ## 16. Verweise
 
+- **Subagent-Research-Report 2026-04-19** (Konkurrenten + User-Wünsche + 2026-Trends) — Output war Quelle für §2.4 — siehe Brainstorming-Conversation-Log dieser Session (Konkurrenz-Matrix mit 7 Tools, 3 Pain-Point-Kategorien, 9 Trend-Punkte).
 - Master-Spec: `docs/superpowers/specs/2026-04-17-konverter-webseite-design.md` v1.1
 - Phase-0-Plan: `docs/superpowers/plans/2026-04-17-phase-0-foundation.md`
 - Session-7-Plan (FileTool-Template-Vorbild): `docs/superpowers/plans/2026-04-18-phase-0-session-5-meter-zu-fuss.md` und nachfolgende
