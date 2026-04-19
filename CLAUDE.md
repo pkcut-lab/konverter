@@ -14,7 +14,9 @@ Vollständige Spec: `docs/superpowers/specs/2026-04-17-konverter-webseite-design
 
 1. `PROGRESS.md` — aktueller Projekt-Status und Next-Session-Plan
 2. `PROJECT.md` — gelockte Tech-Stack-Versionen
-3. **Task-abhängig:** `CONVENTIONS.md` (Code) · `STYLE.md` (Visual) · `CONTENT.md` (SEO-Text) · `TRANSLATION.md` (i18n)
+3. **Task-abhängig:** `CONVENTIONS.md` (Code) · `STYLE.md` (Visual) · `DESIGN.md` (Stitch-Prompts + Approved Baselines) · `CONTENT.md` (SEO-Text) · `TRANSLATION.md` (i18n)
+
+**UI-Task-Extra:** Sobald du eine neue Komponente, ein Tool-Template oder ein Seiten-Layout baust oder redesignst, lies zusätzlich `DESIGN.md` komplett. Dort liegen die 9-Sektionen-Spec (Palette, Typografie, Komponenten, Layout, Motion, Do's/Don'ts) und die Approved Baselines aus Stitch-Generationen. Jede visuelle Entscheidung muss dort hineinpassen oder du begründest die Abweichung. Stitch-Workflow: `npm run stitch:list` testet die Verbindung, `npm run stitch:generate` zieht einen neuen Screen gegen das Referenz-Projekt — Prompt in `scripts/stitch/generate.mjs` anpassen.
 
 ## Arbeitsprinzipien (tailored nach Andrej Karpathy)
 
