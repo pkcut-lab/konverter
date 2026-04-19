@@ -36,3 +36,6 @@ pending-icons/*.jpg
 
 # Cloudflare
 .wrangler/
+
+# Stitch downloads (HTML + screenshots aus @google/stitch-sdk)
+stitch-output/
