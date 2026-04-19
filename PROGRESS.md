@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-19 (Session 11, End)
-**Aktuelle Phase:** Phase 0 — Foundation ✅ abgeschlossen (11/11 Sessions)
-**Current Session:** #11 — CI/CD + Deploy-Scaffolding ✅ (GitHub-Actions-Workflow mit verify→deploy-Gate, `public/_headers` mit SW-no-cache + immutable hashed assets + Security-Headers, `public/_redirects` für / → /de/ 301, Canonical auf `konverter-7qc.pages.dev` korrigiert, DEPLOY.md Checklist für User)
+**Letztes Update:** 2026-04-19 (Phase 1 Session 1, End)
+**Aktuelle Phase:** Phase 1 — Skalierung (läuft)
+**Current Session:** Phase-1 Session 1 — Tool-Cross-Links ✅ (Footer-„Werkzeuge"-Section ersetzt die Kategorien-Stubs, `<RelatedTools>` mountet am Fuß jeder Tool-Seite, shared `src/lib/tools/list.ts`-Helper als Single-Source-of-Truth für Content-Collection-Enumeration, 289/289 Tests, Hard-Caps & web-design-guidelines clean)
 
 ## Phase 0 Fortschritt
 
@@ -19,6 +19,12 @@
 | 9 — Hintergrund-Entferner Prototype | ✅ done | BG-Remover live + FileTool-Erweiterungen (preparing-Phase, Format-Chooser, Preview, Clipboard/Camera/HEIC) + Loader-Komponente + JSON-LD |
 | 10 — PWA + Pagefind | ✅ done | Manifest + 4 Icons + Workbox-SW + Pagefind Build-Step + HeaderSearch |
 | 11 — CI/CD | ✅ scaffolded | GitHub Actions + `_headers` + `_redirects` + DEPLOY.md — First Production Deploy wartet auf User-Secrets |
+
+## Phase 1 Fortschritt
+
+| Session | Status | Deliverable |
+|---------|--------|-------------|
+| 1 — Tool-Cross-Links | ✅ done | `<FooterToolsList>` ersetzt Kategorien-Stubs, `<RelatedTools>` am Fuß jeder Tool-Seite, shared `src/lib/tools/list.ts` Helper, STYLE §14 + CONVENTIONS-§Content-Collection-Enumeration |
 
 ## Tool-Inventar (Phase 0)
 
@@ -51,6 +57,24 @@
 - [ ] `/de/webp-konverter` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] `/de/meter-zu-fuss` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] Homepage `/de/` listet alle 3 Tools als Cards (auto-enumeriert, alphabetisch); Hover-Arrow wandert, Dark-Mode invertiert Icons
+
+## Phase-1 Session 1 Deliverables
+
+- **Tokens (`src/styles/tokens.css`):** +4 neue Design-Tokens für Cross-Link-Komponenten — `--space-5: 1.25rem` (dual-purpose: löst außerdem einen pre-existing silent-fallback Bug auf der Homepage-Grid `src/pages/[lang]/index.astro:172`, die bereits `var(--space-5)` konsumierte ohne Definition), `--icon-size-md: 48px` (RelatedTools-Card-Thumbnail), `--stagger-step: 60ms` (IntersectionObserver-Kaskade), `--underline-offset: 2px` (focus-visible + hover-underline).
+- **`src/lib/tools/list.ts` (neu, ~60 LOC):** Single-Source-of-Truth-Helper für jede Enumeration der Content-Collection — exportiert `listToolsForLang(lang)` (alle Tools für eine Sprache, alphabetisch nach `tagline`), `resolveRelatedTools(lang, localizedSlugs)` (löst Array von lokalisierten Slugs zu `ToolListItem[]` auf, preserviert Input-Order, droppt forward-looking Refs silent), und das `ToolListItem`-Interface `{toolId, title, tagline, href, iconRel, hasIcon}`. Ersetzt damit zwei parallele Implementierungen (FooterToolsList + RelatedTools). Testinfrastruktur: `tests/stubs/astro-content.ts` + vitest-resolveId-Plugin `vitest-stub-astro-content` (mit `enforce: 'pre'`), damit das virtuelle `astro:content`-Modul unter vitest resolvable ist. 6 Unit-Tests decken beide Funktionen + Edge-Cases ab.
+- **`src/components/FooterToolsList.astro` (neu):** ersetzt den `Kategorien (bald)`-Stub in `Footer.astro`. Listet maximal 8 Tools der aktuellen Sprache, bei mehr als 8 folgt eine Overflow-Link-Zeile `+\u00A0${overflow} weitere Werkzeuge →` zur Homepage `/${lang}/`. H2 „Werkzeuge" mit eigenem scoped styling (Astro scoped styles traversieren keine Component-Boundaries — die Footer-scoped h2-Regel greift hier nicht). Focus-visible mit 2px-Outline, `prefers-reduced-motion` respektiert. Tokens-only, 1px-border, Refined-Minimalism clean.
+- **`src/components/Footer.astro` (surgical):** 2 Import-Zeilen + eine `<FooterToolsList lang={lang as Lang} />` ersetzt den Kategorien-Stub. Rechtliches-Spalte + Meta-Zeile bleiben unverändert.
+- **`src/components/RelatedTools.astro` (neu, ~180 LOC):** mountet am Fuß jeder Tool-Seite als Sibling nach `</article>`, vor `</div class="tool-page">`. `<h2 id="related-heading">Verwandte Tools</h2>`, `aria-labelledby="related-heading"`. Conditional-Wrap `{tools.length > 0 && ...}` — wenn keine resolvablen Related-Tools vorhanden (z. B. alle forward-looking), rendert der Block nichts. Grid `auto 1fr`, Icon `var(--icon-size-md)`, Card-Padding `var(--space-4) var(--space-5)`, max-width `60rem`. IntersectionObserver-Inline-Script mit `prefers-reduced-motion` + IO-undefined Guards für Stagger-Fade-In. `:global([data-theme='dark']) .related-tools img { filter: invert(1); }` konsistent mit Homepage-Cards.
+- **`src/pages/[lang]/[slug].astro` (surgical diff):** 1 Import-Zeile + 1 Mount-Zeile `<RelatedTools lang={entry.data.language} relatedSlugs={entry.data.relatedTools} />`. Keine Änderung an der Converter/FileTool-Dispatch-Logik.
+- **Content-Cleanup:** `src/content/tools/{hintergrund-entfernen,meter-zu-fuss,webp-konverter}/de.md` — hand-authored `## Verwandte Tools` / `## Verwandte Konverter` Markdown-Sektionen mit hardcoded forward-looking 404-Links entfernt. Fix gefunden via finaler Code-Review: `/de/hintergrund-entfernen` hätte sonst „Verwandte Tools" zweimal gerendert (einmal aus Markdown, einmal aus Component) mit Phase-1-Slug-Links, die noch nicht existieren. `<RelatedTools>` ist jetzt Single-Source-of-Truth; `relatedTools` im Frontmatter ist die einzige Definitionsstelle.
+- **Tests:** +31 neue (total 258 → 289). Aufteilung: list.ts unit 6, footer-tools-list 4, related-tools source-inspection 6, content-regex updates 2, smoke-build-cross-links 8, tool-content-heading-updates 5 (Meter-zu-Fuß + WebP-Konverter: „5 locked H2 headings" statt 6, `Verwandte Konverter` aus erwarteter Liste entfernt). Test-Pyramide: Source-Inspection + Data-Side-Mock statt Astro Container API (inkompatibel mit vitest node/jsdom environment — dokumentiert in Task-5-Plan).
+- **Rulebooks:** `STYLE.md` +§14 Cross-Link-Muster (Footer-Werkzeuge-Section + RelatedTools-Block — §14 statt §13, weil §13 bereits Skill-Integration belegt, referenziert aus CLAUDE.md §5). `CONVENTIONS.md` +§Content-Collection-Enumeration (Pflicht-Import aus `src/lib/tools/list.ts`, keine parallelen `getCollection('tools')`-Aufrufe in neuen Components).
+- **Gates:** 0/0/0 `astro check`, 289/289 vitest, Build grün (alle 5 Pages rendern FooterToolsList + `/de/{meter-zu-fuss,webp-konverter,hintergrund-entfernen}` RelatedTools-Block inkl. Dark-Mode-Icon-Inversion). web-design-guidelines-Audit-Pass auf beide neue Components clean.
+- **Workflow-Dokumentation:** Plan `docs/superpowers/plans/2026-04-19-tool-cross-links-implementation.md` (nach 4 plan-document-reviewer-Fixes final), 7 Tasks via subagent-driven-development ausgeführt, je zwei-Stage-Review (spec-compliance + code-quality) pro Task, finaler Code-Review fand Content-Duplication-Regression (siehe oben).
+
+### Bekannte Follow-ups (nicht blocking)
+- **Homepage `src/pages/[lang]/index.astro`-Enumerator** (Session 9 eingeführt) kann jetzt den `listToolsForLang`-Helper aus `src/lib/tools/list.ts` konsumieren, statt `getCollection('tools')` lokal zu filtern. Non-blocking — beide Pfade liefern identische Ergebnisse und beide bleiben durch eigene Tests abgedeckt. Refactor-Kandidat für die nächste Session, die die Homepage ohnehin anfasst.
+- **`RelatedTools.astro` `<style>`-Block** liegt technisch außerhalb des Conditional-Wraps `{tools.length > 0 && (...)}`. Kosmetisch: CSS wird auch dann emittiert, wenn der Block gar nicht rendert. Impact ≈ 1 KB, Astro scoped CSS bleibt ohne Match-Target inert. Advisory, kein Fix nötig.
 
 ## Session 11 Deliverables
 
@@ -176,11 +200,13 @@ Alle 11 Sessions abgeschlossen. Was für Phase 1 (Tool-Skalierung, AdSense, mehr
 
 ## Next-Session-Plan
 
-**Phase 0 ist abgeschlossen.** Der erste Production-Deploy wartet nur noch auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Sobald diese gesetzt sind, pusht der nächste Commit auf `main` automatisch auf `konverter-7qc.pages.dev`.
+**Phase 0 abgeschlossen, Phase 1 Session 1 (Tool-Cross-Links) ✅ abgeschlossen.** Erster Production-Deploy wartet weiter auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Cross-Link-Fundament steht — jede neue Tool-Seite aus Phase-1-Batch-1 mountet automatisch `<RelatedTools>` am Fuß und erscheint in der Footer-Werkzeuge-Sektion (bei ≤8) oder trägt zum Overflow-Counter bei.
 
-**Phase 1 — Skalierung (sobald Deploy live):**
-- Batch-1-DE-Converter: weitere Längen-, Gewichts-, Zeit-, Temperatur-Konverter mit dem gelockten `Converter.svelte`-Template. Ziel: 20–30 Tools schnell auf die Seite bringen, um Sitemap-Dichte + interne Verlinkung aufzubauen.
-- AdSense-Setup (Spec §18 Non-Negotiable 5: erst Phase 2, aber Ad-Slots + CLS-Tokens sind seit Session 2 in `global.css` reserviert). Phase-2-Trigger: ~50 Tools live + stabile Traffic-Basis.
-- Review-Session nach Batch-1: prüfen ob Converter-Template skaliert sauber oder Anpassungen nötig sind (Pattern: Session-6/8/11 nach jedem größeren Schritt).
+**Phase 1 Session 2 Kandidaten (prioritätsfrei, entscheidet Session-Start):**
+- **Batch-1-DE-Converter:** weitere Längen-, Gewichts-, Zeit-, Temperatur-Konverter mit dem gelockten `Converter.svelte`-Template. Ziel: 20–30 Tools, Sitemap-Dichte + interne Verlinkung (FooterToolsList + RelatedTools greifen automatisch). Review-Session nach Batch-1 (Pattern: Session-6/8/11).
+- **Homepage-Refactor:** `src/pages/[lang]/index.astro` auf `listToolsForLang`-Helper umstellen (derzeit eigener `getCollection`-Filter) — kleine, chirurgische Änderung. Macht Sinn als Aufwärmer vor Batch-1-DE-Converter, wenn die Homepage-Grid ohnehin angefasst wird.
+- **AdSense-Setup:** Spec §18 Non-Negotiable 5 erlaubt erst Phase 2, aber Ad-Slots + CLS-Tokens sind seit Session 2 in `global.css` reserviert. Phase-2-Trigger: ~50 Tools live + stabile Traffic-Basis.
 
-**Session 11 — CI/CD-Scaffolding (heute) abgeschlossen:** GitHub-Actions-Workflow (verify→deploy, wrangler-action@v3), `public/_headers` (SW no-cache, `_astro`/`fonts` immutable, Security-Baseline), `public/_redirects` (/ → /de/ 301), Canonical korrekt auf `konverter-7qc.pages.dev`, DEPLOY.md mit User-Checklist. 258/258 Tests. 11/11 Phase-0-Sessions ✅.
+**Phase-1 Session 1 Summary (heute) abgeschlossen:** `<FooterToolsList>` ersetzt Kategorien-Stubs mit 8-Tool-Cap + Overflow-Link, `<RelatedTools>` mountet am Fuß jeder Tool-Seite mit Stagger-Fade-In + Dark-Mode-Icon-Inversion, Single-Source `src/lib/tools/list.ts` eliminiert parallele Content-Collection-Aufrufe. Content-Cleanup entfernte duplizierte Markdown-Sektionen aus 3 de.md-Files. 289/289 Tests (258 → 289, +31). Rulebooks: STYLE §14 + CONVENTIONS §Content-Collection-Enumeration.
+
+**Session 11 — CI/CD-Scaffolding abgeschlossen:** GitHub-Actions-Workflow (verify→deploy, wrangler-action@v3), `public/_headers` (SW no-cache, `_astro`/`fonts` immutable, Security-Baseline), `public/_redirects` (/ → /de/ 301), Canonical korrekt auf `konverter-7qc.pages.dev`, DEPLOY.md mit User-Checklist. 258/258 Tests. 11/11 Phase-0-Sessions ✅.
