@@ -59,9 +59,15 @@ describe('Cross-Links — Footer + RelatedTools', () => {
       expect(links.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('meter-zu-fuss suppresses the section (all slugs forward-looking)', () => {
+    it('meter-zu-fuss renders the section with 3 resolvable Längen-Tools', () => {
+      // Phase-1 Batch-1 shipped zentimeter-zu-zoll, kilometer-zu-meilen,
+      // quadratmeter-zu-quadratfuss — all three relatedSlugs now resolve.
       const html = readDist('de/meter-zu-fuss/index.html');
-      expect(html).not.toMatch(/id="related-heading"/);
+      expect(html).toMatch(/<h2[^>]*id="related-heading"[^>]*>\s*Verwandte\s+Tools\s*<\/h2>/);
+      const section = html.split('class="related-tools"')[1] ?? '';
+      for (const slug of ['zentimeter-zu-zoll', 'kilometer-zu-meilen', 'quadratmeter-zu-quadratfuss']) {
+        expect(section).toMatch(new RegExp(`href="/de/${slug}"`));
+      }
     });
 
     it('webp-konverter suppresses the section (all slugs forward-looking)', () => {
