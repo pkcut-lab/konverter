@@ -64,90 +64,93 @@
 </script>
 
 <div class="converter">
-  <div class="panel">
-    <label class="panel__label" for="converter-input" data-testid="converter-label-from">
-      <span class="panel__label-text">{fromLabel}</span>
-      <span class="panel__label-unit" translate="no">({fromUnit})</span>
-    </label>
-    <input
-      class="panel__field panel__field--input"
-      id="converter-input"
-      name="converter-input"
-      type="number"
-      inputmode="decimal"
-      step="any"
-      min="0"
-      autocomplete="off"
-      value={inputValue}
-      oninput={onInput}
-    />
-  </div>
+  <div class="converter__grid">
+    <div class="panel">
+      <label class="panel__label" for="converter-input" data-testid="converter-label-from">
+        <span class="panel__label-text">{fromLabel}</span>
+        <span class="panel__label-unit" translate="no">({fromUnit})</span>
+      </label>
+      <input
+        class="panel__field panel__field--input"
+        id="converter-input"
+        name="converter-input"
+        type="number"
+        inputmode="decimal"
+        step="any"
+        min="0"
+        autocomplete="off"
+        value={inputValue}
+        oninput={onInput}
+      />
+    </div>
 
-  <div class="divider">
-    <button
-      type="button"
-      class="swap"
-      data-testid="converter-swap"
-      onclick={onSwap}
-      aria-label="Richtung tauschen"
-      aria-pressed={direction === 'inverse'}
-    >
-      <svg class="swap__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          d="M7 4v14M7 18l-3-3M7 18l3-3M17 20V6M17 6l-3 3M17 6l3 3"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.75"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      <span class="swap__text">Tauschen</span>
-    </button>
-  </div>
+    <div class="converter__separator" aria-hidden="true">=</div>
 
-  <div class="panel">
-    <span class="panel__label" data-testid="converter-label-to">
-      <span class="panel__label-text">{toLabel}</span>
-      <span class="panel__label-unit" translate="no">({toUnit})</span>
-    </span>
-    <div class="panel__output-row">
+    <div class="panel">
+      <span class="panel__label" data-testid="converter-label-to">
+        <span class="panel__label-text">{toLabel}</span>
+        <span class="panel__label-unit" translate="no">({toUnit})</span>
+      </span>
       <output
         class="panel__field panel__field--output"
         data-testid="converter-output"
         aria-live="polite">{outputFormatted}</output>
-      <button
-        type="button"
-        class="copy"
-        class:copy--copied={copyState === 'copied'}
-        data-testid="converter-copy"
-        onclick={onCopy}
-        aria-label="Ergebnis kopieren"
-      >
-        <svg class="copy__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <rect
-            x="9"
-            y="9"
-            width="11"
-            height="11"
-            rx="2"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-          />
-          <path
-            d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <span class="copy__text">{copyState === 'copied' ? 'Kopiert' : 'Kopieren'}</span>
-      </button>
     </div>
   </div>
+</div>
+
+<div class="converter__actions">
+  <button
+    type="button"
+    class="kbd-chip"
+    class:kbd-chip--copied={copyState === 'copied'}
+    data-testid="converter-copy"
+    onclick={onCopy}
+    aria-label="Ergebnis kopieren"
+  >
+    <svg class="kbd-chip__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect
+        x="9"
+        y="9"
+        width="11"
+        height="11"
+        rx="2"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+      />
+      <path
+        d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span>{copyState === 'copied' ? 'Kopiert' : 'Kopieren'}</span>
+  </button>
+
+  <button
+    type="button"
+    class="kbd-chip"
+    data-testid="converter-swap"
+    onclick={onSwap}
+    aria-label="Richtung tauschen"
+    aria-pressed={direction === 'inverse'}
+  >
+    <svg class="kbd-chip__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M7 4v14M7 18l-3-3M7 18l3-3M17 20V6M17 6l-3 3M17 6l3 3"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span>Tauschen</span>
+  </button>
 </div>
 
 {#if config.examples.length > 0}
@@ -167,35 +170,43 @@
 
 <style>
   .converter {
-    display: flex;
-    flex-direction: column;
     padding: var(--space-8);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
-    border-radius: var(--r-lg);
+    border-radius: var(--r-md);
     box-shadow: var(--shadow-sm);
+  }
+
+  .converter__grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: var(--space-6);
   }
 
   .panel {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: var(--space-4) 0;
+    min-width: 0;
   }
 
   .panel__label {
     display: inline-flex;
     align-items: baseline;
     gap: var(--space-2);
+    font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
     font-weight: 500;
     color: var(--color-text-muted);
-    letter-spacing: 0.01em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
   .panel__label-unit {
-    font-family: var(--font-family-mono);
     color: var(--color-text-subtle);
     font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
   }
 
   .panel__field {
@@ -207,6 +218,8 @@
     line-height: var(--font-lh-h1);
     font-variant-numeric: tabular-nums;
     font-weight: 400;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .panel__field--input {
@@ -241,78 +254,38 @@
 
   .panel__field--output {
     display: block;
-    flex: 1 1 auto;
-    min-width: 0;
-    padding: 0;
+    padding: 0 0 var(--space-2) 0;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .panel__output-row {
+  .converter__separator {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-h1);
+    line-height: var(--font-lh-h1);
+    color: var(--color-text-subtle);
+    font-weight: 400;
+    text-align: center;
+    padding-bottom: var(--space-2);
+    user-select: none;
+  }
+
+  .converter__actions {
+    margin-top: var(--space-4);
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-4);
-  }
-
-  .divider {
-    position: relative;
-    height: 1px;
-    background: var(--color-border);
-    margin: var(--space-4) 0;
-  }
-
-  .swap {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: var(--space-2);
-    padding: var(--space-1) var(--space-3);
-    background: var(--color-bg);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-sm);
-    font: inherit;
-    font-size: var(--font-size-small);
-    cursor: pointer;
-    touch-action: manipulation;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
-  }
-  .swap:hover {
-    color: var(--color-text);
-    border-color: var(--color-text-subtle);
-  }
-  .swap:active {
-    transform: translate(-50%, -50%) scale(0.98);
-  }
-  .swap:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
   }
 
-  .swap__icon {
-    width: 14px;
-    height: 14px;
-    transition: transform var(--dur-med) var(--ease-out);
-  }
-  .swap[aria-pressed='true'] .swap__icon {
-    transform: rotate(180deg);
-  }
-
-  .copy {
-    flex: 0 0 auto;
+  .kbd-chip {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
-    background: transparent;
+    background: var(--color-surface);
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
-    font: inherit;
+    font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
     cursor: pointer;
     touch-action: manipulation;
@@ -320,24 +293,23 @@
       color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out);
   }
-  .copy:hover {
+  .kbd-chip:hover {
     color: var(--color-text);
     border-color: var(--color-text-subtle);
   }
-  .copy:active {
+  .kbd-chip:active {
     transform: scale(0.98);
   }
-  .copy:focus-visible {
+  .kbd-chip:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
-  .copy--copied,
-  .copy--copied:hover {
+  .kbd-chip--copied,
+  .kbd-chip--copied:hover {
     color: var(--color-success);
     border-color: var(--color-success);
   }
-
-  .copy__icon {
+  .kbd-chip__icon {
     width: 14px;
     height: 14px;
   }
@@ -394,9 +366,18 @@
     border-color: var(--color-accent);
   }
 
-  @media (max-width: 40rem) {
+  @media (max-width: 48rem) {
     .converter {
       padding: var(--space-6);
+    }
+    .converter__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+    .converter__separator {
+      padding-bottom: 0;
+      padding-top: 0;
     }
     .panel__field {
       font-size: 1.875rem;
