@@ -5,6 +5,20 @@
 > Bei Konflikt gilt `tokens.css` (enforced durch `tests/design-system/tokens.test.ts` + `contrast.test.ts`, WCAG AAA ≥7:1).
 > Regeneriere diese Datei, wenn sich `tokens.css` oder `STYLE.md §0-§11` ändern.
 
+### Konflikt-Heuristik: Spec vs. Shipped Code
+
+Wann immer diese DESIGN.md mit shipped, getestetem Code kollidiert — **shipped gewinnt, DESIGN.md wird nachgezogen**. Der Code ist die Wahrheit, die Spec beschreibt ihn.
+
+**Ausnahme:** Die Abweichung bricht einen Hard-Cap aus `CLAUDE.md §5` — dann ist der Code falsch und wird korrigiert. Hard-Caps sind:
+- Tokens-Only (kein Hex, kein arbitrary-px)
+- Palette (Graphit-Tokens aus `tokens.css`, keine Pastell-Akzente, keine Colored Gradients)
+- Fonts (Inter + JetBrains Mono, self-hosted)
+- Stack (Astro + Svelte 5 Runes + Tailwind)
+- WCAG-AAA-Kontrast (≥7:1)
+- Refined-Minimalism-Direction (keine Maximalismus-Varianten)
+
+Alle anderen Kollisionen (Slot-Counts, Interaktions-Patterns, Layout-Details, Icon-vs-Text-Labels) werden durch Nachziehen der Spec gelöst, nicht durch Umschreiben des Codes.
+
 ---
 
 ## 1. Visual Theme & Atmosphere
@@ -112,19 +126,29 @@ Wrap unit labels in `<span translate="no">…</span>` (e.g., `Fuß`, `MB`) to pr
 
 ### Header (Site-wide Navigation Bar)
 
-- **Structure:** schmale Leiste, 64px Höhe, volle Bildschirmbreite, `background: var(--color-bg)` ohne Blur.
-- **Inner container:** max-width `72rem`, horizontal padding `1.5rem`, vertikal zentriert per Flex.
-- **Left block:** Wortmarke "Konverter" in Inter 600, 18px, `color: var(--color-text)`. Klickbar → `/[lang]/`.
-- **Center / right block (Desktop):** drei Text-Links in Inter 500, 14px, `color: var(--color-text-muted)`, gap 24px. Links sind sprachabhängig:
-  - DE: `Werkzeuge` · `Über` · `Sprache ▾`
-  - EN: `Tools` · `About` · `Language ▾`
-- **Trailing element:** ThemeToggle rechts außen, 32×32px quadratisch, 1px Border, `var(--r-md)`, Icon swap Sonne ↔ Mond. Keine Label-Text.
+- **Structure:** schmale Leiste, 64px Höhe, volle Bildschirmbreite, `background: var(--color-bg)` ohne Blur. Position `sticky`, `top: 0`.
+- **Inner container:** max-width `72rem`, horizontal padding `1.5rem`, vertikal zentriert per Grid.
+- **Slot-Gliederung (Desktop, in Lese-Reihenfolge links → rechts):**
+  1. **Brand:** Wortmarke „Konverter" in Inter 600, 18px, `color: var(--color-text)`. Klickbar → `/[lang]/`.
+  2. **Nav-Links:** drei Text-Links in Inter 500, 14px, `color: var(--color-text-muted)`, gap 24px. Sprachabhängig:
+     - DE: `Werkzeuge` · `Über` · `Sprache ▾`
+     - EN: `Tools` · `About` · `Language ▾`
+  3. **Search:** Pagefind-Eingabe (siehe `HeaderSearch.svelte`), 1px Hairline, `var(--r-md)`. Ist seit Session 10 integrales Feature; vor DESIGN-Aufriss übersehen, hier explizit verankert. Flex-breitet sich auf den freien Raum aus; min-width `0` damit Grid-Children nicht sprengen.
+  4. **ThemeToggle:** rechts außen als **Segmented Control mit drei Slots** (`Auto` · `Hell` · `Dunkel`). Die ursprüngliche „32×32 Icon-Swap Sonne ↔ Mond"-Formulierung war ein Stitch-Vorschlag ohne Auto-Modus; der shipped Code bietet Auto + Hell + Dunkel als drei explizite First-Class-Slots. Konkrete Werte aus `src/components/ThemeToggle.svelte` (Single Source of Truth):
+     - **Container:** `display: inline-flex`, `gap: var(--space-1)` (4px), `padding: var(--space-1)` (4px), `border: 1px solid var(--color-border)`, `border-radius: var(--r-md)` (8px), `background: var(--color-surface)`. Höhe nicht hart fixiert — ergibt sich aus Container-Padding + Slot-Padding + Font-Line-Height der Labels.
+     - **Slot (inaktiv):** `padding: var(--space-1) var(--space-3)` (4px × 12px), `background: transparent`, `color: var(--color-text-muted)`, `border: 0`, `border-radius: var(--r-sm)` (4px), `font-size: var(--font-size-small)` (0.875rem / 14px), Font-Family `Inter` via `font: inherit`, Weight default (400).
+     - **Slot (aktiv, `aria-pressed="true"`):** `background: var(--color-bg)` (kippt auf Canvas, nicht Surface — das ist der optische Trick, der den aktiven Slot aus dem Surface-Container heraushebt), `color: var(--color-text)`, `box-shadow: var(--shadow-sm)`.
+     - **Slot (hover):** `color: var(--color-text)`.
+     - **Labels:** Text-Only (deutsche Beschriftung auf allen Routen: „Auto" / „Hell" / „Dunkel"). Keine Icons, kein Sun/Moon-Swap.
+     - **Fokus:** `outline: 2px solid var(--color-accent)`, `outline-offset: 2px` auf dem aktiven Slot.
+- **Slot-Anzahl:** 5 Slots (Brand · Nav · Search · Toggle; Nav zählt als ein Slot, nicht drei). Es gibt keinen weiteren CTA, kein Account-Element, keine Benachrichtigung.
+- **Mobile (≤40rem):** Grid bricht auf zwei Zeilen um. Zeile 1: Brand + ThemeToggle (Nav kollabiert). Zeile 2: Search über volle Breite. Nav wird in Phase 1 als Drawer/Menu getrennt behandelt (aktuell: Nav auf Mobile ausgeblendet, Funktionalität via Footer + Search erreichbar).
 - **Divider:** 1px `var(--color-border)` unter dem Header, volle Breite.
 - **NIEMALS erlaubt:**
   - Login-/Sign-In-/Sign-Up-Buttons oder -Links
   - Account-Avatare, User-Menüs, Benachrichtigungs-Glocken
   - CTA-Farbflächen im Header (kein gefüllter Button oben rechts)
-  - Mehr als vier Interaktionselemente gesamt (Brand + max. 3 Links + Toggle)
+  - Englische Nav-Labels auf DE-Routen (z.B. „Tools · Journal · Archive")
 
 ### Card (The Primary Container)
 
@@ -332,7 +356,7 @@ Shadows are even softer in dark mode — elevation is communicated primarily via
 
 - **Tool Card:** 100% width with `1rem` side padding on mobile, `34rem` max-width centered on desktop
 - **Hero H1:** scales from `1.75rem` (mobile ≤40rem) to `2.25rem` (desktop)
-- **Converter widget:** always vertical two-panel stack — NEVER side-by-side, even on wide desktops
+- **Converter widget:** horizontales Zwei-Spalten-Grid mit zentralem `=`-Separator auf ≥`48rem`; vertikal gestapelt unter `48rem`. Breakpoint-basiertes Stacking löst keinen CLS aus (Media-Queries werten vor Content-Paint aus). Die zwei Panels (Input links, Output rechts) teilen eine Grundlinie, das `=` sitzt als 1px-Hairline-Chip zwischen ihnen. Kopier/Tauschen erscheinen als Kbd-Chip-Row unter der Card
 - **FileTool widget:** single card with phase-state-machine morph — stays at the same size across breakpoints to prevent CLS (layout jumps)
 - **Tool icon:** `120×120` on ≤40rem, `160×160` otherwise
 - **Header nav:** horizontal row on desktop, stacked grid (brand + toggle on row 1, search on row 2) on ≤40rem
@@ -393,12 +417,14 @@ Alle Baselines liegen im Stitch-Projekt `17885144393549343699`.
 - Output: `stitch-output/2026-04-19T19-50-27-bfbed533ae504d6ebea69366a8048e08/`
 - Akzeptiert: H1-Setzung, Zwei-Spalten-Card mit `=`-Separator, Kbd-Chips, Erklär-Abschnitt unten.
 - Verworfen: englische Header-Nav ("Tools · Journal · Archive · Sign In"), Footer "Technical Editor", Login-Button. Fix → §4 Header-Regel.
+- Fußnote: Baseline-Screenshot zeigt den Desktop-Zustand (≥`48rem`). Mobile-Variante = vertikaler Stack, siehe §8.
 
 **Converter (Dark) — Validierungs-Run nach Header-Fix:**
 - Screen-ID: `3f7ab1d7d4a94162a63bcba2f2898341`
 - Output: `stitch-output/2026-04-19T20-37-08-3f7ab1d7d4a94162a63bcba2f2898341/`
 - Akzeptiert: Header-Struktur (Brand + Werkzeuge · Über · Sprache ▾ + Theme-Toggle), DE-Footer (Datenschutz · Impressum · Kontakt · Status), spontane "Häufige Werte"-Tabelle als SEO-Content-Muster.
 - Beweist: Hard-Caps greifen in Stitch; Dark-Mode spiegelt Light sauber.
+- Fußnote: Der Baseline-Screen zeigt einen Stitch-Default-Mond-Toggle (Single-Icon). Die reale Implementation ist das 3-Slot-Segment `Auto · Hell · Dunkel` gemäß §4 — nicht aus dem Screenshot ableiten.
 
 **FileTool (Light) — Hintergrund entfernen, Result-State:**
 - Screen-ID: `97e004f183ed4b5f8b42bb47e82457e1`
