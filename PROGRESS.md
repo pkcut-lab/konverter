@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-20 (Design-Alignment Runde 2b — Step 1 FileTool done-state)
+**Letztes Update:** 2026-04-20 (Design-Alignment Runde 2c — Homepage-Listing + RelatedTools Compact)
 **Aktuelle Phase:** Phase 1 — Skalierung (läuft) · parallel Design-Alignment Runden
-**Current Session:** Design-Alignment Runde 2b — Step 1 `FileTool.svelte` Done-State auf Baseline `97e004f1*` ✅ · Branch `design/alignment-2b-expansion` (abgezweigt von 2a-Tip `25ac976`), Tip `93425f7`; Commits: 1× FileTool-Rewrite (Vorher/Nachher + FERTIG-Badge + Meta-Row + konsolidierte Actions); Steps 2–5 (Stitch-Run Homepage-Listing, Homepage-Cards, RelatedTools-Compact, DESIGN.md §9/§4-Updates) vertagt auf Runde 2c; 329/329 Tests grün, astro check 0/0/0
+**Current Session:** Design-Alignment Runde 2c — Homepage-Cards + RelatedTools.astro auf 4. Approved Baseline (Screen-ID `5e95108ca38e4d0f89bd0cea7d7b00a1`, 1 Stitch-Slot) ✅ · Branch `design/alignment-2c-homepage-and-related` (abgezweigt von 2b-Tip `93425f7`); Deliverables: vertikale 3/2/1-Bento-Grid-Karten in `[lang]/index.astro` (flex-column, 48px-Icon → H3 → Tagline, shadow-sm rest + -md hover, Graphit-Tokens), RelatedTools.astro als Compact-Variante derselben Card (padding `var(--space-4) var(--space-5)` gelockt durch Test, staggered IO-Fade-In), DESIGN.md §4 „Variant: Tool-Listing" + „Variant: Compact" Sub-Specs, DESIGN.md §9 4. Approved Baseline incl. Card-Count-Drift-Fußnote (Baseline 6 Karten / Live-SSR 8 via Auto-Index); 329/329 Tests grün, astro check 0/0/0
 
 ## Phase 0 Fortschritt
 
@@ -34,7 +34,8 @@
 | 1 — Chrome + Converter | ✅ done | `design/alignment-1-chrome-and-converter` (73b65ce) | Header.astro + Footer.astro (statisch) + Converter.svelte auf Runde-1-Stitch-Baselines; DESIGN.md §4/§8 Spec-Fixes |
 | 2a — Integration | ✅ done | `design/alignment-2a-integration` | Merge Phase-1 × Runde-1 × LF-Normalisierung; Kombi-Footer (Live-Liste × Baseline-Styling); stale meter-zu-fuss-Test gefixt |
 | 2b — FileTool Done-State | ✅ done (Step 1 von 5) | `design/alignment-2b-expansion` (Tip `93425f7`) | FileTool.svelte internes Done-State auf Baseline `97e004f1*`: Vorher/Nachher + FERTIG-Badge + Meta-Row + konsolidierte Action-Row (Neues Bild / In Zwischenablage / Herunterladen); Clipboard-Copy mit Feature-Detection; aspect-ratio 1/1 gegen CLS |
-| 2c — Homepage + Related | ⬜ geplant | folgt (abgezweigt von 2b-Tip) | Stitch-Run Homepage-Tool-Listing (1 Quota-Slot); Homepage-Cards auf neue Baseline; RelatedTools.astro als compact-scaled Card-Variante; DESIGN.md §9 4. Approved Baseline + §4 Card-Compact-Sub-Spec; page-level „So funktioniert es"-Sidebar + kbd-chips aus FileTool-Baseline (nicht in Svelte, in `[slug].astro`) |
+| 2c — Homepage + Related | ✅ done | `design/alignment-2c-homepage-and-related` (abgezweigt von 2b-Tip `93425f7`) | Stitch-Run Homepage-Tool-Listing (1 Quota-Slot, Screen `5e95108c*`); Homepage-Cards in `[lang]/index.astro` auf vertikalen Flex-Stack (Icon 48px → H3 → Tagline, 3/2/1-Grid, shadow-sm + shadow-md-hover, Graphit-Tokens); RelatedTools.astro als Compact-Variante derselben Card (padding-Lock durch Test, staggered IO-Fade-In beibehalten); DESIGN.md §4 „Variant: Tool-Listing" + „Variant: Compact" Sub-Specs + §9 4. Approved Baseline incl. Card-Count-Drift-Fußnote (6 Baseline / 8 Live-SSR). Page-level „So funktioniert es"-Sidebar + kbd-chips aus FileTool-Baseline (Layout-Arbeit in `[slug].astro`) bewusst auf Runde 2d vertagt — §5 Max-Width-Policy vs. 2-Col-Sidebar muss erst in DESIGN.md geklärt werden |
+| 2d — Tool-Detail-Page-Layout | ⬜ geplant | folgt (abgezweigt von 2c-Tip) | Page-level Bento-Sidebar („So funktioniert es" 01/02/03 + Datenschutz) + kbd-chips-Zeile aus FileTool-Baseline (`97e004f1*`); Layout-Arbeit in `src/pages/[lang]/[slug].astro`; Vorbedingung: DESIGN.md §5 Max-Width-Policy vs. 2-Col-Sidebar klären |
 
 ## Tool-Inventar
 
