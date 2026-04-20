@@ -84,6 +84,22 @@ export const comparerSchema = base.extend({
   diff: z.function(),
 });
 
+export const toggleVisibleIfSchema = z.enum(['source-gt-1080p']);
+
+export const fileToolToggleSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  visibleIf: toggleVisibleIfSchema.optional(),
+});
+
+export const fileToolPresetsSchema = z.object({
+  id: z.string().min(1),
+  options: z
+    .array(z.object({ id: z.string().min(1), label: z.string().min(1) }))
+    .min(2),
+  default: z.string().min(1),
+});
+
 export const fileToolSchema = base.extend({
   type: z.literal('file-tool'),
   accept: z.array(z.string().min(1)).min(1),
@@ -94,6 +110,8 @@ export const fileToolSchema = base.extend({
   cameraCapture: z.boolean().optional(),
   filenameSuffix: z.string().optional(),
   showQuality: z.boolean().optional(),
+  toggles: z.array(fileToolToggleSchema).optional(),
+  presets: fileToolPresetsSchema.optional(),
 });
 
 export const interactiveSchema = base.extend({
@@ -147,8 +165,15 @@ export type ComparerConfig = Omit<z.infer<typeof comparerSchema>, 'diff'> & {
   diff: (a: string, b: string) => string;
 };
 
+export type FileToolToggle = z.infer<typeof fileToolToggleSchema>;
+export type FileToolPresets = z.infer<typeof fileToolPresetsSchema>;
+
 export type FileToolConfig = Omit<z.infer<typeof fileToolSchema>, 'process' | 'prepare'> & {
-  process: (input: Uint8Array, config?: Record<string, unknown>) => Uint8Array | Promise<Uint8Array>;
+  process: (
+    input: Uint8Array,
+    config?: Record<string, unknown>,
+    onProgress?: (progress: number) => void,
+  ) => Uint8Array | Promise<Uint8Array>;
   prepare?: (onProgress: (e: { loaded: number; total: number }) => void) => Promise<void>;
 };
 

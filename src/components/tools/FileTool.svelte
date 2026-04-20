@@ -18,13 +18,27 @@
   let sourceName = $state<string>('');
   let sourceSize = $state<number>(0);
   let sourceUrl = $state<string>('');
+  let sourceDims = $state<Dims>(null);
   let outputSize = $state<number>(0);
   let outputUrl = $state<string>('');
   let outputDims = $state<Dims>(null);
   let errorMessage = $state<string>('');
   let outputFormat = $state<string>(config.defaultFormat ?? 'webp');
   let prepareProgress = $state<{ loaded: number; total: number }>({ loaded: 0, total: 0 });
+  let progress = $state<number | null>(null);
+  let convertStartMs = $state<number | null>(null);
   let clipboardState = $state<ClipboardState>('idle');
+  let presetValue = $state<string>(config.presets?.default ?? '');
+  const initialToggles: Record<string, boolean> = {};
+  for (const t of config.toggles ?? []) initialToggles[t.id] = false;
+  let toggleValues = $state<Record<string, boolean>>(initialToggles);
+  const preflightError = config.id
+    ? (getRuntime(config.id)?.preflightCheck?.() ?? null)
+    : null;
+  if (preflightError) {
+    phase = 'error';
+    errorMessage = preflightError;
+  }
 
   const acceptAttr = $derived(config.accept.join(','));
   const runtime = $derived(getRuntime(config.id));
@@ -89,19 +103,56 @@
     if (outputUrl) URL.revokeObjectURL(outputUrl);
     if (sourceUrl) URL.revokeObjectURL(sourceUrl);
     runtime?.clearLastResult?.();
-    phase = 'idle';
+    // Preflight-error stays sticky — the browser-API gap doesn't change on reset.
+    phase = preflightError ? 'error' : 'idle';
+    errorMessage = preflightError ?? '';
     sourceName = '';
     sourceSize = 0;
     sourceUrl = '';
+    // sourceDims persists: the toggle's visibility depends on it, and the
+    // plan requires toggle-state to stick across reset so the user can opt
+    // in/out before re-dropping another file of the same source class.
     outputSize = 0;
     outputUrl = '';
     outputDims = null;
-    errorMessage = '';
     prepareProgress = { loaded: 0, total: 0 };
+    progress = null;
+    convertStartMs = null;
     clipboardState = 'idle';
   }
 
+  // ETA formatter — MM:SS when <1 h, HH:MM:SS otherwise. Zero-padded.
+  // Empty string if seconds is undefined or non-positive (caller suppresses output).
+  function formatEta(seconds: number | undefined): string {
+    if (seconds === undefined || !Number.isFinite(seconds) || seconds <= 0) return '';
+    const total = Math.round(seconds);
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  }
+
+  // Lazy probe of source video dimensions via Mediabunny. Used by toggles with
+  // visibleIf='source-gt-1080p' — we need to know W×H BEFORE showing the
+  // checkbox. Cached in `sourceDims`. Failure is non-fatal: toggle stays hidden.
+  async function probeVideoDims(bytes: Uint8Array<ArrayBuffer>): Promise<Dims> {
+    try {
+      const mb: Record<string, unknown> = await import('mediabunny');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const source = new (mb.BufferSource as any)(bytes);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inputFile = new (mb.Input as any)({ source, formats: mb.ALL_FORMATS });
+      const track = await inputFile.getPrimaryVideoTrack();
+      if (!track) return null;
+      return { w: track.width, h: track.height };
+    } catch {
+      return null;
+    }
+  }
+
   async function processFile(file: File) {
+    if (preflightError) return; // Browser gap blocks the tool entirely.
     if (!config.accept.includes(file.type)) {
       errorMessage = `Dateityp nicht unterstützt. Erlaubt: ${config.accept.join(', ')}.`;
       phase = 'error';
@@ -138,6 +189,12 @@
       }
     }
 
+    // Source-resolution probe — only runs if at least one toggle needs it.
+    const needsVideoProbe = (config.toggles ?? []).some((t) => t.visibleIf === 'source-gt-1080p');
+    if (needsVideoProbe) {
+      sourceDims = await probeVideoDims(bytes);
+    }
+
     const alreadyReady = runtime?.isPrepared?.() ?? false;
     if (runtime?.prepare && !alreadyReady) {
       phase = 'preparing';
@@ -151,15 +208,29 @@
     }
 
     phase = 'converting';
+    progress = null;
+    convertStartMs = performance.now();
+    // Merged runtime-config: base slider (quality), chosen preset, all toggle values.
+    const mergedConfig: Record<string, unknown> = { quality };
+    if (config.presets) mergedConfig[config.presets.id] = presetValue;
+    for (const t of config.toggles ?? []) mergedConfig[t.id] = toggleValues[t.id] ?? false;
     try {
-      const outBytes = await processor(bytes, { quality });
+      const outBytes = await processor(
+        bytes,
+        mergedConfig,
+        (p: number) => { progress = p; },
+      );
       const blob = new Blob([outBytes as BlobPart], { type: formatToMime(outputFormat) });
       if (outputUrl) URL.revokeObjectURL(outputUrl);
       outputUrl = URL.createObjectURL(blob);
       outputSize = outBytes.byteLength;
       phase = 'done';
+      progress = null;
+      convertStartMs = null;
       void measureDims(blob).then((d) => { outputDims = d; });
     } catch (err) {
+      progress = null;
+      convertStartMs = null;
       errorMessage =
         err instanceof Error
           ? `Konvertierung fehlgeschlagen: ${err.message}`
@@ -245,7 +316,42 @@
 </script>
 
 <div class="filetool">
-  {#if phase === 'idle' || phase === 'error'}
+  {#if (phase === 'idle' || phase === 'error') && !preflightError}
+    {#if config.presets}
+      <fieldset class="presets" data-testid="filetool-presets">
+        <legend class="presets__legend">Qualität</legend>
+        {#each config.presets.options as opt (opt.id)}
+          <label class="presets__opt">
+            <input
+              type="radio"
+              name="filetool-preset"
+              value={opt.id}
+              data-testid="filetool-preset-{opt.id}"
+              checked={presetValue === opt.id}
+              onchange={() => { presetValue = opt.id; }}
+            />
+            <span>{opt.label}</span>
+          </label>
+        {/each}
+      </fieldset>
+    {/if}
+
+    {#each config.toggles ?? [] as t (t.id)}
+      {#if t.visibleIf === undefined || (t.visibleIf === 'source-gt-1080p' && sourceDims !== null && (sourceDims.w > 1920 || sourceDims.h > 1080))}
+        <label class="toggle">
+          <input
+            type="checkbox"
+            data-testid="filetool-toggle-{t.id}"
+            checked={toggleValues[t.id] ?? false}
+            onchange={(e) => {
+              toggleValues = { ...toggleValues, [t.id]: (e.currentTarget as HTMLInputElement).checked };
+            }}
+          />
+          <span>{t.label}</span>
+        </label>
+      {/if}
+    {/each}
+
     <label
       class="dropzone"
       class:dropzone--error={phase === 'error'}
@@ -294,7 +400,23 @@
   {#if phase === 'converting'}
     <div class="converting" data-testid="filetool-status" aria-live="polite">
       <Loader variant="spinner" ariaLabel="Konvertiert" />
-      <span>Konvertiert …</span>
+      {#if progress !== null}
+        {@const percent = Math.round(progress * 100)}
+        {@const elapsedMs = convertStartMs !== null ? performance.now() - convertStartMs : 0}
+        {@const etaSec = progress > 0.05 && elapsedMs > 0
+          ? (elapsedMs / 1000) * (1 - progress) / progress
+          : undefined}
+        {@const etaStr = formatEta(etaSec)}
+        <span class="progress" data-testid="filetool-progress" translate="no">
+          <span class="progress__pct">{percent}&nbsp;%</span>
+          {#if etaStr}
+            <span class="progress__sep" aria-hidden="true"> · </span>
+            <span class="progress__eta">{etaStr}&nbsp;verbleibend</span>
+          {/if}
+        </span>
+      {:else}
+        <span>Konvertiert …</span>
+      {/if}
     </div>
   {/if}
 
@@ -752,6 +874,68 @@
   .btn__icon {
     width: 16px;
     height: 16px;
+  }
+
+  /* ---------- Presets (preset-radios replace the quality slider) ---------- */
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin: 0;
+    padding: var(--space-3) 0;
+    border: 0;
+  }
+  .presets__legend {
+    padding: 0;
+    margin-right: var(--space-3);
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.01em;
+  }
+  .presets__opt {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-small);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .presets__opt input[type='radio'] {
+    accent-color: var(--color-text);
+    cursor: pointer;
+  }
+
+  /* ---------- Single-toggle checkbox (e.g. "Auf 1080p verkleinern") ---------- */
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-2) 0;
+    font-size: var(--font-size-small);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .toggle input[type='checkbox'] {
+    accent-color: var(--color-text);
+    cursor: pointer;
+  }
+
+  /* ---------- Progress (converting state: "42 % · 00:37 verbleibend") ---------- */
+  .progress {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress__sep {
+    color: var(--color-text-subtle);
   }
 
   /* ---------- Formats + quality (unchanged layout, below card) ---------- */

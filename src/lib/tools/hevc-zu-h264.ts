@@ -32,6 +32,22 @@ export const hevcZuH264: FileToolConfig = {
   defaultFormat: 'mp4',
   filenameSuffix: '_h264',
   showQuality: false,
+  presets: {
+    id: 'preset',
+    options: [
+      { id: 'original', label: 'Original-Qualität' },
+      { id: 'balanced', label: 'Balanced' },
+      { id: 'small', label: 'Klein' },
+    ],
+    default: 'balanced',
+  },
+  toggles: [
+    {
+      id: 'downscaleTo1080p',
+      label: 'Auf 1080p verkleinern',
+      visibleIf: 'source-gt-1080p',
+    },
+  ],
   process: () => {
     throw new Error(
       'hevc-to-h264 is runtime-only — handled by tool-runtime-registry.',
