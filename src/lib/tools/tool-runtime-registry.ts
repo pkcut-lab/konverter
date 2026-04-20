@@ -69,6 +69,24 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     isPrepared: () => isPrepared(),
     clearLastResult: () => clearLastResult(),
   },
+  'hevc-to-h264': {
+    process: async (input, config, onProgress) => {
+      const { processHevcToH264 } = await import('./process-hevc-to-h264');
+      const preset =
+        typeof config?.preset === 'string' &&
+        (config.preset === 'original' || config.preset === 'balanced' || config.preset === 'small')
+          ? config.preset
+          : 'balanced';
+      const downscaleTo1080p = config?.downscaleTo1080p === true;
+      return processHevcToH264(input, { preset, downscaleTo1080p }, onProgress);
+    },
+    preflightCheck: () => {
+      if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
+        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';
+      }
+      return null;
+    },
+  },
 };
 
 export function getRuntime(toolId: string): ToolRuntime | undefined {

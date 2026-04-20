@@ -7,6 +7,7 @@ import { kilometerZuMeilen } from './tools/kilometer-zu-meilen';
 import { kilogrammZuPfund } from './tools/kilogramm-zu-pfund';
 import { celsiusZuFahrenheit } from './tools/celsius-zu-fahrenheit';
 import { quadratmeterZuQuadratfuss } from './tools/quadratmeter-zu-quadratfuss';
+import { hevcZuH264 } from './tools/hevc-zu-h264';
 
 /**
  * Single source of truth for tool configurations.
@@ -27,6 +28,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'kg-to-lb': kilogrammZuPfund,
   'celsius-to-fahrenheit': celsiusZuFahrenheit,
   'sqm-to-sqft': quadratmeterZuQuadratfuss,
+  'hevc-to-h264': hevcZuH264,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
