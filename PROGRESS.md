@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-20 (Design-Alignment Runde 2d — Tool-Detail-Page Aside-Slot + Kbd-Hints)
+**Letztes Update:** 2026-04-20 (Phase 1 Session 3 — HEVC→H.264 Video-Konverter)
 **Aktuelle Phase:** Phase 1 — Skalierung (läuft) · parallel Design-Alignment Runden
-**Current Session:** Design-Alignment Runde 2d — Aside-Slot-Primitive + Kbd-Hint-Row für `[lang]/[slug].astro` ✅ · Branch `design/alignment-2d-tool-detail-slot` (abgezweigt von 2c-Tip `7f3dad0`); Deliverables: Zod-Schema um optionale `aside` (3 Steps + Privacy) + `kbdHints` Felder erweitert, `[slug].astro` um `.tool-main` Container (60rem, grid ab 960px wenn Aside da ist) + `.tool-aside` Sidebar + `.kbd-hints` Row unter der Tool-Section, `hintergrund-entfernen/de.md` befüllt beide Felder mit Stitch-Baseline-Texten (Bild auswählen / KI-Verarbeitung / Ergebnis speichern + DSGVO-Paragraph + ⌘V/Drag&Drop/⌘C); DESIGN.md §5 um Aside-Slot-Primitive (Layout, keine Klassen), DESIGN.md §4 um Card „Variant: Aside-Slot" + „Variant: Kbd-Hint-Row" Sub-Specs; Converter-Pages unverändert (Slot leer = alter Look); 368/368 Tests grün, astro check 0/0/0
+**Current Session:** Phase 1 Session 3 — HEVC→H.264 Video-Konverter ✅ · Branch `design/alignment-2d-tool-detail-slot`; erstes Video-Tool (führt `categoryId: 'video'` ein), erstes File-Tool mit Preset-Chooser + Conditional-Toggle + Progress+ETA. Deliverables: Mediabunny v1.40.1 als Primär-Engine (MPL-2.0, WebCodecs-nativ, kein COOP/COEP nötig), `src/lib/tools/hevc-zu-h264.ts` Config + `process-hevc-to-h264.ts` Pure-Function-Modul + Runtime-Registry-Entry mit WebCodecs-Preflight, FileTool-Template erweitert um Progress-Anzeige (`42 % · ~01:23 verbleibend`), Preflight-Check-Plug, Preset-Radio-Buttons (Original/Balanced/Klein) + Opt-in-Toggle „Auf 1080p verkleinern" (nur bei >1920×1080-Source), 4K-Passthrough-Default als Differenzierungs-Feature; `/de/hevc-zu-h264` mit 7-H2-SEO-Content incl. ehrlicher HDR/Dolby-Vision-FAQ (§4.7) + AEO-Hook-Frage verbatim; Zod-Schemas um `toggleVisibleIfSchema` + `fileToolPresetsSchema` erweitert. 378/378 Tests grün (+23 in 5 neuen Files), astro check 0/0/0, build 11 Pages (Pagefind: 2137 Wörter indexiert). Vorher: Design-Alignment Runde 2d (Aside-Slot-Primitive + Kbd-Hints für `[lang]/[slug].astro`), 368/368 Tests.
 
 ## Phase 0 Fortschritt
 
@@ -26,6 +26,7 @@
 |---------|--------|-------------|
 | 1 — Tool-Cross-Links | ✅ done | `<FooterToolsList>` ersetzt Kategorien-Stubs, `<RelatedTools>` am Fuß jeder Tool-Seite, shared `src/lib/tools/list.ts` Helper, STYLE §14 + CONVENTIONS-§Content-Collection-Enumeration |
 | 2 — Homepage-Refactor + Batch-1-DE-Converter | ✅ done | Homepage konsumiert `listToolsForLang`; 5 neue Converter live (cm-to-inch, km-to-mile, kg-to-lb, celsius-to-fahrenheit, sqm-to-sqft) — Config + Content + Registry + Tests, keine Design-Änderungen |
+| 3 — HEVC→H.264 Video-Konverter | ✅ done (Code) · ⬜ Smoke-Test pending | `/de/hevc-zu-h264` live; Mediabunny WebCodecs-Engine (kein COOP/COEP); FileTool-Template erweitert um Progress+ETA, Preflight-Plug, Presets + Conditional-Toggle; erstes Video-Tool (`categoryId: 'video'`); 4K-Passthrough-Default + 1080p-Opt-in |
 
 ## Design-Alignment (parallel zu Phase 1)
 
@@ -49,12 +50,13 @@
 | kilogramm-zu-pfund | 1 | ✅ | ✅ | ⬜ (Pending Recraft `kg-to-lb` balance-scale) | ✅ |
 | celsius-zu-fahrenheit | 1 | ✅ | ✅ | ⬜ (Pending Recraft `celsius-to-fahrenheit` thermometer) | ✅ |
 | quadratmeter-zu-quadratfuss | 1 | ✅ | ✅ | ⬜ (Pending Recraft `sqm-to-sqft` floor-plan) | ✅ |
+| hevc-to-h264 | 1 | ✅ | ✅ | ⬜ (Pending Recraft → BG-Remover → `public/icons/tools/hevc-to-h264.webp`, Smartphone↔Monitor mit Play-Triangle) | ✅ |
 
 ## Deploy-History
 - **2026-04-19, Session 11:** CI/CD scaffolded (`.github/workflows/deploy.yml` mit verify→deploy, Wrangler-Action v3, Concurrency-Guard). Edge-Config (`public/_headers` + `public/_redirects`) committed. **Blockiert durch User-Aktion:** Cloudflare-API-Token + Account-ID müssen als GitHub-Repo-Secrets gesetzt werden (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). Checkliste in [DEPLOY.md](DEPLOY.md). Nach Setzen der Secrets → nächster Push auf main → automatischer Production-Deploy auf `konverter-7qc.pages.dev`.
 
 ## Blockers
-- Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung. BG-Remover (`/de/hintergrund-entfernen`) wartet auf User-Smoke-Test (Checklist unten).
+- Keine. User-Smoke-Test beider Prototypen (`/de/meter-zu-fuss` + `/de/webp-konverter`) auf Desktop + Mobile, Light + Dark erfolgreich abgeschlossen. Templates Converter + FileTool gelten als gelockt für Phase-1-Skalierung. BG-Remover (`/de/hintergrund-entfernen`) wartet auf User-Smoke-Test. HEVC→H.264 (`/de/hevc-zu-h264`) wartet auf Video-Smoke-Test mit echten iPhone-Aufnahmen (Checklist unten — Spec §5.3).
 
 ## Session 9 Smoke-Test (vom Menschen auszuführen, `npm run dev`)
 - [x] `/de/hintergrund-entfernen` lädt
@@ -73,6 +75,45 @@
 - [ ] `/de/webp-konverter` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] `/de/meter-zu-fuss` funktioniert immer noch wie vorher (Regression-Check)
 - [ ] Homepage `/de/` listet alle 3 Tools als Cards (auto-enumeriert, alphabetisch); Hover-Arrow wandert, Dark-Mode invertiert Icons
+
+## Phase-1 Session 3 Smoke-Test (HEVC→H.264, vom Menschen auszuführen, `npm run dev`)
+
+Spec-Reference: `docs/superpowers/specs/2026-04-20-hevc-zu-h264-design.md` §5.3.
+
+- [ ] `/de/hevc-zu-h264` lädt (Header, Privacy-Lead, 7 H2-Sections, FAQ mit HDR-Eintrag)
+- [ ] Drop 50 MB iPhone-MOV (HEVC+AAC) auf Desktop-Chrome → `preparing` 1–2 s → `converting` mit Progress + ETA → `done` mit MP4-Download, spielt in VLC und Windows Media
+- [ ] Drop 300 MB MOV auf Desktop-Chrome → monoton steigender Progress, UI-Freezes tolerierbar (Main-Thread-Encode in V1)
+- [ ] Drop 50 MB auf iPhone-Safari (iOS 16.4+) → Erfolg oder graceful OOM-Error
+- [ ] Firefox-Android-Test → Preflight-Error mit klarem Fallback-Text „Dein Browser unterstützt kein WebCodecs"
+- [ ] Drop `.jpg` → Format-Error, `process` nie aufgerufen
+- [ ] Drop 600 MB MP4 → Oversize-Error vor dem `process`
+- [ ] Drop 4K-MOV (Default, kein Toggle) → Output bleibt 3840×2160 (`ffprobe` bestätigt 4K)
+- [ ] Drop 4K-MOV + Toggle *„Auf 1080p verkleinern"* aktiv → Output 1920×1080 (`ffprobe` bestätigt)
+- [ ] HDR-Source (iPhone mit aktivem Dolby-Vision) → Encode läuft durch, kein Error, Output ist SDR-H.264, FAQ dokumentiert Qualitätsverlust
+- [ ] Reset nach `done` → State zurück zu `idle`, Blob-URL revoked, Toggle-Wert bleibt (User-Setting)
+- [ ] Preserve-Metadata → `ffprobe` auf MP4-Output zeigt `creation_time` (und `location` falls Source GPS enthält)
+- [ ] Dark-Mode + Mobile-375px → Layout clean, Progress-Text mit `tabular-nums` lesbar
+- [ ] Regression: `/de/meter-zu-fuss` + `/de/webp-konverter` + `/de/hintergrund-entfernen` + 5 Session-2-Converter funktionieren unverändert
+- [ ] Footer: HEVC-Tool ist in der Werkzeuge-Liste enthalten (FooterToolsList); bei 9 Tools zuckt der Overflow-Counter (Cap 8) — sollte „+\u00A01 weitere Werkzeuge →" anzeigen
+
+## Phase-1 Session 3 Deliverables
+
+- **Mediabunny-Library** (`mediabunny@^1.40.1`, MPL-2.0): WebCodecs-basierte Video-Engine, tree-shakeable (~70 kB gzip im Video-Encode-Pfad), kein SharedArrayBuffer, kein COOP/COEP — AdSense-kompatibel (Spec §2.3). `ffmpeg.wasm` bewusst nicht gebundled (22 MB Bundle + COEP-Zwang würden AdSense-Monetarisierung brechen). Deep-Research-Report archiviert, nicht committed.
+- **`src/lib/tools/hevc-zu-h264.ts` (neu, Task 4):** `FileToolConfig` mit `categoryId: 'video'` (erstes Video-Tool, führt die Kategorie ein), `accept: ['video/quicktime', 'video/mp4', 'video/hevc', 'video/h265']`, `maxSizeMb: 500`, `defaultFormat: 'mp4'`, `filenameSuffix: '_h264'`, `showQuality: false` (Preset-Buttons statt Slider), `presets` + `toggles` (neu, siehe Schema-Erweiterung). `process`-Funktion wirft — echte Logik im Runtime-Registry (runtime-only nach 2c-Muster).
+- **`src/lib/tools/process-hevc-to-h264.ts` (neu, Task 3):** Pure-Function-Modul mit Lazy-Import `await import('mediabunny')`. Orchestriert Input → Conversion → Output mit Preset-Bitrate-Mapping (`original` = Source-Bitrate, `balanced` = 0.6×, `small` = 0.35×), AAC-Passthrough ≤192 kbps (`{copy: true}`, sonst `{codec: 'aac', bitrate: 128_000}`), Metadaten-Preservation via `tags: (inputTags) => ({...inputTags})`, 4K-Passthrough-Default (kein `width`/`height` setzen), 1080p-Opt-in via `width: 1920, height: 1080, fit: 'contain'`, Progress-Callback (Mediabunny liefert 0–1, ETA im FileTool berechnet). 12 Unit-Tests mit `vi.mock('mediabunny')`.
+- **`src/lib/tools/tool-runtime-registry.ts` (erweitert):** Neuer `hevc-to-h264`-Entry mit Lazy-Import und WebCodecs-`preflightCheck` (meldet `'Dein Browser unterstützt kein WebCodecs...'` bei fehlendem `VideoEncoder`/`VideoDecoder`). ProcessFn-Typ um optionales drittes `onProgress`-Argument erweitert (abwärtskompatibel — bestehende `png-jpg-to-webp` und `remove-background` ignorieren es).
+- **`src/lib/tools/schemas.ts` (erweitert, Task 5):** +`toggleVisibleIfSchema` (z.Enum `['source-gt-1080p']`), +`fileToolToggleSchema` (`{id, label, visibleIf?}`), +`fileToolPresetsSchema` (`{id, options[≥2], default}`). `fileToolSchema` bekommt optionale `toggles` + `presets` Felder. Ermöglicht generischer Extension-Punkt für künftige File-Tools ohne Template-Duplikation.
+- **`src/components/tools/FileTool.svelte` (heavy-edit, Task 5):** 5 FileTool-Erweiterungen fließen generisch in das Template zurück — keine Konverter-spezifische Logik:
+  1. **Preflight-Check-Plug:** beim Mount `config.preflightCheck?.()` aufrufen, bei Non-Null-Return sticky `error`-State; überlebt `reset()` (User kann Error nicht durch Reset wegklicken, wenn Browser fundamental nicht kann).
+  2. **Progress-Anzeige:** wenn `onProgress` gerufen wird, render `42 % · ~01:23 verbleibend` in der `converting`-State-Region mit `tabular-nums`. ETA aus Elapsed-Time × `(1 − progress) / progress` berechnet, erst ab `progress > 0.05` angezeigt (vermeidet NaN + instabile Early-Estimates). `formatEta` als MM:SS / HH:MM:SS.
+  3. **Preset-Radio-Buttons:** wenn `config.presets` vorhanden, render eine Fieldset-Row mit Radio-Buttons, Default = `presets.default`, Wert wird als `config[presets.id]` in den process-Config gemergt.
+  4. **Conditional-Toggles:** wenn `config.toggles` vorhanden, render pro Toggle eine Checkbox. Sichtbarkeit: ohne `visibleIf` immer sichtbar, `visibleIf: 'source-gt-1080p'` nur sichtbar wenn eine bereits verarbeitete Source >1920×1080 war. Dazu probe-tief der `sourceDims` vor dem Encode via `await import('mediabunny')` + `getPrimaryVideoTrack()`. `sourceDims` persist durch `reset()` (sonst müsste User File zweimal droppen, um das Toggle zu sehen).
+  5. **Drei-Arg-Process:** `config.process(bytes, mergedConfig, onProgress)` — `mergedConfig` kombiniert `{quality, [presets.id]: presetValue, ...toggleValues}`. Abwärtskompatibel für Tools ohne `presets`/`toggles`.
+- **`src/content/tools/hevc-zu-h264/de.md` (neu, Task 6):** 7 locked H2-Sections (Spec §3.6): *Warum spielt mein iPhone-Video nicht überall?* · *HEVC vs. H.264 — was ist der Unterschied?* · *Anwendungsbeispiele* · *Datenschutz — dein Video verlässt nie deinen Browser* · *Grenzen dieses Tools* · *Häufige Fragen* · *Verwandte Video-Tools*. FAQ enthält die AEO-Hook-Frage verbatim („Wie wandle ich ein iPhone-Video in MP4 um ohne es hochzuladen?", Spec §6) + den ehrlichen HDR/Dolby-Vision-Eintrag (Spec §4.7). Body ~1100 Wörter. Privacy-Lead in den ersten 100 Wörtern der Datenschutz-Section.
+- **`src/lib/slug-map.ts` + `src/lib/tool-registry.ts` (je 1 Zeile):** `'hevc-to-h264': { de: 'hevc-zu-h264' }` und Registry-Eintrag. Auto-Route via `[lang]/[slug].astro`-getCollection — keine Page-Datei nötig.
+- **Tests (+23 gegenüber 2d):** `tests/lib/tools/process-hevc-to-h264.test.ts` (12 — Preset-Bitrate-Mapping, Audio-Passthrough-Branches, Downscale-Toggle, Progress-Callback, `tags`-Funktion, Error-Branches, 4K-Passthrough-Default), `tests/lib/tools/hevc-zu-h264-config.test.ts` (14 — Schema-Validierung, Registry-Registration, Slug-Map, Preflight WebCodecs-present vs. absent, Placeholder-process-throws), `tests/components/tools/filetool-extensions.test.ts` (9 — Preflight-Trigger, Preset-Render + Value-Pass, Toggle-Visibility-Konditional, Toggle-Value-Merge, Progress-Render), `tests/content/hevc-zu-h264-content.test.ts` (10 — Frontmatter, H2-Order, Word-Count, HDR-FAQ, AEO-Hook). Total 355 → 378.
+- **Gates:** astro check 0/0/0 · vitest 378/378 · build 11 Pages (Pagefind 2137 Wörter) · 2 neue Commits (Task 4 Tool-Config + Runtime: `6cc7385`, Task 5 FileTool-Extensions: `e842f9b`, Task 6 SEO-Content: `03088b9`; plus ein weiterer Task-3-Commit davor). Hinweis: Branch bleibt `design/alignment-2d-tool-detail-slot` (Rebase-on-main findet im nächsten User-Sync statt, damit die HEVC-Arbeit nicht mit unrelated Design-Changes kollidiert).
+- **Scope-Schutz:** `ffmpeg.wasm` nicht als Fallback gebündelt (Spec §2.3 — AdSense-Kompatibilität), kein Batch-Queue (V1.1), kein Clip-Trim, kein Web-Worker (Main-Thread genügt für V1 laut Spec §2.3), aktive HDR-Warnung bewusst gestrichen (FAQ statt Pre-Encode-Modal — Spec §4.7).
 
 ## Phase-1 Session 1 Deliverables
 
@@ -327,16 +368,18 @@ Alle 11 Sessions abgeschlossen. Was für Phase 1 (Tool-Skalierung, AdSense, mehr
 
 ## Next-Session-Plan
 
-**Phase 0 abgeschlossen, Phase 1 Session 1 (Tool-Cross-Links) + Session 2 (Homepage-Refactor + Batch-1-DE-Converter) ✅ abgeschlossen.** Erster Production-Deploy wartet weiter auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Inventar steht jetzt bei 8 Tools live (3 aus Phase 0 + 5 aus Phase-1 Session 2). FooterToolsList rendert alle 8 (Cap = 8 → kein Overflow-Link aktiv); ab Tool 9 schlägt der Overflow-Counter zu.
+**Phase 0 abgeschlossen, Phase 1 Session 1 (Tool-Cross-Links) + Session 2 (Homepage-Refactor + Batch-1-DE-Converter) + Session 3 (HEVC→H.264 Video-Konverter) ✅ abgeschlossen.** Erster Production-Deploy wartet weiter auf die zwei GitHub-Secrets (Anleitung in [DEPLOY.md](DEPLOY.md)). Inventar steht jetzt bei 9 Tools live (3 Phase-0 + 5 Session-2 + 1 Session-3). Mit Tool 9 wird der Footer-Overflow-Counter aktiv — Smoke-Test (siehe oben) prüft, ob „+\u00A01 weitere Werkzeuge →" korrekt rendert.
 
-**Phase 1 Session 3 Kandidaten (prioritätsfrei, entscheidet Session-Start):**
+**Phase 1 Session 4 Kandidaten (prioritätsfrei, entscheidet Session-Start):**
 - **Batch-2-DE-Converter:** weitere Standard-Konverter (Volumen: liter↔gallone, milliliter↔fl-oz; Zeit: stunden↔minuten, sekunden↔millisekunden; Geschwindigkeit: km/h↔mph, m/s↔km/h; Daten: bit↔byte, megabyte↔gigabyte). Ziel: 8–12 weitere Tools mit demselben Add-Pattern wie Session 2. Sobald Tool 9 live ist, triggert die FooterToolsList den Overflow-Link — Smoke-Check ob `+\u00A0${overflow} weitere Werkzeuge →` korrekt rendert.
 - **Recraft-Icon-Batch:** für die 5 Session-2-Konverter Icons generieren + via BG-Remover droppen (Auto-Pickup greift). Macht visuell den größten Sprung pro Aufwand.
 - **Phase-1 Mini-Review (Pattern Session 6/8/11):** Smoke-Check der 5 neuen Tool-Seiten auf Desktop+Mobile×Light+Dark, Regression-Check der Phase-0-Tools, Bestätigung dass `<RelatedTools>` zwischen den 5 neuen + 3 alten korrekt resolvt (alle Slugs sind in beiden Richtungen real).
 - **Design-Agent-Sync:** sobald der parallele Design-Agent seine Refinements gemerged hat, einen Visual-Audit-Pass über die 5 neuen Tool-Seiten laufen lassen — weil alle Tool-Templates geshared sind, propagieren Design-Änderungen automatisch, aber der Audit-Pass bestätigt es Tool-für-Tool.
 - **AdSense-Setup:** Spec §18 Non-Negotiable 5 erlaubt erst Phase 2 (Trigger ~50 Tools live + stabile Traffic-Basis). Aktuell 8/50.
 
-**Phase-1 Session 2 Summary (heute) abgeschlossen:** Homepage-Refactor (`getCollection`-Inline-Enumerator → `listToolsForLang`-Konsument, −22 LOC), 5 neue DE-Konverter (zentimeter-zu-zoll, kilometer-zu-meilen, kilogramm-zu-pfund, celsius-zu-fahrenheit als erstes affines Tool, quadratmeter-zu-quadratfuss mit vorquadriertem Faktor), je Config + DE-SEO-Content + Slug-Map + Registry + Unit-Test + Content-Test. 329/329 Tests (289 → 329, +40). Build grün, 10 Pages, Pagefind-Index +66 % Wörter. Keine Touches an Templates/Tokens/Layout — paralleler Design-Agent ungestört.
+**Phase-1 Session 3 Summary (heute) abgeschlossen:** HEVC→H.264 Video-Konverter `/de/hevc-zu-h264` live (Code-complete, Smoke-Test pending). Mediabunny v1.40.1 als WebCodecs-Engine (AdSense-kompatibel, kein COOP/COEP), FileTool-Template um fünf generische Erweiterungen ergänzt (Preflight-Plug, Progress+ETA, Preset-Buttons, Conditional-Toggles, Drei-Arg-Process), erstes Video-Tool (`categoryId: 'video'`). 355 → 378 Tests (+23 in 4 neuen Files). 11 Pages gebaut. Scope-Disziplin: keine Batch-Queue, kein Clip-Trim, kein Web-Worker, kein `ffmpeg.wasm`-Fallback — alles V1-out-of-scope laut Spec.
+
+**Phase-1 Session 2 Summary (gestern) abgeschlossen:** Homepage-Refactor (`getCollection`-Inline-Enumerator → `listToolsForLang`-Konsument, −22 LOC), 5 neue DE-Konverter (zentimeter-zu-zoll, kilometer-zu-meilen, kilogramm-zu-pfund, celsius-zu-fahrenheit als erstes affines Tool, quadratmeter-zu-quadratfuss mit vorquadriertem Faktor), je Config + DE-SEO-Content + Slug-Map + Registry + Unit-Test + Content-Test. 329/329 Tests (289 → 329, +40). Build grün, 10 Pages, Pagefind-Index +66 % Wörter. Keine Touches an Templates/Tokens/Layout — paralleler Design-Agent ungestört.
 
 **Phase-1 Session 1 Summary (gestern) abgeschlossen:** `<FooterToolsList>` ersetzt Kategorien-Stubs mit 8-Tool-Cap + Overflow-Link, `<RelatedTools>` mountet am Fuß jeder Tool-Seite mit Stagger-Fade-In + Dark-Mode-Icon-Inversion, Single-Source `src/lib/tools/list.ts` eliminiert parallele Content-Collection-Aufrufe. 289/289 Tests. Rulebooks: STYLE §14 + CONVENTIONS §Content-Collection-Enumeration.
 
