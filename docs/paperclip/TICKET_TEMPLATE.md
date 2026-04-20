@@ -14,7 +14,7 @@ tool:
   slug: meter-zu-fuss               # kebab-case, ASCII
   tool_id: meter-to-feet            # sprach-neutral
   tool_type: converter              # converter | calculator | generator | formatter | validator | analyzer | comparer (+ ml-file-* für Phase 7a)
-  category: laengen                 # aus src/lib/tools/categories.ts
+  category: length                  # PFLICHT. Authoritative Enum in CONVENTIONS.md §Category-Taxonomie (length | weight | area | volume | distance | temperature | image | video | audio | document | text | dev | color | time)
   lang: de                          # de | en | es | fr | pt-BR (Phase 3)
 
 files:
@@ -23,14 +23,15 @@ files:
   test: tests/lib/tools/meter-to-feet.test.ts
 
 accept:
-  - Tests grün (npm test)
-  - astro check 0/0/0
-  - Content ≥ 300 Wörter
-  - H1 vorhanden + unique
-  - FAQ-Block mit ≥ 3 Fragen + FAQPage-Schema
+  # Siehe BRAND_GUIDE.md §4 für die 12-Punkte-Eval-Rubrik (v2). Hier nur Ticket-spezifische Zusätze + kurze Mnemonik:
+  - Tests grün + astro check 0/0/0
+  - Frontmatter-Schema valid (15 Felder gemäß CONTENT.md §13.1; category PFLICHT; headingHtml max 1 <em>)
+  - H2-Pattern konform (A/B/C gemäß CONTENT.md §13.2; Tool-Typ bestimmt Pattern)
+  - Prose-Link-Closer `## Verwandte <Kat>-Tools` + wortgleiche Intro-Zeile + 3 Bullets (CONTENT.md §13.4)
+  - Kat-Label aus §13.3-Mapping (`length → Längen` etc.)
   - NBSP zwischen allen Zahl-Einheit-Paaren
-  - Icon-Prompt als JSDoc in tool-config (für Recraft.ai)
-  - Related-Tools-Slot leer (wird automatisch via RelatedTools gesetzt)
+  - `relatedTools: []` ist OK — Category-Fallback trägt (CONVENTIONS.md §Category-Fallback-Contract). Kuration nur bei redaktionellem Wunsch.
+  - FAQ 4–6 Einträge (JSON-LD FAQPage)
   - Differenzierungs-Check §2.4 verlinkt (bei Tools mit Unique-Strategie)
   - Commit-Trailer `Rulebooks-Read: PROJECT, CONVENTIONS, STYLE, CONTENT`
 
@@ -81,7 +82,7 @@ tool:
   slug: kilometer-zu-meilen
   tool_id: kilometer-to-miles
   tool_type: converter
-  category: laengen
+  category: length
   lang: de
 
 files:
@@ -90,12 +91,13 @@ files:
   test: tests/lib/tools/kilometer-to-miles.test.ts
 
 accept:
-  - Tests grün
-  - astro check 0/0/0
-  - Content ≥ 300 Wörter
+  - Tests grün + astro check 0/0/0
+  - Frontmatter v2 gemäß CONTENT.md §13.1 (inkl. category: length, contentVersion: 1)
+  - Pattern A Locked-H2 (Was macht / Umrechnungsformel / Anwendungsbeispiele / Häufige Einsatzgebiete / Häufige Fragen / Verwandte Längen-Tools)
+  - Prose-Link-Closer §13.4 (3 Bullets, Titel fett + Link, Prose ≤120 Z.)
   - Formel-Sektion: 1 km = 0.621371 mi
-  - FAQ ≥ 3 Fragen (Wann, Präzision, Historie)
-  - Icon-Prompt in tool-config als JSDoc
+  - FAQ 4–6 Fragen (Wann / Präzision / Historie / Formel-Exaktheit)
+  - relatedTools darf [] sein — Category-Fallback füllt aus length-Siblings
   - Commit-Trailer vorhanden
 
 budget:

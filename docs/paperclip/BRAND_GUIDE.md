@@ -11,8 +11,8 @@
 ### Farben
 - **Pflicht:** CSS-Variablen aus `src/styles/tokens.css`. Kein Hex, kein RGBA, kein Tailwind-Arbitrary-Color.
   - `var(--color-text)`, `var(--color-bg)`, `var(--color-border)`, `var(--color-muted)`, `var(--color-success)`, `var(--color-error)`
-- **Akzent = Graphit-Grau.** NICHT Blau, NICHT Purple, keine Gradients.
-- **Success (Olive) + Error (Rust):** NUR für semantischen State. Nicht dekorativ.
+- **Palette (Runde 3, gelockt):** Graphit + 1 warmer Orange-Accent (`#8F3A0C` Light / `#F0A066` Dark, beide AAA). Orange erscheint **ausschließlich** auf Links, Focus-Rings, `<em>`-Highlights, Eyebrow-Pulse-Dots, Spinner-Arcs, Dropzone-Active-Borders. **Niemals Primary-Button-Fläche** — Primary-Buttons bleiben `var(--color-text)` graphit. Kein Purple, keine bold accent colors, keine Gradients.
+- **Success (Olive) + Error (Rust):** Pro/Con-Bullet-Dots + States. Nicht dekorativ.
 - **Icon-Color:** `filter: var(--icon-filter)` — niemals manuell pro Theme recolorieren.
 
 ### Spacing
@@ -67,14 +67,16 @@
 - **H1:** Eine klare Aussage. Keine Fragen. Keine "Die ultimative Lösung für…"
 - **Meta-Description:** 140–160 Zeichen, Call-to-Action sinnvoll, keine Emojis.
 
-### Struktur (jede Tool-Seite)
-1. H1 = Tool-Name + Kern-Nutzen
-2. Tool-Component (Converter, Calculator, etc.) direkt unter H1
-3. `## Wie funktioniert [Tool]?` — erklärend, 2–4 Absätze
-4. `## Wann brauchst du [Tool]?` — 3–5 konkrete Use-Cases
-5. `## Formel / Hintergrund` (bei Konvertern/Rechnern) — Mathematik transparent
-6. `## Häufige Fragen` — FAQPage-Schema, min. 3 Fragen
-7. **Related Tools:** automatisch via `<RelatedTools>` (siehe [CONVENTIONS.md](../../CONVENTIONS.md)). NICHT hand-authored.
+### Struktur (jede Tool-Seite — v2, Session-6-gelockt)
+
+**Single-Source-of-Truth:** [CONTENT.md §13](../../CONTENT.md#13-tool-content-template-v2-gelockt-session-6). Kurzfassung:
+
+- **Frontmatter:** 15 Felder — siehe §13.1. Pflicht: `toolId`, `language`, `title` (30–60 Z.), `metaDescription` (140–160 Z.), `tagline`, `intro`, `howToUse` (3–5), `faq` (4–6), `relatedTools` (0–5, darf `[]` sein), `category` (14-Enum), `contentVersion`. Optional: `eyebrow` (1–24 Z.), `headingHtml` (max 1 `<em>`, kein anderes HTML), `aside`, `kbdHints`.
+- **H2-Patterns:** A (Größen-Konverter, 6 fixe H2s), B (File-Tools, 6 fixe H2s), C (free-form mit Closer-Pflicht). Exakte Wortlaute in §13.2.
+- **Prose-Link-Closer:** Jedes DE-Tool endet mit `## Verwandte <Kat>-Tools` + Intro-Zeile `"Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:"` + exakt 3 Bullets im Format `- **[Titel](/de/<slug>)** — Prose ≤120 Zeichen.` Vollständig in §13.4.
+- **Kategorie-Mapping:** 14-Zeilen-Tabelle in §13.3 (`length → Längen`, `video → Video`, …). Hand-authored, keine Auto-Derivation.
+- **Italic-Accent-Regel:** `<em>` umschließt das Ziel-Substantiv der Umwandlung, NICHT Verb/Prozess (§13.5 Regel 2).
+- **Short-Title-Rule:** `computeShortTitle()` kappt Dash-Suffixe NUR für Nav-Chips (Related-Bar, YouMightStrip). NICHT für `<title>`/Meta/JSON-LD/Heading (§13.5 Regel 3).
 
 ### SEO-Non-Negotiables
 - **Schema.org:** `WebApplication` + `FAQPage` (wenn FAQs vorhanden) + `BreadcrumbList`. Siehe `schema-markup` Skill.
@@ -101,22 +103,31 @@
 
 ---
 
-## 4. Eval-Rubrik für QA-Agent
+## 4. Eval-Rubrik für QA-Agent (v2, Session-6-gelockt)
 
-Pro Tool-Commit vor `engineer_output.md` → `qa_results.md`:
+Pro Tool-Commit vor `engineer_output.md` → `qa_results.md`. Referenz für alle v2-Regeln: [CONTENT.md §13](../../CONTENT.md#13-tool-content-template-v2-gelockt-session-6).
 
-| Kriterium | Pass-Bedingung | Tool |
-|-----------|----------------|------|
-| Tests grün | `npm test` exit 0 | Bash |
-| Astro-Check grün | `astro check` 0/0/0 | Bash |
-| Kein Hex in Component-Code | `grep -E '#[0-9a-fA-F]{3,8}' src/components/` leer | Grep |
-| Keine arbitrary-px | `grep -E '[0-9]+px' src/components/` nur in tokens.css | Grep |
-| Content ≥ 300 Wörter | wc -w auf `.md`-Content ≥ 300 | Bash |
-| H1 vorhanden + unique | Regex auf `^# ` (exactly 1) | Grep |
-| Schema.org JSON-LD | `<script type="application/ld+json">` im HTML | Playwright |
-| Contrast AAA | axe-core audit ohne Fails | Playwright |
-| Focus-Ring sichtbar | Visual-Diff Screenshot Tab-Navigation | Playwright |
-| NBSP zwischen Zahl+Einheit | Regex `[0-9]+\s(MB\|GB\|m\|km\|Fuß)` = 0 matches | Grep |
-| Commit-Trailer vorhanden | `git log -1` enthält `Rulebooks-Read:` | Bash |
+| # | Kriterium | Pass-Bedingung | Tool |
+|---|-----------|----------------|------|
+| 1 | Tests grün | `npm test` exit 0 | Bash |
+| 2 | Astro-Check grün | `astro check` 0/0/0 | Bash |
+| 3 | Kein Hex in Component-Code | `grep -E '#[0-9a-fA-F]{3,8}' src/components/` leer (außer tokens.css) | Grep |
+| 4 | Keine arbitrary-px | `grep -E '[0-9]+px' src/components/` nur in tokens.css | Grep |
+| 5 | Frontmatter-Schema valid | Zod-Parse in Vitest-Content-Test grün; `category` gesetzt + valid | Bash |
+| 6 | H2-Pattern-Konformität | Pattern A/B: Locked-Sequence matcht exakt (Vitest content-test). Pattern C: `## Häufige Fragen` + `## Verwandte <Kat>-Tools` present | Grep |
+| 7 | Prose-Link-Closer korrekt | Letzte H2 = `## Verwandte <Kat>-Tools` (Mapping §13.3) + Intro-Zeile wortgleich + exakt 3 Bullets im Format `- **[Titel](/de/<slug>)** — Prose ≤120 Z.` | Grep |
+| 8 | `headingHtml` clean | Falls gesetzt: max 1 `<em>…</em>`, kein anderes HTML → Zod-refine grün | Bash |
+| 9 | Schema.org JSON-LD | `WebApplication` + `FAQPage` (wenn FAQ) + `BreadcrumbList` im Build | Playwright |
+| 10 | Contrast AAA + Focus-Ring | axe-core ohne Fails + Focus-Ring-Visual-Diff Tab-Navigation | Playwright |
+| 11 | NBSP zwischen Zahl+Einheit | Regex `[0-9]+\s(MB\|GB\|KB\|m\|km\|cm\|mm\|Fuß\|Meter\|Zoll\|kg\|lb)` = 0 matches im Content | Grep |
+| 12 | Commit-Trailer vorhanden | `git log -1` enthält `Rulebooks-Read:` | Bash |
 
-**Pass-Schwelle:** 11/11. Jeder Fail = Re-Work Ticket an Tool-Builder.
+**Pass-Schwelle:** 12/12. Jeder Fail = Re-Work Ticket an Tool-Builder.
+
+### Forbidden Patterns (instant-Reject)
+
+- `<em>` umschließt Verb/Prozess statt Ziel-Substantiv (§13.5 Regel 2)
+- Icon-Frontmatter-Eintrag oder Card-Icon im neuen Content (§13.5 Regel 5 — keine Tool-Icons)
+- Orange-Fläche auf Primary-Button (§13.5 Regel 6)
+- `computeShortTitle()`-Kappung in `<title>`, Meta-Desc oder JSON-LD (§13.5 Regel 3)
+- Prose-Closer mit Forward-Ref-Link (Link auf noch nicht existierenden Slug)

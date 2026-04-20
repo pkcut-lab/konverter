@@ -23,21 +23,17 @@ cat souls/tool-builder.md BRAND_GUIDE.md
 import type { ConverterConfig } from './types';
 import { ok, err } from './types';
 
-/**
- * @iconPrompt Pencil-sketch style icon of a meter-stick converting to a foot-ruler,
- *   graphite grey (#1A1917), 1px line weight, minimalist, on white background.
- *   For Recraft.ai generation.
- */
 export const meterToFeet: ConverterConfig = {
   id: 'meter-to-feet',
   type: 'converter',
-  category: 'laengen',
+  category: 'length',      // 14-Enum, authoritative in CONVENTIONS.md §Category-Taxonomie
   // ... config gemäß Zod-Schema in src/lib/tools/schemas.ts
 };
 ```
 
 **Pflicht:**
-- `@iconPrompt` JSDoc oben (Recraft.ai-prompt für Icon-Generation)
+- KEIN `@iconPrompt` JSDoc, KEIN `icon`-Feld (Runde 3 Session 4 — Tool-Karten tragen keine Icons mehr)
+- `category` aus 14-Enum (CONVENTIONS.md §Category-Taxonomie) — Zod refined, Build bricht bei ungültigem Wert
 - Config wird NICHT default-exported (CONVENTIONS.md)
 - Zod-validiert via `parseToolConfig()` in Test
 
@@ -70,50 +66,78 @@ describe('meter-to-feet config', () => {
 
 `src/content/tools/{slug}/{lang}.md`:
 
+Vollständige Frontmatter- + H2-Spezifikation: **[CONTENT.md §13](../../../CONTENT.md#13-tool-content-template-v2-gelockt-session-6)**. Kurzform-Sample (Pattern A — Größen-Konverter):
+
 ```markdown
 ---
-title: "Meter zu Fuß umrechnen — Präzise Einheiten-Konvertierung"
-description: "Schnell und exakt Meter in Fuß konvertieren. Mit Formel, Beispielen und..."
+toolId: "meter-to-feet"
+language: "de"
+title: "Meter in Fuß umrechnen — Präzise Längen-Konvertierung"
+metaDescription: "Meter zu Fuß exakt umrechnen. Formel 1 m = 3,28084 ft, Beispiele, FAQ. Kostenlos, client-seitig, ohne Tracking."
+tagline: "Schnell und präzise von Meter zu Fuß"
+intro: "Rechne Meter in Fuß um — mit der exakten Formel 1 m = 3,28084 ft. Ideal für Baudokumente, Sport-Längen und internationale Datenblätter."
+category: "length"
+contentVersion: 1
+headingHtml: "Meter in <em>Fuß</em> umrechnen"
+howToUse:
+  - "Gib den Meter-Wert in das Eingabefeld ein."
+  - "Das Ergebnis in Fuß erscheint sofort — kein Klick nötig."
+  - "Kopiere das Ergebnis über den Copy-Button."
+faq:
+  - q: "Wie präzise ist die Umrechnung?"
+    a: "Exakt 3,28084 Fuß pro Meter (7 Nachkomma-Stellen)."
+  - q: "Warum nutzen die USA noch Fuß?"
+    a: "Historisch gewachsen — das US-customary-System basiert auf britischen Imperial-Einheiten."
+  - q: "Gilt die Formel auch für Quadrat-Fuß?"
+    a: "Nein — Flächen quadrieren: 1 m² = 10,7639 ft²."
+  - q: "Wie exakt ist 3,28084?"
+    a: "Per Definition ist 1 Fuß = 0,3048 m (seit 1959) — Kehrwert liefert 3,2808398..."
+relatedTools: []   # [] ist OK — Category-Fallback füllt aus length-Siblings
 ---
 
-# Meter zu Fuß — Schnell und präzise umrechnen
+## Was macht dieser Konverter?
 
-<!-- Tool-Component wird dynamisch via [slug].astro gerendert. Content startet hier. -->
+Ein Meter entspricht exakt 3,28084&nbsp;Fuß. …
 
-## Wie funktioniert die Umrechnung?
+## Umrechnungsformel
 
-Ein Meter entspricht exakt 3,28084&nbsp;Fuß. Die Formel lautet...
+Meter (m) × 3,28084 = Fuß (ft). …
 
-## Wann brauchst du Meter-zu-Fuß?
+## Anwendungsbeispiele
 
-- Bei internationalen Baudokumenten
-- Bei Sport-Längen (...)
-- ...
+- 10&nbsp;m = 32,8084&nbsp;ft
+- 100&nbsp;m = 328,084&nbsp;ft
+- …
 
-## Formel und Hintergrund
+## Häufige Einsatzgebiete
 
-Meter (m) × 3,28084 = Fuß (ft)
-
-Der Fuß wurde historisch ...
+- Internationale Baudokumente
+- Sport-Längen (Leichtathletik, Schwimmen)
+- …
 
 ## Häufige Fragen
 
-### Wie präzise ist die Umrechnung?
+(FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-### Warum nutzen die USA noch Fuß?
+## Verwandte Längen-Tools
 
-### Gilt die Formel auch für Quadrat-Fuß?
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
-<!-- mind. 3 Q+A, wird als FAQPage-Schema gerendert -->
+- **[Kilometer zu Meilen](/de/kilometer-zu-meilen)** — Längere Distanzen zwischen metrisch und imperial umrechnen.
+- **[Zentimeter zu Zoll](/de/zentimeter-zu-zoll)** — Kleinere Längen für Datenblätter und Handwerk konvertieren.
+- **[Quadratmeter zu Quadratfuß](/de/quadratmeter-zu-quadratfuss)** — Flächen statt Längen zwischen SI und imperial umwandeln.
 ```
 
-**Pflicht:**
-- Frontmatter mit title + description (160 Zeichen max)
-- H1 genau einmal
-- Min. 300 Wörter
-- NBSP bei allen Zahl+Einheit-Kombinationen
-- Min. 3 FAQ-Einträge
-- KEIN hand-authored Related-Tools-Block (RelatedTools mountet automatisch)
+**Pflicht (Kurzliste — volle Regeln in CONTENT.md §13):**
+- Frontmatter **15 Felder** gemäß §13.1 (9 Pflicht + 6 optional). `category` PFLICHT aus 14-Enum.
+- `headingHtml` (optional): max 1 `<em>…</em>`, kein anderes HTML. `<em>` umschließt **Ziel-Substantiv** der Umwandlung, nicht Verb/Prozess (§13.5 Regel 2).
+- KEIN `icon`-Feld (§13.5 Regel 5 — keine Tool-Icons)
+- H2-Pattern A/B/C nach Tool-Typ (§13.2) — Pattern-A-Converter haben 6 fixe H2s in exakter Reihenfolge.
+- **Letzte H2 immer** `## Verwandte <Kat>-Tools` + wortgleiche Intro-Zeile + exakt 3 Bullets (§13.4). `<Kat>` aus Mapping §13.3 (`length → Längen`).
+- 4–6 FAQ-Einträge in Frontmatter (werden als FAQPage-JSON-LD gerendert).
+- NBSP zwischen ALLEN Zahl-Einheit-Paaren.
+- `relatedTools: []` ist OK — Category-Fallback trägt (CONVENTIONS.md §Category-Fallback-Contract). Kuration nur bei redaktionellem Wunsch, niemals Forward-Ref auf noch nicht existierende Slugs.
+- Mindestens 300 Wörter Prose (thin-Content-Guard).
 
 ## 3. Test-Gate lokal
 
