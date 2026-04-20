@@ -47,17 +47,14 @@ const tools = await listToolsForLang(lang);
                   class="tool-card__icon"
                   src={tool.iconRel}
                   alt=""
-                  width="72"
-                  height="72"
+                  width="48"
+                  height="48"
                   loading="lazy"
                   decoding="async"
                 />
               )}
-              <div class="tool-card__body">
-                <h3 class="tool-card__title">{tool.title}</h3>
-                <p class="tool-card__tagline">{tool.tagline}</p>
-              </div>
-              <span class="tool-card__arrow" aria-hidden="true">→</span>
+              <h3 class="tool-card__title">{tool.title}</h3>
+              <p class="tool-card__tagline">{tool.tagline}</p>
             </a>
           </li>
         ))}
@@ -120,6 +117,7 @@ const tools = await listToolsForLang(lang);
   .tools-head h2 {
     margin: 0;
     letter-spacing: -0.01em;
+    text-wrap: balance;
   }
   .count {
     font-family: var(--font-family-mono);
@@ -134,36 +132,48 @@ const tools = await listToolsForLang(lang);
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--space-4);
+  }
+  @media (min-width: 48rem) {
+    .tool-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .tool-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .tool-card {
     display: block;
   }
   .tool-card__link {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-4);
-    padding: var(--space-5) var(--space-6);
+    padding: var(--space-6);
+    height: 100%;
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface);
     color: var(--color-text);
     text-decoration: none;
+    box-shadow: var(--shadow-sm);
     transition:
       border-color var(--dur-fast) var(--ease-out),
       background var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out),
       transform var(--dur-fast) var(--ease-out);
-    min-height: 5.5rem;
   }
   .tool-card__link:hover {
     border-color: var(--color-text-subtle);
     background: var(--color-bg);
+    box-shadow: var(--shadow-md);
   }
   .tool-card__link:focus-visible {
-    outline: 2px solid var(--color-text);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
   .tool-card__link:active {
@@ -171,27 +181,22 @@ const tools = await listToolsForLang(lang);
   }
 
   .tool-card__icon {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
     flex: 0 0 auto;
   }
   :global([data-theme='dark']) .tool-card__icon {
-    filter: invert(1);
+    filter: var(--icon-filter);
   }
 
-  .tool-card__body {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
   .tool-card__title {
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.35;
     letter-spacing: -0.005em;
+    color: var(--color-text);
   }
   .tool-card__tagline {
     margin: 0;
@@ -200,25 +205,11 @@ const tools = await listToolsForLang(lang);
     color: var(--color-text-muted);
   }
 
-  .tool-card__arrow {
-    font-family: var(--font-family-mono);
-    color: var(--color-text-subtle);
-    transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
-  }
-  .tool-card__link:hover .tool-card__arrow {
-    transform: translateX(2px);
-    color: var(--color-text);
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .tool-card__link,
-    .tool-card__arrow {
+    .tool-card__link {
       transition: none;
     }
     .tool-card__link:active {
-      transform: none;
-    }
-    .tool-card__link:hover .tool-card__arrow {
       transform: none;
     }
   }
@@ -228,16 +219,8 @@ const tools = await listToolsForLang(lang);
       gap: var(--space-12);
       padding-top: var(--space-8);
     }
-    .home-hero h1 {
-      font-size: 1.875rem;
-    }
     .tool-card__link {
-      padding: var(--space-4) var(--space-5);
-      gap: var(--space-3);
-    }
-    .tool-card__icon {
-      width: 48px;
-      height: 48px;
+      padding: var(--space-5);
     }
   }
 </style>

@@ -35,10 +35,8 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
                 decoding="async"
               />
             )}
-            <div>
-              <h3>{t.title}</h3>
-              <p>{t.tagline}</p>
-            </div>
+            <h3>{t.title}</h3>
+            <p>{t.tagline}</p>
           </a>
         </li>
       ))}
@@ -86,6 +84,7 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
   .related-tools h2 {
     margin: 0 0 var(--space-6);
     letter-spacing: -0.01em;
+    text-wrap: balance;
   }
   ul {
     list-style: none;
@@ -108,26 +107,29 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
     transition-delay: calc(var(--index) * var(--stagger-step));
   }
   a {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
     padding: var(--space-4) var(--space-5);
+    height: 100%;
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface);
     color: var(--color-text);
     text-decoration: none;
+    box-shadow: var(--shadow-sm);
     transition:
       border-color var(--dur-fast) var(--ease-out),
-      background var(--dur-fast) var(--ease-out);
+      background var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
   }
   a:hover {
     border-color: var(--color-text-subtle);
     background: var(--color-bg);
+    box-shadow: var(--shadow-md);
   }
   a:focus-visible {
-    outline: 2px solid var(--color-text);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
   img {
@@ -136,9 +138,8 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
     object-fit: contain;
     flex: 0 0 auto;
   }
-  /* Graphit pencil-sketch icons are strokes on transparent; invert in dark mode. */
   :global([data-theme='dark']) .related-tools img {
-    filter: invert(1);
+    filter: var(--icon-filter);
   }
   h3 {
     margin: 0;
@@ -146,9 +147,10 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
     font-weight: 600;
     line-height: 1.35;
     letter-spacing: -0.005em;
+    color: var(--color-text);
   }
   p {
-    margin: var(--space-1) 0 0;
+    margin: 0;
     font-size: var(--font-size-small);
     line-height: 1.5;
     color: var(--color-text-muted);
