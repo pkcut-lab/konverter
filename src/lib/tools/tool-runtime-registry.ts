@@ -25,9 +25,12 @@ import {
  *   3. Runtime entry below
  */
 
+export type ProgressCallback = (progress: number) => void;
+
 export type ProcessFn = (
   input: Uint8Array,
   config?: Record<string, unknown>,
+  onProgress?: ProgressCallback,
 ) => Uint8Array | Promise<Uint8Array>;
 
 export type PrepareFn = (
@@ -42,6 +45,7 @@ export interface ToolRuntime {
   reencode?: ReencodeFn;
   isPrepared?: () => boolean;
   clearLastResult?: () => void;
+  preflightCheck?: () => string | null;
 }
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
