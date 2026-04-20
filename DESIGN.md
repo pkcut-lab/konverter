@@ -159,6 +159,29 @@ Wrap unit labels in `<span translate="no">…</span>` (e.g., `Fuß`, `MB`) to pr
 - **Shadow rest:** `0 1px 2px rgba(26, 25, 23, 0.05)` — graphite-tinted, ultra-diffuse
 - **Shadow hover (interactive cards only):** `0 4px 8px rgba(26, 25, 23, 0.08)`
 
+#### Variant: Tool-Listing (Homepage `tool-card`)
+
+Vertikaler Stack. Verwendet für Auto-Index-Grids auf der Homepage und künftig Kategorie-Seiten.
+
+- **Layout:** `display: flex; flex-direction: column; gap: var(--space-4)`.
+- **Padding:** `var(--space-6)` (24px) Desktop, `var(--space-5)` (20px) unter 40rem.
+- **Höhe:** `height: 100%` auf dem inneren `<a>`, damit Grid-Geschwister in derselben Row gleiche Höhe haben.
+- **Inhalt (in Reihenfolge):** 48×48-Pencil-Sketch-Icon → H3 Titel → `.tagline` (Small, `--color-text-muted`).
+- **Hover:** Border-Farbe kippt auf `--color-text-subtle`, Background auf `--color-bg`, Shadow auf Hover-Level.
+- **Focus-visible:** `outline: 2px solid var(--color-accent)`, `outline-offset: 2px`.
+- **Kein Arrow, kein Chevron, kein Status-Dot, keine Kategorie-Badge.** Die Karte ist die Affordanz — der Titel ist der CTA.
+
+#### Variant: Compact (RelatedTools, inline Cross-Linking)
+
+Skalierte Tool-Listing-Variante für eingebettete Kontexte (Unterhalb einer Tool-Seite, künftig Sidebar). Dieselbe vertikale Struktur, tighter Padding und kleinerer Gap. Nutzt dasselbe 48px-Icon, denselben H3/Small-Text-Stack.
+
+- **Layout:** identisch zu Tool-Listing (`flex column`).
+- **Padding:** `var(--space-4) var(--space-5)` (16px vertikal × 20px horizontal) — gelockt durch `tests/components/related-tools.test.ts`.
+- **Gap:** `var(--space-3)` (12px) statt `var(--space-4)` — Titel und Tagline rücken näher ans Icon.
+- **Grid:** `repeat(auto-fill, minmax(16rem, 1fr))` statt der expliziten 3/2/1-Breakpoints — die Variant lebt in schmaleren Content-Spalten (`60rem`-article) und soll fluid falten.
+- **Motion:** staggered fade-in via IntersectionObserver + `transition-delay: calc(var(--index) * var(--stagger-step))`. Unter `prefers-reduced-motion: reduce` wird der Delay auf 0 kollabiert und die Transition deaktiviert (Code-Pflicht, nicht nur DESIGN.md-Wunsch).
+- **Gleichbleibend:** Border/Radius/Background/Shadow/Hover/Focus wie Tool-Listing.
+
 ### Primary CTA / Button
 
 - **Background:** Accent (`#3A3733` light / `#E8E6E1` dark)
@@ -431,6 +454,19 @@ Alle Baselines liegen im Stitch-Projekt `17885144393549343699`.
 - Output: `stitch-output/2026-04-19T20-46-42-97e004f183ed4b5f8b42bb47e82457e1/`
 - Akzeptiert: Vorher/Nachher-Grid mit Schachbrett-Transparenz, Status-Badge "FERTIG", Meta-Zeile `1240×1760px · PNG · 340 KB`, Action-Row (Primary `Herunterladen` + zwei Ghost), rechts-seitige Bento-Sidebar "So funktioniert es" mit 01/02/03-Schritten, DSGVO-Banner.
 - Stitch-Eigenleistung (begrüßt): Bento-Sidebar statt vertikaler Flow — Layout darf so bleiben.
+
+**Homepage (Light) — Tool-Listing, /de/ Default-State:**
+- Screen-ID: `5e95108ca38e4d0f89bd0cea7d7b00a1`
+- Output: `stitch-output/2026-04-20T00-46-32-5e95108ca38e4d0f89bd0cea7d7b00a1/`
+- Akzeptiert: Eyebrow "KONVERTER" + H1 + Lede im 44rem-Hero, Section-Head mit `Alle Werkzeuge` + `06`-count-badge, Bento-Grid 3-Col Desktop / 2-Col Tablet / 1-Col Mobile mit sechs uniformen Karten (vertikaler Stack: Icon-Container oben → H3 Titel → Tagline), alphabetische Sortierung der sechs Live-Tool-Titel plus ihre Taglines wörtlich aus den Content-Frontmattern.
+- Stitch-Eigenleistungen (verworfen, NICHT ins Code-Alignment übernommen):
+  - **Material-Symbols-Icons** (`thermostat`, `scale`, `straighten`, …) als 48×48-Platzhalter — verletzt §7 Don't (Material Icons). Live bleibt bei `/icons/tools/<toolId>.webp` Pencil-Sketch.
+  - **Icon-Wrapper** mit `bg-surface-container-high` + Border um jedes Icon herum — Stitch-ism. Live-Icons sitzen direkt auf der Card ohne Sekundärcontainer.
+  - **Google-Fonts-CDN-Link** — Stitch-Default. Wir bleiben self-hosted via `@fontsource-variable/*`.
+  - **Material-Design-3-Token-Namen** (`on-surface-variant`, `surface-container-lowest`) — werden 1:1 auf `var(--color-*)` gemappt.
+- Footer-Divergenz (Live gewinnt per Konflikt-Heuristik): Stitch zeigt Brand+© / Werkzeuge+Über / Datenschutz+Impressum+Sprache; Live hat FooterToolsList (6 Tool-Links) / Rechtliches (Datenschutz+Impressum, disabled) / Meta (Sprache+©). Shipped bleibt, Stitch-Vorschlag wird nicht übernommen.
+- Bestätigt: 4-Element-Header-Regel aus §4 (Brand + Nav + Search + Theme-Toggle), 3-Slot-Segmented-Control (`Hell` aktiv), keine Login-/Account-Elemente, DE-Nav-Labels, Hex-Werte matchen §2 innerhalb M3-Token-Mapping-Toleranz.
+- Fußnote (Card-Count-Drift): Baseline zeigt **6** Converter-Karten (alphabetisch, matched Phase-1-Batch-1 + meter-zu-fuss). Live-SSR an `/de/` indiziert zum Zeitpunkt der Baseline bereits **8** Karten — inklusive `hintergrund-entfernen` und `webp-konverter` (beide via Auto-Index aus `src/content/tools/`). Das Layout ist breakpoint-robust für beliebige `N`: Grid fällt 3→2→1 sauber durch, der `count`-Badge rendert `String(n).padStart(2, '0')`. Baseline-Zahl ist eine Momentaufnahme für Design-Abnahme, kein Tool-Whitelist.
 
 ---
 
