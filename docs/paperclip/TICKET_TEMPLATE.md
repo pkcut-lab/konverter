@@ -37,7 +37,7 @@ accept:
 
 budget:
   heartbeats: 4                     # max Heartbeat-Zyklen bis Timeout → User-Eskalation
-  reworks: 2                        # max QA-Rejects → User-Review
+  reworks: 2                        # max QA-Rejects → v1.0 Auto-Resolve (kein User-Review)
 
 dependencies:
   blocked_by: []                    # ticket-ids die zuerst fertig sein müssen
@@ -46,7 +46,31 @@ dependencies:
 differenzierung:
   applies: false                    # true bei unique-strategy tools → §2.4 Pflicht
   research_subagent: null           # ticket-id für parallel laufenden Subagent-Research
+
+autonomy:
+  # v1.0 Autonomie-Gate-Verhalten. Siehe HEARTBEAT.md §3 für Resolve-Logik.
+  can_auto_ship_as_is: true         # nach rework > 2 + Score ≥ 0.80 → ship-as-is erlaubt
+  can_auto_park: true               # nach rework > 2 + Score < 0.80 → park erlaubt
+  force_user_review: false          # bei true: NIE auto-resolve, immer User-Eskalation
+  score_threshold_override: null    # null = Default 0.80 (HEARTBEAT §3.2 gelockt)
+
+ship_state: open                    # open | in-progress | shipped | ship-as-is | parked | halted
+rework_counter: 0                   # inkrementiert bei jedem critic-fail-Retry
+halt_recovery_tag: null             # halt-recovery | halt-recovery-dossier | null
 ```
+
+## v1.0 Ship-States (Glossar)
+
+| State | Bedeutung | Trigger |
+|---|---|---|
+| `open` | Backlog-Eintrag, noch nicht dispatched | Default bei Ticket-Create |
+| `in-progress` | Worker hat Lock-File, baut aktiv | CEO-Dispatch |
+| `shipped` | Alle Critics pass, deploy-queue passed | Default-Success |
+| `ship-as-is` | Auto-Resolve mit Score ≥ 0.80 nach > 2 Reworks | HEARTBEAT §3.2 |
+| `parked` | Auto-Resolve mit Score < 0.80 oder blocker nach > 2 Reworks | HEARTBEAT §3.2 |
+| `halted` | EMERGENCY_HALT während in-progress | HEARTBEAT §5.4 |
+
+**Regel:** Ship-State-Transitions sind CEO-only. Tool-Builder + Critics schreiben NICHT direkt in das Ticket — sie liefern Lock-Files / Critic-Reports, der CEO aggregiert beim Heartbeat-Step 8.
 
 ## Workflow pro Ticket
 
@@ -110,4 +134,14 @@ dependencies:
 
 differenzierung:
   applies: false
+
+autonomy:
+  can_auto_ship_as_is: true
+  can_auto_park: true
+  force_user_review: false
+  score_threshold_override: null
+
+ship_state: open
+rework_counter: 0
+halt_recovery_tag: null
 ```

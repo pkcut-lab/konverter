@@ -42,3 +42,6 @@ stitch-output/
 
 # Eval transients (JSON-Ergebnisse der Critic-Smokes, lokal regenerierbar)
 evals/*/last-*-result.txt
+
+# Paperclip runtime flags (EMERGENCY_HALT etc. — per-workspace, nicht im repo)
+.paperclip/
