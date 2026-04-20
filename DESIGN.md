@@ -11,8 +11,8 @@ Wann immer diese DESIGN.md mit shipped, getestetem Code kollidiert — **shipped
 
 **Ausnahme:** Die Abweichung bricht einen Hard-Cap aus `CLAUDE.md §5` — dann ist der Code falsch und wird korrigiert. Hard-Caps sind:
 - Tokens-Only (kein Hex, kein arbitrary-px)
-- Palette (Graphit-Tokens aus `tokens.css`, keine Pastell-Akzente, keine Colored Gradients)
-- Fonts (Inter + JetBrains Mono, self-hosted)
+- Palette (Graphit-Tokens aus `tokens.css` **+ 1 warmer Orange-Accent** + Olive-Success + Rust-Error; keine weiteren Farben, keine Pastell-Akzente, keine Colored Gradients — gelockert Runde 3 2026-04-20)
+- Fonts (Inter + JetBrains Mono, self-hosted; keine Serif-Fonts — Emphasis via Inter-Italic + Accent-Color)
 - Stack (Astro + Svelte 5 Runes + Tailwind)
 - WCAG-AAA-Kontrast (≥7:1)
 - Refined-Minimalism-Direction (keine Maximalismus-Varianten)
@@ -23,9 +23,9 @@ Alle anderen Kollisionen (Slot-Counts, Interaktions-Patterns, Layout-Details, Ic
 
 ## 1. Visual Theme & Atmosphere
 
-**Refined editorial minimalism in graphite monochrome.** Quiet sophistication through typography hierarchy, precise spacing rhythms, and hairline borders — never through color, ornament, or motion.
+**Refined editorial minimalism in graphite monochrome, warmed by a single orange accent.** Quiet sophistication through typography hierarchy, precise spacing rhythms, and hairline borders — color is a scarce resource, deployed only for emphasis and state.
 
-The website hosts over a thousand conversion tools (unit converters, file converters, calculators, generators). Each tool page serves a single pragmatic job. The UI must recede so the tool becomes the focus: a calm blank-page canvas, a single dominant widget, and typographic metadata around it. No competing calls-to-action, no decorative flourishes, no chromatic accents.
+The website hosts over a thousand conversion tools (unit converters, file converters, calculators, generators). Each tool page serves a single pragmatic job. The UI must recede so the tool becomes the focus: a calm blank-page canvas, a single dominant widget, and typographic metadata around it. No competing calls-to-action, no decorative flourishes. Accent color (warm burnt-orange) surfaces only on links, focus rings, `<em>` highlights in headings, and the small eyebrow-pulse dot — never as a button background, never as a card fill.
 
 The atmosphere: a printed editorial page set in a quiet library — restrained, precise, warm-toned. Not clinical. Not corporate. Not playful. The user should feel respected and unhurried.
 
@@ -39,20 +39,26 @@ The atmosphere: a printed editorial page set in a quiet library — restrained, 
 
 All colors are locked in `src/styles/tokens.css`. Never approximate the hex values below.
 
+### History
+
+- **v1 (Session 2, 2026-04-18):** Graphite-only. Accent was Deep Graphite `#3A3733`. Success + Error as sole non-graphite hues (sparingly).
+- **v2 (Runde 3, 2026-04-20):** Accent gelockert auf warmen Orange (`#8F3A0C` Light / `#F0A066` Dark, beide AAA ≥7:1). Motivation: das externe Redesign zeigte, dass ein einzelner Orange-Akzent die Refined-Minimalism-Identität stärkt (Emphasis, Link-State, Focus-Ring), ohne in SaaS-Bunt abzudriften. Graphite bleibt primär; Primary-Buttons bleiben graphit-dunkel. Success (Olive) + Error (Rust) bekommen breitere Use-License: auch für Pro/Con-Bullet-Lists in Content, nicht nur States.
+
 ### Light Mode (default)
 
 | Role | Hex | Semantic Name | Functional Use |
 |---|---|---|---|
 | Background | `#FFFFFF` | True white | Page canvas — the reader's blank page |
 | Surface | `#FAFAF9` | Warm off-white | Cards, panels, input fields (one step up from canvas) |
+| Surface Sunk | `#F3F0EA` | Warm sunk | Badge-pills, code-inlines, mini-stat-chips (below canvas) |
 | Border | `#E8E6E1` | Warm pale gray | 1px hairlines, dividers, card outlines — the only structural line |
 | Text | `#1A1917` | Graphite off-black | Body text, headings, primary content (NEVER pure `#000000`) |
 | Text Muted | `#5C5A55` | Mid warm gray | Subtitles, labels, secondary copy |
 | Text Subtle | `#9C9A94` | Light warm gray | Timestamps, metadata, disabled captions |
-| Accent | `#3A3733` | Deep graphite | Primary CTA background, active links, focus rings |
-| Accent Hover | `#1A1917` | Darkest graphite | Hover state for accent elements |
-| Success | `#4A6B4E` | Muted olive | Confirmation states only — sparingly |
-| Error | `#8B3A3A` | Muted rust | Error states only — sparingly |
+| **Accent** | `#8F3A0C` | **Warm burnt-orange** | Links, focus rings, `<em>` highlights in headings, eyebrow pulse-dot, spinner top-arc, dropzone active-border |
+| Accent Hover | `#6B2A08` | Deeper burnt-orange | Hover state for accent elements |
+| Success | `#4A6B4E` | Muted olive | Success states, pro-bullet dots (`.compare .plus li::before`) |
+| Error | `#8B3A3A` | Muted rust | Error states, con-bullet dots (`.compare .minus li::before`) |
 
 ### Dark Mode
 
@@ -60,22 +66,24 @@ All colors are locked in `src/styles/tokens.css`. Never approximate the hex valu
 |---|---|---|
 | Background | `#1A1917` | Inverted graphite canvas |
 | Surface | `#252320` | Warm near-black |
+| Surface Sunk | `#0F0E0D` | Darker than canvas — pill-bg |
 | Border | `#3A3733` | Deep graphite hairline |
 | Text | `#FAFAF9` | Warm near-white |
 | Text Muted | `#A8A59E` | |
 | Text Subtle | `#6C6A64` | |
-| Accent | `#E8E6E1` | Inverted — light accent on dark |
-| Accent Hover | `#FFFFFF` | |
+| **Accent** | `#F0A066` | **Peach-orange** — AAA ≥8:1 on dark canvas |
+| Accent Hover | `#F5B07C` | Lighter peach-orange |
 | Success | `#7FA582` | Muted olive lightened |
 | Error | `#C67373` | Muted rust lightened |
 
 ### Role Rules
 
-- **Graphite only.** No blue, purple, teal, cyan, pink, yellow, orange, or any saturated chromatic accent.
-- **Success and Error are the ONLY two non-graphite hues.** Use exclusively for semantic state signaling (form validation, operation result).
-- **No pastels.** Pale blue, pale green, pale yellow, pale red from other design systems are forbidden here.
-- **No colored backgrounds on large surfaces.** Sections, heroes, cards use white or warm off-white only.
+- **One warm accent.** Orange only. No blue, purple, teal, cyan, pink, yellow, or any other saturated hue — those remain gesperrt.
+- **Orange is NEVER a primary-button background.** Primary filled-buttons use `var(--color-text)` (dark graphite). Orange appears as text-color, focus-ring, border-highlight, or outlined-secondary-button — not as a filled CTA surface. This preserves Refined-Minimalism — Orange reads as emphasis, not as loud attention-grab.
+- **Success and Error are the ONLY two additional hues.** Use for semantic state (form validation, operation result) **and** for pro/con-bullet dots in content comparisons (see §4 Compare-Table).
+- **No pastels as backgrounds.** Pale blue, pale green, pale yellow, pale red from other design systems are forbidden. Pill-tints are achieved via `color-mix(in oklch, var(--color-accent|success|error) N%, var(--color-bg))` — never via hard-coded pastel hex.
 - **No gradients of any kind.** Use solid fill plus a hairline border for separation.
+- **No colored-header-blocks or hero-BGs.** Only the accent letter, bullet, or ring carries color.
 
 ---
 
@@ -204,21 +212,21 @@ Passive Shortcut-Hinweise — keine Buttons, keine Actions. Liegen unter der `.t
 
 ### Primary CTA / Button
 
-- **Background:** Accent (`#3A3733` light / `#E8E6E1` dark)
-- **Text color:** `#FFFFFF` light / `#1A1917` dark
-- **Padding:** `12px 20px`
-- **Radius:** `8px`
+- **Background:** `var(--color-text)` — dark graphite in Light (`#1A1917`), near-white in Dark (`#FAFAF9`). **Never Orange.** Primary buttons are graphit-dunkel, damit Orange als Emphasis-Akzent reserviert bleibt.
+- **Text color:** `var(--color-bg)` — white in Light, dark graphite in Dark (automatische Inversion).
+- **Padding:** `var(--space-3) var(--space-5)` (12px × 20px)
+- **Radius:** `var(--r-md)` (8px)
 - **Font weight:** 500
-- **Active state:** `transform: scale(0.98)` over `150ms` with `cubic-bezier(0.16, 1, 0.3, 1)`
-- **Focus-visible:** `outline: 2px solid` Accent, `outline-offset: 2px`
-- **One primary CTA per page.** The dark button IS the focus point — no competing accent buttons.
+- **Active state:** `transform: scale(0.98)` über `var(--dur-fast)` mit `var(--ease-out)`
+- **Focus-visible:** `outline: 2px solid var(--color-accent)` (Orange), `outline-offset: 2px` — Orange tritt nur im Fokus-Ring auf, nicht in der Flächen-Füllung.
+- **One primary CTA per page.** Der dunkle Button IST der Fokus-Punkt — keine konkurrierenden Accent-Buttons.
 
 ### Secondary / Ghost Button
 
 - Background: transparent
-- Text: Accent color
-- Border: `1px solid` Border
-- Hover: background shifts to Surface
+- Text: `var(--color-text)` oder `var(--color-accent)` (Orange). Orange nur auf Neben-Actions mit eindeutig emphatischem Zweck (z.B. „Mehr erfahren" unter einem Privacy-Callout). Default ist Graphit-Text.
+- Border: `1px solid var(--color-border)`
+- Hover: Background wechselt auf `var(--color-surface)`; wenn Orange-Text, kippt er auf `var(--color-accent-hover)`.
 
 ### Input Field
 
@@ -267,8 +275,81 @@ Passive Shortcut-Hinweise — keine Buttons, keine Actions. Liegen unter der `.t
 
 Two variants only:
 
-- **Spinner:** `24×24`, `1px` hairline arc, stroke `#9C9A94`, 900ms rotation, linear. Under `prefers-reduced-motion`: slower rotation (`2.4s`), NOT frozen.
-- **Progress Bar:** `2px` height, background Border, fill `#9C9A94`, width transitions `250ms ease-out`. Label in JetBrains Mono tabular-nums on the right.
+- **Spinner:** `24×24`, `1px` hairline arc, stroke `var(--color-accent)` (Orange — einziger Ort, an dem Orange als bewegtes Element auftritt), 900ms Rotation, linear. Unter `prefers-reduced-motion`: langsamere Rotation (`2.4s`), NICHT eingefroren.
+- **Progress Bar:** `2px` Höhe, Background `var(--color-border)`, Fill `var(--color-accent)`, width-transitions `var(--dur-med) var(--ease-out)`. Label in JetBrains Mono tabular-nums rechts.
+
+### Eyebrow Pill (Above Heading)
+
+Kleine Status-Kapsel direkt über H1 in Hero-Blöcken und Section-Heads. Signalisiert Kontext („KONVERTER", „BILD-TOOL", „VIDEO-TOOL") ohne visuelles Lärm.
+
+- **Shape:** pill (`border-radius: 9999px`) — Ausnahme zur No-rounded-full-Regel, analog Tag/Badge.
+- **Layout:** `display: inline-flex; align-items: center; gap: var(--space-2)`.
+- **Background:** `var(--color-surface-sunk)` — Warmer Sunk-Ton, einen Schritt UNTER Canvas, damit das Pill ruhig in der Hero-Fläche sitzt.
+- **Border:** `1px solid var(--color-border)`.
+- **Padding:** `var(--space-1) var(--space-3)` (4px × 12px).
+- **Typography:** JetBrains Mono, `0.6875rem` (11px), `uppercase`, `letter-spacing: 0.08em`, `color: var(--color-text-muted)`, `font-weight: 500`.
+- **Pulse-Dot (optional):** kleiner Kreis `6×6px`, `border-radius: 9999px`, `background: var(--color-accent)` (Orange), pulsiert via `@keyframes` 2s-Loop (`opacity: 1 → 0.4 → 1`). Unter `prefers-reduced-motion` statisch auf `opacity: 1`. Der Pulse-Dot ist die EINE Stelle, an der Orange in einem Hero ruhig rhythmisch atmet — signalisiert „das Tool ist live, arbeitet clientseitig".
+
+### Italic Accent in Headings
+
+Emphasis innerhalb H1/H2 wird als `<em>` in Inter-Italic + Orange gerendert, nicht als neue Serif-Font. Das ist unser „editorial Seriven-Substitut".
+
+- **Markup:** `<h1>100 Meter in <em>Fuß</em> umrechnen</h1>`.
+- **CSS:** `h1 em, h2 em { font-style: italic; color: var(--color-accent); font-weight: inherit; }`.
+- **Semantik:** `<em>` markiert das konzeptionelle Kern-Wort (Einheit, Tool-Zweck, Nutzen). Maximal **1** `<em>` pro Heading, sonst verliert der Akzent seine Ruhe.
+- **Mobile:** kein Scale-Down — das `<em>` erbt H1/H2-Größe.
+- **Dark Mode:** Orange-Tint kippt auf Peach (`#F0A066`), automatisch via `var(--color-accent)`.
+
+### Section Head (2-Column Editorial)
+
+Für Below-the-fold-Sektionen auf Tool-Detail-Pages und Homepage-Variant: Kleiner Mono-Label links, großer Titel rechts. Editorial-Rhythmus, der Abschnitte wie Kapitel in einer Zeitschrift gliedert.
+
+- **Grid Desktop (≥48rem):** `display: grid; grid-template-columns: 10rem 1fr; gap: var(--space-8);`.
+- **Grid Mobile (<48rem):** `display: flex; flex-direction: column; gap: var(--space-2);` — Label stapelt über Titel.
+- **Label (links):** JetBrains Mono, `0.75rem`, `uppercase`, `letter-spacing: 0.1em`, `color: var(--color-text-subtle)`, `padding-top: var(--space-2)` (optisch zur Grundlinie des Titels justiert). Kann Zähler sein: `01 — ANWENDUNGSFÄLLE` (Mono-Number + em-Dash + Wort).
+- **Titel (rechts):** H2-Scale (`1.75rem`, weight 600, `text-wrap: balance`). Darf ein `<em>` Orange-Italic enthalten.
+- **Abstand zu Section-Body:** `margin-top: var(--space-6)` zwischen Head und erstem Content-Block.
+
+### Compare Table (Pro/Con List in Content)
+
+**Reine CSS-Klassen, kein eigenständiger Component.** MDX-Autoren nutzen `.compare`, `.compare .plus`, `.compare .minus` inline in Tool-Content-Bodies. Existiert als SEO-Struktur, nicht als Widget.
+
+- **Container:** `<div class="compare">` — `display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);`. Mobile stapelt auf `1fr` via `@media (max-width: 40rem)`.
+- **Spalten:** `<div class="plus">` (Vorteile) + `<div class="minus">` (Nachteile). Beide haben `<h3>` mit Mono-Eyebrow + Titel-Text, darunter `<ul>` mit 3–5 `<li>`.
+- **Bullet-Color:** custom `::before` mit `content: "+"` (plus) oder `content: "−"` (minus, U+2212), `color: var(--color-success)` bzw. `var(--color-error)`, `font-family: 'JetBrains Mono'`, `font-weight: 600`, `margin-right: var(--space-2)`. Bullets sind die EINE erlaubte Stelle, an der Success/Error als Content-Signal (nicht State) erscheinen dürfen.
+- **Kein Border um die Spalten.** Reiner Text-Block, gegliedert nur durch Typografie + Farbe der Bullets.
+- **Mobile:** Plus-Block zuerst, Minus-Block darunter (gleicher Flow, keine Reorder-Acrobatik).
+
+### Usecases Grid (Numbered Cards)
+
+Editorial 3-Spalten-Liste für „So nutzt du das Tool"-Abschnitte. Nummerierte Cards mit Titel + Description.
+
+- **Container:** `<ol class="usecases">` — `display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);`. Tablet (≤48rem): 2 Spalten. Mobile: 1 Spalte.
+- **Item:** `<li>` mit `padding: var(--space-5)`, `border: 1px solid var(--color-border)`, `border-radius: var(--r-md)`, `background: var(--color-surface)`.
+- **Counter:** `counter-reset: usecase;` auf `<ol>`, `counter-increment: usecase;` auf `<li>`. `<li>::before { content: counter(usecase, decimal-leading-zero); }` in JetBrains Mono, `0.75rem`, uppercase, `color: var(--color-text-subtle)`, `letter-spacing: 0.1em`, `display: block; margin-bottom: var(--space-2);`.
+- **Titel:** H3-Scale oder body-medium 500-weight, `color: var(--color-text)`.
+- **Description:** Small-scale, `color: var(--color-text-muted)`, `line-height: 1.55`.
+- **Hover:** kein Hover — Cards sind nicht interaktiv (reiner Content).
+
+### Limits Rows (Technische Grenzen / Specs)
+
+Editorial-Tabelle light — key-value-Zeilen, die technische Grenzen kommunizieren („Max. Dateigröße: 50 MB", „Unterstützte Formate: …"). Kein `<table>`-Element; strukturierter `<dl>` oder Flex-Rows.
+
+- **Container:** `<dl class="limits">` — `display: flex; flex-direction: column; gap: 0;`.
+- **Row:** `<div class="limits__row">` — `display: grid; grid-template-columns: auto 1fr; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border);`. Letzte Row ohne border.
+- **Num / Marker (optional, links):** JetBrains Mono, `0.75rem`, `color: var(--color-accent)` (Orange). Wenn semantisch sinnvoll: `01`, `02`, `03`. Kann auch ein Zeichen sein (`→`, `·`).
+- **Key (`<dt>`):** weight 500, `color: var(--color-text)`.
+- **Value (`<dd>`):** `color: var(--color-text-muted)`, right-aligned auf Desktop, left-aligned Mobile (flex-direction wechselt auf column unter 40rem).
+- **Mono-Werte:** Dateigrößen, Dauern, Pixel-Werte tragen `.mono { font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; }`.
+
+### Privacy Callout (Client-Only-Trust-Signal)
+
+Mini-Block zur Kommunikation „läuft im Browser, kein Upload". Entscheidend für File-Tools (Hintergrund-Entferner, HEIC-Decoder), sekundär für Converters.
+
+- **Container:** `<aside class="privacy-callout">` — `display: grid; grid-template-columns: auto 1fr; gap: var(--space-4); padding: var(--space-4) var(--space-5); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface);`.
+- **Icon-Slot (links):** `24×24`, aktuell keine dedizierten Icons — nutze stattdessen ein graphit-Monogramm-Glyph in JetBrains Mono `1.25rem` (`§`, `•`, oder `→`). Kein externes Icon-Set.
+- **Text-Slot (rechts):** Kurze Zeile Small-Scale, `color: var(--color-text-muted)`. Beispiel: „Läuft vollständig in deinem Browser · keine Datei wird hochgeladen · kein Tracking." Unit-Labels in `<span translate="no">` wrappen, wenn Fachwörter auftauchen.
+- **Kein Dismiss-X, kein CTA darin** — reiner Trust-Signal-Block.
 
 ---
 
@@ -363,11 +444,13 @@ Shadows are even softer in dark mode — elevation is communicated primarily via
 - Don't use Arial, Roboto, Open Sans, system-ui as the primary font
 
 **Colors:**
-- Don't use blue, purple, teal, cyan, pink, yellow, orange as accents
-- Don't use pastel backgrounds (pale blue, pale green, pale yellow, pale red)
+- Don't use blue, purple, teal, cyan, pink, yellow, red, green as accents — we have exactly ONE warm-orange accent (`var(--color-accent)`) plus Olive-Success + Rust-Error for pro/con-bullets and state
+- Don't use a bright/saturated orange — our orange is burnt, earthy (`#8F3A0C`), not a candy-hue. Never approximate with `#FF5722`, `#F97316`, or Tailwind `orange-500`
+- Don't use orange as a filled primary-button background — orange is for links, focus-rings, `<em>`-highlights, eyebrow-pulse-dots, spinner arcs, dropzone active-borders. Primary buttons are `var(--color-text)` (dark graphite)
+- Don't use pastel backgrounds (pale blue, pale green, pale yellow, pale red). For soft tints, use `color-mix(in oklch, var(--color-accent|success|error) 8%, var(--color-bg))`
 - Don't use gradient backgrounds (`bg-gradient-*`, gradient-mesh, radial blobs)
 - Don't use Tailwind default shadows (`shadow-md`, `shadow-lg`) — blue cast
-- Don't use pure black `#000000` for body text — use `#1A1917`
+- Don't use pure black `#000000` for body text — use `var(--color-text)` (`#1A1917`)
 
 **Shapes & Surfaces:**
 - Don't use `rounded-full` on cards, buttons, inputs, images, or any large container (tags/badges are the single exception)
@@ -430,7 +513,7 @@ When driving Stitch (or any generating agent) with this DESIGN.md active:
 
 ### Prompt Prefix (Mandatory on Every Generation)
 
-> "Generate this in accordance with DESIGN.md. Use Tailwind utility classes for layout. All colors must resolve to the exact hex values in Section 2. All typography must use Inter (sans) and JetBrains Mono (mono) per Section 3. Follow every Don't in Section 7 without exception. This is a refined editorial minimalism aesthetic in graphite monochrome — not SaaS, not Material, not maximalist."
+> "Generate this in accordance with DESIGN.md. Use Tailwind utility classes for layout. All colors must resolve to the exact hex values in Section 2 — graphite tokens plus one warm burnt-orange accent (`#8F3A0C` light / `#F0A066` dark). All typography must use Inter (sans) and JetBrains Mono (mono) per Section 3. Follow every Don't in Section 7 without exception. This is a refined editorial minimalism aesthetic in graphite monochrome, warmed by a single orange accent — not SaaS, not Material, not maximalist. Orange appears only on links, focus-rings, `<em>`-highlights inside headings, eyebrow-pulse-dots, spinner arcs, dropzone active borders. Primary buttons stay dark graphite (`var(--color-text)`)."
 
 ### For Tool-Widget Screens (Converters, File Tools, Calculators)
 
@@ -465,6 +548,8 @@ This DESIGN.md is also uploaded as a Stitch `DesignSystem` object (via `project.
 ### Approved Baselines (2026-04-19)
 
 Alle Baselines liegen im Stitch-Projekt `17885144393549343699`.
+
+**Retro-Note (Runde 3, 2026-04-20 — Palette-Loosening):** Die vier Baselines unten wurden gegen die v1-Palette (Graphit-only Accent `#3A3733`) generiert. Mit der Palette-Lockerung zu warm-burnt-orange (`#8F3A0C` Light / `#F0A066` Dark) driften die Accent-getragenen Elemente der Baselines farblich — konkret: Link-Color, Focus-Ring, Spinner-Stroke, Dropzone-Active-Border, Eyebrow-Pulse-Dot. Das ist **kein Baseline-Invalid**; die Layout-, Typografie-, und Slot-Entscheidungen bleiben gültig. Nur die Accent-Farbe ist jetzt Orange statt Graphit. Vor Re-Generation einer Baseline: prüfen, ob die Layout-Entscheidung noch trägt — wenn ja, kein Stitch-Re-Run nötig, nur die implementierte Farbe rippled automatisch via `var(--color-accent)`.
 
 **Converter (Light) — initiale Abnahme:**
 - Screen-ID: `bfbed533ae504d6ebea69366a8048e08`
@@ -501,6 +586,6 @@ Alle Baselines liegen im Stitch-Projekt `17885144393549343699`.
 
 ---
 
-**Generated from:** `src/styles/tokens.css` (v1.2, Session 2 locked) + `STYLE.md` (v1.2) + `CLAUDE.md §5 Hard-Caps`.
-**Last regenerated:** 2026-04-19.
+**Generated from:** `src/styles/tokens.css` (v1.3, Runde 3 palette-loosening) + `STYLE.md` (v1.3) + `CLAUDE.md §5 Hard-Caps`.
+**Last regenerated:** 2026-04-20.
 **Regenerate when:** tokens.css changes, STYLE.md §0–§11 changes, or CLAUDE.md §5 Hard-Caps change.

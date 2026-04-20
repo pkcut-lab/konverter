@@ -1,5 +1,6 @@
 /* Design Tokens — Single source of truth.
    Spec: Section 5.1-5.5 (2026-04-17 design doc v1.1).
+   Runde 3 (2026-04-20): palette gelockert — warmer Orange-Akzent ergänzt Graphit.
    WCAG AAA contrast locked by tests/design-system/contrast.test.ts. */
 
 :root {
@@ -8,12 +9,13 @@
   /* Colors — Light Mode (default) */
   --color-bg: #FFFFFF;
   --color-surface: #FAFAF9;
+  --color-surface-sunk: #F3F0EA;
   --color-border: #E8E6E1;
   --color-text: #1A1917;
   --color-text-muted: #5C5A55;
   --color-text-subtle: #9C9A94;
-  --color-accent: #3A3733;
-  --color-accent-hover: #1A1917;
+  --color-accent: #8F3A0C;
+  --color-accent-hover: #6B2A08;
   --color-success: #4A6B4E;
   --color-error: #8B3A3A;
   --icon-filter: none;
@@ -93,12 +95,13 @@
   color-scheme: dark;
   --color-bg: #1A1917;
   --color-surface: #252320;
+  --color-surface-sunk: #0F0E0D;
   --color-border: #3A3733;
   --color-text: #FAFAF9;
   --color-text-muted: #A8A59E;
   --color-text-subtle: #6C6A64;
-  --color-accent: #E8E6E1;
-  --color-accent-hover: #FFFFFF;
+  --color-accent: #F0A066;
+  --color-accent-hover: #F5B07C;
   --color-success: #7FA582;
   --color-error: #C67373;
   --icon-filter: invert(0.92) brightness(1.05);

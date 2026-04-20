@@ -1,7 +1,7 @@
 # STYLE — Visual Design Rulebook
 
-**Status:** v1 final (Session 2 locked) + v1.1 Skill-Integration (2026-04-19) + v1.2 Tool-Layouts (2026-04-19, Sessions 5–7).
-**Last reviewed:** 2026-04-19.
+**Status:** v1 final (Session 2 locked) + v1.1 Skill-Integration (2026-04-19) + v1.2 Tool-Layouts (2026-04-19, Sessions 5–7) + v1.3 Editorial-Accent (Runde 3, 2026-04-20).
+**Last reviewed:** 2026-04-20.
 
 ---
 
@@ -28,8 +28,13 @@
 - **Always** use token vars, never hex literals in component code.
   - ✅ `color: var(--color-text);`
   - ❌ `color: #1A1917;`
-- Accent is **Graphit-Grau**. NO blue, NO purple, NO colored gradients.
-- Success (olive green) and error (rusty red) are the ONLY two non-graphite hues. Use sparingly — only for semantic state.
+- **Accent ist ein warmer Orange** (Light `#8F3A0C`, Dark `#F0A066`, beide AAA ≥7:1). Er ersetzt den alten Graphit-only-Accent ab Runde 3 (2026-04-20) — siehe DESIGN.md §2 für Geschichte. Der Accent ist **sparsam**: Links, Focus-Ringe, aktive Input-States, `<em>`-Highlights in Headings, Eyebrow-Pulsierpunkt, Spinner-Top-Arc. **NICHT** für Body-Text, Headings, Primary-Buttons, Card-BGs, Icons, Borders.
+- **Primary-Buttons (filled, dark)** nutzen `background: var(--color-text)` mit `color: var(--color-bg)` — **nicht** `--color-accent`. Ink-Buttons bleiben Graphit. Der Accent ist **kein** Button-BG.
+- **Secondary/Accent-Buttons** (z.B. „Herunterladen", „Beispiel laden") dürfen `color: var(--color-accent)` + Outline-Variante nutzen. Filled-Orange-Buttons sind verboten (reißt Refined-Minimalism, wirkt CTA-aufdringlich).
+- **Semantische Hues** — weiterhin sparsam, aber mit breiterer Use-License:
+  - `--color-success` (Olive) → Success-States **und** Pro-Bullets in Content-Listen (`.compare .plus li::before`).
+  - `--color-error` (Rust) → Error-States **und** Con-Bullets in Content-Listen (`.compare .minus li::before`).
+- **Keine weiteren Farben.** Blau/Violett/Pink/Cyan bleiben gesperrt. Pastell-Tinten nur via `color-mix(in oklch, var(--color-accent|success|error) N%, var(--color-bg))` als Pill-Backgrounds für Badges.
 - Icon color is achieved via `filter: var(--icon-filter);` — never recolor icons per-theme manually.
 
 ## 2. Typography
@@ -159,8 +164,8 @@ Bei jeder Session, die UI erstellt oder überarbeitet, ist folgende Skill-Sequen
 
 **Hard-Caps (überstimmen alle Skills):**
 - Ästhetik = "refined minimalism" (Section 0).
-- Palette = Graphit-Tokens (Section 1) — Pastell-Akzente aus `minimalist-ui` werden NICHT übernommen.
-- Fonts = Inter + JetBrains Mono gelockt (Section 2) — Skill-Defaults "avoid Inter" werden überstimmt.
+- Palette = Graphit-Tokens **+ 1 warmer Orange-Accent** (Section 1, gelockt Runde 3 2026-04-20). Pastell-Akzente aus `minimalist-ui` werden NICHT übernommen; Pink/Blau/Violett/Cyan bleiben gesperrt. Pill-Tints nur via `color-mix(in oklch, var(--color-accent|success|error) N%, var(--color-bg))`.
+- Fonts = Inter + JetBrains Mono gelockt (Section 2) — Skill-Defaults "avoid Inter" werden überstimmt. Keine Serif-Fonts trotz Editorial-Feel — Emphasis via Inter-Italic + `var(--color-accent)` (siehe DESIGN.md §4 „Italic-Accent").
 - Konkrete px/Hex-Werte aus Skills auf Tokens mappen, niemals direkt übernehmen.
 - Stack = Astro + Svelte-Runes — React/Next.js-Syntax wird umgeschrieben.
 
