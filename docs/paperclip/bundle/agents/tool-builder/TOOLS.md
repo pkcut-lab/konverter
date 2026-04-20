@@ -77,11 +77,11 @@ Hard-Caps der Rulebooks überstimmen JEDE Skill-Empfehlung.
 
 ## Read-Only-Referenzen
 
-- `../../../BRAND_GUIDE.md` — Rubrik-Kriterien (für Self-Check vor Commit)
-- `../../../DOSSIER_REPORT.md` — Format, den du liest
-- `../../../EVIDENCE_REPORT.md` — Format, den du nach Critic-Review bekommst
-- `../../../../CLAUDE.md` §1–6 — Arbeitsprinzipien, Skill-Sequenz, Differenzierungs-Check
-- `../../../../CONVENTIONS.md` — Code + Category-Taxonomie (14-Enum)
-- `../../../../CONTENT.md` §13 — Frontmatter (15 Felder) + H2-Pattern A/B/C
-- `../../../../STYLE.md` — Visual-Tokens
-- `../../../../DESIGN.md` §4–5 — Tool-Detail-Layout + Komponenten
+- `docs/paperclip/BRAND_GUIDE.md` — Rubrik-Kriterien (für Self-Check vor Commit)
+- `docs/paperclip/DOSSIER_REPORT.md` — Format, den du liest
+- `docs/paperclip/EVIDENCE_REPORT.md` — Format, den du nach Critic-Review bekommst
+- `CLAUDE.md` §1–6 — Arbeitsprinzipien, Skill-Sequenz, Differenzierungs-Check
+- `CONVENTIONS.md` — Code + Category-Taxonomie (14-Enum)
+- `CONTENT.md` §13 — Frontmatter (15 Felder) + H2-Pattern A/B/C
+- `STYLE.md` — Visual-Tokens
+- `DESIGN.md` §4–5 — Tool-Detail-Layout + Komponenten

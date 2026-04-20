@@ -11,7 +11,7 @@ unterschiedliche Lock-Files).
    reaktivieren (Rubrik-ist-Gesetz, Evidence-over-Vibes, Alle-Fails-nicht-nur-
    erster). Dann Eval-Smoke:
    ```bash
-   bash ../../../../evals/merged-critic/run-smoke.sh
+   bash evals/merged-critic/run-smoke.sh
    ```
    F1 ≥ 0.85 → proceed. F1 < 0.85 → `verdict: self-disabled` in Report +
    `inbox/to-ceo/critic-drift-merged-critic.md`, Lock nicht anlegen, exit. Das
@@ -24,8 +24,8 @@ unterschiedliche Lock-Files).
    echo "merged-critic|$(date -Iseconds)|<ticket-id>" \
      > tasks/awaiting-critics/<ticket-id>/merged-critic.lock
    ```
-   Format-Referenzen re-lesen: `../../../EVIDENCE_REPORT.md`,
-   `../../../BRAND_GUIDE.md §4`.
+   Format-Referenzen re-lesen: `docs/paperclip/EVIDENCE_REPORT.md`,
+   `docs/paperclip/BRAND_GUIDE.md §4`.
 
 3. **15-Check-Sequenz (nicht abbrechen beim ersten Fail)** — Details in
    `AGENTS.md` §3. Reihenfolge ist nicht strikt, aber jeder Check MUSS laufen:
@@ -55,7 +55,7 @@ unterschiedliche Lock-Files).
    # Nach je 10 Reviews: Trend-Analyse
    review_count=$(wc -l < memory/merged-critic-log.md)
    if (( review_count % 10 == 0 )); then
-     bash ../../../../evals/merged-critic/run-trend-check.sh
+     bash evals/merged-critic/run-trend-check.sh
    fi
 
    # Lock entfernen NUR bei pass/fail (nicht bei partial/timeout — CEO retry)

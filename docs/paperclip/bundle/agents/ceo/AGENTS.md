@@ -19,20 +19,20 @@ outputs:
   - tasks/current_task.md
   - memory/ceo-log.md
 rulebooks:
-  - ../../../BRAND_GUIDE.md
-  - ../../../TICKET_TEMPLATE.md
-  - ../../../EVIDENCE_REPORT.md
-  - ../../../DOSSIER_REPORT.md
-  - ../../../CATEGORY_TTL.md
-  - ../../../DAILY_DIGEST.md
-  - ../../../EMERGENCY_HALT.md
-  - ../../../../CLAUDE.md
-  - ../../../../PROJECT.md
-  - ../../../../CONVENTIONS.md
-  - ../../../../STYLE.md
-  - ../../../../CONTENT.md
+  - docs/paperclip/BRAND_GUIDE.md
+  - docs/paperclip/TICKET_TEMPLATE.md
+  - docs/paperclip/EVIDENCE_REPORT.md
+  - docs/paperclip/DOSSIER_REPORT.md
+  - docs/paperclip/CATEGORY_TTL.md
+  - docs/paperclip/DAILY_DIGEST.md
+  - docs/paperclip/EMERGENCY_HALT.md
+  - CLAUDE.md
+  - PROJECT.md
+  - CONVENTIONS.md
+  - STYLE.md
+  - CONTENT.md
 references:
-  - ../../../research/2026-04-20-multi-agent-role-matrix.md
+  - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
 ---
 
 # AGENTS — CEO-Prozeduren (v1.0)
@@ -233,7 +233,7 @@ Ein File pro Tag: `inbox/daily-digest/YYYY-MM-DD.md`. Sections:
 4. **Metrics-Highlights** (rework-rate, partial-rate, tokens-today, F1-per-critic)
 5. **Offene Blocker** (nicht auto-resolved, nicht Live-Alarm)
 
-Format-Details in `../../../DAILY_DIGEST.md`.
+Format-Details in `docs/paperclip/DAILY_DIGEST.md`.
 
 ## 10. Memory-Update (Step 12)
 

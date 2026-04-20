@@ -70,7 +70,7 @@ Digest: `- Tie-Break: {ticket.id} via {competitor|user-pain|trend}`
 
 ### §3.4 Digest-Stream
 
-Alle Auto-Resolves werden in `inbox/daily-digest/YYYY-MM-DD.md` appended. Format siehe `../../../DAILY_DIGEST.md`. User liest 1× täglich — kein Ping pro Resolve.
+Alle Auto-Resolves werden in `inbox/daily-digest/YYYY-MM-DD.md` appended. Format siehe `docs/paperclip/DAILY_DIGEST.md`. User liest 1× täglich — kein Ping pro Resolve.
 
 **Was NICHT im Digest landet** (zu verbose):
 - Routine-Ticket-Completions ohne Auto-Resolve (die Metrics-Zeile zeigt die Summe)

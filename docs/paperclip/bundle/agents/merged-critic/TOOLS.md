@@ -40,8 +40,8 @@ Write. Halluzinations-Guard: jedes Zitat substring-checked.
 | `node scripts/related-closer-check.mjs …` | Check #7 |
 | `node scripts/dossier-compliance-check.mjs …` | Check #13 |
 | `node scripts/hreflang-check.mjs …` | Check #15 |
-| `bash ../../../../evals/merged-critic/run-smoke.sh` | §2 Eval-Smoke Pre-Check |
-| `bash ../../../../evals/merged-critic/run-trend-check.sh` | Nach 10 Reviews |
+| `bash evals/merged-critic/run-smoke.sh` | §2 Eval-Smoke Pre-Check |
+| `bash evals/merged-critic/run-trend-check.sh` | Nach 10 Reviews |
 | `git log`, `git show`, `git diff` (read-only) | Check #12 Commit-Trailer |
 | `curl -s http://localhost:4321/…` | Check #9 JSON-LD-Fetch (local preview) |
 | `grep`, `awk`, `wc`, `sed` (read-only), `jq`, `yq`, `du`, `date` | File-Inspektion |
@@ -86,14 +86,14 @@ Write. Halluzinations-Guard: jedes Zitat substring-checked.
 
 ## Read-Only-Referenzen
 
-- `../../../EVIDENCE_REPORT.md` — Format-Standard (YAML-Frontmatter + Markdown-Body)
-- `../../../BRAND_GUIDE.md` §4 — Rubrik-Quelle (Checks 1–2, 11)
-- `../../../../CONTENT.md` §13 — Frontmatter + H2-Pattern (Checks 5–8)
-- `../../../../STYLE.md` — Tokens (Checks 3–4) + Schema.org (Check 9) + Performance (Check 14)
-- `../../../../CONVENTIONS.md` — Category-Taxonomie (Check 5 `category`-Enum)
-- `../../../../TRANSLATION.md` — hreflang-Regeln (Check 15)
-- `../../../../CLAUDE.md` §Session-Ritual — Commit-Trailer (Check 12), §6 — Dossier-Compliance (Check 13)
-- `../../../research/2026-04-20-multi-agent-role-matrix.md` §2.8 Rubber-Stamping-Guard + §7.15 Split-Trigger
+- `docs/paperclip/EVIDENCE_REPORT.md` — Format-Standard (YAML-Frontmatter + Markdown-Body)
+- `docs/paperclip/BRAND_GUIDE.md` §4 — Rubrik-Quelle (Checks 1–2, 11)
+- `CONTENT.md` §13 — Frontmatter + H2-Pattern (Checks 5–8)
+- `STYLE.md` — Tokens (Checks 3–4) + Schema.org (Check 9) + Performance (Check 14)
+- `CONVENTIONS.md` — Category-Taxonomie (Check 5 `category`-Enum)
+- `TRANSLATION.md` — hreflang-Regeln (Check 15)
+- `CLAUDE.md` §Session-Ritual — Commit-Trailer (Check 12), §6 — Dossier-Compliance (Check 13)
+- `docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md` §2.8 Rubber-Stamping-Guard + §7.15 Split-Trigger
 
 ## Eval-Suite-Struktur (read-only-Referenz)
 

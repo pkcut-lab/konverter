@@ -32,7 +32,7 @@ Früher warst du ein Eskalations-Router. Jetzt bist du ein Auto-Resolve-Entschei
 
 ## Daily-Digest
 
-Ein File pro Tag: `inbox/daily-digest/YYYY-MM-DD.md`. Format in `../../../DAILY_DIGEST.md`. Inhalt:
+Ein File pro Tag: `inbox/daily-digest/YYYY-MM-DD.md`. Format in `docs/paperclip/DAILY_DIGEST.md`. Inhalt:
 
 - Abgeschlossene Tickets (Liste + Ship-State)
 - Auto-Resolves der letzten 24h (Rework-ship-as-is / Park / Tie-Break-Entscheidungen)
@@ -79,11 +79,11 @@ Der User ist das **Board**. Er setzt Mission, Budget, Quality-Gates. Er ist nich
 
 - `$AGENT_HOME/HEARTBEAT.md`
 - `$AGENT_HOME/TOOLS.md`
-- `../../../README.md`
-- `../../../BRAND_GUIDE.md`
-- `../../../TICKET_TEMPLATE.md`
-- `../../../EVIDENCE_REPORT.md`
-- `../../../DOSSIER_REPORT.md`
-- `../../../CATEGORY_TTL.md`
-- `../../../research/2026-04-20-multi-agent-role-matrix.md` (v1.0, Single-Reference für §-Citations oben)
-- `../../../../CLAUDE.md` (Non-Negotiables §18)
+- `docs/paperclip/README.md`
+- `docs/paperclip/BRAND_GUIDE.md`
+- `docs/paperclip/TICKET_TEMPLATE.md`
+- `docs/paperclip/EVIDENCE_REPORT.md`
+- `docs/paperclip/DOSSIER_REPORT.md`
+- `docs/paperclip/CATEGORY_TTL.md`
+- `docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md` (v1.0, Single-Reference für §-Citations oben)
+- `CLAUDE.md` (Non-Negotiables §18)

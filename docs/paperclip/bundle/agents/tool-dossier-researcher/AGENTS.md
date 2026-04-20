@@ -19,11 +19,11 @@ outputs:
   - memory/dossier-cache-index.md (appended)
 writes_git_commits: false
 rulebooks:
-  - ../../../DOSSIER_REPORT.md
-  - ../../../CATEGORY_TTL.md
-  - ../../../../CLAUDE.md
+  - docs/paperclip/DOSSIER_REPORT.md
+  - docs/paperclip/CATEGORY_TTL.md
+  - CLAUDE.md
 references:
-  - ../../../research/2026-04-20-multi-agent-role-matrix.md
+  - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
 budget_caps:
   firecrawl_per_ticket: 3
   webfetch_per_ticket: 200
@@ -43,7 +43,7 @@ mkdir -p tasks/dossier-locks
 echo "tool-dossier-researcher|$(date -Iseconds)|<tool-slug>" > tasks/dossier-locks/<tool-slug>.lock
 
 # SOUL + Format-Standard re-lesen
-cat SOUL.md ../../../DOSSIER_REPORT.md ../../../CATEGORY_TTL.md
+cat SOUL.md docs/paperclip/DOSSIER_REPORT.md docs/paperclip/CATEGORY_TTL.md
 ```
 
 ## 2. Research-Sequenz
@@ -61,7 +61,7 @@ if [[ -z "$parent_path" ]] || is_stale "$parent_path"; then
 fi
 ```
 
-`is_stale()` ruft TTL aus `../../../CATEGORY_TTL.md` ab, vergleicht mit `<date>` im Dateinamen.
+`is_stale()` ruft TTL aus `docs/paperclip/CATEGORY_TTL.md` ab, vergleicht mit `<date>` im Dateinamen.
 
 ### Schritt B — Konkurrenz-Matrix (WebFetch-first)
 
@@ -202,7 +202,7 @@ npm run citation-verify -- "dossiers/$tool_slug/$(date -I).md"
 
 **Invocation-Order (hart, 2 Stellen):**
 1. Nach **jedem** Dossier-Write (Tool- oder Category-Root-Dossier) — Exit 1 setzt `verdict: citation_fail` und öffnet `inbox/to-ceo/dossier-citation-fail-<tool>.md`.
-2. Bei **Category-Root-Dossiers**: `citation_verify_passed: true` MUSS im Frontmatter stehen, **BEVOR** der erste Child davon erben darf. CEO-Gate blockt tool-build-Dispatch mit `parent_dossier`-Ref, wenn die Parent-Verification nicht grün ist (Inheritance-Integrity, siehe `../../../DOSSIER_REPORT.md`).
+2. Bei **Category-Root-Dossiers**: `citation_verify_passed: true` MUSS im Frontmatter stehen, **BEVOR** der erste Child davon erben darf. CEO-Gate blockt tool-build-Dispatch mit `parent_dossier`-Ref, wenn die Parent-Verification nicht grün ist (Inheritance-Integrity, siehe `docs/paperclip/DOSSIER_REPORT.md`).
 
 ## 3. Index-Update
 
@@ -309,7 +309,7 @@ EOF
 - PII in Dossier-Body ohne Scrub
 - Paywall-Inhalte paraphrasieren ohne `quelle: paywalled`
 - Dossier-Erstellen ohne Parent-Category-Check
-- TTL eigenmächtig vergeben (nur aus `../../../CATEGORY_TTL.md`)
+- TTL eigenmächtig vergeben (nur aus `docs/paperclip/CATEGORY_TTL.md`)
 - Neue Kategorie ohne User-Approval aufnehmen
 - Erasure-Request selbst ausführen (nur Tickets schreiben)
 

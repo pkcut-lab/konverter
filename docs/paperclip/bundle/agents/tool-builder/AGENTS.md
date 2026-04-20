@@ -20,16 +20,16 @@ outputs:
   - tasks/engineer_output_<ticket-id>.md
 writes_git_commits: true
 rulebooks:
-  - ../../../BRAND_GUIDE.md
-  - ../../../DOSSIER_REPORT.md
-  - ../../../EVIDENCE_REPORT.md
-  - ../../../../CLAUDE.md
-  - ../../../../CONVENTIONS.md
-  - ../../../../CONTENT.md
-  - ../../../../STYLE.md
-  - ../../../../DESIGN.md
+  - docs/paperclip/BRAND_GUIDE.md
+  - docs/paperclip/DOSSIER_REPORT.md
+  - docs/paperclip/EVIDENCE_REPORT.md
+  - CLAUDE.md
+  - CONVENTIONS.md
+  - CONTENT.md
+  - STYLE.md
+  - DESIGN.md
 references:
-  - ../../../research/2026-04-20-multi-agent-role-matrix.md
+  - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
 ---
 
 # AGENTS — Tool-Builder-Prozeduren (v1.0)
@@ -54,7 +54,7 @@ fi
 echo "tool-builder|$(date -Iseconds)|<ticket-id>" > tasks/task.lock
 
 # SOUL + BRAND_GUIDE + Dossier re-lesen
-cat SOUL.md ../../../BRAND_GUIDE.md "$dossier_ref"
+cat SOUL.md docs/paperclip/BRAND_GUIDE.md "$dossier_ref"
 ```
 
 ## 2. Build-Sequenz
@@ -110,7 +110,7 @@ describe('meter-to-feet config', () => {
 
 `src/content/tools/{slug}/{lang}.md`:
 
-Vollständige Frontmatter- + H2-Spezifikation: **[CONTENT.md §13](../../../../CONTENT.md#13-tool-content-template-v2-gelockt-session-6)**. Kurzform-Sample (Pattern A — Größen-Konverter):
+Vollständige Frontmatter- + H2-Spezifikation: **[CONTENT.md §13](CONTENT.md#13-tool-content-template-v2-gelockt-session-6)**. Kurzform-Sample (Pattern A — Größen-Konverter):
 
 ```markdown
 ---

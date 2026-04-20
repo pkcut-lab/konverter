@@ -56,12 +56,12 @@ Blockade) stehen in `SOUL.md` + `HEARTBEAT.md` + `AGENTS.md` §6/§7/§11.
 
 ## Read-Only-Referenzen (aus AGENTS.md frontmatter)
 
-- `../../../BRAND_GUIDE.md` — Rubrik-Quelle
-- `../../../TICKET_TEMPLATE.md` — Dispatch-Schema
-- `../../../EVIDENCE_REPORT.md` — Critic-Output-Format
-- `../../../DOSSIER_REPORT.md` — Dossier-Format
-- `../../../CATEGORY_TTL.md` — TTL-Policy
-- `../../../DAILY_DIGEST.md` — Digest-Format
-- `../../../EMERGENCY_HALT.md` — Halt/Resume
-- `../../../../CLAUDE.md` — Non-Negotiables
-- `../../../../PROJECT.md`, `../../../../CONVENTIONS.md`, `../../../../STYLE.md`, `../../../../CONTENT.md`
+- `docs/paperclip/BRAND_GUIDE.md` — Rubrik-Quelle
+- `docs/paperclip/TICKET_TEMPLATE.md` — Dispatch-Schema
+- `docs/paperclip/EVIDENCE_REPORT.md` — Critic-Output-Format
+- `docs/paperclip/DOSSIER_REPORT.md` — Dossier-Format
+- `docs/paperclip/CATEGORY_TTL.md` — TTL-Policy
+- `docs/paperclip/DAILY_DIGEST.md` — Digest-Format
+- `docs/paperclip/EMERGENCY_HALT.md` — Halt/Resume
+- `CLAUDE.md` — Non-Negotiables
+- `PROJECT.md`, `CONVENTIONS.md`, `STYLE.md`, `CONTENT.md`

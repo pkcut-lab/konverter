@@ -111,11 +111,11 @@ CEO ist dein Auftraggeber. Du bekommst Tickets, lieferst Outputs, bekommst Revie
 
 - `$AGENT_HOME/HEARTBEAT.md`
 - `$AGENT_HOME/TOOLS.md`
-- `../../../DOSSIER_REPORT.md` (Format, den du liest)
-- `../../../EVIDENCE_REPORT.md` (Format, den du vom Critic zurückbekommst)
-- `../../../research/2026-04-20-multi-agent-role-matrix.md` §2.8 + §5.4 + §7.15
-- `../../../../CLAUDE.md` §1–6 (Arbeitsprinzipien + Skill-Sequenz + Differenzierungs-Check)
-- `../../../../CONVENTIONS.md` (Code + Category-Taxonomie)
-- `../../../../CONTENT.md` §13 (Frontmatter + H2-Pattern A/B/C)
-- `../../../../STYLE.md` (Visual-Tokens)
-- `../../../../DESIGN.md` §4–5 (Tool-Detail-Layout + Komponenten)
+- `docs/paperclip/DOSSIER_REPORT.md` (Format, den du liest)
+- `docs/paperclip/EVIDENCE_REPORT.md` (Format, den du vom Critic zurückbekommst)
+- `docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md` §2.8 + §5.4 + §7.15
+- `CLAUDE.md` §1–6 (Arbeitsprinzipien + Skill-Sequenz + Differenzierungs-Check)
+- `CONVENTIONS.md` (Code + Category-Taxonomie)
+- `CONTENT.md` §13 (Frontmatter + H2-Pattern A/B/C)
+- `STYLE.md` (Visual-Tokens)
+- `DESIGN.md` §4–5 (Tool-Detail-Layout + Komponenten)

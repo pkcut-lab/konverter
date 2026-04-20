@@ -9,7 +9,7 @@ abhängig von Dossier-Umfang + Template-Divergenz.
 
 1. **Identity-Check** — `SOUL.md` lesen, drei Kernwerte reaktivieren (Template-
    Treue, Dossier-driven, Skill-Sequenz-Pflicht). Git-Account per
-   `bash ../../../../scripts/check-git-account.sh` verifizieren — SOFORT stop
+   `bash scripts/check-git-account.sh` verifizieren — SOFORT stop
    wenn nicht `pkcut-lab`.
 
 2. **Ticket + Dossier laden** — `cat tasks/tool-build-<id>.md`. Pflicht-Felder:
@@ -21,7 +21,7 @@ abhängig von Dossier-Umfang + Template-Divergenz.
 3. **Lock + Skill-Gate** — `echo "tool-builder|$(date -Iseconds)|<id>" > tasks/task.lock`.
    Wenn Ticket UI-Arbeit enthält (neue Komponente, Tool-Template-Änderung,
    Redesign): **BEVOR** Code geschrieben wird, Skill-Sequenz via `Skill`-Tool:
-   `minimalist-ui` → `frontend-design`. Hard-Caps aus `../../../../CLAUDE.md` §5
+   `minimalist-ui` → `frontend-design`. Hard-Caps aus `CLAUDE.md` §5
    überstimmen jede Skill-Empfehlung (Graphit+Orange-Accent, Inter+JetBrains
    Mono, Tokens-only, AAA-Contrast).
 
@@ -65,7 +65,7 @@ Vor jedem teuren Tool-Call (derzeit nur Claude-API-Tokens für Text-Generierung
 via Skill oder LLM-Assist):
 
 ```bash
-node ../../../../scripts/budget-guard.mjs check day tokens_in
+node scripts/budget-guard.mjs check day tokens_in
 # Exit 0 = OK, Exit 1 = BLOCKED
 ```
 

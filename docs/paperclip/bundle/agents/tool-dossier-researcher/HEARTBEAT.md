@@ -11,8 +11,8 @@ Firecrawl-Calls + ~200 WebFetch-Calls.
    reaktivieren (Evidence-over-Opinion, Kostenlos-First §7.16, DSGVO-Pseudonym
    §7.12). Budget-Guard pre-flight:
    ```bash
-   node ../../../../scripts/budget-guard.mjs check day tokens_in
-   node ../../../../scripts/budget-guard.mjs check ticket firecrawl <slug>
+   node scripts/budget-guard.mjs check day tokens_in
+   node scripts/budget-guard.mjs check ticket firecrawl <slug>
    ```
    Exit 1 → Lock nicht anlegen, `inbox/to-ceo/dossier-blocked-<slug>.md` Typ A
    "budget exhausted", exit. Fail-secure hard-bound.
@@ -27,7 +27,7 @@ Firecrawl-Calls + ~200 WebFetch-Calls.
    Lock-Files).
 
 3. **Parent-Check + evtl. Root-Build** — `dossiers/_categories/<category>/*.md`
-   prüfen: neueste Date, TTL aus `../../../CATEGORY_TTL.md` vergleichen. Wenn
+   prüfen: neueste Date, TTL aus `docs/paperclip/CATEGORY_TTL.md` vergleichen. Wenn
    stale oder fehlend → ZUERST Parent bauen (Schritt B–F für Category-Root),
    dann Tool-Dossier. Citation-Verify auf Parent MUSS grün sein, bevor Tool-
    Dossier davon erben darf (§5.5-Guard).
@@ -71,11 +71,11 @@ Firecrawl-Calls + ~200 WebFetch-Calls.
 
 ```bash
 # Firecrawl
-node ../../../../scripts/budget-guard.mjs check ticket firecrawl <slug>
+node scripts/budget-guard.mjs check ticket firecrawl <slug>
 # WebFetch (bei gebudgetierter Variante)
-node ../../../../scripts/budget-guard.mjs check ticket webfetch <slug>
+node scripts/budget-guard.mjs check ticket webfetch <slug>
 # Anthropic-Tokens (für LLM-Extract, falls LLM-assisted)
-node ../../../../scripts/budget-guard.mjs check day tokens_in
+node scripts/budget-guard.mjs check day tokens_in
 ```
 
 Exit 0 = proceed, Exit 1 = Call wird NICHT ausgeführt. Log-Zeile nach
@@ -94,7 +94,7 @@ fetch raw text → pii-scrub(in-memory) → writeFile(scrubbed)
 ```
 
 NIEMALS `writeFile(raw) → scrub-on-disk`. Patterns in
-`../../../../scripts/pii-scrub.mjs` (`u/<user>` → `[reddit-user]`, E-Mail →
+`scripts/pii-scrub.mjs` (`u/<user>` → `[reddit-user]`, E-Mail →
 `[email]`, "posted by FirstName LastName" → `[author]`, etc.). Version-Stamp
 `pii_scrub_version: 1.0` im Frontmatter — bei Pattern-Update Version bumpen,
 alte Dossiers beim TTL-Refresh re-scrubben.

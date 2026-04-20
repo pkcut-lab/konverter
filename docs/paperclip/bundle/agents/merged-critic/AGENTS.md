@@ -8,14 +8,14 @@ can_dispatch: []
 writes_git_commits: false
 rulebooks:
   shared:
-    - ../../../EVIDENCE_REPORT.md
-    - ../../../BRAND_GUIDE.md
+    - docs/paperclip/EVIDENCE_REPORT.md
+    - docs/paperclip/BRAND_GUIDE.md
   project:
-    - ../../../../CLAUDE.md
-    - ../../../../CONVENTIONS.md
-    - ../../../../STYLE.md
-    - ../../../../CONTENT.md
-    - ../../../../TRANSLATION.md
+    - CLAUDE.md
+    - CONVENTIONS.md
+    - STYLE.md
+    - CONTENT.md
+    - TRANSLATION.md
 inputs:
   - tasks/review-<ticket-id>.md
   - tasks/engineer_output_<ticket-id>.md
@@ -43,20 +43,20 @@ echo "merged-critic|$(date -Iseconds)|<ticket-id>" \
   > tasks/awaiting-critics/<ticket-id>/merged-critic.lock
 
 # SOUL + Format-Standard re-lesen
-cat SOUL.md ../../../EVIDENCE_REPORT.md ../../../BRAND_GUIDE.md
+cat SOUL.md docs/paperclip/EVIDENCE_REPORT.md docs/paperclip/BRAND_GUIDE.md
 ```
 
 ## 2. Pre-Review: Eval-Smoke (§2.8 Rubber-Stamping-Guard)
 
 ```bash
 # Pflicht vor jedem Review-Run
-bash ../../../../evals/merged-critic/run-smoke.sh
+bash evals/merged-critic/run-smoke.sh
 
 # Script Output: F1-Score gegen 5 random pass + 5 random fail Fixtures
 # Exit-Code: 0 = F1 ≥ 0.85, 1 = F1 < 0.85 (Critic-Drift)
 
 if [[ $? -ne 0 ]]; then
-  f1=$(cat ../../../../evals/merged-critic/last-smoke-result.txt | jq .f1)
+  f1=$(cat evals/merged-critic/last-smoke-result.txt | jq .f1)
   cat > tasks/awaiting-critics/<ticket-id>/merged-critic.md <<EOF
 ---
 evidence_report_version: 1
@@ -303,7 +303,7 @@ echo "$(date -I)|<ticket-id>|<verdict>|$failed_checks" >> memory/merged-critic-l
 # Nach 10 Reviews: F1-Trend-Analyse
 review_count=$(wc -l < memory/merged-critic-log.md)
 if (( review_count % 10 == 0 )); then
-  bash ../../../../evals/merged-critic/run-trend-check.sh
+  bash evals/merged-critic/run-trend-check.sh
 fi
 ```
 
@@ -335,7 +335,7 @@ fi
 ## 8. Screenshots (Design-Checks, ab Phase 3)
 
 Phase 1-2 (v1.0-Start): keine Playwright-Screenshots außer axe-core.
-Phase 3+: Screenshots via Playwright-Artifacts, referenziert via `screenshots[]`-Array im Frontmatter (siehe `../../../EVIDENCE_REPORT.md` §Screenshot-Referenzen). Keine Binary-Blobs im Repo.
+Phase 3+: Screenshots via Playwright-Artifacts, referenziert via `screenshots[]`-Array im Frontmatter (siehe `docs/paperclip/EVIDENCE_REPORT.md` §Screenshot-Referenzen). Keine Binary-Blobs im Repo.
 
 ## 9. Dein Ton
 

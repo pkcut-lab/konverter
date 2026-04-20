@@ -42,7 +42,7 @@ kostenpflichtige Call durchläuft pre-flight `budget-guard.mjs`.
 **Hart vor JEDEM kostenpflichtigen Call:**
 
 ```bash
-node ../../../../scripts/budget-guard.mjs check <scope> <action> [ticket-id]
+node scripts/budget-guard.mjs check <scope> <action> [ticket-id]
 # Exit 0 = proceed, Exit 1 = Call NICHT ausführen (fail-secure)
 ```
 
@@ -51,8 +51,8 @@ node ../../../../scripts/budget-guard.mjs check <scope> <action> [ticket-id]
 | Command | Zweck |
 |---|---|
 | `npm run citation-verify -- <dossier-path>` | Post-Write-Guard |
-| `bash ../../../../scripts/pii-scrub.mjs` (oder Inline-Aufruf) | In-memory Scrub VOR Write |
-| `node ../../../../scripts/budget-guard.mjs check …` | Pre-Tool-Call-Wrapper |
+| `bash scripts/pii-scrub.mjs` (oder Inline-Aufruf) | In-memory Scrub VOR Write |
+| `node scripts/budget-guard.mjs check …` | Pre-Tool-Call-Wrapper |
 | `sha256sum`, `date`, `jq`, `grep`, `awk`, `wc` | File-Ops |
 
 ## Forbidden — Network
@@ -83,17 +83,17 @@ node ../../../../scripts/budget-guard.mjs check <scope> <action> [ticket-id]
 | PII in Dossier-Body ohne Scrub | DSGVO §7.12 |
 | Write → scrub-on-disk (reihenfolge-vertauscht) | PII liegt kurzzeitig auf Disk — hebelt Scrub aus |
 | Dossier-Erstellen ohne Parent-Category-Check | §5.5 Inheritance-Integrity |
-| TTL eigenmächtig vergeben | `../../../CATEGORY_TTL.md` authoritativ |
+| TTL eigenmächtig vergeben | `docs/paperclip/CATEGORY_TTL.md` authoritativ |
 | Neue Category ohne User-Approval | Enum-Expansion = User-Territorium |
 | Erasure selbst ausführen | User-Bestätigung Pflicht |
 | User direkt kontaktieren (inbox/to-user/*) außer `category-new-*` | Alles sonst über CEO |
 
 ## Read-Only-Referenzen
 
-- `../../../DOSSIER_REPORT.md` — Format-Standard (10 Sektionen + Frontmatter)
-- `../../../CATEGORY_TTL.md` — TTL-authoritative (14-Enum-Mapping)
-- `../../../research/2026-04-20-multi-agent-role-matrix.md` §5.5 + §7.12 + §7.13 + §7.16
-- `../../../../CLAUDE.md` §6 — Differenzierungs-Check
+- `docs/paperclip/DOSSIER_REPORT.md` — Format-Standard (10 Sektionen + Frontmatter)
+- `docs/paperclip/CATEGORY_TTL.md` — TTL-authoritative (14-Enum-Mapping)
+- `docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md` §5.5 + §7.12 + §7.13 + §7.16
+- `CLAUDE.md` §6 — Differenzierungs-Check
 
 ## Erasure-Key-Generierung (Rezept)
 
