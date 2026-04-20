@@ -63,10 +63,9 @@ export const toolContentFrontmatterSchema = z.object({
   relatedTools: z.array(z.string().regex(kebabCase)).min(0).max(5),
   /**
    * Flache Kategorie. Treibt das Category-Fallback in `resolveRelatedToolsWithFallback`.
-   * In Commit C1 noch optional — Commit C3 macht das Feld required, sobald alle
-   * Content-Files migriert sind.
+   * Required seit C3 — alle Content-Files müssen eine Kategorie setzen.
    */
-  category: z.enum(TOOL_CATEGORIES).optional(),
+  category: z.enum(TOOL_CATEGORIES),
   aside: z
     .object({
       steps: z.array(asideStep).length(3),

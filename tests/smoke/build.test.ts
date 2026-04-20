@@ -71,9 +71,16 @@ describe('Cross-Links — Footer + RelatedTools', () => {
       }
     });
 
-    it('webp-konverter suppresses the bar (all slugs forward-looking)', () => {
+    it('webp-konverter resolves the bar via category-fallback (image → hintergrund-entfernen)', () => {
+      // Bis C2 (category-Frontmatter + Fallback) blieb die Bar hier leer, weil
+      // alle drei relatedSlugs (jpg-zu-png, bild-komprimieren, bild-groesse-aendern)
+      // noch nicht existieren. Seit C3 (`category: image` required) füllt das
+      // Category-Fallback die Bar mit anderen image-Tools auf — aktuell
+      // hintergrund-entfernen. Verifiziert den Fallback-Pfad Ende-zu-Ende.
       const html = readDist('de/webp-konverter/index.html');
-      expect(html).not.toMatch(/class="related-bar"/);
+      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandt"/);
+      const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
+      expect(section).toMatch(/href="\/de\/hintergrund-entfernen"/);
     });
   });
 });

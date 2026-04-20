@@ -20,6 +20,7 @@ const valid = {
     { q: 'Dezimaltrennung?', a: 'Komma deutsch, Punkt englisch.' },
   ],
   relatedTools: ['zentimeter-zu-zoll', 'kilometer-zu-meile', 'meter-zu-yard'],
+  category: 'length' as const,
   contentVersion: 1,
 };
 
@@ -39,6 +40,7 @@ function makeValidFrontmatter() {
       { q: 'q4', a: 'a4' },
     ],
     relatedTools: ['a', 'b', 'c'],
+    category: 'length' as const,
     contentVersion: 1,
   };
 }
@@ -138,6 +140,13 @@ describe('toolContentFrontmatterSchema', () => {
     const base = makeValidFrontmatter();
     const six = ['a', 'b', 'c', 'd', 'e', 'f'];
     const result = toolContentFrontmatterSchema.safeParse({ ...base, relatedTools: six });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects frontmatter without `category`', () => {
+    const base = makeValidFrontmatter();
+    const { category: _omitted, ...withoutCategory } = base;
+    const result = toolContentFrontmatterSchema.safeParse(withoutCategory);
     expect(result.success).toBe(false);
   });
 });
