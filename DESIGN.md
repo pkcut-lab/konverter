@@ -182,6 +182,26 @@ Skalierte Tool-Listing-Variante für eingebettete Kontexte (Unterhalb einer Tool
 - **Motion:** staggered fade-in via IntersectionObserver + `transition-delay: calc(var(--index) * var(--stagger-step))`. Unter `prefers-reduced-motion: reduce` wird der Delay auf 0 kollabiert und die Transition deaktiviert (Code-Pflicht, nicht nur DESIGN.md-Wunsch).
 - **Gleichbleibend:** Border/Radius/Background/Shadow/Hover/Focus wie Tool-Listing.
 
+#### Variant: Aside-Slot (Tool-Detail-Page optional Sidebar)
+
+Wird ausschließlich auf Tool-Detail-Pages gerendert, wenn die Content-Frontmatter einen `aside`-Block enthält. Siehe §5 „Aside-Slot-Primitive" für Container-Regeln.
+
+- **Layout:** `display: flex; flex-direction: column; gap: var(--space-8)` — zwei Sub-Sections (Steps, Privacy) mit großzügiger vertikaler Trennung.
+- **Padding:** `var(--space-6)` (24px) — analog Tool-Listing-Variant.
+- **Border / Radius / Background / Shadow:** identisch zu Base-Card (`1px solid var(--color-border)`, `var(--r-md)`, `var(--color-surface)`, `var(--shadow-sm)`). Keine Hover-Elevation — Aside ist nicht interaktiv.
+- **Steps-Sub-Section (`.tool-aside__steps`):** `<h3>` (small-caps mono-number vorne: „01" / „02" / „03"), darunter Step-Titel als fette `0.875rem` und Description als `--color-text-muted` Small-Text. Maximal drei Steps, gelockt durch Zod-Schema.
+- **Privacy-Sub-Section (`.tool-aside__privacy`):** `<h3>` mit JetBrains-Mono-Eyebrow (`0.6875rem`, uppercase, `letter-spacing: 0.1em`, `--color-text-subtle`) als „DATENSCHUTZ", darunter Paragraph in `--color-text-muted` bei `line-height: 1.55`. Border-Top `1px solid var(--color-border)` trennt sie von Steps.
+- **Icon:** Keine. Der Steps-Block erzählt die Story durch Zahlen + Typografie allein.
+
+#### Variant: Kbd-Hint-Row (Tool-Detail-Page unterhalb Tool-Card)
+
+Passive Shortcut-Hinweise — keine Buttons, keine Actions. Liegen unter der `.tool-section` auf FileTool-Pages und bleiben unberührt von State-Änderungen im Tool. Unterscheidet sich bewusst vom interaktiven `.kbd-chip` im Converter (der ist ein Button).
+
+- **Layout:** `display: flex; flex-wrap: wrap; gap: var(--space-2)`; zentriert unter `.tool-section` bei schmalem Viewport, linksbündig ab Desktop.
+- **Chip (`<kbd>`):** Border `1px solid var(--color-border)`, Radius `4px` (kbd-Ausnahme, §4 „Keyboard Shortcut Chip"), Background `var(--color-surface)`, Padding `var(--space-1) var(--space-2)`, Font JetBrains Mono `0.75rem`, Text `var(--color-text-muted)`.
+- **Key + Label:** Zwei `<span>` nebeneinander, `gap: var(--space-1)`. Key (`⌘V`, `Drag & Drop`, `⌘C`) trägt `font-weight: 500` und `color: var(--color-text)`. Label (`Einfügen`, `Ziehen`, `Kopieren`) bleibt in Muted.
+- **Kein Hover, kein Focus, kein tabindex.** Es sind Text-Affordanzen, keine interaktiven Elemente.
+
 ### Primary CTA / Button
 
 - **Background:** Accent (`#3A3733` light / `#E8E6E1` dark)
@@ -260,8 +280,19 @@ Two variants only:
 |---|---|---|
 | `.tool-hero` (H1 + tagline) | `40rem` | Editorial reading flow, centered |
 | Tool icon | `160×160` desktop, `120×120` mobile | Pencil-sketch WebP, native 1:1 |
-| `.tool-section` (the tool widget) | `34rem` | Narrowest — the tool is the visual anchor |
+| `.tool-main` (tool + optional aside) | `60rem` | Container-primitive; aside-slot opt-in. Siehe „Aside-Slot-Primitive" unten. |
+| `.tool-section` (the tool widget) | `34rem` | Narrowest — the tool is the visual anchor, zentriert innerhalb `.tool-main` |
+| `.tool-aside` (optionaler Slot) | `20rem` | Nur gerendert, wenn Content-Frontmatter `aside` füllt. Erzwingt keine Klasse am Tool. |
 | `.tool-article` (intro, how-to, FAQ) | `42rem` | Prose-optimal reading width |
+
+### Aside-Slot-Primitive (`.tool-main`)
+
+**Regel:** Tool-Detail-Pages bekommen einen additiven Aside-Slot. Ob er sichtbar wird, entscheidet ausschließlich die Content-Frontmatter (`aside` Block), nicht der Tool-Typ (`converter` / `file-tool` / etc.). Jede künftige Tool-Seite entscheidet inhaltlich „habe ich Aside-Content?" statt identitär „welche Klasse bin ich?".
+
+- **Container:** `.tool-main { max-width: 60rem; margin: 0 auto; }` ersetzt die direkt zentrierte `.tool-section`. Solange kein Aside da ist, rendert die `.tool-section` weiter mit `max-width: 34rem` und bleibt innerhalb der 60rem zentriert — visuell identisch zum vorherigen Zustand.
+- **Grid:** Sobald `.tool-aside` existiert UND Viewport `≥ 60rem` (960px), aktiviert `.tool-main` `display: grid; grid-template-columns: minmax(0, 34rem) minmax(0, 20rem); gap: var(--space-6);`. Unterhalb von `60rem` stackt der Aside unter der `.tool-section` (wieder Flow).
+- **Kein Klassen-Branching:** Weder in DESIGN.md noch im Code gibt es „Converter-Class" vs. „FileTool-Class". Der Slot ist Layout-Primitive, nicht Identität.
+- **Leerer Slot = Regression-frei:** Meter-zu-Fuß und die fünf Phase-1-Batch-1-Converter haben kein `aside`-Frontmatter und bleiben visuell 1:1. Verifiziere per Browser bei jeder Schema-Änderung.
 
 ### Vertical Rhythm
 
