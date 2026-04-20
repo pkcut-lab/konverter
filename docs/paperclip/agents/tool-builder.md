@@ -1,16 +1,26 @@
-# AGENTS — Tool-Builder-Prozeduren
+# AGENTS — Tool-Builder-Prozeduren (v1.0)
 
 ## 1. Task-Start
 
 ```bash
-# Ticket lesen
-cat tasks/current_task.md
+# Ticket lesen (vom CEO dispatcht, MUSS dossier_ref enthalten)
+cat tasks/tool-build-<ticket-id>.md
+
+# Dossier-Ref-Pflicht (v1.0): kein Build ohne Dossier
+dossier_ref=$(yq '.dossier_ref' tasks/tool-build-<ticket-id>.md)
+if [[ -z "$dossier_ref" || ! -f "$dossier_ref" ]]; then
+  cat > "inbox/to-ceo/missing-dossier-<ticket-id>.md" <<EOF
+**Ticket:** <ticket-id>
+**Problem:** dossier_ref fehlt oder File nicht gefunden: $dossier_ref
+EOF
+  exit 1
+fi
 
 # Lock erzeugen (Pflicht, sonst CEO startet nächsten Cycle mitten in deiner Arbeit)
 echo "tool-builder|$(date -Iseconds)|<ticket-id>" > tasks/task.lock
 
-# SOUL + BRAND_GUIDE re-lesen (du darfst vergessen zwischen Heartbeats)
-cat souls/tool-builder.md BRAND_GUIDE.md
+# SOUL + BRAND_GUIDE + Dossier re-lesen
+cat souls/tool-builder.md BRAND_GUIDE.md "$dossier_ref"
 ```
 
 ## 2. Build-Sequenz
@@ -174,10 +184,17 @@ EOF
 ```bash
 rm tasks/task.lock
 
-# engineer_output.md schreiben
-cat > tasks/engineer_output.md <<EOF
+# engineer_output pro Ticket (v1.0: kein globales File mehr)
+cat > tasks/engineer_output_<ticket-id>.md <<EOF
 ticket_id: <id>
+tool_slug: <slug>
+language: <lang>
 status: done
+dossier_ref: $dossier_ref
+dossier_applied:
+  baseline_features: [input-field, copy-button, formula-display, ...]
+  white_space_feature: "<1 Satz, welches Dossier-§B-Feature implementiert>"
+  user_pain_addressed: "<1 Satz, welche FAQ einen Dossier-§User-Pain-Quote adressiert>"
 files_changed:
   - path: src/lib/tools/<id>.ts
     action: created
@@ -197,29 +214,59 @@ tests:
 astro_check:
   ran: npm run astro -- check
   result: pass
+word_count:
+  file: src/content/tools/<slug>/<lang>.md
+  value: 412
 notes: |
-  Nichts Besonderes. Template-Copy vom letzten Converter.
+  Template-Copy vom letzten Converter. White-Space-Feature aus Dossier §B.
 EOF
 ```
 
-## 6. Blocker-Behandlung
+## 6. Rework-Handling (v1.0 Autonomie-Gate §7.15)
+
+Nach Merged-Critic-Review legt CEO Ticket wieder in deine Queue — mit `rework_counter` im Ticket-Header:
 
 ```bash
-# Wenn du nicht weiterkommst
+rework_counter=$(yq '.rework_counter' tasks/tool-build-<ticket-id>.md)
+
+if [[ $rework_counter -le 2 ]]; then
+  # Lies EVIDENCE_REPORT.md des Critics
+  critic_report="tasks/awaiting-critics/<ticket-id>/merged-critic.md"
+  
+  # Fixe NUR die in §Fails genannten Punkte. Keine Rescope.
+  # Re-run: npm test -- <id>, npm run astro -- check
+  # Commit mit Trailer: Rework-Reference: <previous-commit-sha>
+  
+  # Neues engineer_output schreiben (überschreibt altes)
+  # Status: done
+elif [[ $rework_counter -gt 2 ]]; then
+  # CEO entscheidet Auto-Resolve. Du tust NICHTS.
+  # Lock entfernen, auf neues Ticket warten.
+  rm tasks/task.lock
+  exit 0
+fi
+```
+
+## 7. Blocker-Behandlung
+
+```bash
 rm tasks/task.lock
 
-cat > inbox/from-agents/clarify-<ticket-id>.md <<EOF
+# Blocker-Typen:
+# A) Dossier fehlt oder unvollständig
+# B) Commit schlägt wegen Git-Account-Hook fehl
+# C) Rulebook-Konflikt (z.B. CONTENT.md §X widerspricht BRAND_GUIDE.md §Y)
+# D) Test kann nicht geschrieben werden, weil Feature zu vage
+
+cat > inbox/to-ceo/blocker-<ticket-id>.md <<EOF
 **Ticket:** <id>
-**Blocker:** <1-Satz>
+**Blocker:** <Typ A/B/C/D>
 **Was ich versucht habe:** <2-3 Zeilen>
 **Was ich brauche:** <konkrete Frage/Entscheidung>
 EOF
-
-# Ticket-Status auf blocked setzen
-# (via Paperclip-CLI oder Dashboard-API)
 ```
 
-## 7. Forbidden Actions
+## 8. Forbidden Actions
 
 - Tokens.css, Layout-Files, Header/Footer, BaseLayout editieren
 - Neue Dependencies installieren
@@ -228,5 +275,20 @@ EOF
 - Rulebooks editieren
 - Git-Config ändern
 - Ticket selbst erzeugen (nur CEO öffnet Tickets)
-- Rework-Loops auf eigene Faust >2× laufen
+- Rework-Loops auf eigene Faust > 2× laufen (CEO entscheidet danach)
 - User direkt kontaktieren (IMMER via CEO)
+- Build ohne Dossier-Ref starten
+- `@iconPrompt`-JSDoc oder `icon`-Feld schreiben (Runde 3 Session 4)
+
+## 9. Skill-Sequenz-Pflicht (CLAUDE.md §5)
+
+Bei UI-Arbeit (neue generische Komponente, Tool-Template-Änderung, Redesign) MUSS diese Sequenz laufen, bevor du Code schreibst:
+
+```
+1. Skill: minimalist-ui      → warm-monochrome, flat Bento, 1px Borders, Anti-Cliché
+2. Skill: frontend-design    → Typografie, Whitespace, Mikro-Interaktionen
+3. Code schreiben
+4. Skill: web-design-guidelines → Audit-Pass auf geänderte Dateien
+```
+
+Hard-Caps aus CLAUDE.md §5 überstimmen jede Skill-Empfehlung (Graphit+Orange-Accent, Inter+JetBrains Mono, Tokens-only, AAA-Contrast, Astro/Svelte-Stack).
