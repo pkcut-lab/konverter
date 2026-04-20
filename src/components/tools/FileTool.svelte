@@ -29,6 +29,8 @@
   let convertStartMs = $state<number | null>(null);
   let clipboardState = $state<ClipboardState>('idle');
   let presetValue = $state<string>(config.presets?.default ?? '');
+  let isDragging = $state<boolean>(false);
+  let pasteStatus = $state<'idle' | 'error'>('idle');
   const initialToggles: Record<string, boolean> = {};
   for (const t of config.toggles ?? []) initialToggles[t.id] = false;
   let toggleValues = $state<Record<string, boolean>>(initialToggles);
@@ -41,6 +43,19 @@
   }
 
   const acceptAttr = $derived(config.accept.join(','));
+  // Dropzone title adapts to the tool's category: "Video hierher ziehen",
+  // "Bild hierher ziehen", etc. Falls back to the generic "Datei" when the
+  // category is not recognised. Kept config-driven so a new category
+  // (e.g. "audio", "document") flows through without template edits.
+  const dropzoneSubjectByCategoryId: Record<string, string> = {
+    video: 'Video',
+    image: 'Bild',
+    audio: 'Audio',
+    document: 'Dokument',
+  };
+  const dropzoneSubject = $derived(
+    dropzoneSubjectByCategoryId[config.categoryId] ?? 'Datei',
+  );
   const runtime = $derived(getRuntime(config.id));
   const processor = $derived(runtime?.process);
   const reencoder = $derived(runtime?.reencode);
@@ -72,6 +87,20 @@
       default: return 'webp';
     }
   }
+  // Map "video/quicktime" → "MOV", "image/jpeg" → "JPG", "video/hevc" → "HEVC".
+  // Used in the dropzone hint row where we show the list of accepted formats
+  // as compact, human-recognisable extensions instead of full MIME types.
+  function mimeToExt(mime: string): string {
+    const rawSub = mime.split('/')[1] ?? mime;
+    const simplified = rawSub
+      .replace(/^x-/, '')
+      .replace('quicktime', 'mov')
+      .replace('jpeg', 'jpg')
+      .replace('h265', 'hevc')
+      .replace('svg+xml', 'svg');
+    return simplified.toUpperCase();
+  }
+
   function buildDownloadName(name: string, format: string, suffix?: string): string {
     if (!name) return '';
     const ext = '.' + formatToExt(format);
@@ -299,6 +328,52 @@
     }
   }
 
+  // Drag-and-drop handlers for the dropzone. preventDefault is required on both
+  // dragover AND drop, otherwise the browser navigates away to the file.
+  function onDragOver(e: DragEvent) {
+    if (phase !== 'idle' && phase !== 'error') return;
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    isDragging = true;
+  }
+  function onDragLeave(e: DragEvent) {
+    if ((e.currentTarget as HTMLElement).contains(e.relatedTarget as Node)) return;
+    isDragging = false;
+  }
+  function onDrop(e: DragEvent) {
+    e.preventDefault();
+    isDragging = false;
+    const file = e.dataTransfer?.files?.[0];
+    if (file) void processFile(file);
+  }
+
+  // Paste-button handler: async Clipboard API. Falls back to a short error flash
+  // if the user's browser doesn't grant permission or has nothing pasteable.
+  // The global document paste-listener in $effect still handles Ctrl+V directly.
+  async function onPasteClick() {
+    const clip = navigator.clipboard;
+    if (!clip?.read) { pasteStatus = 'error'; setTimeout(() => { pasteStatus = 'idle'; }, 1600); return; }
+    try {
+      const items = await clip.read();
+      for (const item of items) {
+        for (const type of item.types) {
+          if (config.accept.includes(type)) {
+            const blob = await item.getType(type);
+            const ext = type.split('/')[1] ?? 'bin';
+            const file = new File([blob], `pasted-${Date.now()}.${ext}`, { type });
+            void processFile(file);
+            return;
+          }
+        }
+      }
+      pasteStatus = 'error';
+      setTimeout(() => { pasteStatus = 'idle'; }, 1600);
+    } catch {
+      pasteStatus = 'error';
+      setTimeout(() => { pasteStatus = 'idle'; }, 1600);
+    }
+  }
+
   async function copyToClipboard() {
     if (!outputUrl) return;
     try {
@@ -317,58 +392,121 @@
 
 <div class="filetool">
   {#if (phase === 'idle' || phase === 'error') && !preflightError}
-    {#if config.presets}
-      <fieldset class="presets" data-testid="filetool-presets">
-        <legend class="presets__legend">Qualität</legend>
-        {#each config.presets.options as opt (opt.id)}
-          <label class="presets__opt">
-            <input
-              type="radio"
-              name="filetool-preset"
-              value={opt.id}
-              data-testid="filetool-preset-{opt.id}"
-              checked={presetValue === opt.id}
-              onchange={() => { presetValue = opt.id; }}
-            />
-            <span>{opt.label}</span>
-          </label>
-        {/each}
-      </fieldset>
+    {@const visibleToggles = (config.toggles ?? []).filter((t) =>
+      t.visibleIf === undefined ||
+      (t.visibleIf === 'source-gt-1080p' &&
+        sourceDims !== null && (sourceDims.w > 1920 || sourceDims.h > 1080))
+    )}
+    {#if config.presets || visibleToggles.length > 0}
+      <div class="settings">
+        {#if config.presets}
+          <fieldset class="presets" data-testid="filetool-presets">
+            <legend class="presets__legend">Qualität</legend>
+            <div class="presets__group">
+              {#each config.presets.options as opt (opt.id)}
+                <label
+                  class="preset-pill"
+                  class:preset-pill--active={presetValue === opt.id}
+                >
+                  <input
+                    type="radio"
+                    name="filetool-preset"
+                    value={opt.id}
+                    data-testid="filetool-preset-{opt.id}"
+                    checked={presetValue === opt.id}
+                    onchange={() => { presetValue = opt.id; }}
+                  />
+                  <span class="preset-pill__label">{opt.label}</span>
+                  {#if opt.subLabel}
+                    <span class="preset-pill__sub">{opt.subLabel}</span>
+                  {/if}
+                </label>
+              {/each}
+            </div>
+          </fieldset>
+        {/if}
+
+        {#if visibleToggles.length > 0}
+          <div class="settings__toggles">
+            {#each visibleToggles as t (t.id)}
+              <label class="toggle">
+                <input
+                  type="checkbox"
+                  data-testid="filetool-toggle-{t.id}"
+                  checked={toggleValues[t.id] ?? false}
+                  onchange={(e) => {
+                    toggleValues = { ...toggleValues, [t.id]: (e.currentTarget as HTMLInputElement).checked };
+                  }}
+                />
+                <span>{t.label}</span>
+              </label>
+            {/each}
+          </div>
+        {/if}
+      </div>
     {/if}
 
-    {#each config.toggles ?? [] as t (t.id)}
-      {#if t.visibleIf === undefined || (t.visibleIf === 'source-gt-1080p' && sourceDims !== null && (sourceDims.w > 1920 || sourceDims.h > 1080))}
-        <label class="toggle">
-          <input
-            type="checkbox"
-            data-testid="filetool-toggle-{t.id}"
-            checked={toggleValues[t.id] ?? false}
-            onchange={(e) => {
-              toggleValues = { ...toggleValues, [t.id]: (e.currentTarget as HTMLInputElement).checked };
-            }}
-          />
-          <span>{t.label}</span>
-        </label>
-      {/if}
-    {/each}
-
-    <label
+    <div
       class="dropzone"
       class:dropzone--error={phase === 'error'}
+      class:dropzone--dragging={isDragging}
       data-testid="filetool-dropzone"
+      ondragover={onDragOver}
+      ondragleave={onDragLeave}
+      ondrop={onDrop}
+      role="region"
+      aria-label="Dateien hierher ziehen oder auswählen"
     >
-      <span class="dropzone__title">Datei wählen</span>
-      <span class="dropzone__hint" data-testid="filetool-meta">
-        {config.accept.join(', ')} · max. {config.maxSizeMb}&nbsp;MB · oder Strg+V
-      </span>
-      <input
-        class="dropzone__input"
-        type="file"
-        accept={acceptAttr}
-        data-testid="filetool-input"
-        onchange={onFileChange}
-      />
-    </label>
+      <div class="dropzone__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22">
+          <path
+            d="M12 15V4m0 0l-4 4m4-4l4 4M5 20h14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <p class="dropzone__title">{dropzoneSubject} hierher ziehen</p>
+      <p class="dropzone__hint" data-testid="filetool-meta">
+        <span class="dropzone__formats">{config.accept.map(mimeToExt).join(', ')}</span>
+        <span class="dropzone__sep" aria-hidden="true">·</span>
+        <span>max. {config.maxSizeMb}&nbsp;MB</span>
+      </p>
+      <ul class="dropzone__mime" aria-hidden="true">
+        {#each config.accept as mime (mime)}
+          <li class="dropzone__mime-pill">{mime}</li>
+        {/each}
+      </ul>
+      <div class="dropzone__actions">
+        <label class="btn btn--primary dropzone__browse">
+          <span>Datei wählen</span>
+          <input
+            class="dropzone__input"
+            type="file"
+            accept={acceptAttr}
+            data-testid="filetool-input"
+            onchange={onFileChange}
+          />
+        </label>
+        <button
+          type="button"
+          class="btn btn--ghost dropzone__paste"
+          onclick={onPasteClick}
+          data-testid="filetool-paste"
+        >
+          <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="8" y="3" width="8" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
+              fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+          <span>{pasteStatus === 'error' ? 'Nichts Passendes' : 'Einfügen'}</span>
+          <kbd class="btn__kbd">⌘V</kbd>
+        </button>
+      </div>
+    </div>
     {#if (config.cameraCapture ?? true) && config.accept.some((m) => m.startsWith('image/'))}
       <label class="camera">
         <input
@@ -589,45 +727,104 @@
     box-shadow: var(--shadow-sm);
   }
 
+  /* ---------- Dropzone (Session 4 redesign, 2026-04-20) ----------
+     Structure: icon-tile → title → meta hint → MIME pills → action row.
+     The whole zone is a drop target; the "Datei wählen" label nests the
+     hidden file input so clicking it opens the browser's file picker
+     without the legacy absolute-positioned overlay. */
   .dropzone {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    padding: var(--space-8) var(--space-6);
+    text-align: center;
+    gap: var(--space-3);
+    padding: var(--space-12) var(--space-6) var(--space-8);
     border: 1px dashed var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface);
-    cursor: pointer;
     transition:
       border-color var(--dur-fast) var(--ease-out),
       background var(--dur-fast) var(--ease-out);
   }
   .dropzone:hover {
     border-color: var(--color-text-subtle);
-    background: var(--color-bg);
-  }
-  .dropzone:focus-within {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
   }
   .dropzone--error {
     border-color: var(--color-error);
   }
+  .dropzone--dragging {
+    border-color: var(--color-accent);
+    border-style: solid;
+    background: color-mix(in oklch, var(--color-accent) 6%, var(--color-bg));
+  }
 
+  .dropzone__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--space-2);
+    border-radius: var(--r-md);
+    background: var(--color-surface-sunk);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
   .dropzone__title {
+    margin: 0;
     font-size: var(--font-size-h3);
-    line-height: var(--font-lh-h3);
+    line-height: 1.25;
+    font-weight: 500;
     color: var(--color-text);
     letter-spacing: -0.01em;
   }
   .dropzone__hint {
+    margin: 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
     color: var(--color-text-subtle);
     letter-spacing: 0.02em;
+  }
+  .dropzone__formats {
+    color: var(--color-text-muted);
+  }
+  .dropzone__sep {
+    color: var(--color-text-subtle);
+  }
+  .dropzone__mime {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-1) 0 var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+  .dropzone__mime-pill {
+    padding: 2px var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--color-accent) 8%, var(--color-bg));
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .dropzone__actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+  .dropzone__browse {
+    position: relative;
+    cursor: pointer;
   }
   .dropzone__input {
     position: absolute;
@@ -636,6 +833,17 @@
     height: 100%;
     opacity: 0;
     cursor: pointer;
+  }
+  .dropzone__paste .btn__kbd {
+    font-family: var(--font-family-mono);
+    font-size: 0.75rem;
+    padding: 0 var(--space-1);
+    margin-left: var(--space-1);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    background: var(--color-surface);
+    color: var(--color-text-subtle);
+    line-height: 1.4;
   }
 
   .camera {
@@ -876,50 +1084,130 @@
     height: 16px;
   }
 
-  /* ---------- Presets (preset-radios replace the quality slider) ---------- */
+  /* ---------- Settings card ----------------------------------------
+     Single rounded card that wraps the preset-row + optional toggles —
+     template shows both in ONE bordered container with a divider between
+     them. Acts as the card chrome; .presets and .toggle are chrome-less
+     children so the parent's border/background is the single source. */
+  .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-bg);
+  }
+  .settings__toggles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* ---------- Presets — segmented-pill selector (Session 4 redesign) ----------
+     Template match: mono "QUALITÄT" label on the left with a divider, then
+     horizontal pills. Active pill is filled graphite. Each pill optionally
+     carries a compact mono sub-label ("CRF 18 · größte Datei"). Chrome-less
+     — the surrounding .settings card provides border/background. */
   .presets {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-4);
+    align-items: stretch;
+    gap: var(--space-3);
     margin: 0;
-    padding: var(--space-3) 0;
+    padding: var(--space-2) var(--space-3);
     border: 0;
+    background: transparent;
   }
   .presets__legend {
-    padding: 0;
-    margin-right: var(--space-3);
-    font-size: var(--font-size-small);
+    float: none;
+    display: inline-flex;
+    align-items: center;
+    padding-right: var(--space-3);
+    margin-right: var(--space-1);
+    border-right: 1px solid var(--color-border);
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
     font-weight: 500;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .presets__group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  .preset-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: 9999px;
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .preset-pill:hover {
+    color: var(--color-text);
+  }
+  .preset-pill input[type='radio'] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .preset-pill:focus-within {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .preset-pill__label {
+    font-weight: 500;
+    color: inherit;
+  }
+  .preset-pill__sub {
+    font-family: var(--font-family-mono);
+    font-size: 0.75rem;
     color: var(--color-text-subtle);
     letter-spacing: 0.01em;
   }
-  .presets__opt {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--font-size-small);
-    color: var(--color-text);
-    cursor: pointer;
+  .preset-pill--active {
+    background: var(--color-text);
+    color: var(--color-bg);
   }
-  .presets__opt input[type='radio'] {
-    accent-color: var(--color-text);
-    cursor: pointer;
+  .preset-pill--active .preset-pill__label,
+  .preset-pill--active .preset-pill__sub {
+    color: var(--color-bg);
+  }
+  .preset-pill--active .preset-pill__sub {
+    opacity: 0.7;
   }
 
-  /* ---------- Single-toggle checkbox (e.g. "Auf 1080p verkleinern") ---------- */
+  /* ---------- Single-toggle checkbox (e.g. "Auf 1080p verkleinern") ----------
+     Lives inside .settings__toggles; the parent handles alignment/spacing. */
   .toggle {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     margin: 0;
-    padding: var(--space-2) 0;
+    padding: 0;
     font-size: var(--font-size-small);
-    color: var(--color-text);
+    color: var(--color-text-muted);
     cursor: pointer;
   }
+  .toggle:hover {
+    color: var(--color-text);
+  }
   .toggle input[type='checkbox'] {
-    accent-color: var(--color-text);
+    accent-color: var(--color-accent);
     cursor: pointer;
   }
 

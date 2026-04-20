@@ -35,9 +35,9 @@ export const hevcZuH264: FileToolConfig = {
   presets: {
     id: 'preset',
     options: [
-      { id: 'original', label: 'Original-Qualität' },
-      { id: 'balanced', label: 'Balanced' },
-      { id: 'small', label: 'Klein' },
+      { id: 'original', label: 'Original', subLabel: 'CRF 18 · größte Datei' },
+      { id: 'balanced', label: 'Balanced', subLabel: 'CRF 23 · empfohlen' },
+      { id: 'small', label: 'Klein', subLabel: 'CRF 28 · kleinste Datei' },
     ],
     default: 'balanced',
   },

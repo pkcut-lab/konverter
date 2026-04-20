@@ -2,10 +2,9 @@
 toolId: hevc-to-h264
 language: de
 title: "iPhone-Video in MP4 umwandeln — HEVC zu H.264 Konverter"
-eyebrow: "VIDEO-TOOL"
 headingHtml: "iPhone-Video in <em>MP4</em> umwandeln"
 metaDescription: "Wandle iPhone-HEVC-Videos in H.264-MP4 um — direkt im Browser, ohne Upload, ohne Anmeldung, kostenlos. Dein Video verlässt deinen Rechner nicht."
-tagline: "HEVC-Videos in universelles H.264-MP4 umwandeln — direkt im Browser, ohne Upload."
+tagline: "Direkt im Browser — ohne Upload, ohne Wasserzeichen."
 intro: "iPhones nehmen Videos seit iOS 11 standardmäßig als HEVC (H.265) im MOV-Container auf. Das spart Speicherplatz, sorgt aber bei älteren Windows-Rechnern, Samsung-Fernsehern, Photoshop-Versionen vor 2023 oder WhatsApp-Web für schwarze Bildschirme und Fehlermeldungen. Dieser Konverter wandelt HEVC-MOV-Dateien in ein universell abspielbares H.264-MP4 um — vollständig in deinem Browser, ohne Server-Upload, ohne Anmeldung und ohne Wasserzeichen. Die eigentliche Konvertierung läuft über die native WebCodecs-API deines Browsers und nutzt die Hardware-Beschleunigung deiner GPU. Das macht die Umwandlung schnell genug, dass ein 1080p-Video in etwa Echtzeit-Geschwindigkeit durchläuft."
 howToUse:
   - "HEVC- oder MOV-Datei per Drag-and-Drop ablegen oder über die Auswahl öffnen (bis 500 MB)"

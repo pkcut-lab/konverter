@@ -64,6 +64,18 @@ const projectRoot = process.cwd();
 const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
 const hasIcon = existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, '')));
 
+// Default privacy-eyebrow: every client-side tool gets a trust signal above
+// its H1 unless the content file explicitly overrides via frontmatter.eyebrow.
+// Because all tools on this site run fully in the browser (Spec §7, pure-client
+// or ML-worker fallback), the message is universal. Content authors can still
+// override for special cases (e.g., a deliberately privacy-highlighting pill).
+const defaultEyebrowByLang: Record<string, string> = {
+  de: 'Läuft lokal · kein Upload',
+  en: 'Runs local · no upload',
+};
+const eyebrowText =
+  entry.data.eyebrow ?? defaultEyebrowByLang[entry.data.language] ?? defaultEyebrowByLang.en!;
+
 const jsonLd = buildToolJsonLd(
   {
     toolId: entry.data.toolId,
@@ -101,12 +113,10 @@ const jsonLd = buildToolJsonLd(
           decoding="async"
         />
       )}
-      {entry.data.eyebrow && (
-        <span class="eyebrow">
-          <span class="eyebrow__dot" aria-hidden="true"></span>
-          {entry.data.eyebrow}
-        </span>
-      )}
+      <span class="eyebrow">
+        <span class="eyebrow__dot" aria-hidden="true"></span>
+        {eyebrowText}
+      </span>
       {entry.data.headingHtml
         ? <h1 set:html={entry.data.headingHtml} />
         : <h1>{entry.data.title}</h1>
@@ -196,13 +206,13 @@ const jsonLd = buildToolJsonLd(
   }
 
   .tool-hero {
-    max-width: 40rem;
+    max-width: 56rem;
     margin: 0 auto var(--space-12);
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-5);
   }
   .tool-hero__icon {
     width: 160px;
@@ -224,14 +234,20 @@ const jsonLd = buildToolJsonLd(
   }
   .tool-hero h1 {
     margin: 0;
-    letter-spacing: -0.015em;
+    /* Editorial scale — fluid from 2.5rem (mobile) up to 5.5rem (wide desktop).
+       Replaces the default h1 token size inside .tool-hero only. */
+    font-size: clamp(2.5rem, 1.75rem + 3.5vw, 5.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    font-weight: 600;
     text-wrap: balance;
   }
   .tool-hero .tagline {
     margin: 0;
+    max-width: 34rem;
     color: var(--color-text-muted);
-    font-size: var(--font-size-body);
-    line-height: var(--font-lh-body);
+    font-size: 1.0625rem;
+    line-height: 1.55;
   }
 
   /* §5 Aside-Slot-Primitive: .tool-main wraps .tool-section plus optional .tool-aside.
@@ -444,9 +460,7 @@ const jsonLd = buildToolJsonLd(
     }
     .tool-hero {
       margin-bottom: var(--space-8);
-    }
-    .tool-hero h1 {
-      font-size: 1.875rem;
+      gap: var(--space-4);
     }
     .tool-main {
       margin-bottom: var(--space-16);

@@ -95,7 +95,14 @@ export const fileToolToggleSchema = z.object({
 export const fileToolPresetsSchema = z.object({
   id: z.string().min(1),
   options: z
-    .array(z.object({ id: z.string().min(1), label: z.string().min(1) }))
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        /** Optional mono sub-label shown beside the main label in the segmented pill (e.g. "CRF 18 · größte Datei"). */
+        subLabel: z.string().min(1).optional(),
+      }),
+    )
     .min(2),
   default: z.string().min(1),
 });
