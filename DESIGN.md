@@ -171,21 +171,21 @@ Wrap unit labels in `<span translate="no">…</span>` (e.g., `Fuß`, `MB`) to pr
 
 Vertikaler Stack. Verwendet für Auto-Index-Grids auf der Homepage und künftig Kategorie-Seiten.
 
-- **Layout:** `display: flex; flex-direction: column; gap: var(--space-4)`.
+- **Layout:** `display: flex; flex-direction: column; gap: var(--space-2)`. Tighter 8px-Paar-Bindung zwischen Titel und Tagline — ohne Icon-Slot bilden die zwei Text-Items ein redaktionelles Unit.
 - **Padding:** `var(--space-6)` (24px) Desktop, `var(--space-5)` (20px) unter 40rem.
 - **Höhe:** `height: 100%` auf dem inneren `<a>`, damit Grid-Geschwister in derselben Row gleiche Höhe haben.
-- **Inhalt (in Reihenfolge):** 48×48-Pencil-Sketch-Icon → H3 Titel → `.tagline` (Small, `--color-text-muted`).
+- **Inhalt (in Reihenfolge):** H3 Titel → `.tagline` (Small, `--color-text-muted`). **Tool-Identity-Icons: keine — der Name ist das Label.**
 - **Hover:** Border-Farbe kippt auf `--color-text-subtle`, Background auf `--color-bg`, Shadow auf Hover-Level.
 - **Focus-visible:** `outline: 2px solid var(--color-accent)`, `outline-offset: 2px`.
-- **Kein Arrow, kein Chevron, kein Status-Dot, keine Kategorie-Badge.** Die Karte ist die Affordanz — der Titel ist der CTA.
+- **Kein Arrow, kein Chevron, kein Status-Dot, keine Kategorie-Badge, kein Identity-Icon.** Die Karte ist die Affordanz — der Titel ist der CTA.
 
 #### Variant: Compact (RelatedTools, inline Cross-Linking)
 
-Skalierte Tool-Listing-Variante für eingebettete Kontexte (Unterhalb einer Tool-Seite, künftig Sidebar). Dieselbe vertikale Struktur, tighter Padding und kleinerer Gap. Nutzt dasselbe 48px-Icon, denselben H3/Small-Text-Stack.
+Skalierte Tool-Listing-Variante für eingebettete Kontexte (Unterhalb einer Tool-Seite, künftig Sidebar). Dieselbe vertikale Struktur, tighter Padding. H3/Small-Text-Stack — **Tool-Identity-Icons: keine, analog zu Tool-Listing**.
 
 - **Layout:** identisch zu Tool-Listing (`flex column`).
 - **Padding:** `var(--space-4) var(--space-5)` (16px vertikal × 20px horizontal) — gelockt durch `tests/components/related-tools.test.ts`.
-- **Gap:** `var(--space-3)` (12px) statt `var(--space-4)` — Titel und Tagline rücken näher ans Icon.
+- **Gap:** `var(--space-3)` (12px). Etwas luftiger als die Homepage-Variante (`var(--space-2)`), weil die Compact-Card insgesamt weniger Padding hat — der Rhythmus zwischen H3 und Tagline würde sonst kollabieren.
 - **Grid:** `repeat(auto-fill, minmax(16rem, 1fr))` statt der expliziten 3/2/1-Breakpoints — die Variant lebt in schmaleren Content-Spalten (`60rem`-article) und soll fluid falten.
 - **Motion:** staggered fade-in via IntersectionObserver + `transition-delay: calc(var(--index) * var(--stagger-step))`. Unter `prefers-reduced-motion: reduce` wird der Delay auf 0 kollabiert und die Transition deaktiviert (Code-Pflicht, nicht nur DESIGN.md-Wunsch).
 - **Gleichbleibend:** Border/Radius/Background/Shadow/Hover/Focus wie Tool-Listing.
@@ -460,10 +460,11 @@ Shadows are even softer in dark mode — elevation is communicated primarily via
 - Don't use multiple competing CTA buttons on one page
 
 **Icons & Imagery:**
-- Don't use Phosphor Icons, Lucide, Feather, Heroicons, Material Icons — tool icons are pencil-sketch WebP files served from `/icons/tools/<toolId>.webp`
+- Don't use Phosphor Icons, Lucide, Feather, Heroicons, Material Icons — functional system icons stay as locked SVGs or glyphs (Search-Lupe, Theme-Toggle, Kbd-Chips, Spinner, FERTIG-Badge, Favicon/PWA, FileTool-funktional); Tool-Identity-Icons auf Karten sind abgeschafft (siehe nächster Punkt).
+- Don't use Per-Tool-Identity-Icons auf Karten (Tool-Listing + Compact). Ab Runde 3 Session „No Tool Icons" (2026-04-20) tragen Tool-Karten ausschließlich Titel + Tagline. Begründung: Produktions-Aufwand bei 1000+ Tools, redaktionelle Ruhe wird durch Icon-Wiederholung gestört. Das betrifft nur die 48×48-Slots auf Karten — der 160×160-Hero-Icon auf `[slug].astro` bleibt, sofern `public/icons/tools/<toolId>.webp` existiert (Recraft → BG-Removal → WebP-Pipeline).
 - Don't use oversaturated stock photography
 - Don't use emoji characters in markup, text, alt text, or aria-labels
-- Don't invent new icons ad-hoc — we have a locked pipeline (Recraft → BG-removal → WebP)
+- Don't invent new icons ad-hoc — we have a locked pipeline (Recraft → BG-removal → WebP) für Hero-Icons; funktionale UI-Glyphs sind fest inline.
 
 **Copy:**
 - Don't use AI-copywriting clichés: "Elevate", "Seamless", "Unleash", "Next-Gen", "Game-changer", "Delve", "Embark"
@@ -574,7 +575,8 @@ Alle Baselines liegen im Stitch-Projekt `17885144393549343699`.
 **Homepage (Light) — Tool-Listing, /de/ Default-State:**
 - Screen-ID: `5e95108ca38e4d0f89bd0cea7d7b00a1`
 - Output: `stitch-output/2026-04-20T00-46-32-5e95108ca38e4d0f89bd0cea7d7b00a1/`
-- Akzeptiert: Eyebrow "KONVERTER" + H1 + Lede im 44rem-Hero, Section-Head mit `Alle Werkzeuge` + `06`-count-badge, Bento-Grid 3-Col Desktop / 2-Col Tablet / 1-Col Mobile mit sechs uniformen Karten (vertikaler Stack: Icon-Container oben → H3 Titel → Tagline), alphabetische Sortierung der sechs Live-Tool-Titel plus ihre Taglines wörtlich aus den Content-Frontmattern.
+- **Retro-Note (Runde 3 Session „No Tool Icons", 2026-04-20):** Die Baseline zeigt 48×48-Pencil-Sketch-Icon-Slots pro Karte. Shipped implementiert jetzt NUR Titel + Tagline — keine Icons. Die Baseline bleibt strukturell gültig (Grid-Layout, Card-Padding, Hover-Shadow-Tick, Typo-Hierarchie sind alle weiter ok) und wird visuell überstimmt: Icons in Baseline vorhanden, Code-Implementierung ohne. Analog zur Palette-Retro-Note oben — Baseline-Layout trägt weiter, nur der eine Slot fällt weg. Kein Stitch-Re-Run nötig.
+- Akzeptiert: Eyebrow "KONVERTER" + H1 + Lede im 44rem-Hero, Section-Head mit `Alle Werkzeuge` + `06`-count-badge, Bento-Grid 3-Col Desktop / 2-Col Tablet / 1-Col Mobile mit sechs uniformen Karten (vertikaler Stack: ~~Icon-Container oben → H3 Titel → Tagline~~ → H3 Titel → Tagline ab Session „No Tool Icons"), alphabetische Sortierung der sechs Live-Tool-Titel plus ihre Taglines wörtlich aus den Content-Frontmattern.
 - Stitch-Eigenleistungen (verworfen, NICHT ins Code-Alignment übernommen):
   - **Material-Symbols-Icons** (`thermostat`, `scale`, `straighten`, …) als 48×48-Platzhalter — verletzt §7 Don't (Material Icons). Live bleibt bei `/icons/tools/<toolId>.webp` Pencil-Sketch.
   - **Icon-Wrapper** mit `bg-surface-container-high` + Border um jedes Icon herum — Stitch-ism. Live-Icons sitzen direkt auf der Card ohne Sekundärcontainer.
