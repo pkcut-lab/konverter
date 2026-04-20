@@ -105,10 +105,50 @@ const jsonLd = buildToolJsonLd(
       <p class="tagline">{entry.data.tagline}</p>
     </header>
 
-    <section class="tool-section" aria-label="Konverter">
-      {config.type === 'converter' && <Converter config={config} client:load />}
-      {config.type === 'file-tool' && <FileTool config={config} client:load />}
-    </section>
+    <div class:list={['tool-main', entry.data.aside && 'tool-main--with-aside']}>
+      <div class="tool-main__primary">
+        <section class="tool-section" aria-label="Konverter">
+          {config.type === 'converter' && <Converter config={config} client:load />}
+          {config.type === 'file-tool' && <FileTool config={config} client:load />}
+        </section>
+
+        {entry.data.kbdHints && entry.data.kbdHints.length > 0 && (
+          <div class="kbd-hints" aria-hidden="true">
+            {entry.data.kbdHints.map((hint) => (
+              <kbd class="kbd-hint">
+                <span class="kbd-hint__key">{hint.key}</span>
+                <span class="kbd-hint__label">{hint.label}</span>
+              </kbd>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {entry.data.aside && (
+        <aside class="tool-aside" aria-labelledby="tool-aside-heading">
+          <section class="tool-aside__steps">
+            <h2 id="tool-aside-heading">So funktioniert es</h2>
+            <ol>
+              {entry.data.aside.steps.map((step, i) => (
+                <li>
+                  <span class="tool-aside__step-number">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div class="tool-aside__step-body">
+                    <h3>{step.title}</h3>
+                    <p>{step.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+          <section class="tool-aside__privacy" aria-labelledby="tool-aside-privacy-heading">
+            <h3 id="tool-aside-privacy-heading">Datenschutz</h3>
+            <p>{entry.data.aside.privacy}</p>
+          </section>
+        </aside>
+      )}
+    </div>
 
     {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt
         schon, damit späteres Einblenden keinen CLS erzeugt. aria-hidden, weil
@@ -180,10 +220,145 @@ const jsonLd = buildToolJsonLd(
     line-height: var(--font-lh-body);
   }
 
+  /* §5 Aside-Slot-Primitive: .tool-main wraps .tool-section plus optional .tool-aside.
+     Solange kein Aside gerendert wird (kein aside-Frontmatter), bleibt alles zentriert
+     innerhalb der 60rem und sieht visuell identisch zum vorherigen Single-Column-Zustand aus. */
+  .tool-main {
+    max-width: 60rem;
+    width: 100%;
+    margin: 0 auto var(--space-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .tool-main__primary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
   .tool-section {
     max-width: 34rem;
     width: 100%;
-    margin: 0 auto var(--space-24);
+    margin: 0 auto;
+  }
+
+  @media (min-width: 60rem) {
+    .tool-main--with-aside {
+      display: grid;
+      grid-template-columns: minmax(0, 34rem) minmax(0, 20rem);
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .tool-main--with-aside .tool-section {
+      margin: 0;
+    }
+  }
+
+  /* Aside-Slot (§4 Card Variant: Aside-Slot). Base-Card-Styling + non-interaktiv. */
+  .tool-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .tool-aside__steps h2 {
+    margin: 0 0 var(--space-5) 0;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+  .tool-aside__steps ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  .tool-aside__steps li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+  .tool-aside__step-number {
+    flex: 0 0 auto;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.02em;
+  }
+  .tool-aside__step-body {
+    min-width: 0;
+  }
+  .tool-aside__step-body h3 {
+    margin: 0 0 var(--space-1) 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  .tool-aside__step-body p {
+    margin: 0;
+    font-size: var(--font-size-small);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+  .tool-aside__privacy {
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+  .tool-aside__privacy h3 {
+    margin: 0 0 var(--space-3) 0;
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .tool-aside__privacy p {
+    margin: 0;
+    font-size: var(--font-size-small);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  /* Kbd-Hint-Row (§4 Card Variant: Kbd-Hint-Row). Passive Shortcut-Hinweise. */
+  .kbd-hints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+  }
+  .kbd-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    font-family: var(--font-family-mono);
+    font-size: 0.75rem;
+  }
+  .kbd-hint__key {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  .kbd-hint__label {
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 60rem) {
+    .kbd-hints {
+      justify-content: flex-start;
+    }
   }
 
   .ad-slot-placeholder {
@@ -259,7 +434,7 @@ const jsonLd = buildToolJsonLd(
     .tool-hero h1 {
       font-size: 1.875rem;
     }
-    .tool-section {
+    .tool-main {
       margin-bottom: var(--space-16);
     }
     .ad-slot-placeholder {

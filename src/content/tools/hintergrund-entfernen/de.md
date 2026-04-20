@@ -24,6 +24,22 @@ relatedTools:
   - bild-komprimieren
   - bild-groesse-aendern
   - webp-konverter
+aside:
+  steps:
+    - title: "Bild auswählen"
+      description: "Ziehe eine Datei per Drag & Drop in den Bereich oder wähle sie aus deinem Gerät aus. PNG, JPG, WebP, AVIF oder HEIC bis 15 MB."
+    - title: "KI-Verarbeitung"
+      description: "Das lokale BEN2-Modell trennt Motiv und Hintergrund direkt im Browser — ohne Upload, ohne Serverkontakt."
+    - title: "Ergebnis speichern"
+      description: "Lade den Freisteller als PNG mit Transparenz herunter oder kopiere ihn direkt in die Zwischenablage."
+  privacy: "Die Verarbeitung läuft ausschließlich auf deinem Gerät. Deine Bilder verlassen den Browser nicht, werden nicht auf unsere Server übertragen und nach dem Schließen des Tabs gelöscht. Damit ist das Tool DSGVO-konform nutzbar."
+kbdHints:
+  - key: "⌘V"
+    label: "Einfügen"
+  - key: "Drag & Drop"
+    label: "Ziehen"
+  - key: "⌘C"
+    label: "Kopieren"
 contentVersion: 1
 ---
 

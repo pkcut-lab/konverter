@@ -8,6 +8,16 @@ const faqEntry = z.object({
   a: z.string().min(1),
 });
 
+const asideStep = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+});
+
+const kbdHint = z.object({
+  key: z.string().min(1),
+  label: z.string().min(1),
+});
+
 /**
  * Frontmatter schema for tool content files.
  * Lives in its own module so it is unit-testable without importing astro:content.
@@ -31,6 +41,13 @@ export const toolContentFrontmatterSchema = z.object({
   howToUse: z.array(z.string().min(1)).min(3).max(5),
   faq: z.array(faqEntry).min(4).max(6),
   relatedTools: z.array(z.string().regex(kebabCase)).min(3).max(5),
+  aside: z
+    .object({
+      steps: z.array(asideStep).length(3),
+      privacy: z.string().min(1),
+    })
+    .optional(),
+  kbdHints: z.array(kbdHint).min(1).max(4).optional(),
   contentVersion: z.number().int().min(1),
 });
 
