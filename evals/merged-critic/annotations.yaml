@@ -1,0 +1,144 @@
+# evals/merged-critic/annotations.yaml
+# Auto-generiert von scripts/eval-fixture-gen.mjs — nicht manuell editieren.
+# fixture-id → { verdict: pass|fail, failing_checks: [ids] }
+
+pass-01-meter-zu-fuss:
+  verdict: pass
+  failing_checks: []
+pass-02-zentimeter-zu-zoll:
+  verdict: pass
+  failing_checks: []
+pass-03-kilometer-zu-meilen:
+  verdict: pass
+  failing_checks: []
+pass-04-kilogramm-zu-pfund:
+  verdict: pass
+  failing_checks: []
+pass-05-gramm-zu-unzen:
+  verdict: pass
+  failing_checks: []
+pass-06-liter-zu-gallonen:
+  verdict: pass
+  failing_checks: []
+pass-07-milliliter-zu-unzen:
+  verdict: pass
+  failing_checks: []
+pass-08-celsius-zu-fahrenheit:
+  verdict: pass
+  failing_checks: []
+pass-09-quadratmeter-zu-quadratfuss:
+  verdict: pass
+  failing_checks: []
+pass-10-hektar-zu-acres:
+  verdict: pass
+  failing_checks: []
+pass-11-kubikmeter-zu-kubikfuss:
+  verdict: pass
+  failing_checks: []
+pass-12-megabyte-zu-gigabyte:
+  verdict: pass
+  failing_checks: []
+pass-13-kilojoule-zu-kilokalorien:
+  verdict: pass
+  failing_checks: []
+pass-14-stunden-zu-minuten:
+  verdict: pass
+  failing_checks: []
+pass-15-tage-zu-wochen:
+  verdict: pass
+  failing_checks: []
+pass-16-kmh-zu-mph:
+  verdict: pass
+  failing_checks: []
+pass-17-knots-zu-kmh:
+  verdict: pass
+  failing_checks: []
+pass-18-bar-zu-psi:
+  verdict: pass
+  failing_checks: []
+pass-19-newton-zu-pfundkraft:
+  verdict: pass
+  failing_checks: []
+pass-20-watt-zu-pferdestaerken:
+  verdict: pass
+  failing_checks: []
+fail-01-meta-missing-toolid:
+  verdict: fail
+  failing_checks:
+    - c-meta
+fail-02-meta-missing-language:
+  verdict: fail
+  failing_checks:
+    - c-meta
+fail-03-meta-missing-metadesc:
+  verdict: fail
+  failing_checks:
+    - c-meta
+fail-04-meta-missing-tagline:
+  verdict: fail
+  failing_checks:
+    - c-meta
+fail-05-meta-missing-category:
+  verdict: fail
+  failing_checks:
+    - c-meta
+fail-06-hex-inline-3chars:
+  verdict: fail
+  failing_checks:
+    - c3-hex
+fail-07-hex-inline-6chars:
+  verdict: fail
+  failing_checks:
+    - c3-hex
+fail-08-hex-uppercase:
+  verdict: fail
+  failing_checks:
+    - c3-hex
+fail-09-hex-8chars-alpha:
+  verdict: fail
+  failing_checks:
+    - c3-hex
+fail-10-hex-mixed-case:
+  verdict: fail
+  failing_checks:
+    - c3-hex
+fail-11-arbpx-padding:
+  verdict: fail
+  failing_checks:
+    - c4-arb-px
+fail-12-arbpx-width:
+  verdict: fail
+  failing_checks:
+    - c4-arb-px
+fail-13-arbpx-decimal:
+  verdict: fail
+  failing_checks:
+    - c4-arb-px
+fail-14-words-150:
+  verdict: fail
+  failing_checks:
+    - c8-words
+fail-15-words-250:
+  verdict: fail
+  failing_checks:
+    - c8-words
+fail-16-words-100:
+  verdict: fail
+  failing_checks:
+    - c8-words
+fail-17-words-299:
+  verdict: fail
+  failing_checks:
+    - c8-words
+fail-18-nbsp-meter:
+  verdict: fail
+  failing_checks:
+    - c11-nbsp
+fail-19-nbsp-kg:
+  verdict: fail
+  failing_checks:
+    - c11-nbsp
+fail-20-nbsp-ft:
+  verdict: fail
+  failing_checks:
+    - c11-nbsp

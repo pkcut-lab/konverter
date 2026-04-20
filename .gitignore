@@ -39,3 +39,6 @@ pending-icons/*.jpg
 
 # Stitch downloads (HTML + screenshots aus @google/stitch-sdk)
 stitch-output/
+
+# Eval transients (JSON-Ergebnisse der Critic-Smokes, lokal regenerierbar)
+evals/*/last-*-result.txt
