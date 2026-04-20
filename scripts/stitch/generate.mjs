@@ -65,10 +65,9 @@ Seitenstruktur (von oben nach unten):
      Jede Karte:
      · Container: 1px Border #E8E6E1, border-radius 8px, padding 24px,
        Background #FAFAF9. Min-height 8rem.
-     · Vertikales Flex column, gap 16px:
-       Oben: 48×48px Pencil-Sketch-Icon-Platzhalter (Graphit-Stroke, 1px, handgezeichnete
-       Linie auf transparentem Hintergrund, kein Filled, keine Farbe, object-fit contain).
-       Darunter: H3 Tool-Titel in Inter 600, 16px, line-height 1.35, letter-spacing -0.005em,
+     · Vertikales Flex column, gap 8px (nicht 16px — zwei Text-Items
+       bilden ein redaktionelles Paar, dichter ist besser):
+       Oben: H3 Tool-Titel in Inter 600, 16px, line-height 1.35, letter-spacing -0.005em,
        Farbe #1A1917. Darf über zwei Zeilen brechen.
        Darunter: zwei-zeilige Tagline in Inter 400, 14px, line-height 1.5, Farbe #5C5A55.
      · Hover-State: border-color kippt auf #9C9A94, Background auf #FFFFFF,
@@ -118,8 +117,14 @@ Verbotene Elemente:
 - Keine chromatischen Akzente auf Karten (kein farbiges Tag, kein "NEU"-Badge,
   kein Status-Dot, kein Pastell-Hintergrund).
 - Kein Purple, kein Cyan, keine Gradients, kein Glassmorphism.
-- Keine Emojis, keine Stock-Fotos, keine Hero-Images, keine Illustrationen
-  außerhalb der sechs Pencil-Sketch-Icons in den Karten.
+- Keine Per-Tool-Identity-Icons auf Karten (kein 48×48-Icon-Slot, kein
+  Pencil-Sketch, kein Symbol, kein Monogramm). Tools werden ausschließlich
+  durch Titel + Tagline identifiziert — der Name IST das Label. Gilt seit
+  Runde 3 Session "No Tool Icons" (2026-04-20): Produktions-Aufwand bei
+  1000+ Tools zu hoch, redaktionelle Ruhe wird durch Icon-Wiederholung
+  gestört. Ausnahme: der 160×160-Hero-Icon auf Tool-Detail-Pages
+  (`/de/<slug>/`), NICHT auf dieser Homepage.
+- Keine Emojis, keine Stock-Fotos, keine Hero-Images, keine Illustrationen.
 - Kein "Elevate", "Seamless", "Unleash", "Next-Gen" im Text.
 - Keine asymmetrischen Bento-Tiles. Karten sind uniform.
 - Kein Filter-Chip-Row oberhalb des Grids, kein Sortier-Dropdown, keine
