@@ -169,6 +169,16 @@ der Frontmatter generiert (Spec Section 12.1).
   `relatedTools`-Slug-Check ab (Spec Section 8.5). In Prototypen-Phase dürfen bis
   zu 3 Platzhalter stehen, solange die Route der späteren Konvention
   (`/de/<slug>`) entspricht.
+- **Tool-Nennungen im Prose sind IMMER Links.** Wenn im Fließtext oder in
+  einer „Verwandte Tools"-Sektion ein anderes Tool namentlich erwähnt wird
+  (z.B. `WebP-Konverter`, `Hintergrund entfernen`, `Meter zu Fuß`), MUSS der
+  Name als Markdown-Link zur tatsächlichen Tool-URL geschrieben werden:
+  `**[WebP-Konverter](/de/webp-konverter)**` statt nur `**WebP-Konverter**`.
+  Grund: die neue Related-Bar + You-Might-Strip (siehe DESIGN.md §4) liefern
+  navigierbare Sprungpunkte bereits über dem und unter dem Content — wenn
+  zusätzlich im Prose ein Tool erwähnt wird, wäre ein nicht-verlinkter Name
+  eine Sackgasse für den Nutzer. Das gilt ausnahmslos, auch wenn derselbe
+  Tool-Slug schon in `relatedTools` (Frontmatter) steht.
 
 ---
 

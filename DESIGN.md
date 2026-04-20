@@ -179,16 +179,34 @@ Vertikaler Stack. Verwendet für Auto-Index-Grids auf der Homepage und künftig 
 - **Focus-visible:** `outline: 2px solid var(--color-accent)`, `outline-offset: 2px`.
 - **Kein Arrow, kein Chevron, kein Status-Dot, keine Kategorie-Badge, kein Identity-Icon.** Die Karte ist die Affordanz — der Titel ist der CTA.
 
-#### Variant: Compact (RelatedTools, inline Cross-Linking)
+#### Variant: Related-Bar (Tool-Detail-Page — Zwilling der Header-`popular-bar`)
 
-Skalierte Tool-Listing-Variante für eingebettete Kontexte (Unterhalb einer Tool-Seite, künftig Sidebar). Dieselbe vertikale Struktur, tighter Padding. H3/Small-Text-Stack — **Tool-Identity-Icons: keine, analog zu Tool-Listing**.
+Runde 3 Session (2026-04-20): Die alte Compact-Card-Grid-Variante (H3 + Tagline-Karten) wurde verworfen. `RelatedTools` rendert jetzt als horizontale Tab-Leiste direkt unter dem Tool-Bereich — visuell und strukturell dasselbe Muster wie die Header-`popular-bar`. Ziel: nach dem Konvertieren sieht der Nutzer die nächste Option auf einen Blick, ohne dass ein zweites Karten-Raster das Tool „erschlägt".
 
-- **Layout:** identisch zu Tool-Listing (`flex column`).
-- **Padding:** `var(--space-4) var(--space-5)` (16px vertikal × 20px horizontal) — gelockt durch `tests/components/related-tools.test.ts`.
-- **Gap:** `var(--space-3)` (12px). Etwas luftiger als die Homepage-Variante (`var(--space-2)`), weil die Compact-Card insgesamt weniger Padding hat — der Rhythmus zwischen H3 und Tagline würde sonst kollabieren.
-- **Grid:** `repeat(auto-fill, minmax(16rem, 1fr))` statt der expliziten 3/2/1-Breakpoints — die Variant lebt in schmaleren Content-Spalten (`60rem`-article) und soll fluid falten.
-- **Motion:** staggered fade-in via IntersectionObserver + `transition-delay: calc(var(--index) * var(--stagger-step))`. Unter `prefers-reduced-motion: reduce` wird der Delay auf 0 kollabiert und die Transition deaktiviert (Code-Pflicht, nicht nur DESIGN.md-Wunsch).
-- **Gleichbleibend:** Border/Radius/Background/Shadow/Hover/Focus wie Tool-Listing.
+- **Position:** direkt unter `.tool-main`, VOR dem Ad-Slot und vor der `.tool-article`. Die Platzierung ist inhaltliches Design — Nähe zum Tool ist die Affordanz.
+- **Container:** `<nav class="related-bar">` mit `max-width: 60rem`, `border-top` + `border-bottom` (`1px solid var(--color-border)`), keine Hintergrund-Fläche, keine Radii. Kein Karten-Look.
+- **Inner-Layout:** `display: flex; align-items: stretch; overflow-x: auto; gap: var(--space-4); padding: 0 var(--space-2);`. Scrollbar visuell versteckt (`scrollbar-width: none` + `::-webkit-scrollbar { display: none }`).
+- **Label (`.related-bar__label`):** Sprachbasiert (`de: 'Verwandt'`, `en: 'Related'`). Mono (`--font-family-mono`), `0.6875rem`, `font-weight: 500`, `letter-spacing: 0.12em`, `text-transform: uppercase`, `color: var(--color-text-subtle)`, `border-right: 1px solid var(--color-border)`, `padding-right: var(--space-4)`.
+- **Tab-Label (`.related-tab__label`):** Zeigt `t.shortTitle` (nicht `t.title`). `computeShortTitle()` in `src/lib/tools/list.ts` schneidet den SEO-Suffix nach „ – " / „ — " / „ - " ab, sodass Tabs nicht mit USP-Claims wie „– ohne Upload" oder „— direkt im Browser" überladen werden. Gilt ebenso für You-Might-Strip.
+- **Tab (`.related-tab`):** `display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-3);`, `font-size: var(--font-size-small)`, `color: var(--color-text-muted)`, `border-bottom: 2px solid transparent`.
+- **Dot (`.related-tab__dot`):** `5×5` Pixel, `border-radius: 9999px`, Grundfarbe `--color-text-subtle`. Hover → `--color-accent`. Dot + Border-Bottom sind die einzigen Orange-Touches.
+- **Hover:** Tab-Text → `--color-text`, `border-bottom-color: var(--color-accent)`, Dot → Accent.
+- **Focus-visible:** `outline: 2px solid var(--color-accent)`, `outline-offset: -2px`, `border-radius: var(--r-sm)`.
+- **Keine Motion:** keine staggered fade-in, keine IntersectionObserver-Abhängigkeit. Die Leiste ist statisch und sofort sichtbar — wie die Header-`popular-bar`.
+- **Mobile (< 40rem):** Label wird versteckt (`display: none`). Tabs bleiben horizontal-scrollbar.
+
+#### Variant: You-Might-Strip (Tool-Detail-Page — direkt über dem Footer)
+
+Serendipity-Strip direkt über dem Footer. Mono-Label + einfache zentrierte Liste von Tool-Titeln mit dünnen `·`-Separatoren. Ziel: am Seitenende eine „schau-dich-um"-Einladung ohne neue Karten-Fläche.
+
+- **Position:** Letzter Block innerhalb `.tool-page`, direkt vor dem Footer. Kommt nach `.tool-article`, schließt die Seite ab.
+- **Container:** `<section class="you-might">` mit `max-width: 60rem`, `border-top: 1px solid var(--color-border)` (einzige Trennung zur vorherigen Prose-Sektion), `text-align: center`.
+- **Padding:** `var(--space-8) var(--space-6)` (32px × 24px), Mobile `var(--space-6) var(--space-4)`. Tight, weil `.tool-article` ihr eigenes kleines Bottom-Padding mitbringt.
+- **Label:** Block-Element oben, sprachbasiert (`de: 'Das könnte dir auch gefallen'`, `en: 'You might also like'`). Mono, `0.6875rem`, uppercase, Letter-Spacing `0.12em`, `color: var(--color-text-subtle)`, `margin-bottom: var(--space-4)`.
+- **Liste:** `display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0 var(--space-4); row-gap: var(--space-2);`. Editorial-Separator per `li:not(:last-child)::after { content: '·'; color: var(--color-text-subtle); }` — keine Punkte im Markup, nur CSS.
+- **Link (`.you-might__link`):** zeigt `t.shortTitle` (nicht `t.title` — gleiche Regel wie Related-Bar). Keine Tagline, keine Icons, keine Karten. `font-size: 0.9375rem`, `color: var(--color-text-muted)`, `text-decoration: none`. Hover → `--color-text`. Focus → Accent-Outline.
+- **Auswahl:** seeded shuffle basierend auf `currentToolId` (xfnv1a + mulberry32 inline in der Komponente). Stabil pro Tool, unterschiedlich pro Tool. Limit default `6`. Aktuelles Tool und Slugs aus `relatedTools` (Content-Frontmatter) werden ausgeschlossen, damit sich die Strip nicht mit der Related-Bar doppelt.
+- **Keine Motion.**
 
 #### Variant: Aside-Slot (Tool-Detail-Page optional Sidebar)
 
@@ -357,14 +375,25 @@ Mini-Block zur Kommunikation „läuft im Browser, kein Upload". Entscheidend f�
 
 ### Page Rhythm (Tool Detail Pages — `/[lang]/[slug]`)
 
+Feste Render-Reihenfolge im Template (Runde 3 Session 2026-04-20 gelockt):
+
+1. `.tool-hero` — H1 + Eyebrow + Tagline
+2. `.tool-main` — Tool-Widget (+ optional `.tool-aside`)
+3. `.related-bar` — **direkt unter dem Tool** (Verwandt-Tabs, Zwilling der Header-popular-bar)
+4. `.ad-slot-placeholder` — AdSense-Platz
+5. `.tool-article` — Intro, How-To, FAQ, MDX-Prose
+6. `.you-might` — **direkt über dem Footer** (Serendipity-Strip mit random Tools)
+
 | Block | max-width | Notes |
 |---|---|---|
 | `.tool-hero` (H1 + tagline) | `40rem` | Editorial reading flow, centered |
-| Tool icon | `160×160` desktop, `120×120` mobile | Pencil-sketch WebP, native 1:1 |
 | `.tool-main` (tool + optional aside) | `60rem` | Container-primitive; aside-slot opt-in. Siehe „Aside-Slot-Primitive" unten. |
-| `.tool-section` (the tool widget) | `34rem` | Narrowest — the tool is the visual anchor, zentriert innerhalb `.tool-main` |
-| `.tool-aside` (optionaler Slot) | `20rem` | Nur gerendert, wenn Content-Frontmatter `aside` füllt. Erzwingt keine Klasse am Tool. |
+| `.tool-section` (the tool widget) | `34rem` (Converter) / `48rem` (FileTool) | Tool ist der visuelle Anker, zentriert innerhalb `.tool-main` |
+| `.tool-aside` (optionaler Slot) | `20rem` | Nur gerendert, wenn Content-Frontmatter `aside` füllt. |
+| `.related-bar` (Verwandt-Tabs) | `60rem` | Horizontale Tab-Leiste, direkt unter `.tool-main`. Siehe §4 „Variant: Related-Bar". |
+| `.ad-slot-placeholder` | `42rem` | CLS-reservierter Platz, Phase 2 befüllt. |
 | `.tool-article` (intro, how-to, FAQ) | `42rem` | Prose-optimal reading width |
+| `.you-might` (Serendipity-Strip) | `60rem` | Zentrierte Link-Liste mit `·`-Separatoren, direkt vor dem Footer. Siehe §4 „Variant: You-Might-Strip". |
 
 ### Aside-Slot-Primitive (`.tool-main`)
 
@@ -377,8 +406,12 @@ Mini-Block zur Kommunikation „läuft im Browser, kein Upload". Entscheidend f�
 
 ### Vertical Rhythm
 
+Runde 3 Session (2026-04-20) — Abstände sind knapper geworden, damit Related-Bar direkt am Tool klebt und You-Might-Strip nicht abhängt:
+
 - Between hero and tool: `3rem` (48px) desktop, `2rem` mobile
-- Between tool and article: `6rem` (96px) desktop, `4rem` mobile
+- **Between tool and Related-Bar: `1rem` (16px)** — Related-Bar ist Teil des Tool-Kontextes, darf nicht separat wirken.
+- Between Related-Bar and Ad-Slot / Article: `4rem` (64px) desktop
+- Between article end and You-Might-Strip: `2rem` (32px) desktop, `1rem` mobile — die Border-Top übernimmt die visuelle Trennung.
 - Between major article sections: `3rem`
 
 ### Grid System
