@@ -136,29 +136,93 @@ export function fixtureVerdict(failing) {
   return failing.length === 0 ? 'pass' : 'fail';
 }
 
+function safeF1(tp, fp, fn) {
+  const precision = tp + fp === 0 ? 1 : tp / (tp + fp);
+  const recall = tp + fn === 0 ? 1 : tp / (tp + fn);
+  const f1 = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
+  return { precision, recall, f1 };
+}
+
 /**
  * Aggregiert Runner-Output gegen Erwartungen aus annotations.yaml.
+ *
+ * Liefert drei Metriken:
+ *   - binary:  pass-vs-fail per verdict (grobmaschig; fängt Total-Detection-Failure).
+ *   - micro:   per-check TP/FP/FN summiert über alle Checks + Fixtures (eine globale F1).
+ *   - macro:   Durchschnitt der per-Check-F1-Werte (sensibel für Single-Check-Drift).
+ *
+ * Macro-F1 ist das wichtigere Rubber-Stamp-Guard-Kriterium, weil es Erosion
+ * eines einzelnen Checks (z.B. c11-nbsp bricht silent) sichtbar macht, auch
+ * wenn andere Checks weiterhin trippen und der binäre verdict stimmt.
+ *
+ * Legacy-Felder (precision/recall/f1/correct/total) bleiben erhalten =
+ * Alias auf binary — existing consumers brechen nicht.
+ *
  * @param {Array<{fixture: string, expected: {verdict: string, failing_checks?: string[]}, actual: {failing_checks: string[]}}>} rows
- * @returns {{ precision: number, recall: number, f1: number, correct: number, total: number }}
  */
 export function computeF1(rows) {
-  // Binäre Fixture-Verdict-F1: pass vs. fail
-  let tp = 0;
-  let fp = 0;
-  let fn = 0;
+  // --- Binary (pass vs fail per verdict) ---
+  let bTp = 0;
+  let bFp = 0;
+  let bFn = 0;
   let correct = 0;
   for (const r of rows) {
     const expectFail = r.expected.verdict === 'fail';
     const actualFail = r.actual.failing_checks.length > 0;
-    if (expectFail && actualFail) tp += 1;
-    else if (!expectFail && actualFail) fp += 1;
-    else if (expectFail && !actualFail) fn += 1;
+    if (expectFail && actualFail) bTp += 1;
+    else if (!expectFail && actualFail) bFp += 1;
+    else if (expectFail && !actualFail) bFn += 1;
     if (expectFail === actualFail) correct += 1;
   }
-  const precision = tp + fp === 0 ? 1 : tp / (tp + fp);
-  const recall = tp + fn === 0 ? 1 : tp / (tp + fn);
-  const f1 = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
-  return { precision, recall, f1, correct, total: rows.length };
+  const binary = { ...safeF1(bTp, bFp, bFn), tp: bTp, fp: bFp, fn: bFn, correct, total: rows.length };
+
+  // --- Per-check (micro + macro) ---
+  const perCheck = {};
+  let microTp = 0;
+  let microFp = 0;
+  let microFn = 0;
+  for (const cid of CHECK_IDS) {
+    let tp = 0;
+    let fp = 0;
+    let fn = 0;
+    for (const r of rows) {
+      const expectedArr = Array.isArray(r.expected.failing_checks) ? r.expected.failing_checks : [];
+      const actualArr = Array.isArray(r.actual.failing_checks) ? r.actual.failing_checks : [];
+      const inE = expectedArr.includes(cid);
+      const inA = actualArr.includes(cid);
+      if (inE && inA) tp += 1;
+      else if (!inE && inA) fp += 1;
+      else if (inE && !inA) fn += 1;
+    }
+    const support = tp + fn;
+    perCheck[cid] = { ...safeF1(tp, fp, fn), tp, fp, fn, support };
+    microTp += tp;
+    microFp += fp;
+    microFn += fn;
+  }
+  const micro = { ...safeF1(microTp, microFp, microFn), tp: microTp, fp: microFp, fn: microFn };
+
+  // Macro-F1: Durchschnitt über Checks mit support > 0. Checks ohne support
+  // (in keinem Fixture-expected enthalten) werden exkludiert, damit sie nicht
+  // künstlich den Durchschnitt hochziehen.
+  const withSupport = Object.values(perCheck).filter((m) => m.support > 0);
+  const macroF1 = withSupport.length === 0
+    ? 1
+    : withSupport.reduce((acc, m) => acc + m.f1, 0) / withSupport.length;
+  const macro = { f1: macroF1, per_check: perCheck };
+
+  return {
+    // Legacy-Alias: top-level = binary
+    precision: binary.precision,
+    recall: binary.recall,
+    f1: binary.f1,
+    correct,
+    total: rows.length,
+    // Strukturierte neue Felder
+    binary,
+    micro,
+    macro,
+  };
 }
 
 function readFixtureDir(dir) {
@@ -236,6 +300,11 @@ export function parseAnnotations(src) {
         currentArray = [];
         currentArrayKey = key;
         out[currentFixture][key] = currentArray;
+      } else if (val === '[]') {
+        // Inline empty-array notation: `failing_checks: []`
+        out[currentFixture][key] = [];
+        currentArray = null;
+        currentArrayKey = null;
       } else {
         out[currentFixture][key] = val.replace(/^["']|["']$/g, '');
         currentArray = null;
@@ -252,6 +321,20 @@ export function parseAnnotations(src) {
   return out;
 }
 
+// Rubber-Stamp-Guard-Schwellen (§2.8).
+// binary fängt Total-Detection-Failure (kata­strophal, Runner erkennt nichts).
+// macro fängt Single-Check-Drift (einzelner Check silent broken, andere tripfen).
+// Macro ist strenger (0.90) weil Single-Check-Erosion statistisch wahrscheinlicher
+// ist als Total-Ausfall und früher sichtbar sein muss.
+export const THRESHOLDS = Object.freeze({
+  binary_min: 0.85,
+  macro_min: 0.90,
+});
+
+function passesThresholds(metrics) {
+  return metrics.binary.f1 >= THRESHOLDS.binary_min && metrics.macro.f1 >= THRESHOLDS.macro_min;
+}
+
 // CLI
 if (process.argv[1]?.endsWith('eval-runner.mjs')) {
   const [, , cmd, ...rest] = process.argv;
@@ -259,13 +342,15 @@ if (process.argv[1]?.endsWith('eval-runner.mjs')) {
     const fixturesDir = rest[0] ?? 'evals/merged-critic/fixtures';
     const annotationsPath = rest[1] ?? 'evals/merged-critic/annotations.yaml';
     const { rows, metrics } = runEvalSuite({ fixturesDir, annotationsPath });
-    console.log(JSON.stringify({ metrics, rows: rows.map((r) => ({
+    console.log(JSON.stringify({ metrics, thresholds: THRESHOLDS, rows: rows.map((r) => ({
       fixture: r.fixture,
       expected: r.expected.verdict,
+      expected_failing: Array.isArray(r.expected.failing_checks) ? r.expected.failing_checks : [],
       actual: r.actual.failing_checks.length ? 'fail' : 'pass',
       actual_failing: r.actual.failing_checks,
+      source: r.expected.source ?? null,
     })) }, null, 2));
-    process.exit(metrics.f1 >= 0.85 ? 0 : 1);
+    process.exit(passesThresholds(metrics) ? 0 : 1);
   }
   if (cmd === 'smoke') {
     const fixturesDir = rest[0] ?? 'evals/merged-critic/fixtures';
@@ -276,9 +361,9 @@ if (process.argv[1]?.endsWith('eval-runner.mjs')) {
     const pick = (arr, n) => [...arr].sort(() => Math.random() - 0.5).slice(0, n);
     const ids = [...pick(pass, nPerBucket), ...pick(fail, nPerBucket)];
     const { rows, metrics } = runEvalSuite({ fixturesDir, annotationsPath, ids });
-    const out = { metrics, rows: rows.length, picked: ids };
+    const out = { metrics, thresholds: THRESHOLDS, rows: rows.length, picked: ids };
     console.log(JSON.stringify(out, null, 2));
-    process.exit(metrics.f1 >= 0.85 ? 0 : 1);
+    process.exit(passesThresholds(metrics) ? 0 : 1);
   }
   if (cmd === 'one') {
     const path = rest[0];

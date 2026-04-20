@@ -28,7 +28,9 @@ exit_code=$?
 node -e "
   const j = JSON.parse(require('fs').readFileSync('$RESULT_FILE', 'utf8'));
   const m = j.metrics;
-  console.log(\`smoke: F1=\${m.f1.toFixed(3)} P=\${m.precision.toFixed(3)} R=\${m.recall.toFixed(3)} (\${m.correct}/\${m.total})\`);
+  const t = j.thresholds;
+  console.log(\`smoke: binary_f1=\${m.binary.f1.toFixed(3)} micro_f1=\${m.micro.f1.toFixed(3)} macro_f1=\${m.macro.f1.toFixed(3)} (\${m.binary.correct}/\${m.binary.total} verdict-correct)\`);
+  console.log(\`thresholds: binary>=\${t.binary_min} macro>=\${t.macro_min}\`);
 "
 
 exit $exit_code

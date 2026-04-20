@@ -253,6 +253,11 @@ function writeAnnotations(rows) {
     '# evals/merged-critic/annotations.yaml',
     '# Auto-generiert von scripts/eval-fixture-gen.mjs — nicht manuell editieren.',
     '# fixture-id → { verdict: pass|fail, failing_checks: [ids], source?, git_sha? }',
+    '#',
+    '# Rubber-Stamp-Guard-Schwellen (in scripts/eval-runner.mjs als THRESHOLDS gelockt):',
+    '#   binary_f1 >= 0.85  → fängt Total-Detection-Failure (Runner detektiert nichts)',
+    '#   macro_f1  >= 0.90  → fängt Single-Check-Drift (ein Check silent broken)',
+    '# Smoke + Suite exit 1 iff eine der beiden Schwellen verfehlt wird.',
     '',
   ];
   for (const r of rows) {

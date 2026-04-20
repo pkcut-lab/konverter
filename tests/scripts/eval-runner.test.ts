@@ -164,6 +164,57 @@ describe('eval-runner — parseAnnotations', () => {
     expect(parsed['fail-01'].verdict).toBe('fail');
     expect(parsed['fail-01'].failing_checks).toEqual(['c-meta', 'c3-hex']);
   });
+
+  it('parses inline empty-array notation `failing_checks: []` as empty array', () => {
+    const yaml = [
+      'pass-01:',
+      '  verdict: pass',
+      '  failing_checks: []',
+      '',
+    ].join('\n');
+    const parsed = parseAnnotations(yaml);
+    expect(Array.isArray(parsed['pass-01'].failing_checks)).toBe(true);
+    expect(parsed['pass-01'].failing_checks).toEqual([]);
+  });
+});
+
+describe('eval-runner — computeF1 per-check (binary vs macro sensitivity)', () => {
+  it('binary_f1=1.0 hides single-check drift; macro_f1 catches it', () => {
+    // Szenario: Runner erkennt c-meta korrekt, aber verschweigt c11-nbsp
+    // auf einem Fixture, das BEIDE Checks als fail annotiert hat. Binary
+    // verdict bleibt fail → binary_f1=1.0. Aber c11-nbsp wird als FN gewertet
+    // → per-check-F1 für c11-nbsp < 1 → macro_f1 < 1.
+    const rows = [
+      { fixture: 'a', expected: { verdict: 'pass', failing_checks: [] },
+        actual: { failing_checks: [] } },
+      { fixture: 'b', expected: { verdict: 'fail', failing_checks: ['c-meta', 'c11-nbsp'] },
+        actual: { failing_checks: ['c-meta'] } }, // c11-nbsp verschwiegen
+      { fixture: 'c', expected: { verdict: 'fail', failing_checks: ['c3-hex'] },
+        actual: { failing_checks: ['c3-hex'] } },
+    ];
+    const m = computeF1(rows);
+    // Binary ist blind für Single-Check-Miss solange ein anderer Check trippt
+    expect(m.binary.f1).toBe(1);
+    // Macro fängt es: c11-nbsp hat recall=0 → F1=0 → Durchschnitt sinkt
+    expect(m.macro.f1).toBeLessThan(1);
+    expect(m.macro.per_check['c11-nbsp'].recall).toBe(0);
+    expect(m.macro.per_check['c11-nbsp'].f1).toBe(0);
+  });
+
+  it('both metrics = 1.0 when runner detects every check per fixture', () => {
+    const rows = [
+      { fixture: 'a', expected: { verdict: 'pass', failing_checks: [] },
+        actual: { failing_checks: [] } },
+      { fixture: 'b', expected: { verdict: 'fail', failing_checks: ['c-meta', 'c7-related'] },
+        actual: { failing_checks: ['c-meta', 'c7-related'] } },
+      { fixture: 'c', expected: { verdict: 'fail', failing_checks: ['c11-nbsp'] },
+        actual: { failing_checks: ['c11-nbsp'] } },
+    ];
+    const m = computeF1(rows);
+    expect(m.binary.f1).toBe(1);
+    expect(m.micro.f1).toBe(1);
+    expect(m.macro.f1).toBe(1);
+  });
 });
 
 describe('eval-runner — exports', () => {
