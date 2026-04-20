@@ -54,39 +54,46 @@ const componentSrc = readFileSync(
 );
 
 describe('RelatedTools — template invariants (source inspection)', () => {
-  it('renders the spec-mandated heading "Verwandte Tools" with id="related-heading"', () => {
+  // Runde 3 Session (2026-04-20): Redesign from card-grid to popular-bar-twin
+  // — dotted horizontal tabs with mono uppercase label, positioned directly
+  // below the tool area. No cards, no stagger-fade-in.
+  it('wraps the output in <nav class="related-bar"> with an aria-label', () => {
     expect(componentSrc).toMatch(
-      /<h2\s+id="related-heading">\s*Verwandte Tools\s*<\/h2>/,
+      /<nav[^>]*class="related-bar"[^>]*aria-label=\{label\}/,
     );
   });
 
-  it('declares aria-labelledby="related-heading" on the wrapping <section>', () => {
+  it('renders the mono-uppercase label span with class "related-bar__label"', () => {
     expect(componentSrc).toMatch(
-      /<section[^>]*class="related-tools"[^>]*aria-labelledby="related-heading"|<section[^>]*aria-labelledby="related-heading"[^>]*class="related-tools"/,
+      /<span\s+class="related-bar__label">\{label\}<\/span>/,
     );
+  });
+
+  it('resolves the label by language (de → "Verwandt", en → "Related")', () => {
+    expect(componentSrc).toMatch(/de:\s*'Verwandt'/);
+    expect(componentSrc).toMatch(/en:\s*'Related'/);
   });
 
   it('guards output with a `tools.length > 0` conditional so empty resolutions render nothing', () => {
-    // Astro fragment-conditional pattern: {tools.length > 0 && (…)}
     expect(componentSrc).toMatch(/tools\.length\s*>\s*0/);
   });
 
-  it('uses the stagger-step token for the staggered IO fade-in (no arbitrary px)', () => {
-    // Runde 3 Session (No Tool Icons, 2026-04-20): the 48×48 tool-identity icon
-    // slot was removed site-wide. `--icon-size-md` is therefore no longer
-    // referenced here — the staggered fade-in contract is the remaining
-    // motion-token assertion.
-    expect(componentSrc).not.toMatch(/var\(--icon-size-md\)/);
-    expect(componentSrc).toMatch(/var\(--stagger-step\)/);
+  it('renders each tool as a .related-tab with a dot + label pair', () => {
+    expect(componentSrc).toMatch(
+      /<a\s+class="related-tab"\s+href=\{t\.href\}>/,
+    );
+    expect(componentSrc).toMatch(/class="related-tab__dot"/);
+    expect(componentSrc).toMatch(/class="related-tab__label">\{t\.shortTitle\}/);
   });
 
-  it('uses --dur-med and --ease-out for the fade-in transition (motion tokens)', () => {
-    expect(componentSrc).toMatch(/var\(--dur-med\)/);
+  it('drops the old stagger-fade-in (no --stagger-step / --dur-med reference)', () => {
+    expect(componentSrc).not.toMatch(/var\(--stagger-step\)/);
+    expect(componentSrc).not.toMatch(/var\(--dur-med\)/);
+  });
+
+  it('uses --dur-fast + --ease-out for hover transitions (motion tokens)', () => {
+    expect(componentSrc).toMatch(/var\(--dur-fast\)/);
     expect(componentSrc).toMatch(/var\(--ease-out\)/);
-  });
-
-  it('uses padding: var(--space-4) var(--space-5) on the card link', () => {
-    expect(componentSrc).toMatch(/padding:\s*var\(--space-4\)\s+var\(--space-5\)/);
   });
 
   it('contains no hex color literals (tokens-only discipline)', () => {

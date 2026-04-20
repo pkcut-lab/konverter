@@ -6,9 +6,13 @@
 :root {
   color-scheme: light;
 
-  /* Colors — Light Mode (default) */
-  --color-bg: #FFFFFF;
-  --color-surface: #FAFAF9;
+  /* Colors — Light Mode (default)
+     Runde 3 Session 2 (2026-04-20): bg/surface getauscht. Page-Canvas ist
+     warm-off-white, Cards poppen als reinweiße, leicht erhobene Flächen
+     (Notion-/Linear-Konvention). Kontrast-Tests gegen beide Werte passen
+     wegen <0.05 ΔL weiterhin AAA. */
+  --color-bg: #FAFAF9;
+  --color-surface: #FFFFFF;
   --color-surface-sunk: #F3F0EA;
   --color-border: #E8E6E1;
   --color-text: #1A1917;
@@ -23,6 +27,11 @@
   /* Typography */
   --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  /* Accent-Font für <em>-Highlights in H1/H2 — edle Editorial-Italic.
+     Playfair Display Italic inszeniert das warme Orange mit High-Contrast-Serif-
+     Schwüngen. Fallback auf Systemkursive hält Layout stabil bis woff2 da ist.
+     Nur hier referenzieren, sonst brechen wir den Refined-Minimalism-Lock. */
+  --font-family-accent: 'Playfair Display', 'Georgia', 'Iowan Old Style', serif;
 
   --font-size-h1: 2.25rem;
   --font-lh-h1: 1.2;

@@ -7,11 +7,23 @@ import type { Lang } from './types';
 export type ToolListItem = {
   toolId: string;
   title: string;
+  /**
+   * Kurz-Variante des Titels für kompakte Kontexte (Related-Bar, You-Might-Strip).
+   * Schneidet alles nach dem ersten „ – " / „ — " / „ - " (Gedankenstrich + Spaces) ab.
+   * Beispiel: „PNG und JPG in WebP umwandeln – ohne Upload" → „PNG und JPG in WebP umwandeln".
+   * SEO-Suffixe gehören nicht in navigierbare Tabs — siehe DESIGN.md §4 Related-Bar.
+   */
+  shortTitle: string;
   tagline: string;
   href: string;
   iconRel: string;
   hasIcon: boolean;
 };
+
+/** Strippt SEO-Suffix nach Gedankenstrich-mit-Spaces. Leerer Eingang → leerer Ausgang. */
+function computeShortTitle(title: string): string {
+  return title.split(/\s+[–—-]\s+/)[0]!.trim();
+}
 
 /**
  * Enumerates all content entries for a language, resolved to render-ready items.
@@ -30,6 +42,7 @@ export async function listToolsForLang(lang: Lang): Promise<ToolListItem[]> {
       return {
         toolId: entry.data.toolId,
         title: entry.data.title,
+        shortTitle: computeShortTitle(entry.data.title),
         tagline: entry.data.tagline,
         href: `/${lang}/${slug}`,
         iconRel,

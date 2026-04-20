@@ -31,13 +31,20 @@ h1 { font-size: var(--font-size-h1); line-height: var(--font-lh-h1); font-weight
 h2 { font-size: var(--font-size-h2); line-height: var(--font-lh-h2); font-weight: var(--font-fw-h2); }
 h3 { font-size: var(--font-size-h3); line-height: var(--font-lh-h3); font-weight: var(--font-fw-h3); }
 
-/* Italic-Accent emphasis inside H1/H2 — editorial serif-substitute.
-   Inter italic in warm orange reads as emphasis without a second font. */
+/* Editorial-Italic-Accent in H1/H2 — Playfair Display in warmem Orange.
+   Bewusste Ausnahme vom Inter+Mono-Lock; Token --font-family-accent
+   ist die einzige zulässige Stelle, an der eine dritte Schrift
+   durchschlägt. Italic-Only — nur mit real kursiven Glyphen geladen. */
 h1 em,
 h2 em {
+  font-family: var(--font-family-accent);
   font-style: italic;
   color: var(--color-accent);
-  font-weight: inherit;
+  font-weight: 500;
+  /* Playfair rendert bei identischem font-size minimal größer —
+     1.02em kompensiert die Wahrnehmung gegen Inter ohne Line-Height-Bruch. */
+  font-size: 1.02em;
+  letter-spacing: -0.01em;
 }
 
 a {
@@ -199,7 +206,9 @@ code, pre {
   padding: var(--space-1) var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: 9999px;
-  background: var(--color-surface-sunk);
+  /* Reinweißer Pill gegen warmen --color-bg-Canvas — keine beige Sunk-Fläche
+     mehr, die gegen das Card-Weiß konkurriert. */
+  background: var(--color-surface);
   color: var(--color-text-muted);
   font-family: var(--font-family-mono);
   font-size: 0.6875rem;

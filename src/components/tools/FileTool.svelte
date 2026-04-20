@@ -715,16 +715,15 @@
 </div>
 
 <style>
+  /* Layout-only wrapper — KEIN eigenes Chrome. Settings-Card + Dropzone
+     schweben als unabhängige Cards auf dem warmen Canvas (Template-Match).
+     Der alte Outer-Border/Shadow/Padding würde einen überflüssigen zweiten
+     Rahmen um die inneren Cards ziehen. */
   .filetool {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
-    padding: var(--space-8);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-sm);
+    gap: var(--space-5);
   }
 
   /* ---------- Dropzone (Session 4 redesign, 2026-04-20) ----------
@@ -1040,11 +1039,15 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--r-md);
+    /* Feinere Button-Proportionen — schmaleres Padding, kleinerer Radius
+       und leichterer Font-Weight zugunsten eines eleganten, premium
+       Eindrucks statt "solid block". */
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--r-sm);
     font: inherit;
     font-size: var(--font-size-small);
-    font-weight: 500;
+    font-weight: 450;
+    letter-spacing: -0.005em;
     text-decoration: none;
     cursor: pointer;
     touch-action: manipulation;
@@ -1066,7 +1069,9 @@
     background: var(--color-text);
     color: var(--color-bg);
     border: 1px solid var(--color-text);
-    padding: var(--space-3) var(--space-5);
+    /* Primary-Padding bleibt etwas großzügiger als Secondary, aber spürbar
+       schmaler als der alte --space-3/--space-5-Block. */
+    padding: var(--space-2) var(--space-5);
   }
   .btn--primary:hover {
     background: var(--color-text-muted);
@@ -1137,20 +1142,28 @@
     text-transform: uppercase;
   }
   .presets__group {
-    display: inline-flex;
+    /* Group füllt den Rest der Settings-Card und zentriert die Pills horizontal —
+       so bleibt die Anordnung balanciert, egal ob 2, 3, 4 oder 5 Preset-Pills. */
+    flex: 1;
+    display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: var(--space-1);
   }
   .preset-pill {
     position: relative;
     display: inline-flex;
     align-items: baseline;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
+    /* Pill kompakter — kleineres Gap + schmaleres Padding, damit alle
+       drei Presets + QUALITÄT-Label einzeilig in die Settings-Card passen. */
+    gap: 6px;
+    padding: 5px var(--space-3);
     border-radius: 9999px;
     font-size: var(--font-size-small);
     color: var(--color-text-muted);
     cursor: pointer;
+    /* Kein Umbruch zwischen Label und Sub-Label innerhalb eines Pills. */
+    white-space: nowrap;
     transition:
       background var(--dur-fast) var(--ease-out),
       color var(--dur-fast) var(--ease-out);
@@ -1165,17 +1178,24 @@
     height: 0;
     pointer-events: none;
   }
-  .preset-pill:focus-within {
+  /* Fokus-Ring NUR bei Keyboard-Fokus — :focus-within würde auch nach
+     Mausklick triggern (radio-input behält Fokus) und den Accent-Ring um
+     den ohnehin schon schwarz markierten Active-Pill legen. */
+  .preset-pill:has(input:focus-visible) {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
   .preset-pill__label {
-    font-weight: 500;
+    /* 450 statt 500 — feinere Typografie auf dem Active-Pill, damit die
+       dunkle Fläche nicht zu stark nach vorn drückt. */
+    font-weight: 450;
     color: inherit;
   }
   .preset-pill__sub {
     font-family: var(--font-family-mono);
-    font-size: 0.75rem;
+    /* Sub-Label kompakter — 11px statt 12px, damit die Preset-Reihe
+       horizontal in die 48rem-Settings-Card passt ohne umzubrechen. */
+    font-size: 0.6875rem;
     color: var(--color-text-subtle);
     letter-spacing: 0.01em;
   }
@@ -1358,8 +1378,7 @@
 
   @media (max-width: 40rem) {
     .filetool {
-      padding: var(--space-6);
-      gap: var(--space-5);
+      gap: var(--space-4);
     }
     .dropzone {
       padding: var(--space-8) var(--space-4);

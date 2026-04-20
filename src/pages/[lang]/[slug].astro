@@ -7,6 +7,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
+import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
@@ -126,7 +127,10 @@ const jsonLd = buildToolJsonLd(
 
     <div class:list={['tool-main', entry.data.aside && 'tool-main--with-aside']}>
       <div class="tool-main__primary">
-        <section class="tool-section" aria-label="Konverter">
+        <section
+          class:list={['tool-section', config.type === 'file-tool' && 'tool-section--wide']}
+          aria-label="Konverter"
+        >
           {config.type === 'converter' && <Converter config={config} client:load />}
           {config.type === 'file-tool' && <FileTool config={config} client:load />}
         </section>
@@ -169,6 +173,8 @@ const jsonLd = buildToolJsonLd(
       )}
     </div>
 
+    <RelatedTools lang={entry.data.language} relatedSlugs={entry.data.relatedTools} />
+
     {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt
         schon, damit späteres Einblenden keinen CLS erzeugt. aria-hidden, weil
         bis dahin keine sinnvolle Information drinsteht. */}
@@ -194,7 +200,11 @@ const jsonLd = buildToolJsonLd(
       </div>
     </article>
 
-    <RelatedTools lang={entry.data.language} relatedSlugs={entry.data.relatedTools} />
+    <YouMightAlsoLike
+      lang={entry.data.language}
+      currentToolId={entry.data.toolId}
+      excludeSlugs={entry.data.relatedTools}
+    />
   </div>
 </BaseLayout>
 
@@ -234,11 +244,12 @@ const jsonLd = buildToolJsonLd(
   }
   .tool-hero h1 {
     margin: 0;
-    /* Editorial scale — fluid from 2.5rem (mobile) up to 5.5rem (wide desktop).
-       Replaces the default h1 token size inside .tool-hero only. */
-    font-size: clamp(2.5rem, 1.75rem + 3.5vw, 5.5rem);
-    line-height: 1.04;
-    letter-spacing: -0.035em;
+    /* Editorial scale — Single-Line-Ziel auf Desktop. Max 3.5rem (56px)
+       hält den H1 einzeilig bei typischen Tool-Titeln und verhindert,
+       dass der Playfair-<em>-Accent die Zeile sprengt. */
+    font-size: clamp(2rem, 1rem + 2vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     font-weight: 600;
     text-wrap: balance;
   }
@@ -256,7 +267,10 @@ const jsonLd = buildToolJsonLd(
   .tool-main {
     max-width: 60rem;
     width: 100%;
-    margin: 0 auto var(--space-24);
+    /* Abstand nach unten knapp halten — die Related-Bar soll direkt unter dem
+       Tool sitzen, damit der Nutzer nach dem Konvertieren die nächste Option
+       sofort sieht. Größerer Abstand kommt erst nach der Related-Bar. */
+    margin: 0 auto var(--space-4);
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
@@ -271,6 +285,13 @@ const jsonLd = buildToolJsonLd(
     max-width: 34rem;
     width: 100%;
     margin: 0 auto;
+  }
+  /* FileTool braucht mehr horizontale Breite als prose — die 3-Preset-
+     Segmentreihe + MIME-Pill-Strip passen nicht in 34rem (würden unschön
+     umbrechen). 48rem matcht die Template-Settings-Card-Breite bei 1920px
+     und bleibt unter dem 60rem-tool-main-Cap. Converter-Tools bleiben 34rem. */
+  .tool-section--wide {
+    max-width: 48rem;
   }
 
   @media (min-width: 60rem) {
@@ -411,7 +432,9 @@ const jsonLd = buildToolJsonLd(
     max-width: 42rem;
     width: 100%;
     margin: 0 auto;
-    padding-bottom: var(--space-24);
+    /* Kein padding-bottom — die .you-might-Strip setzt ihr eigenes top-padding
+       und einen border-top, der die visuelle Trennung übernimmt. */
+    padding-bottom: var(--space-8);
   }
   .tool-article .intro {
     font-size: 1.125rem;
@@ -478,6 +501,9 @@ const jsonLd = buildToolJsonLd(
     }
     .tool-article__prose {
       margin-top: var(--space-12);
+    }
+    .tool-article {
+      padding-bottom: var(--space-4);
     }
   }
 </style>

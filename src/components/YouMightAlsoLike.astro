@@ -1,0 +1,145 @@
+---
+// src/components/YouMightAlsoLike.astro
+//
+// Serendipity-Strip direkt über dem Footer: mono-Label + einfache Liste von
+// Tool-Titeln mit dünnen Separatoren. Kein Raster, keine Karten, keine
+// Taglines — nur Namen. Ziel: dezenter Einladungscharakter („schau dich um").
+//
+// Selection = seeded shuffle based on currentToolId. Same tool → same picks
+// (cache-friendly), different tools → different picks (feels random). The
+// aktuelle Tool wird und bereits als „Verwandt" gelistete Slugs werden
+// ausgeschlossen.
+import { listToolsForLang } from '../lib/tools/list';
+import type { Lang } from '../lib/tools/types';
+
+interface Props {
+  lang: Lang;
+  currentToolId: string;
+  excludeSlugs?: readonly string[];
+  /** how many random picks to show (default 6) */
+  limit?: number;
+}
+const { lang, currentToolId, excludeSlugs = [], limit = 6 } = Astro.props;
+
+const labelByLang: Record<string, string> = {
+  de: 'Das könnte dir auch gefallen',
+  en: 'You might also like',
+};
+const label = labelByLang[lang] ?? labelByLang.en!;
+
+// Deterministisch gemischtes Auswahl-Array pro `currentToolId`. xfnv1a → mulberry32
+// gibt uns einen billigen, seedbaren PRNG ohne Dependency. So bleibt das
+// Ergebnis beim Rebuild stabil (gut für HTTP-Caches), variiert aber pro Tool.
+function xfnv1a(str: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+function mulberry32(seed: number): () => number {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const all = await listToolsForLang(lang);
+const excludeSet = new Set(excludeSlugs);
+const pool = all.filter(
+  (t) => t.toolId !== currentToolId && !excludeSet.has(t.href.split('/').pop()!),
+);
+
+const rand = mulberry32(xfnv1a(`${lang}:${currentToolId}`));
+const shuffled = [...pool].sort(() => rand() - 0.5);
+const picks = shuffled.slice(0, limit);
+---
+{picks.length > 0 && (
+  <section class="you-might" aria-labelledby="you-might-heading">
+    <span class="you-might__label" id="you-might-heading">{label}</span>
+    <ul class="you-might__list">
+      {picks.map((t) => (
+        <li>
+          <a class="you-might__link" href={t.href}>{t.shortTitle}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  /* Max-Breite matcht .tool-main, damit der Strip visuell unter dem Rest der
+     Seite ankommt und nicht wie ein fremder Block wirkt. */
+  .you-might {
+    max-width: 60rem;
+    width: 100%;
+    margin: 0 auto;
+    /* Knapper Spacing-Rhythmus: vorgelagerte Sektion (tool-article) hat schon
+       eigenes Spacing, wir brauchen nur den Trenn-Border + etwas Atem. */
+    padding: var(--space-8) var(--space-6);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .you-might__label {
+    display: block;
+    margin-bottom: var(--space-4);
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .you-might__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0 var(--space-4);
+    row-gap: var(--space-2);
+  }
+  /* Editorial-Separator zwischen den Titeln: kein `·` als Zeichen in jedes <li>,
+     sondern ein CSS-Pseudo auf allen außer dem letzten Item — sauber, kopierbar,
+     responsive umbruchfest. */
+  .you-might__list li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+  .you-might__list li:not(:last-child)::after {
+    content: '·';
+    color: var(--color-text-subtle);
+  }
+  .you-might__link {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .you-might__link:hover {
+    color: var(--color-text);
+  }
+  .you-might__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+
+  @media (max-width: 40rem) {
+    .you-might {
+      padding: var(--space-6) var(--space-4);
+    }
+    .you-might__list {
+      gap: 0 var(--space-3);
+    }
+  }
+</style>

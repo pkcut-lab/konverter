@@ -6,6 +6,7 @@ mkdir -p "$DEST"
 
 INTER_SRC="node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2"
 JBM_SRC="node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2"
+PLAYFAIR_SRC="node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-italic.woff2"
 
 if [[ ! -f "$INTER_SRC" ]]; then
   echo "❌ Inter source not found at $INTER_SRC"
@@ -16,9 +17,14 @@ if [[ ! -f "$JBM_SRC" ]]; then
   echo "❌ JetBrains Mono source not found at $JBM_SRC"
   exit 1
 fi
+if [[ ! -f "$PLAYFAIR_SRC" ]]; then
+  echo "❌ Playfair Display source not found at $PLAYFAIR_SRC"
+  exit 1
+fi
 
 cp "$INTER_SRC" "$DEST/Inter-Variable.woff2"
 cp "$JBM_SRC" "$DEST/JetBrainsMono-Variable.woff2"
+cp "$PLAYFAIR_SRC" "$DEST/PlayfairDisplay-Italic-Variable.woff2"
 
 echo "✓ Copied:"
 ls -la "$DEST"/*.woff2

@@ -1,13 +1,11 @@
 ---
 // src/components/RelatedTools.astro
 //
-// Renders a grid of related tools below a tool page's <article>. Input is a
-// list of LOCALIZED SLUGS (from frontmatter `relatedTools`). Slugs without a
-// matching content/slug-map entry are dropped silently, so forward-looking
-// references (tools planned for future sessions) are safe.
-//
-// Wrap is conditional: if zero slugs resolve, the component renders NOTHING —
-// no heading, no section. See spec §Fallback, §Conditional Render.
+// Rendert die verwandten Tools als horizontale Tab-Leiste direkt unter
+// dem Tool-Bereich — visuell das Pendant zur `.popular-bar` im Header
+// (dotted Tabs, Mono-Uppercase-Label, Border-Top/Bottom, keine Karten).
+// Slugs ohne Slug-Map- oder Content-Entry werden stumm verworfen.
+// Wrap ist conditional: null Treffer → kein Markup.
 import { resolveRelatedTools } from '../lib/tools/list';
 import type { Lang } from '../lib/tools/types';
 
@@ -17,149 +15,114 @@ interface Props {
 }
 const { lang, relatedSlugs } = Astro.props;
 const tools = await resolveRelatedTools(lang, relatedSlugs);
+
+const labelByLang: Record<string, string> = {
+  de: 'Verwandt',
+  en: 'Related',
+};
+const label = labelByLang[lang] ?? labelByLang.en!;
 ---
 {tools.length > 0 && (
-  <section class="related-tools" aria-labelledby="related-heading">
-    <h2 id="related-heading">Verwandte Tools</h2>
-    <ul>
-      {tools.map((t, i) => (
-        <li style={`--index: ${i}`}>
-          <a href={t.href}>
-            <h3>{t.title}</h3>
-            <p>{t.tagline}</p>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
+  <nav class="related-bar" aria-label={label}>
+    <div class="related-bar__inner">
+      <span class="related-bar__label">{label}</span>
+      <ul class="related-bar__list">
+        {tools.map((t) => (
+          <li>
+            <a class="related-tab" href={t.href}>
+              <span class="related-tab__dot" aria-hidden="true"></span>
+              <span class="related-tab__label">{t.shortTitle}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
 )}
 
-<script>
-  // Plain IntersectionObserver fade-in. No import, ~30 bytes.
-  // `prefers-reduced-motion` and the CSS-side `@media` handle the no-motion case;
-  // the class flip is safe either way (CSS disables the transition below).
-  const section = document.querySelector<HTMLElement>('.related-tools');
-  if (section) {
-    const prefersReduced =
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReduced || typeof IntersectionObserver === 'undefined') {
-      section.classList.add('in-view');
-    } else {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              section.classList.add('in-view');
-              io.disconnect();
-              break;
-            }
-          }
-        },
-        { rootMargin: '-40px 0px' },
-      );
-      io.observe(section);
-    }
-  }
-</script>
-
 <style>
-  .related-tools {
+  /* Stilzwilling zur Header-.popular-bar: gleiche Tokens, gleiches Muster.
+     Border-Top/Bottom grenzt die Leiste optisch vom Tool-Bereich ab,
+     ohne eine Karte zu bauen. */
+  .related-bar {
     max-width: 60rem;
-    margin: var(--space-16) auto 0;
-    padding: 0 var(--space-6);
+    width: 100%;
+    margin: 0 auto var(--space-16);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
-  .related-tools h2 {
-    margin: 0 0 var(--space-6);
-    letter-spacing: -0.01em;
-    text-wrap: balance;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: var(--space-4);
-  }
-  li {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  .related-tools.in-view li {
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity var(--dur-med) var(--ease-out),
-      transform var(--dur-med) var(--ease-out);
-    transition-delay: calc(var(--index) * var(--stagger-step));
-  }
-  a {
+  .related-bar__inner {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    height: 100%;
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-md);
-    background: var(--color-surface);
-    color: var(--color-text);
-    text-decoration: none;
-    box-shadow: var(--shadow-sm);
-    transition:
-      border-color var(--dur-fast) var(--ease-out),
-      background var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur-fast) var(--ease-out);
+    align-items: stretch;
+    gap: var(--space-4);
+    padding: 0 var(--space-2);
+    overflow-x: auto;
+    scrollbar-width: none;
   }
-  a:hover {
-    border-color: var(--color-text-subtle);
-    background: var(--color-bg);
-    box-shadow: var(--shadow-md);
+  .related-bar__inner::-webkit-scrollbar {
+    display: none;
   }
-  a:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+  .related-bar__label {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    padding-right: var(--space-4);
+    border-right: 1px solid var(--color-border);
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    white-space: nowrap;
   }
-  h3 {
+  .related-bar__list {
+    display: inline-flex;
+    gap: var(--space-1);
+    list-style: none;
     margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.35;
-    letter-spacing: -0.005em;
-    color: var(--color-text);
+    padding: 0;
   }
-  p {
-    margin: 0;
+  .related-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-3);
     font-size: var(--font-size-small);
-    line-height: 1.5;
     color: var(--color-text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .related-tab:hover {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent);
+  }
+  .related-tab:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    border-radius: var(--r-sm);
+  }
+  .related-tab__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--color-text-subtle);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .related-tab:hover .related-tab__dot {
+    background: var(--color-accent);
   }
 
   @media (max-width: 40rem) {
-    .related-tools {
-      padding: 0 var(--space-4);
+    .related-bar {
+      margin-bottom: var(--space-12);
     }
-    ul {
-      grid-template-columns: 1fr;
-    }
-    .related-tools.in-view li {
-      transition-delay: 0ms !important;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    li {
-      opacity: 1;
-      transform: none;
-    }
-    .related-tools.in-view li {
-      transition: none;
-      transition-delay: 0ms;
-    }
-    a {
-      transition: none;
+    .related-bar__label {
+      display: none;
     }
   }
 </style>

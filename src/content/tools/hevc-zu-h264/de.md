@@ -231,8 +231,8 @@ Foto-Chronologien durcheinanderbringt.
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
-- **WebP-Konverter** — Bilder in das moderne WebP-Format umwandeln, ebenfalls
+- **[WebP-Konverter](/de/webp-konverter)** — Bilder in das moderne WebP-Format umwandeln, ebenfalls
   vollständig im Browser.
-- **Hintergrund entfernen** — Motive aus Fotos freistellen, KI-basiert und
+- **[Hintergrund entfernen](/de/hintergrund-entfernen)** — Motive aus Fotos freistellen, KI-basiert und
   ohne Upload.
-- **Meter zu Fuß** — schnelle Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg.
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — schnelle Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg.
