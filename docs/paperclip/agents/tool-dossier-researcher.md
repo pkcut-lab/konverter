@@ -75,7 +75,9 @@ done
 pii_scrub "$raw_quote" > "$scrubbed_quote"
 ```
 
-Pseudonymisierung (§7.12): `u/user42` → `[reddit-user]`, E-Mails → `[email]`, Klarnamen → `[author]`. Script: `scripts/pii-scrub.ts` (Batch 3).
+Pseudonymisierung (§7.12): `u/user42` → `[reddit-user]`, E-Mails → `[email]`, Klarnamen → `[author]`. Script: `scripts/pii-scrub.mjs` (Batch 3).
+
+**Invocation-Order (hart, nicht verhandelbar):** `pii-scrub` läuft **VOR dem Dossier-Write**, in-memory auf dem raw-fetched Text. Pipeline: `fetch → scrub(in-memory) → writeFile(scrubbed)`. NIEMALS `write → scrub-on-disk` — das lässt PII kurzzeitig auf Disk liegen und hebelt den Zweck aus. Jeder raw-fetched String MUSS durch `scrub()` gehen, bevor er in einen String-Buffer kommt, der später als File persistiert wird.
 
 ### Schritt D — 2026-Trends
 
@@ -166,7 +168,11 @@ npm run citation-verify -- "dossiers/$tool_slug/$(date -I).md"
 # Exit 1 → verdict: citation_fail + inbox/to-ceo/dossier-citation-fail-<tool>.md
 ```
 
-Details zum Script in `scripts/citation-verify.ts` (Batch 3).
+Details zum Script in `scripts/citation-verify.mjs` (Batch 3).
+
+**Invocation-Order (hart, 2 Stellen):**
+1. Nach **jedem** Dossier-Write (Tool- oder Category-Root-Dossier) — Exit 1 setzt `verdict: citation_fail` und öffnet `inbox/to-ceo/dossier-citation-fail-<tool>.md`.
+2. Bei **Category-Root-Dossiers**: `citation_verify_passed: true` MUSS im Frontmatter stehen, **BEVOR** der erste Child davon erben darf. CEO-Gate blockt tool-build-Dispatch mit `parent_dossier`-Ref, wenn die Parent-Verification nicht grün ist (Inheritance-Integrity, siehe `DOSSIER_REPORT.md`).
 
 ## 3. Index-Update
 
@@ -230,7 +236,9 @@ EOF
 | SerpAPI | verboten | 0 |
 | Ahrefs / SEMrush | verboten | 0 |
 
-`scripts/budget-guard.ts` (Batch 3) bricht Run ab bei Firecrawl-Call 4+.
+`scripts/budget-guard.mjs` (Batch 3) bricht Run ab bei Firecrawl-Call 4+.
+
+**Invocation-Order (hart):** Budget-Guard läuft als **Pre-Tool-Call-Wrapper**, NICHT als Post-hoc-Audit. Vor jedem kostenpflichtigen Tool-Call (Firecrawl, Claude-API, gebudgetiertes WebFetch): `checkBudget({ scope, action, current, limits })` → wenn `allowed: false`, Call wird **nicht ausgeführt**. Post-hoc wäre wertlos: das Token-Budget ist dann schon verbrannt.
 
 ## 7. DSGVO-Pseudonymisierung (§7.12) — PII-Scrub-Pipeline
 
@@ -239,7 +247,7 @@ PII_PATTERNS = [
     (r'\bu/[A-Za-z0-9_-]+\b', '[reddit-user]'),
     (r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '[email]'),
     (r'(?i)(?:posted by|—)\s+([A-Z][a-z]+ [A-Z][a-z]+)', r'\1 → [author]'),
-    # weitere Patterns in scripts/pii-scrub.ts
+    # weitere Patterns in scripts/pii-scrub.mjs
 ]
 ```
 

@@ -245,7 +245,7 @@ Rationale (Pfad-B-Reject-Lehre, angewandt auf Inheritance-Chain): eine halluzini
 
 Enforcement:
 
-1. **Dossier-Researcher** führt `scripts/citation-verify.ts` auf das Root-Dossier direkt nach Write aus. Exit-Code 1 → Root-File bleibt auf `verdict: citation_fail`, Child-Build-Queue der Kategorie pausiert automatisch (CEO-Gate blockt `dossier-request`-Tickets mit diesem Root als Parent).
+1. **Dossier-Researcher** führt `scripts/citation-verify.mjs` auf das Root-Dossier direkt nach Write aus (Invocation-Order hart, 2 Stellen — siehe SOUL). Exit-Code 1 → Root-File bleibt auf `verdict: citation_fail`, Child-Build-Queue der Kategorie pausiert automatisch (CEO-Gate blockt `dossier-request`-Tickets mit diesem Root als Parent). **Wichtig:** Der Verify-Pass MUSS laufen **BEVOR** der erste Child-Build davon erben darf — Inheritance-Integrity ist nicht optional.
 2. **CEO-Gate** (vor jedem `tool-build`-Dispatch mit `parent_dossier`) liest das Parent-File und prüft `citation_verify_passed: true`. Fail → `dossier-refresh` des Parents vor Child-Dispatch.
 3. **Kürzere Root-TTL** (siehe `CATEGORY_TTL.md`): Category-Root deckt mehr Konkurrenten, mehr User-Pain-Communities, mehr SEO-Keyword-Landschaft ab — d.h. größere Change-Surface. Daher Root-TTL = **ceil(Tool-TTL / 2), Minimum 30d**. Beispiel: `length` → Tool 365d, Root 180d. `image` → Tool 180d, Root 90d. `crypto` (wenn aktiv) → beide 30d (Minimum greift).
 4. **Parent-Refresh kaskadiert NICHT automatisch auf Children.** Ein frisches Parent invalidiert kein Child — der Child-TTL gilt unabhängig. Das verhindert Refresh-Stürme bei Kategorie-weiten Updates. Kaskade nur bei `refresh_trigger: competitor-launch` (Event, das ALLE Children betrifft).

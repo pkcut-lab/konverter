@@ -85,7 +85,7 @@ override_triggers_active:
 365d für Physik-Konverter heißt: Ein Konkurrent-Redesign wird bis zu 12 Monate lang verschlafen, wenn kein Override greift. **Mitigation zweistufig:**
 
 - **Root-Level-Refresh alle 180d** fängt Kategorie-weite Competitor-Shifts (UX-Pattern-Wandel, neue Konkurrent-Welle) spätestens nach 6 Monaten ab, ohne dass jeder einzelne Child-Dossier neu gerollt werden muss.
-- **Competitor-Watch-List** (monatlicher Per-Kategorie-Diff-Check, ~5 Min) fängt den 80%-Fall ab, lange vor TTL-Ablauf — Script in `scripts/competitor-watch.ts` (Batch 3).
+- **Competitor-Watch-List** (monatlicher Per-Kategorie-Diff-Check, ~5 Min) fängt den 80%-Fall ab, lange vor TTL-Ablauf — Script in `scripts/competitor-watch.mjs` (Batch 3, Runner-Wiring in Batch 5).
 
 ## Änderungs-Policy
 
