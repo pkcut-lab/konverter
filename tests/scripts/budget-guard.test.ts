@@ -1,7 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { writeFileSync, rmSync, mkdirSync, existsSync } from 'node:fs';
 // @ts-expect-error — .mjs import without types is fine here
-import { checkBudget, loadLimits, readCurrentCount, DEFAULT_LIMITS } from '../../scripts/budget-guard.mjs';
+import {
+  checkBudget,
+  checkRoleLimit,
+  loadLimits,
+  readCurrentCount,
+  DEFAULT_LIMITS,
+  BudgetConfigMissingError,
+} from '../../scripts/budget-guard.mjs';
 
 const TMP_DIR = 'tests/.tmp-budget';
 const TMP_YAML = `${TMP_DIR}/budgets.yaml`;
@@ -55,9 +62,23 @@ describe('budget-guard — loadLimits', () => {
     if (existsSync(TMP_DIR)) rmSync(TMP_DIR, { recursive: true, force: true });
   });
 
-  it('falls back to DEFAULT_LIMITS when yaml missing', () => {
-    const lim = loadLimits(`${TMP_DIR}/missing.yaml`);
-    expect(lim).toEqual(DEFAULT_LIMITS);
+  it('throws BudgetConfigMissingError when yaml missing — fail-secure, not permissive fallback', () => {
+    // §7.16 hard-bound: wenn tasks/budgets.yaml fehlt, MÜSSEN alle gebudgetierten
+    // Calls blockiert werden. Kein stiller Fallback zu DEFAULT_LIMITS mehr.
+    const missingPath = `${TMP_DIR}/missing.yaml`;
+    expect(() => loadLimits(missingPath)).toThrow(BudgetConfigMissingError);
+    expect(() => loadLimits(missingPath)).toThrow(/missing/);
+  });
+
+  it('attaches path to BudgetConfigMissingError for caller diagnostics', () => {
+    const missingPath = `${TMP_DIR}/nope.yaml`;
+    try {
+      loadLimits(missingPath);
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(BudgetConfigMissingError);
+      expect((err as BudgetConfigMissingError).path).toBe(missingPath);
+    }
   });
 
   it('merges yaml overrides into defaults', () => {
@@ -76,6 +97,77 @@ describe('budget-guard — loadLimits', () => {
     );
     const lim = loadLimits(TMP_YAML);
     expect(lim.firecrawl_per_ticket).toBe(7);
+  });
+
+  it('parses per_role block with inline flow-style entries', () => {
+    writeFileSync(
+      TMP_YAML,
+      [
+        'daily_tokens_cap: 1_500_000',
+        'firecrawl_monthly_usd_cap: 0',
+        'per_role:',
+        '  ceo:          { heartbeats_max: 48, reworks_max: 0 }',
+        '  tool-builder: { heartbeats_max: 4,  reworks_max: 2 }',
+        '',
+      ].join('\n'),
+    );
+    const lim = loadLimits(TMP_YAML);
+    expect(lim.daily_tokens_cap).toBe(1_500_000);
+    expect(lim.firecrawl_monthly_usd_cap).toBe(0);
+    expect(lim.per_role.ceo).toEqual({ heartbeats_max: 48, reworks_max: 0 });
+    expect(lim.per_role['tool-builder']).toEqual({ heartbeats_max: 4, reworks_max: 2 });
+  });
+});
+
+describe('budget-guard — checkRoleLimit', () => {
+  const limitsFixture = {
+    per_role: {
+      ceo: { heartbeats_max: 48, reworks_max: 0 },
+      'tool-builder': { heartbeats_max: 4, reworks_max: 2 },
+    },
+  };
+
+  it('allows when current < per_role cap and reports remaining', () => {
+    const res = checkRoleLimit({
+      role: 'tool-builder',
+      metric: 'heartbeats',
+      current: 2,
+      limits: limitsFixture,
+    });
+    expect(res.allowed).toBe(true);
+    expect(res.remaining).toBe(2);
+  });
+
+  it('blocks when current >= per_role cap', () => {
+    const res = checkRoleLimit({
+      role: 'tool-builder',
+      metric: 'reworks',
+      current: 2,
+      limits: limitsFixture,
+    });
+    expect(res.allowed).toBe(false);
+    expect(res.reason).toMatch(/per_role\.tool-builder\.reworks_max reached/);
+  });
+
+  it('fail-secure blocks when role missing from config (not ignore)', () => {
+    const res = checkRoleLimit({
+      role: 'unknown-agent',
+      metric: 'heartbeats',
+      current: 0,
+      limits: limitsFixture,
+    });
+    expect(res.allowed).toBe(false);
+    expect(res.reason).toMatch(/missing — fail-secure block/);
+  });
+
+  it('fail-secure blocks when limits object is empty', () => {
+    const res = checkRoleLimit({
+      role: 'ceo',
+      metric: 'heartbeats',
+      current: 0,
+      limits: {},
+    });
+    expect(res.allowed).toBe(false);
   });
 });
 

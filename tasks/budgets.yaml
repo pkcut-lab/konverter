@@ -1,0 +1,37 @@
+# tasks/budgets.yaml — Runtime-Enforcer für Kostenlos-Constraint (§7.16)
+#
+# Gelesen von scripts/budget-guard.mjs (Pre-Tool-Call-Wrapper).
+# Referenziert in: HEARTBEAT.md §3.1 Budget-Gate, agents/ceo.md §12 Fall 1
+# (Cost-Overflow Live-Alarm), souls/ceo.md „Live-Alarm Ausnahme 1".
+#
+# FAIL-SECURE: Fehlt diese Datei → `loadLimits` wirft `BudgetConfigMissingError`
+# → CLI-Check + Pre-Tool-Call-Wrapper blockieren ALLE kostenpflichtigen Calls.
+# Nicht ignorieren, nicht auf Default-Values zurückfallen. §7.16 ist hard-bound.
+#
+# Schema v1.0 — 3 Top-Level-Caps (Token/Tag, Firecrawl-USD/Monat, Anthropic-
+# Token/Monat) + per_role Heartbeat-/Rework-Ceiling.
+#
+# Legacy per-scope-Caps aus scripts/budget-guard.mjs DEFAULT_LIMITS
+# (firecrawl_per_ticket=3, tokens_per_day_in=2_000_000, …) bleiben intakt
+# via Merge-Semantik: `{ ...DEFAULT_LIMITS, ...parsed }` in loadLimits.
+# Overrides hier nur aufnehmen, wenn wir vom Default abweichen wollen.
+
+# --- Globale Top-Level-Caps (neu v1.0) --------------------------------------
+
+daily_tokens_cap: 2_000_000
+firecrawl_monthly_usd_cap: 0           # free-tier only — §7.16 hard-bound
+anthropic_monthly_token_cap: 50_000_000
+
+# --- Per-Role Heartbeat-/Rework-Ceilings ------------------------------------
+#
+# heartbeats_max: wie oft darf der Agent im Rahmen eines einzelnen Tickets
+#   (nicht global) aufgerufen werden, bevor der Heartbeat-Timeout greift und
+#   User-Eskalation ausgelöst wird.
+# reworks_max: wie viele QA-Fail-Retries sind erlaubt, bevor §3.2
+#   Score-Auto-Resolve (ship-as-is ≥0.80 / parked <0.80) triggert.
+
+per_role:
+  ceo:                      { heartbeats_max: 48, reworks_max: 0 }
+  tool-dossier-researcher:  { heartbeats_max: 2,  reworks_max: 1 }
+  tool-builder:             { heartbeats_max: 4,  reworks_max: 2 }
+  merged-critic:            { heartbeats_max: 1,  reworks_max: 0 }
