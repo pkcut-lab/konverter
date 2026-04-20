@@ -242,3 +242,191 @@ Wer diesen Pass befolgt, passiert die Build-Gates:
 9. Meta-Description 140–160 Zeichen (kommt aus Frontmatter ab S4; im Phase-0-
    Draft optional als Kommentar am Dateiende).
 10. Alt-Text-Schema `Pencil-Sketch-Icon von {Motiv}` pro Tool dokumentiert.
+
+---
+
+## 13. Tool-Content-Template v2 (gelockt Session 6)
+
+Single-Source-of-Truth für Paperclip-Mass-Production und alle künftigen
+DE-Tool-Content-Files. Referenz-Implementierung: `src/content/tools/hevc-zu-h264/de.md`.
+
+### 13.1 Kanonisches Frontmatter-Schema (15 Felder)
+
+```yaml
+---
+# --- Identität (2 Felder, required) ---
+toolId: hevc-to-h264                    # PFLICHT. Kebab-case, aus slug-map.ts — sprach-neutral.
+language: de                            # PFLICHT. Enum aus ACTIVE_LANGUAGES (Phase 0–2: de only).
+
+# --- Editorial-Kopf (3 Felder; 1 required, 2 optional) ---
+title: "iPhone-Video in MP4 umwandeln — HEVC zu H.264 Konverter"
+                                        # PFLICHT. 30–60 Zeichen. Liefert plain H1, <title>, JSON-LD.
+eyebrow: "KONVERTER"                    # OPTIONAL. 1–24 Zeichen. Uppercase-Kicker über H1.
+headingHtml: "iPhone-Video in <em>MP4</em> umwandeln"
+                                        # OPTIONAL. Editorial-H1 mit max 1 <em> — kein anderes HTML.
+                                        # Fallback: plain `title` wird als H1 gerendert.
+
+# --- SEO-Copy (3 Felder, alle required) ---
+metaDescription: "…"                    # PFLICHT. 140–160 Zeichen inkl. Leerzeichen.
+tagline: "…"                            # PFLICHT. 1–200 Zeichen. Unter-H1-Zeile.
+intro: "…"                              # PFLICHT. Freitext, Wortzahl siehe §2.
+
+# --- Nutzer-Flow (2 Felder, beide required) ---
+howToUse:                               # PFLICHT. 3–5 Bullet-Strings.
+  - "Schritt 1 …"
+faq:                                    # PFLICHT. 4–6 {q, a}-Paare.
+  - q: "Wie …?"
+    a: "…"
+
+# --- Related-System (2 Felder, beide required) ---
+relatedTools:                           # PFLICHT, 0–5 kebab-Slugs. Darf [] sein — Fallback trägt.
+  - webp-konverter
+category: video                         # PFLICHT seit Session 6. Enum aus 14 Werten (§13.3).
+
+# --- Optional-Renderings (2 Felder, optional) ---
+aside:                                  # OPTIONAL. 3 Schritte + privacy-String.
+  steps: [{title, description}, {…}, {…}]
+  privacy: "…"
+kbdHints:                               # OPTIONAL. 1–4 {key, label}-Paare.
+  - { key: "Strg+V", label: "Einfügen" }
+
+# --- Versionierung (1 Feld, required) ---
+contentVersion: 1                       # PFLICHT. Integer ≥1, Content-Breaking-Change bumpt.
+---
+```
+
+**Bindende Constraints (aus `src/content/tools.schema.ts`):**
+- `title`: 30–60 Zeichen.
+- `metaDescription`: 140–160 Zeichen.
+- `headingHtml`: max 1 `<em>…</em>`, **kein anderes HTML** (Zod-refine erzwingt).
+- `howToUse`: 3–5 Einträge · `faq`: 4–6 Einträge · `relatedTools`: 0–5 Einträge.
+- `category`: **required** — Schema bricht ohne gültigen Enum-Wert.
+
+### 13.2 Locked-H2-Patterns
+
+Drei Pattern sind erlaubt. Pattern A/B sind in Vitest-Content-Tests gelockt
+(`tests/content/*-content.test.ts`), Pattern C ist legitime Ausnahme.
+
+**Pattern A — Größen-Konverter** (6 H2s, Reihenfolge fix):
+
+```markdown
+## Was macht der Konverter?
+## Umrechnungsformel
+## Anwendungsbeispiele
+## Häufige Einsatzgebiete
+## Häufige Fragen
+## Verwandte <Kat>-Tools
+```
+
+Fällt darunter: alle Einheiten-Konverter (Länge, Gewicht, Fläche, Temperatur,
+Volumen, Distanz, Zeit). Beispiele: meter-zu-fuss, celsius-zu-fahrenheit,
+kilogramm-zu-pfund, quadratmeter-zu-quadratfuss.
+
+**Pattern B — File-Tools** (6 H2s, Reihenfolge fix):
+
+```markdown
+## Was ist <Format>?
+## Warum <Format-A> in <Format-B> umwandeln?
+## Anwendungsbeispiele
+## Datenschutz — 100% im Browser
+## Häufige Fragen
+## Verwandte <Kat>-Tools
+```
+
+Fällt darunter: Format-Konverter mit Single-Format-Fokus und Privacy-Relevanz.
+Beispiel: webp-konverter.
+
+**Pattern C — Free-Form** (H2-Reihenfolge tool-individuell, Prose-Closer bleibt Pflicht):
+
+Für komplexe File-Tools mit tool-spezifischen Sektionen (z.B. Codec-Vergleich,
+Grenzen-Tabelle, Kompatibilitäts-Matrix). H2s free-form, aber:
+- Seite endet **immer** mit `## Verwandte <Kat>-Tools` (§13.4).
+- Mindestens eine H2 `## Häufige Fragen` irgendwo im Body (JSON-LD `FAQPage` braucht das).
+
+Beispiele: hevc-zu-h264, hintergrund-entfernen. Pattern-C-Tools haben **keinen**
+strukturellen Content-Test — nur Build-Smoke + Frontmatter-Schema-Test.
+
+### 13.3 Category-Mapping-Tabelle (hand-authored, keine Auto-Derivation)
+
+`<Kat>`-Label für den Prose-Link-Closer. Wenn ein neuer Enum-Wert in
+`src/lib/tools/categories.ts` dazukommt, MUSS diese Tabelle synchron erweitert werden.
+
+| `category` (Enum) | `<Kat>`-Label (DE) | Closer-H2                           |
+|-------------------|--------------------|-------------------------------------|
+| `length`          | Längen             | `## Verwandte Längen-Tools`         |
+| `weight`          | Gewichts           | `## Verwandte Gewichts-Tools`       |
+| `area`            | Flächen            | `## Verwandte Flächen-Tools`        |
+| `volume`          | Volumen            | `## Verwandte Volumen-Tools`        |
+| `distance`        | Distanz            | `## Verwandte Distanz-Tools`        |
+| `temperature`     | Temperatur         | `## Verwandte Temperatur-Tools`     |
+| `image`           | Bild               | `## Verwandte Bild-Tools`           |
+| `video`           | Video              | `## Verwandte Video-Tools`          |
+| `audio`           | Audio              | `## Verwandte Audio-Tools`          |
+| `document`        | Dokumenten         | `## Verwandte Dokumenten-Tools`     |
+| `text`            | Text               | `## Verwandte Text-Tools`           |
+| `dev`             | Entwickler         | `## Verwandte Entwickler-Tools`     |
+| `color`           | Farb               | `## Verwandte Farb-Tools`           |
+| `time`            | Zeit               | `## Verwandte Zeit-Tools`           |
+
+### 13.4 Prose-Link-Closer — verbindliches Format
+
+Jedes DE-Tool endet mit diesem Block — auch wenn `relatedTools: []` ist
+(Category-Fallback rendert die Nav-Bar, der Prose-Closer bleibt redaktionelle
+Pflicht).
+
+```markdown
+## Verwandte <Kat>-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Tool-Titel-1](/de/<slug-1>)** — 1-Satz-Prose-Beschreibung, max ~120 Zeichen.
+- **[Tool-Titel-2](/de/<slug-2>)** — 1-Satz-Prose-Beschreibung, max ~120 Zeichen.
+- **[Tool-Titel-3](/de/<slug-3>)** — 1-Satz-Prose-Beschreibung, max ~120 Zeichen.
+```
+
+**Verbindlich:**
+- H2-Wortlaut aus §13.3, **keine** Abweichung (Tests greifen).
+- Intro-Zeile wortgleich: `"Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:"`.
+- Exakt **3 Bullets**. Darunter wirkt dünn, darüber lenkt ab.
+- Bullet-Format: `- **[Titel](/de/<slug>)** — Prose.`
+  – Titel fett + Link · Em-Dash-Trenner (` — `, Leerzeichen davor und danach) · Prose in Normal-Gewicht.
+- Prose ≤120 Zeichen, ein Satz, endet mit Punkt.
+- Linkziel ist die tatsächliche DE-Route (`/de/<slug>`) — Forward-Refs zu
+  noch-nicht-existenten Tools sind hier **verboten** (anders als im Frontmatter-
+  `relatedTools`, das Forward-Refs still droppt).
+
+### 13.5 Hard-Caps aus Runde 3 (Design-Alignment Sessions 1–5)
+
+Diese sechs Regeln überstimmen alle Skill-Defaults und gelten für jedes
+Tool-Content-File:
+
+1. **`headingHtml`-Einschränkung.** Maximal ein `<em>…</em>`-Tag, kein anderes
+   HTML (kein `<strong>`, `<b>`, `<span>` etc.). Zod-Schema erzwingt das per
+   doppelter `refine()` — Schema-Error bricht den Build.
+
+2. **Italic-Accent-H1-Pattern.** Das `<em>` umschließt das **Ziel-Substantiv**
+   der Umwandlung, nicht das Verb und nicht den Prozess. Verb bleibt roman.
+   – Richtig: `iPhone-Video in <em>MP4</em> umwandeln`, `<em>Hintergrund</em> entfernen`.
+   – Falsch: `iPhone-Video <em>umwandeln</em>`, `<em>Hintergrund entfernen</em>`.
+
+3. **Short-Title-Rule** (Commit `79738cf`). `computeShortTitle()` kappt
+   ` – / — / - `-Suffixe (Dash mit Leerzeichen davor) und wird **ausschließlich**
+   für kompakte Nav-Chips verwendet: Related-Bar, You-Might-Strip. NICHT für
+   `<title>`, Meta-Description, JSON-LD, Heading-Rendering oder Breadcrumbs.
+
+4. **Prose-Link-Closer-Pflicht.** Jedes DE-Tool-File endet mit
+   `## Verwandte <Kat>-Tools` + Prose-Block nach §13.4. Das ist redaktionelle
+   Zusatzschicht zusätzlich zur component-gerenderten Related-Bar.
+
+5. **Keine Tool-Icons mehr** (Session 4). Tool-Karten (Homepage, Footer, You-
+   Might-Strip) und Nav-Chips tragen KEINE Icons. Icons erscheinen nur noch als
+   160×160-Hero auf Detail-Seiten. Content-Files brauchen keinen Icon-Frontmatter-
+   Eintrag — das alte `iconPrompt`-JSDoc lebt noch in Tool-Configs, aber kein
+   Content-Feld mehr.
+
+6. **Palette-Lockerung** (Session 1, 2026-04-20). Orange-Accent
+   (`#8F3A0C` Light / `#F0A066` Dark, beide AAA) erscheint **ausschließlich** auf
+   Links, Focus-Rings, `<em>`-Highlights, Eyebrow-Pulse-Dots, Spinner-Arcs,
+   Dropzone-Active-Borders. **Niemals** als Primary-Button-Fläche — Primary-
+   Buttons bleiben `var(--color-text)` graphit-dunkel. Keine weiteren
+   Akzentfarben, keine bold accent colors, keine Purple-Gradients.
