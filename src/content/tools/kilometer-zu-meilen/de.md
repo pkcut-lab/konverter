@@ -25,6 +25,7 @@ relatedTools:
   - meter-zu-fuss
   - zentimeter-zu-zoll
   - quadratmeter-zu-quadratfuss
+category: length
 contentVersion: 1
 ---
 

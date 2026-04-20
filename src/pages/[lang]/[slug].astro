@@ -173,7 +173,11 @@ const jsonLd = buildToolJsonLd(
       )}
     </div>
 
-    <RelatedTools lang={entry.data.language} relatedSlugs={entry.data.relatedTools} />
+    <RelatedTools
+      lang={entry.data.language}
+      ownSlug={Astro.params.slug!}
+      relatedSlugs={entry.data.relatedTools}
+    />
 
     {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt
         schon, damit späteres Einblenden keinen CLS erzeugt. aria-hidden, weil

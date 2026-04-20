@@ -25,6 +25,7 @@ relatedTools:
   - meter-zu-fuss
   - zentimeter-zu-zoll
   - celsius-zu-fahrenheit
+category: weight
 contentVersion: 1
 ---
 

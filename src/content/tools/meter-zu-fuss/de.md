@@ -25,6 +25,7 @@ relatedTools:
   - zentimeter-zu-zoll
   - kilometer-zu-meilen
   - quadratmeter-zu-quadratfuss
+category: length
 contentVersion: 1
 ---
 

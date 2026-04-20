@@ -39,6 +39,14 @@ describe('listToolsForLang', () => {
     expect(bgRemover.href).toBe('/de/hintergrund-entfernen');
     expect(bgRemover.iconRel).toBe('/icons/tools/remove-background.webp');
   });
+
+  it('ToolListItem carries `category` field from frontmatter', async () => {
+    const items = await listToolsForLang('de');
+    const mf = items.find((t) => t.toolId === 'meter-to-feet');
+    expect(mf).toBeDefined();
+    // Nach Content-Migration ist category gesetzt; vor Migration undefined.
+    expect(Object.prototype.hasOwnProperty.call(mf!, 'category')).toBe(true);
+  });
 });
 
 describe('resolveRelatedTools (accepts localized slugs, not toolIds)', () => {

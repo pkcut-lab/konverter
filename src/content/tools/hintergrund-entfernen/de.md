@@ -25,6 +25,7 @@ relatedTools:
   - bild-komprimieren
   - bild-groesse-aendern
   - webp-konverter
+category: image
 aside:
   steps:
     - title: "Bild auswählen"

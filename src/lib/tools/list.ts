@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { getCollection } from 'astro:content';
 import { getSlug } from '../slug-map';
 import type { Lang } from './types';
+import type { ToolCategory } from './categories';
 
 export type ToolListItem = {
   toolId: string;
@@ -18,6 +19,8 @@ export type ToolListItem = {
   href: string;
   iconRel: string;
   hasIcon: boolean;
+  /** Flache Kategorie aus dem Frontmatter; `undefined` bis Task 7 schema-tightenet. */
+  category: ToolCategory | undefined;
 };
 
 /** Strippt SEO-Suffix nach Gedankenstrich-mit-Spaces. Leerer Eingang → leerer Ausgang. */
@@ -35,7 +38,7 @@ export async function listToolsForLang(lang: Lang): Promise<ToolListItem[]> {
   const projectRoot = process.cwd();
 
   return entries
-    .map((entry: { data: { toolId: string; title: string; tagline: string } }): ToolListItem | null => {
+    .map((entry: { data: { toolId: string; title: string; tagline: string; category?: ToolCategory } }): ToolListItem | null => {
       const slug = getSlug(entry.data.toolId, lang);
       if (!slug) return null;
       const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
@@ -47,6 +50,7 @@ export async function listToolsForLang(lang: Lang): Promise<ToolListItem[]> {
         href: `/${lang}/${slug}`,
         iconRel,
         hasIcon: existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, ''))),
+        category: entry.data.category,
       };
     })
     .filter((t: ToolListItem | null): t is ToolListItem => t !== null)
@@ -69,5 +73,53 @@ export async function resolveRelatedTools(
     const hit = bySlugSuffix.get(slug);
     if (hit) out.push(hit);
   }
+  return out;
+}
+
+/**
+ * Resolvt explicit-relatedTools zuerst und füllt — falls das Ergebnis unter
+ * `minCount` liegt — mit alphabetisch sortierten Same-Category-Geschwistern auf.
+ * Own-Slug wird aus dem Fallback ausgeschlossen. Duplikate werden still
+ * übersprungen. Explicit-Ordering wird bewahrt; Fallback-Items kommen danach.
+ *
+ * Wenn das Tool keine category hat oder keine Geschwister existieren, wird
+ * das Ergebnis auf der Länge belassen, die explicit lieferte.
+ */
+export async function resolveRelatedToolsWithFallback(
+  lang: Lang,
+  ownSlug: string,
+  explicitSlugs: readonly string[],
+  minCount: number,
+): Promise<ToolListItem[]> {
+  const all = await listToolsForLang(lang);
+  const bySlugSuffix = new Map(all.map((t) => [t.href.split('/').pop()!, t]));
+
+  const seen = new Set<string>();
+  const out: ToolListItem[] = [];
+
+  for (const slug of explicitSlugs) {
+    if (slug === ownSlug) continue;
+    const hit = bySlugSuffix.get(slug);
+    if (hit && !seen.has(slug)) {
+      out.push(hit);
+      seen.add(slug);
+    }
+  }
+
+  if (out.length >= minCount) return out;
+
+  const own = bySlugSuffix.get(ownSlug);
+  if (!own?.category) return out;
+
+  const siblings = all.filter(
+    (t) => t.category === own.category && !seen.has(t.href.split('/').pop()!) && t.toolId !== own.toolId,
+  );
+
+  for (const sibling of siblings) {
+    if (out.length >= minCount) break;
+    out.push(sibling);
+    seen.add(sibling.href.split('/').pop()!);
+  }
+
   return out;
 }

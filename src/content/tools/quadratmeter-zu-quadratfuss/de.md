@@ -25,6 +25,7 @@ relatedTools:
   - meter-zu-fuss
   - zentimeter-zu-zoll
   - kilometer-zu-meilen
+category: area
 contentVersion: 1
 ---
 

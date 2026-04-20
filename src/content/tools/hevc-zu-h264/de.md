@@ -28,6 +28,7 @@ relatedTools:
   - webp-konverter
   - hintergrund-entfernen
   - meter-zu-fuss
+category: video
 contentVersion: 1
 ---
 

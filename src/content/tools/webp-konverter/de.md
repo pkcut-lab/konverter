@@ -25,6 +25,7 @@ relatedTools:
   - jpg-zu-png
   - bild-komprimieren
   - bild-groesse-aendern
+category: image
 contentVersion: 1
 ---
 

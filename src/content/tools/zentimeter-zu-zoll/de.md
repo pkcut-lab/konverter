@@ -25,6 +25,7 @@ relatedTools:
   - meter-zu-fuss
   - kilometer-zu-meilen
   - quadratmeter-zu-quadratfuss
+category: length
 contentVersion: 1
 ---
 

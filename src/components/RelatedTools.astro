@@ -2,19 +2,20 @@
 // src/components/RelatedTools.astro
 //
 // Rendert die verwandten Tools als horizontale Tab-Leiste direkt unter
-// dem Tool-Bereich — visuell das Pendant zur `.popular-bar` im Header
-// (dotted Tabs, Mono-Uppercase-Label, Border-Top/Bottom, keine Karten).
-// Slugs ohne Slug-Map- oder Content-Entry werden stumm verworfen.
+// dem Tool-Bereich. Benutzt seit feat/category-fallback die Fallback-Variante:
+// explicit-Slugs first, dann Same-Category-Geschwister bis `minCount` erreicht.
 // Wrap ist conditional: null Treffer → kein Markup.
-import { resolveRelatedTools } from '../lib/tools/list';
+import { resolveRelatedToolsWithFallback } from '../lib/tools/list';
 import type { Lang } from '../lib/tools/types';
 
 interface Props {
   lang: Lang;
+  ownSlug: string;
   relatedSlugs: readonly string[];
+  minCount?: number;
 }
-const { lang, relatedSlugs } = Astro.props;
-const tools = await resolveRelatedTools(lang, relatedSlugs);
+const { lang, ownSlug, relatedSlugs, minCount = 3 } = Astro.props;
+const tools = await resolveRelatedToolsWithFallback(lang, ownSlug, relatedSlugs, minCount);
 
 const labelByLang: Record<string, string> = {
   de: 'Verwandt',

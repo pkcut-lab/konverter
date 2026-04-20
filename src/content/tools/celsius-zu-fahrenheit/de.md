@@ -25,6 +25,7 @@ relatedTools:
   - kilogramm-zu-pfund
   - meter-zu-fuss
   - zentimeter-zu-zoll
+category: temperature
 contentVersion: 1
 ---
 
