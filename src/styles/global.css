@@ -31,6 +31,15 @@ h1 { font-size: var(--font-size-h1); line-height: var(--font-lh-h1); font-weight
 h2 { font-size: var(--font-size-h2); line-height: var(--font-lh-h2); font-weight: var(--font-fw-h2); }
 h3 { font-size: var(--font-size-h3); line-height: var(--font-lh-h3); font-weight: var(--font-fw-h3); }
 
+/* Italic-Accent emphasis inside H1/H2 — editorial serif-substitute.
+   Inter italic in warm orange reads as emphasis without a second font. */
+h1 em,
+h2 em {
+  font-style: italic;
+  color: var(--color-accent);
+  font-weight: inherit;
+}
+
 a {
   color: var(--color-accent);
   text-decoration: underline;
@@ -174,4 +183,266 @@ code, pre {
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 0.2em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Editorial Pattern Library (Runde 3 — DESIGN.md §4)
+   Content-driven classes — MDX authors can use inline.
+   ───────────────────────────────────────────────────────────── */
+
+/* Eyebrow Pill — small status capsule above H1 or section-head.
+   Layout:  <span class="eyebrow"><span class="eyebrow__dot"></span>KONVERTER</span> */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  background: var(--color-surface-sunk);
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.eyebrow__dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  animation: eyebrow-pulse 2s ease-in-out infinite;
+}
+@keyframes eyebrow-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow__dot { animation: none; opacity: 1; }
+}
+
+/* Section Head — 2-column editorial heading pattern.
+   Layout:  <header class="section-head">
+              <span class="section-head__label">01 — ANWENDUNGSFÄLLE</span>
+              <h2 class="section-head__title">So nutzt du <em>das Tool</em></h2>
+            </header> */
+.section-head {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-6);
+}
+.section-head__label {
+  padding-top: var(--space-2);
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.section-head__title {
+  text-wrap: balance;
+  margin: 0;
+}
+@media (max-width: 48rem) {
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .section-head__label { padding-top: 0; }
+}
+
+/* Compare Table — pro/con list for SEO content blocks.
+   Layout:  <div class="compare">
+              <div class="plus"><h3>…</h3><ul><li>…</li></ul></div>
+              <div class="minus"><h3>…</h3><ul><li>…</li></ul></div>
+            </div>
+   Success/Error-hued bullets are the ONE exception in Role-Rules §2. */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  margin: var(--space-6) 0;
+}
+.compare h3 {
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-subtle);
+  font-family: var(--font-family-mono);
+}
+.compare ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.compare li {
+  position: relative;
+  padding-left: var(--space-5);
+  line-height: 1.55;
+  color: var(--color-text);
+}
+.compare .plus li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+  color: var(--color-success);
+}
+.compare .minus li::before {
+  content: "−";
+  position: absolute;
+  left: 0;
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+  color: var(--color-error);
+}
+@media (max-width: 40rem) {
+  .compare { grid-template-columns: 1fr; gap: var(--space-4); }
+}
+
+/* Usecases Grid — numbered 3-column editorial cards.
+   Layout:  <ol class="usecases">
+              <li><h3>Titel</h3><p>Beschreibung</p></li>
+            </ol> */
+.usecases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+  margin: var(--space-6) 0;
+  counter-reset: usecase;
+}
+.usecases li {
+  counter-increment: usecase;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-surface);
+  margin: 0;
+}
+.usecases li::before {
+  content: counter(usecase, decimal-leading-zero);
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-text-subtle);
+}
+.usecases h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-body);
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+.usecases p {
+  margin: 0;
+  font-size: var(--font-size-small);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+@media (max-width: 48rem) {
+  .usecases { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 40rem) {
+  .usecases { grid-template-columns: 1fr; }
+}
+
+/* Limits Rows — key-value technical-specs list.
+   Layout:  <dl class="limits">
+              <div class="limits__row">
+                <span class="limits__num">01</span>
+                <dt>Max. Dateigröße</dt>
+                <dd class="mono">50 MB</dd>
+              </div>
+            </dl> */
+.limits {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: var(--space-6) 0;
+  padding: 0;
+}
+.limits__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.limits__row:last-child { border-bottom: none; }
+.limits__num {
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+}
+.limits dt {
+  margin: 0;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.limits dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+.limits .mono {
+  font-family: var(--font-family-mono);
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 40rem) {
+  .limits__row {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+  .limits dd {
+    grid-column: 1 / -1;
+    text-align: left;
+    padding-left: calc(0.75rem + var(--space-4));
+  }
+}
+
+/* Privacy Callout — client-only trust-signal block.
+   Layout:  <aside class="privacy-callout">
+              <span class="privacy-callout__mark">§</span>
+              <p>Läuft vollständig in deinem Browser · keine Datei wird hochgeladen.</p>
+            </aside> */
+.privacy-callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-surface);
+  margin: var(--space-6) 0;
+}
+.privacy-callout__mark {
+  font-family: var(--font-family-mono);
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+.privacy-callout p {
+  margin: 0;
+  font-size: var(--font-size-small);
+  line-height: 1.55;
+  color: var(--color-text-muted);
 }

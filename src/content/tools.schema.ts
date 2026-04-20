@@ -31,10 +31,29 @@ const kbdHint = z.object({
  * Word-count for intro is NOT enforced here (warning-only per Spec 8.5);
  * content-lint script (Session 10) handles that.
  */
+/**
+ * Optional editorial H1 in HTML form. Allows exactly ONE `<em>…</em>` inside
+ * the title for italic-accent emphasis (see DESIGN.md §4 Italic-Accent-H1).
+ * Used ONLY for visible rendering — meta/title/JSON-LD always use plain `title`.
+ */
+const headingHtmlSchema = z
+  .string()
+  .min(1)
+  .refine((s) => (s.match(/<em>/g) ?? []).length <= 1, {
+    message: 'headingHtml darf maximal ein <em>…</em> enthalten (Refined-Minimalism).',
+  })
+  .refine((s) => !/<(?!\/?em\b)[^>]+>/i.test(s), {
+    message: 'headingHtml erlaubt nur <em>…</em> — kein anderes HTML.',
+  });
+
 export const toolContentFrontmatterSchema = z.object({
   toolId: z.string().min(1),
   language: z.enum(ACTIVE_LANGUAGES),
   title: z.string().min(30).max(60),
+  /** Optional short label above H1 (e.g., "KONVERTER", "BILD-TOOL"). */
+  eyebrow: z.string().min(1).max(24).optional(),
+  /** Optional editorial H1 with up to one <em>; falls back to plain `title`. */
+  headingHtml: headingHtmlSchema.optional(),
   metaDescription: z.string().min(140).max(160),
   tagline: z.string().min(1).max(200),
   intro: z.string().min(1),

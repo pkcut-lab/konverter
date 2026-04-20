@@ -101,7 +101,16 @@ const jsonLd = buildToolJsonLd(
           decoding="async"
         />
       )}
-      <h1>{entry.data.title}</h1>
+      {entry.data.eyebrow && (
+        <span class="eyebrow">
+          <span class="eyebrow__dot" aria-hidden="true"></span>
+          {entry.data.eyebrow}
+        </span>
+      )}
+      {entry.data.headingHtml
+        ? <h1 set:html={entry.data.headingHtml} />
+        : <h1>{entry.data.title}</h1>
+      }
       <p class="tagline">{entry.data.tagline}</p>
     </header>
 
@@ -160,7 +169,12 @@ const jsonLd = buildToolJsonLd(
     <article class="tool-article">
       <p class="intro">{entry.data.intro}</p>
 
-      <h2>Wie benutzt du den Konverter?</h2>
+      <header class="section-head">
+        <span class="section-head__label">01 — Anleitung</span>
+        <h2 class="section-head__title">
+          Wie benutzt du <em>den Konverter</em>?
+        </h2>
+      </header>
       <ol class="how">
         {entry.data.howToUse.map((step) => <li>{step}</li>)}
       </ol>

@@ -2,6 +2,8 @@
 toolId: hevc-to-h264
 language: de
 title: "iPhone-Video in MP4 umwandeln — HEVC zu H.264 Konverter"
+eyebrow: "VIDEO-TOOL"
+headingHtml: "iPhone-Video in <em>MP4</em> umwandeln"
 metaDescription: "Wandle iPhone-HEVC-Videos in H.264-MP4 um — direkt im Browser, ohne Upload, ohne Anmeldung, kostenlos. Dein Video verlässt deinen Rechner nicht."
 tagline: "HEVC-Videos in universelles H.264-MP4 umwandeln — direkt im Browser, ohne Upload."
 intro: "iPhones nehmen Videos seit iOS 11 standardmäßig als HEVC (H.265) im MOV-Container auf. Das spart Speicherplatz, sorgt aber bei älteren Windows-Rechnern, Samsung-Fernsehern, Photoshop-Versionen vor 2023 oder WhatsApp-Web für schwarze Bildschirme und Fehlermeldungen. Dieser Konverter wandelt HEVC-MOV-Dateien in ein universell abspielbares H.264-MP4 um — vollständig in deinem Browser, ohne Server-Upload, ohne Anmeldung und ohne Wasserzeichen. Die eigentliche Konvertierung läuft über die native WebCodecs-API deines Browsers und nutzt die Hardware-Beschleunigung deiner GPU. Das macht die Umwandlung schnell genug, dass ein 1080p-Video in etwa Echtzeit-Geschwindigkeit durchläuft."
@@ -73,23 +75,45 @@ Dekade hardware-beschleunigt dekodiert. Es ist damit das sichere
 Ziel-Format, wenn „muss überall laufen" wichtiger ist als „minimale
 Dateigröße".
 
+<div class="compare">
+  <div class="plus">
+    <h3>H.264 — pro universelle Wiedergabe</h3>
+    <ul>
+      <li>Läuft auf jedem Gerät der letzten 15 Jahre nativ</li>
+      <li>Hardware-Dekodierung in jedem modernen Browser</li>
+      <li>Patentfrei zugänglich seit 2013 — keine Lizenz-Hürden</li>
+      <li>Universell akzeptiert von WhatsApp, Video-Schnitt, Smart-TVs</li>
+    </ul>
+  </div>
+  <div class="minus">
+    <h3>HEVC — contra Kompatibilität</h3>
+    <ul>
+      <li>Schwarzer Bildschirm auf vielen Windows-Rechnern</li>
+      <li>Blockiert WhatsApp-Web und ältere Social-Media-Uploads</li>
+      <li>Photoshop vor 2023 importiert MOV-HEVC nicht</li>
+      <li>Samsung-Fernseher älterer Generationen verweigern Abspielen</li>
+    </ul>
+  </div>
+</div>
+
 ## Anwendungsbeispiele
 
 Drei typische Situationen, in denen eine Umwandlung nötig wird:
 
-**Familien-Videos teilen:** Opa bekommt per WhatsApp ein MOV-Video vom
-Enkelkind und sieht einen schwarzen Bildschirm. Die Konvertierung in MP4
-macht das Video auf jedem Smartphone, jedem Windows-Rechner und jedem
-Smart-TV abspielbar.
-
-**Video-Schnitt vorbereiten:** Wer mit DaVinci Resolve, Adobe Premiere vor
-2024 oder iMovie auf älteren Macs arbeitet, importiert HEVC-MOV-Dateien
-manchmal nur mit Proxy-Zwischenschritten. Ein H.264-MP4 erspart den Umweg.
-
-**Social-Media-Uploads:** YouTube, Twitter/X und LinkedIn akzeptieren HEVC
-inzwischen, aber die Transcoding-Qualität schwankt. Wer die Kontrolle
-behalten will — besonders bei Kurzvideos, bei denen jedes Re-Encoding die
-Qualität spürbar senkt —, liefert direkt ein H.264-MP4.
+<ol class="usecases">
+  <li>
+    <h3>Familien-Videos teilen</h3>
+    <p>Opa bekommt per WhatsApp ein MOV-Video vom Enkelkind und sieht einen schwarzen Bildschirm. Die Konvertierung in MP4 macht das Video auf jedem Smartphone, jedem Windows-Rechner und jedem Smart-TV abspielbar.</p>
+  </li>
+  <li>
+    <h3>Video-Schnitt vorbereiten</h3>
+    <p>Wer mit DaVinci Resolve, Adobe Premiere vor 2024 oder iMovie auf älteren Macs arbeitet, importiert HEVC-MOV-Dateien manchmal nur mit Proxy-Zwischenschritten. Ein H.264-MP4 erspart den Umweg.</p>
+  </li>
+  <li>
+    <h3>Social-Media-Uploads</h3>
+    <p>YouTube, Twitter/X und LinkedIn akzeptieren HEVC inzwischen, aber die Transcoding-Qualität schwankt. Wer die Kontrolle behalten will, liefert direkt ein H.264-MP4.</p>
+  </li>
+</ol>
 
 ## Datenschutz — dein Video verlässt nie deinen Browser
 
@@ -114,8 +138,30 @@ cloud-basierten Konvertern. Weitere Details stehen in der
 
 ## Grenzen dieses Tools
 
-Ehrliche Erwartungsführung ist uns wichtiger als Marketing-Versprechen. Drei
-Einschränkungen, die du kennen solltest:
+Ehrliche Erwartungsführung ist uns wichtiger als Marketing-Versprechen:
+
+<dl class="limits">
+  <div class="limits__row">
+    <span class="limits__num">01</span>
+    <dt>Max. Dateigröße</dt>
+    <dd class="mono">500 MB (Desktop) · 250 MB (iOS)</dd>
+  </div>
+  <div class="limits__row">
+    <span class="limits__num">02</span>
+    <dt>Auflösungs-Skalierung</dt>
+    <dd>Nur auf Opt-in — sonst bleibt 4K auch 4K</dd>
+  </div>
+  <div class="limits__row">
+    <span class="limits__num">03</span>
+    <dt>HDR / Dolby Vision</dt>
+    <dd>Metadaten gehen verloren (H.264 ist SDR)</dd>
+  </div>
+  <div class="limits__row">
+    <span class="limits__num">04</span>
+    <dt>Browser-Voraussetzung</dt>
+    <dd class="mono">WebCodecs · Chrome 99+ / Safari 16.4+</dd>
+  </div>
+</dl>
 
 **Dateigrößen-Obergrenze 500 MB.** Darüber steigt das Risiko, dass der
 Browser-Speicher überläuft. Auf iPhones empfehlen wir sogar schon ab 250 MB
