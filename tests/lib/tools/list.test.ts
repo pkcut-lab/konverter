@@ -33,11 +33,10 @@ describe('listToolsForLang', () => {
     expect(tools).toEqual([]);
   });
 
-  it('attaches href + iconRel to each entry', async () => {
+  it('attaches href to each entry', async () => {
     const tools = await listToolsForLang('de');
     const bgRemover = tools.find((t) => t.toolId === 'remove-background')!;
     expect(bgRemover.href).toBe('/de/hintergrund-entfernen');
-    expect(bgRemover.iconRel).toBe('/icons/tools/remove-background.webp');
   });
 
   it('ToolListItem carries `category` field from frontmatter', async () => {

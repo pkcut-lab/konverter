@@ -16,7 +16,6 @@ import {
 const baseValid = {
   id: 'meter-to-feet',
   categoryId: 'laengen',
-  iconPrompt: 'A pencil sketch of a ruler',
 };
 
 describe('converterSchema', () => {

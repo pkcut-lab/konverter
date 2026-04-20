@@ -16,7 +16,6 @@ function makeConfig(
     id: TEST_ID,
     type: 'file-tool',
     categoryId: 'bilder',
-    iconPrompt: 'pencil sketch',
     accept: ['image/png', 'image/jpeg'],
     maxSizeMb: 10,
     process,

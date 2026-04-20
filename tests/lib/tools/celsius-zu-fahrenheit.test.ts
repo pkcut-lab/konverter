@@ -21,9 +21,4 @@ describe('celsiusZuFahrenheit config', () => {
   it('formula is affine — required for temperature offset', () => {
     expect(celsiusZuFahrenheit.formula).toEqual({ type: 'affine', factor: 1.8, offset: 32 });
   });
-
-  it('exposes an iconPrompt string', () => {
-    expect(typeof celsiusZuFahrenheit.iconPrompt).toBe('string');
-    expect((celsiusZuFahrenheit.iconPrompt ?? '').length).toBeGreaterThan(40);
-  });
 });

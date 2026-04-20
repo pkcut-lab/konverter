@@ -21,9 +21,4 @@ describe('kilogrammZuPfund config', () => {
   it('formula is linear with the exact inverse-of-0.45359237 factor', () => {
     expect(kilogrammZuPfund.formula).toEqual({ type: 'linear', factor: 2.2046226218 });
   });
-
-  it('exposes an iconPrompt string', () => {
-    expect(typeof kilogrammZuPfund.iconPrompt).toBe('string');
-    expect((kilogrammZuPfund.iconPrompt ?? '').length).toBeGreaterThan(40);
-  });
 });

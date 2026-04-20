@@ -21,9 +21,4 @@ describe('meterZuFuss config', () => {
   it('formula is linear with factor 3.28084', () => {
     expect(meterZuFuss.formula).toEqual({ type: 'linear', factor: 3.28084 });
   });
-
-  it('exposes an iconPrompt string', () => {
-    expect(typeof meterZuFuss.iconPrompt).toBe('string');
-    expect((meterZuFuss.iconPrompt ?? '').length).toBeGreaterThan(40);
-  });
 });

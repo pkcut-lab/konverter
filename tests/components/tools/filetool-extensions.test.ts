@@ -50,7 +50,6 @@ function baseConfig(overrides: Partial<FileToolConfig> = {}): FileToolConfig {
     id: TEST_ID,
     type: 'file-tool',
     categoryId: 'video',
-    iconPrompt: 'pencil sketch',
     accept: ['video/mp4'],
     maxSizeMb: 500,
     showQuality: false,

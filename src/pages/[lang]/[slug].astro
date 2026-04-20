@@ -1,6 +1,4 @@
 ---
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -54,17 +52,6 @@ if (!(config.type in componentByType)) {
 
 const { Content } = await entry.render();
 
-// Convention (Session 9): if `public/icons/tools/<toolId>.webp` exists, the
-// hero renders it above the H1. Auto-picks up new icons as they land —
-// no config flag required. The icon file is the 160×160 WebP output of the
-// Recraft → BG-Remover pipeline; CSS renders it at 160 (Desktop) / 120 (Mobile).
-// process.cwd() is the project root during `astro build`; more reliable than
-// `new URL('../../../', import.meta.url)`, which can point into compiled
-// output when Vite relocates chunks (and when a folder name contains spaces).
-const projectRoot = process.cwd();
-const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
-const hasIcon = existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, '')));
-
 // Default privacy-eyebrow: every client-side tool gets a trust signal above
 // its H1 unless the content file explicitly overrides via frontmatter.eyebrow.
 // Because all tools on this site run fully in the browser (Spec §7, pure-client
@@ -103,17 +90,6 @@ const jsonLd = buildToolJsonLd(
   ))}
   <div class="tool-page">
     <header class="tool-hero">
-      {hasIcon && (
-        <img
-          class="tool-hero__icon"
-          src={iconRel}
-          alt=""
-          width="160"
-          height="160"
-          loading="eager"
-          decoding="async"
-        />
-      )}
       <span class="eyebrow">
         <span class="eyebrow__dot" aria-hidden="true"></span>
         {eyebrowText}
@@ -227,24 +203,6 @@ const jsonLd = buildToolJsonLd(
     flex-direction: column;
     align-items: center;
     gap: var(--space-5);
-  }
-  .tool-hero__icon {
-    width: 160px;
-    height: 160px;
-    margin-bottom: var(--space-4);
-    object-fit: contain;
-  }
-  @media (max-width: 40rem) {
-    .tool-hero__icon {
-      width: 120px;
-      height: 120px;
-    }
-  }
-  /* The icons are graphite pencil sketches on transparent — in dark mode the
-     strokes vanish against the dark canvas. ThemeScript always stamps
-     `data-theme` before first paint, so a plain selector is enough. */
-  :global([data-theme='dark']) .tool-hero__icon {
-    filter: invert(1);
   }
   .tool-hero h1 {
     margin: 0;

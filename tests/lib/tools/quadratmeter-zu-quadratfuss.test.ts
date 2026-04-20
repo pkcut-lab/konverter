@@ -21,9 +21,4 @@ describe('quadratmeterZuQuadratfuss config', () => {
   it('formula is linear with pre-squared factor (3.28084²)', () => {
     expect(quadratmeterZuQuadratfuss.formula).toEqual({ type: 'linear', factor: 10.7639104 });
   });
-
-  it('exposes an iconPrompt string', () => {
-    expect(typeof quadratmeterZuQuadratfuss.iconPrompt).toBe('string');
-    expect((quadratmeterZuQuadratfuss.iconPrompt ?? '').length).toBeGreaterThan(40);
-  });
 });

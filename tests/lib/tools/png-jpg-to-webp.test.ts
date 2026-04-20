@@ -21,8 +21,4 @@ describe('pngJpgToWebp config', () => {
   it('has maxSizeMb = 10', () => {
     expect(pngJpgToWebp.maxSizeMb).toBe(10);
   });
-
-  it('has iconPrompt (non-empty Pencil-Sketch-style)', () => {
-    expect(pngJpgToWebp.iconPrompt).toMatch(/pencil/i);
-  });
 });

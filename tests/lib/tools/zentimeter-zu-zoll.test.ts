@@ -21,9 +21,4 @@ describe('zentimeterZuZoll config', () => {
   it('formula is linear with the exact inverse-of-2.54 factor', () => {
     expect(zentimeterZuZoll.formula).toEqual({ type: 'linear', factor: 0.3937007874 });
   });
-
-  it('exposes an iconPrompt string', () => {
-    expect(typeof zentimeterZuZoll.iconPrompt).toBe('string');
-    expect((zentimeterZuZoll.iconPrompt ?? '').length).toBeGreaterThan(40);
-  });
 });

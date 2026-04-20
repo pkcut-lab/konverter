@@ -79,14 +79,16 @@
 - **CSS variable** for colors, typography, spacing scale values, radii, shadows, motion. (Tailwind's `bg-bg`, `text-accent` etc. are ok — they resolve to the vars.)
 - For component-internal styles: either approach. Prefer utilities for one-liners, `<style>` blocks with vars for anything non-trivial.
 
-## 8. Icons (gelockt Session 9)
+## 8. Tool-Icons (entfernt 2026-04-20)
 
-- **Datei-Format:** Freigestellte WebP-Dateien unter `public/icons/tools/<toolId>.webp` (nicht `<slug>`, damit die Pfad-Auflösung stabil bleibt wenn Slugs pro Sprache variieren). Native Größe: 160×160.
-- **Pipeline:** Recraft.ai (PNG mit weißem Hintergrund) → `/de/hintergrund-entfernen` (Alpha-Freisteller) → Download als WebP → Commit unter `public/icons/tools/<toolId>.webp`.
-- **Auto-Pickup:** `[slug].astro` rendert das Icon automatisch, wenn die Datei existiert (Frontmatter-Check via `node:fs existsSync` zur Build-Zeit). Kein Config-Flag in der Tool-Config nötig — neue Icons erscheinen beim nächsten Build ohne Code-Änderung.
-- **CSS-Größe:** 160×160 auf Desktop, 120×120 auf ≤40rem (Mobile). Native 1:1 auf Desktop gibt retina-scharfe Kanten ohne zweite Asset-Version.
-- **Dark-Mode:** Graphit-Pencil-Sketches verschwinden vor dunklem Canvas → `:global([data-theme='dark']) .tool-hero__icon { filter: invert(1); }`. ThemeScript stampt `data-theme` vor First-Paint, also keine Flash-Prevention-Sonderfälle nötig.
-- **Alt-Text:** `alt=""` — der H1 daneben beschreibt das Tool bereits. Das Icon ist dekorativ.
+Tool-Icons wurden komplett entfernt (weder Hero noch Card). Begründung: Optik —
+die editoriale Typo-Hierarchie trägt die Detail-Seite eigenständig, Icons
+konkurrierten mit dem H1. `public/icons/tools/` gelöscht, Pipeline (Recraft →
+BG-Remover → WebP) stillgelegt, `iconPrompt`/`iconRel`/`hasIcon` aus Schema,
+Tool-Configs, `list.ts` und `[slug].astro` gestrichen.
+
+Favicon + PWA-Icons (`/favicon-32.png`, `/icon.svg`, `/icon-*.png`) sind davon
+NICHT betroffen — siehe CONVENTIONS.md §PWA-Icon-Regeneration.
 
 ## 9. Tool-Component Layouts (gelockt Sessions 5–7)
 
@@ -119,7 +121,6 @@ Tool-Detail-Seiten (`/[lang]/[slug]`) folgen einer dreistufigen Breiten-Hierarch
 | Block | `max-width` | Begründung |
 |-------|-------------|------------|
 | `.tool-hero` (H1 + Tagline) | `40rem` | Editorial Lesefluss, zentriert |
-| `.tool-hero__icon` | `160×160` Desktop, `120×120` ≤40rem | Native 1:1 ohne zweite Asset-Version; `margin-bottom: var(--space-4)` unter dem Icon |
 | `.tool-section` (Tool-Card) | `34rem` | Tool dominiert visuell — engste Spalte |
 | `.ad-slot-placeholder` | `42rem` | CLS-safe `min-height` aus Token, `dashed 1px` Ghost bis Phase 2 |
 | `.tool-article` (Intro + How + Prose) | `42rem` | Prose-optimale Lesebreite |
@@ -187,7 +188,6 @@ Zwei Cross-Link-Kanäle, beide refined-minimalism, beide Datenquelle `src/lib/to
 - Gemountet als Sibling von `<article class="tool-article">` innerhalb `.tool-page`.
 - Max-Breite `60rem`, `margin-top: var(--space-16)`.
 - Conditional-Render: leere Auflösung → keine Section (dokumentiert in Spec §4.3).
-- Card-Layout: `auto 1fr`-Grid, Icon `var(--icon-size-md)` (48px), `border: 1px solid var(--color-border)`, `border-radius: var(--r-md)`.
+- Card-Layout: `1px solid var(--color-border)`, `border-radius: var(--r-md)`. Kein Icon (entfernt 2026-04-20).
 - Motion: IntersectionObserver-Fade-In-Stagger, `var(--dur-med) var(--ease-out)`, Delay-Step `var(--stagger-step)` (60ms). `prefers-reduced-motion: reduce`: Fade-In komplett deaktiviert (sofort sichtbar).
-- Dark-Theme: globales `[data-theme='dark'] .related-tools img { filter: invert(1); }` matcht Homepage-Konvention (Section 8).
 - Datenquelle: `resolveRelatedTools(lang, frontmatter.relatedTools)` aus `src/lib/tools/list.ts` — **lokalisierte URL-Slugs**, nicht `toolId`s.

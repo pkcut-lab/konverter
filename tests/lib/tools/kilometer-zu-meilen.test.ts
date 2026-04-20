@@ -21,9 +21,4 @@ describe('kilometerZuMeilen config', () => {
   it('formula is linear with the exact inverse-of-1.609344 factor', () => {
     expect(kilometerZuMeilen.formula).toEqual({ type: 'linear', factor: 0.6213711922 });
   });
-
-  it('exposes an iconPrompt string', () => {
-    expect(typeof kilometerZuMeilen.iconPrompt).toBe('string');
-    expect((kilometerZuMeilen.iconPrompt ?? '').length).toBeGreaterThan(40);
-  });
 });

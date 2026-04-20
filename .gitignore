@@ -26,11 +26,6 @@ npm-debug.log*
 # Pagefind Index (generated)
 public/pagefind/
 
-# Icons pipeline (User drops PNGs here, Build converts to public/icons/tools/)
-pending-icons/*.png
-pending-icons/*.jpg
-!pending-icons/.gitkeep
-
 # Husky runtime
 .husky/_/
 

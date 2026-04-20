@@ -1,5 +1,3 @@
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { getCollection } from 'astro:content';
 import { getSlug } from '../slug-map';
 import type { Lang } from './types';
@@ -17,8 +15,6 @@ export type ToolListItem = {
   shortTitle: string;
   tagline: string;
   href: string;
-  iconRel: string;
-  hasIcon: boolean;
   /** Flache Kategorie aus dem Frontmatter; `undefined` bis Task 7 schema-tightenet. */
   category: ToolCategory | undefined;
 };
@@ -35,21 +31,17 @@ function computeShortTitle(title: string): string {
  */
 export async function listToolsForLang(lang: Lang): Promise<ToolListItem[]> {
   const entries = await getCollection('tools', (e: { data: { language: Lang } }) => e.data.language === lang);
-  const projectRoot = process.cwd();
 
   return entries
     .map((entry: { data: { toolId: string; title: string; tagline: string; category?: ToolCategory } }): ToolListItem | null => {
       const slug = getSlug(entry.data.toolId, lang);
       if (!slug) return null;
-      const iconRel = `/icons/tools/${entry.data.toolId}.webp`;
       return {
         toolId: entry.data.toolId,
         title: entry.data.title,
         shortTitle: computeShortTitle(entry.data.title),
         tagline: entry.data.tagline,
         href: `/${lang}/${slug}`,
-        iconRel,
-        hasIcon: existsSync(resolve(projectRoot, 'public', iconRel.replace(/^\//, ''))),
         category: entry.data.category,
       };
     })

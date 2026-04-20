@@ -418,11 +418,12 @@ Tool-Content-File:
    `## Verwandte <Kat>-Tools` + Prose-Block nach §13.4. Das ist redaktionelle
    Zusatzschicht zusätzlich zur component-gerenderten Related-Bar.
 
-5. **Keine Tool-Icons mehr** (Session 4). Tool-Karten (Homepage, Footer, You-
-   Might-Strip) und Nav-Chips tragen KEINE Icons. Icons erscheinen nur noch als
-   160×160-Hero auf Detail-Seiten. Content-Files brauchen keinen Icon-Frontmatter-
-   Eintrag — das alte `iconPrompt`-JSDoc lebt noch in Tool-Configs, aber kein
-   Content-Feld mehr.
+5. **Keine Tool-Icons überhaupt** (Rollback 2026-04-20, erweitert Session 4).
+   Weder Tool-Karten, Nav-Chips NOCH Detail-Seiten-Hero tragen Icons. Die
+   editoriale Typo-Hierarchie trägt die Seite eigenständig. `iconPrompt`-JSDoc,
+   `iconRel`/`hasIcon`-Runtime-Felder und `/public/icons/tools/` sind aus dem
+   Projekt entfernt. Content-Files brauchen keinen Icon-Frontmatter-Eintrag.
+   Favicon + PWA-Icons (`/icon.svg`, `/icon-*.png`) sind davon NICHT betroffen.
 
 6. **Palette-Lockerung** (Session 1, 2026-04-20). Orange-Accent
    (`#8F3A0C` Light / `#F0A066` Dark, beide AAA) erscheint **ausschließlich** auf

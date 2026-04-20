@@ -32,11 +32,6 @@
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Tool icons (WebP, pencil-sketches) change rarely — one week keeps
-# CF edges warm without freezing updates for too long.
-/icons/*
-  Cache-Control: public, max-age=604800
-
 # Pagefind index + UI chunks: the search can tolerate a few-minute stale
 # window; the SW also has StaleWhileRevalidate, so this is belt-and-
 # suspenders for non-SW (first-load) requests.
