@@ -1,8 +1,8 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-20 (Design-Alignment Runde 2a Integration, End)
+**Letztes Update:** 2026-04-20 (Design-Alignment Runde 2b — Step 1 FileTool done-state)
 **Aktuelle Phase:** Phase 1 — Skalierung (läuft) · parallel Design-Alignment Runden
-**Current Session:** Design-Alignment Runde 2a — Integration (Phase-1 × Runde-1 × LF-Normalisierung) ✅ · Branch `design/alignment-2a-integration` von `phase-1/session-2-batch-1-converters`, Merges: `tooling/stitch-integration` + `chore/git-line-endings`; Cherry-Picks: DESIGN.md-Spec-Fix + Header + Converter (ohne alten statischen Footer); neuer Kombi-Footer (Phase-1-Live-Liste × Runde-1-Styling); 1 stale Phase-1-Test gefixt (`meter-zu-fuss` rendert jetzt 3 Längen-Tools durch Batch-1); 329/329 Tests grün; `/de/meter-zu-fuss` + `/de/celsius-zu-fahrenheit` browser-verifiziert
+**Current Session:** Design-Alignment Runde 2b — Step 1 `FileTool.svelte` Done-State auf Baseline `97e004f1*` ✅ · Branch `design/alignment-2b-expansion` (abgezweigt von 2a-Tip `25ac976`), Tip `93425f7`; Commits: 1× FileTool-Rewrite (Vorher/Nachher + FERTIG-Badge + Meta-Row + konsolidierte Actions); Steps 2–5 (Stitch-Run Homepage-Listing, Homepage-Cards, RelatedTools-Compact, DESIGN.md §9/§4-Updates) vertagt auf Runde 2c; 329/329 Tests grün, astro check 0/0/0
 
 ## Phase 0 Fortschritt
 
@@ -33,7 +33,8 @@
 |-------|--------|--------|-------------|
 | 1 — Chrome + Converter | ✅ done | `design/alignment-1-chrome-and-converter` (73b65ce) | Header.astro + Footer.astro (statisch) + Converter.svelte auf Runde-1-Stitch-Baselines; DESIGN.md §4/§8 Spec-Fixes |
 | 2a — Integration | ✅ done | `design/alignment-2a-integration` | Merge Phase-1 × Runde-1 × LF-Normalisierung; Kombi-Footer (Live-Liste × Baseline-Styling); stale meter-zu-fuss-Test gefixt |
-| 2b — Expansion | ⬜ geplant | folgt | FileTool.svelte auf Result-State-Baseline (`97e004f1*`); Homepage-Cards auf Tool-Listing-Baseline (Stitch-Run pending); RelatedTools.svelte Card-Idiom-Angleichung |
+| 2b — FileTool Done-State | ✅ done (Step 1 von 5) | `design/alignment-2b-expansion` (Tip `93425f7`) | FileTool.svelte internes Done-State auf Baseline `97e004f1*`: Vorher/Nachher + FERTIG-Badge + Meta-Row + konsolidierte Action-Row (Neues Bild / In Zwischenablage / Herunterladen); Clipboard-Copy mit Feature-Detection; aspect-ratio 1/1 gegen CLS |
+| 2c — Homepage + Related | ⬜ geplant | folgt (abgezweigt von 2b-Tip) | Stitch-Run Homepage-Tool-Listing (1 Quota-Slot); Homepage-Cards auf neue Baseline; RelatedTools.astro als compact-scaled Card-Variante; DESIGN.md §9 4. Approved Baseline + §4 Card-Compact-Sub-Spec; page-level „So funktioniert es"-Sidebar + kbd-chips aus FileTool-Baseline (nicht in Svelte, in `[slug].astro`) |
 
 ## Tool-Inventar
 
@@ -132,6 +133,47 @@
 - Homepage-Cards (`src/pages/[lang]/index.astro`) auf Tool-Listing-Baseline — Stitch-Run steht aus
 - `RelatedTools.astro` Card-Idiom-Angleichung an DESIGN.md §4 (aktuell inline grid, soll auf Baseline-Card-Pattern)
 - FooterToolsList.astro Token-Cleanup (`outline-offset: 2px` → `var(--space-1)`, `outline: ... var(--color-text)` → `var(--color-accent)`) — optional, im Zuge einer codebase-weiten Token-Konsistenz-Session
+
+## Design-Alignment Runde 2b Deliverables (2026-04-20)
+
+Branch `design/alignment-2b-expansion` von 2a-Tip `25ac976`, Tip `93425f7`. Scope nach dem user-Stop-Rule von 5 Schritten auf Step 1 (FileTool-interne Done-State) reduziert — Steps 2–5 in Runde 2c geschoben.
+
+### Step 1 ✅ — FileTool.svelte Done-State
+
+Einziger Commit `93425f7` · Surgical Rewrite des internen Done-States auf Stitch-Baseline `97e004f1*` (Hintergrund-Entferner Result).
+
+- **2-Spalten-Grid Vorher/Nachher:** ORIGINAL + ERGEBNIS als `<figure class="compare__col">` mit mono-uppercase-`<figcaption>`. Desktop (≥40rem) 2-Col mit 1px-Hairline zwischen Spalten (`border-left: 1px solid var(--color-border)`); Mobile 1-Col gestackt mit `border-top`. `.preview`-Wrapper auf ERGEBNIS-Spalte trägt weiter das Schachbrett-Pattern (Alpha-Kanal-Visualisierung für PNG/WebP). `aspect-ratio: 1 / 1` auf beiden Frame-Wrappern verhindert CLS beim Blob-URL-Load.
+- **Status-Badge „FERTIG":** top-right absolute, mono · uppercase · `letter-spacing: 0.08em`, mit `var(--color-success)`-Dot (`var(--space-2)` × `var(--space-2)`, 9999px-radius), `aria-label="Status: fertig"`.
+- **Meta-Row:** mono · tabular-nums · dot-separiert: `WIDTH×HEIGHT · FORMAT · SIZE · −X%`. Dimensions via `createImageBitmap(blob)` (null-safe try/catch — in jsdom gibt's keine Implementierung). Reduktions-Prozent nur wenn `>0`, eingefärbt in `var(--color-success)`.
+- **Konsolidierte Action-Row:** `Neues Bild` (ghost) · `In Zwischenablage` (ghost, Feature-Detect für `ClipboardItem` + `navigator.clipboard.write`, Label-Flip „Kopiert"/„Nicht unterstützt" nach 1800ms) · `Herunterladen` (primary filled, mit Download-SVG-Icon). Ersetzt die alte getrennte `reset+download`-Zeile ohne Clipboard-Option.
+- **Source-URL:** `URL.createObjectURL(file)` für die ORIGINAL-Spalte, in `reset()` revoked. HEIC-Dateien rendern ohne Safari-Fallback als Broken-Image (Browser ohne native HEIC-Unterstützung) — akzeptiert, da Runde 1 HEIC nur als Input-Format und die Vorher-Spalte kein Hard-Cap ist.
+- **Preparing-, Converting-, Error-Phasen:** unverändert (Loader-Spinner, Prepare-Progress, Error-Box).
+
+### Test-Layer — bewahrte Invarianten
+
+Alle 16 `data-testid`-Anker unverändert: `filetool-dropzone`, `filetool-meta`, `filetool-input`, `filetool-camera-input`, `filetool-preparing`, `filetool-status` (wandert auf das `<article class="card">` im Done-State), `filetool-preview`, `filetool-format-chooser`, `filetool-format-{png,webp,jpg}`, `filetool-quality`, `filetool-result`, `filetool-error`, `filetool-download`, `filetool-reset`, `loader-progress-label`. `.preview`-Klasse bleibt auf dem direkten Parent von `filetool-preview`-img (Test `filetool-preview.test.ts:71` asserts `parentElement.className.match(/preview/)`).
+
+**1 Test-Assertion geflipped:** `filetool-input-methods.test.ts` — „paste in non-idle ignored" testet jetzt relativ (`callsAfterFirst === callsAfterSecond`), weil Done-State jetzt 2 Object-URLs pro Upload erzeugt (Source + Output) statt 1. Semantisch korrekt — ein zweiter Paste in der Done-Phase darf die Pipeline nicht erneut starten, und genau das misst die relative Assertion.
+
+### Gates
+
+- `npx vitest run` → 329/329 grün (inkl. 40/40 `filetool*`-Tests, Converter + Content + Smoke).
+- `npx astro check` → 0 errors / 0 warnings / 0 hints.
+- `npm run build` → grün, 10 Pagefind-indexed Pages.
+- Preview-SSR auf `http://localhost:4325/de/hintergrund-entfernen` liefert korrekte Idle-State-Markup (`<h1>Hintergrund entfernen — direkt im Browser</h1>` + `class="filetool svelte-1tgt0o8"` + alle Dropzone-Testids). Interaktive Done-State-Verifikation (Datei droppen, Badge + Vorher/Nachher sichten) nicht automatisiert durchgeführt — kein Headless-Driver in devDeps; empfohlen manuell vor dem Push von Runde 2c zu sichten.
+- Audit-Pass (web-design-guidelines + Hard-Caps CLAUDE.md §5): clean. `outline: none` auf `.quality__slider` ist pre-existing und paart sich mit einer `:focus-visible`-Regel — konform. Keine Hex-Farben, alle Transitions via `var(--dur-fast)` + `var(--ease-out)`, `prefers-reduced-motion` respektiert.
+
+### Commits
+
+- `93425f7` feat(filetool): align done-state to DESIGN.md baseline 97e004f1 — Vorher/Nachher + FERTIG badge + meta-row
+
+### Carry-over nach Runde 2c
+
+- **Step 2** — Stitch-Run Homepage-Tool-Listing (1 Quota-Slot, Prompt in `scripts/stitch/generate.mjs`): 3-Col Desktop · 2-Col Tablet · 1-Col Mobile · DE-Labels · ohne Hero-Background · Bento-Grid aus DESIGN.md §9.
+- **Step 3** — Homepage-Cards (`src/pages/[lang]/index.astro`) an neue Stitch-Baseline angleichen.
+- **Step 4** — `RelatedTools.astro` als compact-scaled Variante desselben Card-Idioms (kein eigener Stitch-Run, skaliert Homepage-Card herunter).
+- **Step 5** — DESIGN.md-Updates: §9 4. Approved-Baseline (Homepage-Listing) + §4 „Variant: compact (RelatedTools)"-Sub-Spec.
+- **Bonus (nicht zwingend)** — FileTool-Baseline hat eine page-level Bento-Sidebar („So funktioniert es" 01/02/03 + Datenschutz) + kbd-chips-Zeile unter dem Card. Die gehören NICHT in FileTool.svelte, sondern in `src/pages/[lang]/[slug].astro` (oder ein Tool-Detail-Layout). Wegen des user-Stop-Rules aus 2b in 2c oder später eingeplant; Risiko: §5 Max-Width-Policy vs. 2-Col-Sidebar-Layout muss erst in DESIGN.md §5 geklärt werden.
 
 ### Bekannte Follow-ups (nicht blocking)
 - **Recraft-Icons für die 5 neuen Tools** stehen aus. Pipeline ist live (`Recraft → /de/hintergrund-entfernen → public/icons/tools/<toolId>.webp`). Auto-Pickup via `existsSync` in beiden Templates greift sobald die WebP-Datei droppt — keine Code-Änderung nötig. Reihenfolge offen, üblicherweise nach Search-Volume.
