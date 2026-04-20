@@ -35,6 +35,7 @@ describe('zentimeter-zu-zoll/de.md frontmatter', () => {
       '## Anwendungsbeispiele',
       '## Häufige Einsatzgebiete',
       '## Häufige Fragen',
+      '## Verwandte Längen-Tools',
     ]);
   });
 });

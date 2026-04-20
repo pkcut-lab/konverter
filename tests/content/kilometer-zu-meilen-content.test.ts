@@ -35,6 +35,7 @@ describe('kilometer-zu-meilen/de.md frontmatter', () => {
       '## Anwendungsbeispiele',
       '## Häufige Einsatzgebiete',
       '## Häufige Fragen',
+      '## Verwandte Längen-Tools',
     ]);
   });
 });

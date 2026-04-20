@@ -2,6 +2,7 @@
 toolId: celsius-to-fahrenheit
 language: de
 title: "Celsius in Fahrenheit umrechnen – Formel & Tabelle"
+headingHtml: "Celsius in <em>Fahrenheit</em> umrechnen"
 metaDescription: "Celsius in Fahrenheit umrechnen: affine Formel (°F = °C × 1,8 + 32), Tabelle für Wetter, Kochen und Fiebermessung. Ohne Anmeldung, ohne Tracking."
 tagline: "Schnelle °C-zu-°F-Umrechnung mit affiner Formel — client-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Grad Celsius (°C) in die entsprechende Angabe in Grad Fahrenheit (°F) um und zeigt gleichzeitig den Rückweg. Er eignet sich für US-Wetterberichte, Kochrezepte mit Ofen-Temperaturen, Fieber-Werte aus amerikanischen Arztunterlagen und für jeden Kontext, in dem die beiden Temperatur-Skalen aufeinandertreffen. Die Umrechnung ist nicht rein multiplikativ — sie braucht einen Offset, weil beide Skalen unterschiedliche Nullpunkte haben."
@@ -125,3 +126,11 @@ Für schnelle Schätzungen: Celsius verdoppeln und 30 addieren. 20 °C × 2 + 30
 = 70 °F (exakt 68 °F). Die Abweichung bleibt unter 3 Grad im Alltagsbereich.
 Für präzise Werte — vor allem bei Fieber oder Ofen-Temperaturen — die exakte
 Formel nutzen.
+
+## Verwandte Temperatur-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Kilogramm zu Pfund](/de/kilogramm-zu-pfund)** — Gewichts-Umrechnung zwischen kg und Pfund, präzise Formel seit 1959.
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg und Beispielen.
+- **[Zentimeter zu Zoll](/de/zentimeter-zu-zoll)** — Längen-Umrechnung für Körpergrößen, Bildschirm-Diagonalen und DIY-Maße.

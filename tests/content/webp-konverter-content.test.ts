@@ -28,8 +28,6 @@ describe('webp-konverter/de.md frontmatter', () => {
   });
 
   it('body includes the 5 locked H2 headings in order', () => {
-    // „Verwandte Konverter" wurde 2026-04-19 entfernt — die Related-Tools-Section
-    // kommt jetzt aus <RelatedTools>, die das frontmatter.relatedTools konsumiert.
     const h2s = parsed.content.match(/^## .+$/gm) ?? [];
     expect(h2s).toEqual([
       '## Was ist WebP?',
@@ -37,6 +35,7 @@ describe('webp-konverter/de.md frontmatter', () => {
       '## Anwendungsbeispiele',
       '## Datenschutz — 100% im Browser',
       '## Häufige Fragen',
+      '## Verwandte Bild-Tools',
     ]);
   });
 });

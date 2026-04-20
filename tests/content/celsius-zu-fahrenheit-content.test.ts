@@ -35,6 +35,7 @@ describe('celsius-zu-fahrenheit/de.md frontmatter', () => {
       '## Anwendungsbeispiele',
       '## Häufige Einsatzgebiete',
       '## Häufige Fragen',
+      '## Verwandte Temperatur-Tools',
     ]);
   });
 });

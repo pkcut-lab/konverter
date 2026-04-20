@@ -2,6 +2,7 @@
 toolId: km-to-mile
 language: de
 title: "Kilometer in Meilen umrechnen – Formel & Tabelle"
+headingHtml: "Kilometer in <em>Meilen</em> umrechnen"
 metaDescription: "Kilometer in Meilen umrechnen: exakte Formel (1 mi = 1,609344 km), Tabelle für Marathon-Distanzen, Reise und US-Tacho. Ohne Anmeldung, ohne Tracking."
 tagline: "Schnelle km-zu-Meilen-Umrechnung — client-seitig, ohne Tracking, ohne Upload."
 intro: "Der Konverter wandelt einen Wert in Kilometern (km) in Meilen (mi) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Laufstrecken, Straßenangaben in US-Medien, Reisedistanzen und für Tachos in amerikanischen Fahrzeugen. Die Definition ist seit 1959 weltweit einheitlich: 1 internationale Meile entspricht exakt 1,609344 km."
@@ -114,3 +115,11 @@ zeigen meist beide Skalen. Bei Tempolimits lohnt sich die Kopfrechnung mal
 Eine Meile entspricht 1.760 Yard oder 5.280 Fuß. Ein Yard misst 0,9144 m.
 Kurzstrecken-Leichtathletik in den USA wird oft in Yard gemessen
 (100-Yard-Dash = 91,44 m).
+
+## Verwandte Längen-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg und Beispielen.
+- **[Zentimeter zu Zoll](/de/zentimeter-zu-zoll)** — Längen-Umrechnung für Körpergrößen, Bildschirm-Diagonalen und DIY-Maße.
+- **[Quadratmeter zu Quadratfuß](/de/quadratmeter-zu-quadratfuss)** — Flächen-Umrechnung mit vorquadriertem Faktor, für Wohnfläche und Grundrisse.

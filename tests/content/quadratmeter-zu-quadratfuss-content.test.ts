@@ -35,6 +35,7 @@ describe('quadratmeter-zu-quadratfuss/de.md frontmatter', () => {
       '## Anwendungsbeispiele',
       '## Häufige Einsatzgebiete',
       '## Häufige Fragen',
+      '## Verwandte Flächen-Tools',
     ]);
   });
 });

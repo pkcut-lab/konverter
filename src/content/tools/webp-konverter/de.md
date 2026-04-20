@@ -2,6 +2,7 @@
 toolId: png-jpg-to-webp
 language: de
 title: "PNG und JPG in WebP umwandeln – ohne Upload"
+headingHtml: "PNG und JPG in <em>WebP</em> umwandeln"
 metaDescription: "PNG oder JPG in WebP umwandeln: deutlich kleinere Dateien bei gleicher Qualität. Läuft komplett im Browser, ohne Upload, Anmeldung oder Tracking."
 tagline: "Bilder direkt im Browser komprimieren — kein Server, kein Tracking."
 intro: "Der Konverter wandelt eine PNG- oder JPG-Datei in das moderne WebP-Format um und reduziert die Dateigröße in den meisten Fällen um 25 bis 35 Prozent — bei vergleichbarer visueller Qualität. Die Verarbeitung passiert ausschließlich in deinem Browser über die Canvas-API, kein Byte verlässt dein Gerät. Ideal für Web-Entwicklerinnen, Blogger und alle, die ihre Seitenladezeit verbessern wollen."
@@ -117,3 +118,11 @@ das Ergebnis visuell.
 Nein. Die Konvertierung läuft vollständig in deinem Browser über die
 Canvas-API. Es gibt weder Upload, noch Server-Verarbeitung, noch Tracking. Du
 kannst diese Seite sogar offline nutzen, sobald sie einmal geladen wurde.
+
+## Verwandte Bild-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[HEVC zu H.264](/de/hevc-zu-h264)** — iPhone-Videos in universell abspielbares MP4 umwandeln, direkt im Browser.
+- **[Hintergrund entfernen](/de/hintergrund-entfernen)** — Motive aus Fotos freistellen, KI-basiert und ohne Upload.
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — schnelle Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg.

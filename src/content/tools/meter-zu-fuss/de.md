@@ -2,6 +2,7 @@
 toolId: meter-to-feet
 language: de
 title: "Meter in Fuß umrechnen – Formel & Tabelle"
+headingHtml: "Meter in <em>Fuß</em> umrechnen"
 metaDescription: "Meter in Fuß umrechnen: exakte Formel (1 m = 3,28084 ft), Tabelle gängiger Werte und FAQ zu internationalem vs. US-Survey-Fuß. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Längen-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Metern (m) in die entsprechende Angabe in Fuß (ft) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen metrischem und imperialem Längenmaß pendelt — von der Körpergröße bis zur Flughöhe. Meter in Fuß umrechnen ist dank exakter Definition seit 1959 eindeutig."
@@ -117,3 +118,11 @@ draufschlagen.
 Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder
 25,4 mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
 bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m.
+
+## Verwandte Längen-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Zentimeter zu Zoll](/de/zentimeter-zu-zoll)** — Längen-Umrechnung für Körpergrößen, Bildschirm-Diagonalen und DIY-Maße.
+- **[Kilometer zu Meilen](/de/kilometer-zu-meilen)** — Distanz-Umrechnung für Reisen, US-Tacho und Marathon-Strecken.
+- **[Quadratmeter zu Quadratfuß](/de/quadratmeter-zu-quadratfuss)** — Flächen-Umrechnung mit vorquadriertem Faktor, für Wohnfläche und Grundrisse.

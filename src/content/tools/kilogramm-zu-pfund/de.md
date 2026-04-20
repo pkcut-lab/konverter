@@ -2,6 +2,7 @@
 toolId: kg-to-lb
 language: de
 title: "Kilogramm in Pfund umrechnen – Formel & Tabelle"
+headingHtml: "Kilogramm in <em>Pfund</em> umrechnen"
 metaDescription: "Kilogramm in Pfund umrechnen: exakte Formel (1 lb = 0,45359237 kg), Tabelle für Körpergewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise kg-zu-Pfund-Umrechnung in Sekunden — client-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Kilogramm (kg) in die entsprechende Angabe in Pfund (lb) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Körpergewicht im US-Format, Kochrezepte mit Pound-Angaben, Fitness-Statistiken und für jeden Handel mit angelsächsisch normierten Waren. Die Definition ist seit 1959 weltweit einheitlich: 1 avoirdupois-Pfund entspricht exakt 0,45359237 kg."
@@ -118,3 +119,11 @@ Die US-Metrik-Umstellung wurde seit 1866 mehrfach gesetzlich autorisiert, aber
 nie verpflichtend durchgesetzt. Im Alltag, im Einzelhandel und in der Medizin
 dominiert weiterhin das Pfund. In Forschung, Technik und Export arbeiten
 US-Betriebe aber metrisch.
+
+## Verwandte Gewichts-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg und Beispielen.
+- **[Zentimeter zu Zoll](/de/zentimeter-zu-zoll)** — Längen-Umrechnung für Körpergrößen, Bildschirm-Diagonalen und DIY-Maße.
+- **[Celsius zu Fahrenheit](/de/celsius-zu-fahrenheit)** — Temperatur-Umrechnung mit affiner Formel, für Ofen, Fieber und US-Wetter.

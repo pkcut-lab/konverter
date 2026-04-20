@@ -2,6 +2,7 @@
 toolId: sqm-to-sqft
 language: de
 title: "Quadratmeter in Quadratfuß umrechnen – Formel & Tabelle"
+headingHtml: "Quadratmeter in <em>Quadratfuß</em> umrechnen"
 metaDescription: "Quadratmeter in Quadratfuß umrechnen: exakte Formel (1 m² = 10,7639 ft²), Tabelle für Wohnfläche, Immobilien und Grundrisse. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise m²-zu-ft²-Umrechnung mit vorquadriertem Faktor — client-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Quadratmetern (m²) in die entsprechende Angabe in Quadratfuß (ft²) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Wohnflächen in US-Immobilien-Angeboten, Grundrisse aus englischsprachigen Architektur-Unterlagen, Büro-Mietverträge und für jeden Kontext, in dem Flächenangaben zwischen metrischem und imperialem System übersetzt werden. Der Umrechnungsfaktor ist das Quadrat des linearen Fuß-zu-Meter-Faktors: 3,28084² = 10,7639."
@@ -128,3 +129,11 @@ Bei Mietverträgen ist die Präzision juristisch relevant. Deutsche Gerichte
 akzeptieren Abweichungen bis 10 % — größere Differenzen können Mietminderung
 rechtfertigen. Für offizielle Angaben rechne mit vier Nachkommastellen und
 runde erst im letzten Schritt.
+
+## Verwandte Flächen-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg und Beispielen.
+- **[Zentimeter zu Zoll](/de/zentimeter-zu-zoll)** — Längen-Umrechnung für Körpergrößen, Bildschirm-Diagonalen und DIY-Maße.
+- **[Kilometer zu Meilen](/de/kilometer-zu-meilen)** — Distanz-Umrechnung für Reisen, US-Tacho und Marathon-Strecken.

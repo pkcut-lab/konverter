@@ -35,6 +35,7 @@ describe('kilogramm-zu-pfund/de.md frontmatter', () => {
       '## Anwendungsbeispiele',
       '## Häufige Einsatzgebiete',
       '## Häufige Fragen',
+      '## Verwandte Gewichts-Tools',
     ]);
   });
 });

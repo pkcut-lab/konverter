@@ -2,6 +2,7 @@
 toolId: cm-to-inch
 language: de
 title: "Zentimeter in Zoll umrechnen – Formel & Tabelle"
+headingHtml: "Zentimeter in <em>Zoll</em> umrechnen"
 metaDescription: "Zentimeter in Zoll umrechnen: exakte Formel (1 in = 2,54 cm), Tabelle gängiger Werte und FAQ zu Körpergröße und Bildschirmdiagonalen. Ohne Ads."
 tagline: "Präzise cm-zu-Zoll-Umrechnung in Sekunden — client-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Zentimetern (cm) in die entsprechende Angabe in Zoll (in) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Körpergrößen im US-Format, Bildschirmdiagonalen, DIY-Maße und für jede Rechnung, die zwischen metrischem und imperialem System pendelt. Die Definition ist seit dem Yard-und-Pfund-Abkommen von 1959 weltweit einheitlich: 1 Zoll entspricht exakt 2,54 cm."
@@ -113,3 +114,11 @@ Optik behält man alle Stellen und rundet erst am Ende der Rechenkette.
 
 15 Zoll entsprechen 38,1 cm Diagonale. Für einen 16:9-Bildschirm bedeutet das
 rund 33,2 cm Breite und 18,7 cm Höhe — wichtig für Koffer- oder Tisch-Planung.
+
+## Verwandte Längen-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg und Beispielen.
+- **[Kilometer zu Meilen](/de/kilometer-zu-meilen)** — Distanz-Umrechnung für Reisen, US-Tacho und Marathon-Strecken.
+- **[Quadratmeter zu Quadratfuß](/de/quadratmeter-zu-quadratfuss)** — Flächen-Umrechnung mit vorquadriertem Faktor, für Wohnfläche und Grundrisse.

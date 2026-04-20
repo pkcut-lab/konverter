@@ -2,6 +2,7 @@
 toolId: remove-background
 language: de
 title: "Hintergrund entfernen — direkt im Browser"
+headingHtml: "<em>Hintergrund</em> entfernen"
 metaDescription: "Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert mit BEN2, WebGPU-beschleunigt."
 tagline: "Freisteller in Sekunden — das Bild bleibt auf deinem Gerät."
 intro: "Das Tool trennt ein Motiv vom Hintergrund und speichert das Ergebnis als transparente PNG-Datei. Die Analyse läuft vollständig auf deinem Gerät über ein KI-Modell, das einmalig ins Browser-Cache geladen wird. Danach funktioniert alles offline — kein Server, keine Anmeldung, kein Tracking. Ideal für Produktfotos, Porträts, Tiere und alles, was einen sauberen Freisteller braucht."
@@ -182,3 +183,11 @@ rund 110 MB groß und wird nach dem ersten Laden vom Browser gecacht.
 Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der
 Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP
 (kleinere Dateigröße bei vergleichbarer Qualität).
+
+## Verwandte Bild-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[WebP-Konverter](/de/webp-konverter)** — PNG und JPG in WebP umwandeln, rund 30 % kleinere Dateien, vollständig im Browser.
+- **[HEVC zu H.264](/de/hevc-zu-h264)** — iPhone-Videos in universell abspielbares MP4 umwandeln, direkt im Browser.
+- **[Meter zu Fuß](/de/meter-zu-fuss)** — schnelle Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg.

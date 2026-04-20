@@ -47,32 +47,33 @@ describe('Cross-Links — Footer + RelatedTools', () => {
   });
 
   describe('RelatedTools render matrix', () => {
-    it('hintergrund-entfernen renders the section with 1 card → webp-konverter', () => {
+    it('hintergrund-entfernen renders the bar with 1 resolvable → webp-konverter', () => {
+      // Runde-3-Session-4-Redesign: <RelatedTools> rendert jetzt als
+      // `<nav class="related-bar" aria-label="Verwandt">` mit span-Label,
+      // nicht mehr als Card-Grid mit <h2 id="related-heading">.
       const html = readDist('de/hintergrund-entfernen/index.html');
-      expect(html).toMatch(/<h2[^>]*id="related-heading"[^>]*>\s*Verwandte\s+Tools\s*<\/h2>/);
-      expect(html).toContain('aria-labelledby="related-heading"');
-      // Scope to the related-tools section so we don't count footer links.
-      // Forward-looking slugs (bild-komprimieren, bild-groesse-aendern) are
-      // dropped silently — only webp-konverter resolves today.
-      const section = html.split('class="related-tools"')[1] ?? '';
+      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandt"/);
+      // Forward-looking slugs (bild-komprimieren, bild-groesse-aendern) werden
+      // still verworfen — nur webp-konverter resolvt heute.
+      const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
       const links = section.match(/href="\/de\/webp-konverter"/g) ?? [];
       expect(links.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('meter-zu-fuss renders the section with 3 resolvable Längen-Tools', () => {
+    it('meter-zu-fuss renders the bar with 3 resolvable Längen-Tools', () => {
       // Phase-1 Batch-1 shipped zentimeter-zu-zoll, kilometer-zu-meilen,
       // quadratmeter-zu-quadratfuss — all three relatedSlugs now resolve.
       const html = readDist('de/meter-zu-fuss/index.html');
-      expect(html).toMatch(/<h2[^>]*id="related-heading"[^>]*>\s*Verwandte\s+Tools\s*<\/h2>/);
-      const section = html.split('class="related-tools"')[1] ?? '';
+      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandt"/);
+      const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
       for (const slug of ['zentimeter-zu-zoll', 'kilometer-zu-meilen', 'quadratmeter-zu-quadratfuss']) {
         expect(section).toMatch(new RegExp(`href="/de/${slug}"`));
       }
     });
 
-    it('webp-konverter suppresses the section (all slugs forward-looking)', () => {
+    it('webp-konverter suppresses the bar (all slugs forward-looking)', () => {
       const html = readDist('de/webp-konverter/index.html');
-      expect(html).not.toMatch(/id="related-heading"/);
+      expect(html).not.toMatch(/class="related-bar"/);
     });
   });
 });
