@@ -1,0 +1,77 @@
+# .paperclip.yaml — Runtime-Config für bundle-subpath Import
+#
+# Gelesen von `paperclipai company import docs/paperclip/bundle`. Alle Pfade
+# relativ zum Bundle-Root (= `docs/paperclip/bundle/`). Telemetry explizit
+# false — Scope unbekannt, strategische Metadaten-Leaks möglich, reversibel.
+#
+# Schema-Annahmen in v1 best-guess. Phase B verifiziert via
+# `paperclipai configure --help` + Dry-Run-Import.
+
+company: konverter
+
+telemetry: false
+
+heartbeat:
+  cadence: 30m
+  idle_behavior: wait         # kein Leer-Zyklus bei leerem Backlog
+  phase_1_warmup: 60m         # erste Woche Phase 2 langsamer
+
+git:
+  required_user: pkcut-lab
+  forbidden_users:
+    - DennisJedlicka
+  check_before_commit: scripts/check-git-account.sh
+
+# Runtime-Pfade — relativ zum Projekt-Root, NICHT zum Bundle-Root
+# Konvention: paperclip resolved `runtime.*` gegen die Working-Directory
+# (projekt-root), alles andere gegen das Bundle.
+runtime:
+  tasks_root: tasks
+  memory_root: memory
+  dossier_root: dossiers
+  inbox_root: inbox
+  evals_root: evals
+  halt_flag: .paperclip/EMERGENCY_HALT
+  budgets_config: tasks/budgets.yaml
+  metrics_log: tasks/metrics.jsonl
+
+budgets:
+  config_path: tasks/budgets.yaml
+  fail_secure: true           # fehlt Config → alle kostenpflichtigen Calls blockiert
+  firecrawl_monthly_usd_cap: 0
+  anthropic_monthly_token_cap: 50_000_000
+  daily_tokens_cap: 2_000_000
+
+rulebooks:
+  base: ../..                 # = docs/paperclip/
+  shared:
+    - BRAND_GUIDE.md
+    - TICKET_TEMPLATE.md
+    - DOSSIER_REPORT.md
+    - EVIDENCE_REPORT.md
+    - CATEGORY_TTL.md
+    - DAILY_DIGEST.md
+    - EMERGENCY_HALT.md
+    - SKILLS.md
+    - README.md
+
+project_rulebooks:
+  base: ../../..              # = projekt-root
+  files:
+    - CLAUDE.md
+    - CONVENTIONS.md
+    - STYLE.md
+    - CONTENT.md
+    - TRANSLATION.md
+    - DESIGN.md
+    - PROJECT.md
+    - PROGRESS.md
+
+# Skills-Sequenz für UI-Arbeit (CLAUDE.md §5)
+skills:
+  ui_sequence_pre:
+    - minimalist-ui
+    - frontend-design
+  ui_sequence_post:
+    - web-design-guidelines
+  hard_caps_override: true    # Rulebook-Hard-Caps überstimmen Skill-Defaults
