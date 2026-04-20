@@ -1,6 +1,6 @@
 # evals/merged-critic/annotations.yaml
 # Auto-generiert von scripts/eval-fixture-gen.mjs — nicht manuell editieren.
-# fixture-id → { verdict: pass|fail, failing_checks: [ids] }
+# fixture-id → { verdict: pass|fail, failing_checks: [ids], source?, git_sha? }
 
 pass-01-meter-zu-fuss:
   verdict: pass
@@ -66,79 +66,140 @@ fail-01-meta-missing-toolid:
   verdict: fail
   failing_checks:
     - c-meta
+  source: synthetic
 fail-02-meta-missing-language:
   verdict: fail
   failing_checks:
     - c-meta
+  source: synthetic
 fail-03-meta-missing-metadesc:
   verdict: fail
   failing_checks:
     - c-meta
+  source: synthetic
 fail-04-meta-missing-tagline:
   verdict: fail
   failing_checks:
     - c-meta
+  source: synthetic
 fail-05-meta-missing-category:
   verdict: fail
   failing_checks:
     - c-meta
+  source: synthetic
 fail-06-hex-inline-3chars:
   verdict: fail
   failing_checks:
     - c3-hex
+  source: synthetic
 fail-07-hex-inline-6chars:
   verdict: fail
   failing_checks:
     - c3-hex
+  source: synthetic
 fail-08-hex-uppercase:
   verdict: fail
   failing_checks:
     - c3-hex
+  source: synthetic
 fail-09-hex-8chars-alpha:
   verdict: fail
   failing_checks:
     - c3-hex
+  source: synthetic
 fail-10-hex-mixed-case:
   verdict: fail
   failing_checks:
     - c3-hex
+  source: synthetic
 fail-11-arbpx-padding:
   verdict: fail
   failing_checks:
     - c4-arb-px
+  source: synthetic
 fail-12-arbpx-width:
   verdict: fail
   failing_checks:
     - c4-arb-px
+  source: synthetic
 fail-13-arbpx-decimal:
   verdict: fail
   failing_checks:
     - c4-arb-px
+  source: synthetic
 fail-14-words-150:
   verdict: fail
   failing_checks:
     - c8-words
+  source: synthetic
 fail-15-words-250:
   verdict: fail
   failing_checks:
     - c8-words
+  source: synthetic
 fail-16-words-100:
   verdict: fail
   failing_checks:
     - c8-words
+  source: synthetic
 fail-17-words-299:
   verdict: fail
   failing_checks:
     - c8-words
+  source: synthetic
 fail-18-nbsp-meter:
   verdict: fail
   failing_checks:
     - c11-nbsp
+  source: synthetic
 fail-19-nbsp-kg:
   verdict: fail
   failing_checks:
     - c11-nbsp
+  source: synthetic
 fail-20-nbsp-ft:
   verdict: fail
   failing_checks:
     - c11-nbsp
+  source: synthetic
+fail-real-01-session5-prototype:
+  verdict: fail
+  failing_checks:
+    - c-meta
+    - c7-related
+    - c11-nbsp
+  source: real-history
+  git_sha: a1b8f9b
+  source_path: src/content/tools/meter-zu-fuss/de.md
+fail-real-02-pre-migration-kilogramm-zu-pfund:
+  verdict: fail
+  failing_checks:
+    - c-meta
+    - c7-related
+    - c11-nbsp
+  source: real-history
+  git_sha: ab168ff
+  source_path: src/content/tools/kilogramm-zu-pfund/de.md
+fail-real-03-pre-migration-zentimeter-zu-zoll:
+  verdict: fail
+  failing_checks:
+    - c-meta
+    - c7-related
+    - c11-nbsp
+  source: real-history
+  git_sha: ab168ff
+  source_path: src/content/tools/zentimeter-zu-zoll/de.md
+fail-real-04-pre-category-hintergrund-entfernen:
+  verdict: fail
+  failing_checks:
+    - c-meta
+  source: real-history
+  git_sha: 5fcbbf0
+  source_path: src/content/tools/hintergrund-entfernen/de.md
+fail-real-05-pre-category-webp-konverter:
+  verdict: fail
+  failing_checks:
+    - c-meta
+  source: real-history
+  git_sha: 5fcbbf0
+  source_path: src/content/tools/webp-konverter/de.md

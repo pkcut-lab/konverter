@@ -8,11 +8,50 @@
 // per-Check-Sensitivität messbar bleibt. Annotations listen den
 // erwarteten Check explizit auf.
 
-import { writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { writeFileSync, readFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = 'evals/merged-critic/fixtures';
+const REAL_HISTORY_ROOT = 'evals/merged-critic/real-history';
 const ANNOT = 'evals/merged-critic/annotations.yaml';
+
+// Real-History-Fail-Fixtures: verbatim pre-fix Blobs aus der Git-Historie.
+// Provenance: git_sha = Fix-Commit, source_path = getroffene Datei.
+// Expected-Checks wurden per manueller Inspektion des Blob-Inhalts gegen die
+// 6-Check-Rubrik abgeleitet, NICHT vom Runner ausgelesen — so fällt F1 <1.0,
+// falls der Runner etwas nicht detektiert, was laut Rubrik kaputt ist.
+const REAL_HISTORY_FIXTURES = [
+  {
+    id: 'fail-real-01-session5-prototype',
+    git_sha: 'a1b8f9b',
+    source_path: 'src/content/tools/meter-zu-fuss/de.md',
+    failing_checks: ['c-meta', 'c7-related', 'c11-nbsp'],
+  },
+  {
+    id: 'fail-real-02-pre-migration-kilogramm-zu-pfund',
+    git_sha: 'ab168ff',
+    source_path: 'src/content/tools/kilogramm-zu-pfund/de.md',
+    failing_checks: ['c-meta', 'c7-related', 'c11-nbsp'],
+  },
+  {
+    id: 'fail-real-03-pre-migration-zentimeter-zu-zoll',
+    git_sha: 'ab168ff',
+    source_path: 'src/content/tools/zentimeter-zu-zoll/de.md',
+    failing_checks: ['c-meta', 'c7-related', 'c11-nbsp'],
+  },
+  {
+    id: 'fail-real-04-pre-category-hintergrund-entfernen',
+    git_sha: '5fcbbf0',
+    source_path: 'src/content/tools/hintergrund-entfernen/de.md',
+    failing_checks: ['c-meta'],
+  },
+  {
+    id: 'fail-real-05-pre-category-webp-konverter',
+    git_sha: '5fcbbf0',
+    source_path: 'src/content/tools/webp-konverter/de.md',
+    failing_checks: ['c-meta'],
+  },
+];
 
 const SLUGS_PASS = [
   { slug: 'meter-zu-fuss', title: 'Meter in Fuß umrechnen', unit_from: 'Meter', unit_to: 'Fuß', cat: 'length', cat_de: 'Längen' },
@@ -213,7 +252,7 @@ function writeAnnotations(rows) {
   const lines = [
     '# evals/merged-critic/annotations.yaml',
     '# Auto-generiert von scripts/eval-fixture-gen.mjs — nicht manuell editieren.',
-    '# fixture-id → { verdict: pass|fail, failing_checks: [ids] }',
+    '# fixture-id → { verdict: pass|fail, failing_checks: [ids], source?, git_sha? }',
     '',
   ];
   for (const r of rows) {
@@ -225,6 +264,9 @@ function writeAnnotations(rows) {
     } else {
       lines.push('  failing_checks: []');
     }
+    if (r.source) lines.push(`  source: ${r.source}`);
+    if (r.git_sha) lines.push(`  git_sha: ${r.git_sha}`);
+    if (r.source_path) lines.push(`  source_path: ${r.source_path}`);
   }
   return lines.join('\n') + '\n';
 }
@@ -255,11 +297,31 @@ function main() {
     const slug_info = SLUGS_PASS[i % SLUGS_PASS.length];
     const id = `fail-${String(i + 1).padStart(2, '0')}-${mutator.id}`;
     writeFileSync(join(failDir, `${id}.md`), buildFailFixture(mutator, slug_info));
-    annotations.push({ id, verdict: 'fail', failing_checks: [mutator.check] });
+    annotations.push({ id, verdict: 'fail', failing_checks: [mutator.check], source: 'synthetic' });
+  }
+
+  // Real-History-Fail-Fixtures: Blobs aus REAL_HISTORY_ROOT nach fail/ spiegeln.
+  for (const rh of REAL_HISTORY_FIXTURES) {
+    const src = join(REAL_HISTORY_ROOT, `${rh.id}.md`);
+    if (!existsSync(src)) {
+      throw new Error(`Real-history fixture missing: ${src}`);
+    }
+    writeFileSync(join(failDir, `${rh.id}.md`), readFileSync(src, 'utf8'));
+    annotations.push({
+      id: rh.id,
+      verdict: 'fail',
+      failing_checks: rh.failing_checks,
+      source: 'real-history',
+      git_sha: rh.git_sha,
+      source_path: rh.source_path,
+    });
   }
 
   writeFileSync(ANNOT, writeAnnotations(annotations));
-  console.log(`Generated ${annotations.filter((a) => a.verdict === 'pass').length} pass + ${annotations.filter((a) => a.verdict === 'fail').length} fail fixtures → ${ROOT}`);
+  const nPass = annotations.filter((a) => a.verdict === 'pass').length;
+  const nFail = annotations.filter((a) => a.verdict === 'fail').length;
+  const nReal = annotations.filter((a) => a.source === 'real-history').length;
+  console.log(`Generated ${nPass} pass + ${nFail} fail (${nReal} real-history) → ${ROOT}`);
   console.log(`Annotations → ${ANNOT}`);
 }
 
