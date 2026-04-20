@@ -23,6 +23,26 @@ const valid = {
   contentVersion: 1,
 };
 
+function makeValidFrontmatter() {
+  return {
+    toolId: 'demo-tool',
+    language: 'de' as const,
+    title: 'Demo-Titel der exakt die Mindest-Länge trifft',
+    metaDescription: 'a'.repeat(150),
+    tagline: 'Demo-Tagline.',
+    intro: 'Demo-Intro.',
+    howToUse: ['step1', 'step2', 'step3'],
+    faq: [
+      { q: 'q1', a: 'a1' },
+      { q: 'q2', a: 'a2' },
+      { q: 'q3', a: 'a3' },
+      { q: 'q4', a: 'a4' },
+    ],
+    relatedTools: ['a', 'b', 'c'],
+    contentVersion: 1,
+  };
+}
+
 describe('toolContentFrontmatterSchema', () => {
   it('accepts a minimal valid frontmatter', () => {
     const r = toolContentFrontmatterSchema.safeParse(valid);
@@ -73,9 +93,9 @@ describe('toolContentFrontmatterSchema', () => {
     expect(r.success).toBe(false);
   });
 
-  it('rejects fewer than 3 relatedTools', () => {
+  it('accepts fewer than 3 relatedTools (fallback-füllt auf)', () => {
     const r = toolContentFrontmatterSchema.safeParse({ ...valid, relatedTools: ['a', 'b'] });
-    expect(r.success).toBe(false);
+    expect(r.success).toBe(true);
   });
 
   it('rejects more than 5 relatedTools', () => {
@@ -94,5 +114,30 @@ describe('toolContentFrontmatterSchema', () => {
   it('rejects contentVersion < 1', () => {
     const r = toolContentFrontmatterSchema.safeParse({ ...valid, contentVersion: 0 });
     expect(r.success).toBe(false);
+  });
+
+  it('accepts optional category from TOOL_CATEGORIES enum', () => {
+    const base = makeValidFrontmatter();
+    const result = toolContentFrontmatterSchema.safeParse({ ...base, category: 'length' });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects category values outside TOOL_CATEGORIES', () => {
+    const base = makeValidFrontmatter();
+    const result = toolContentFrontmatterSchema.safeParse({ ...base, category: 'not-a-category' });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts relatedTools of length 0 (fallback-fähig)', () => {
+    const base = makeValidFrontmatter();
+    const result = toolContentFrontmatterSchema.safeParse({ ...base, relatedTools: [] });
+    expect(result.success).toBe(true);
+  });
+
+  it('still rejects relatedTools of length 6 (hard cap at 5)', () => {
+    const base = makeValidFrontmatter();
+    const six = ['a', 'b', 'c', 'd', 'e', 'f'];
+    const result = toolContentFrontmatterSchema.safeParse({ ...base, relatedTools: six });
+    expect(result.success).toBe(false);
   });
 });

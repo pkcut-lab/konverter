@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ACTIVE_LANGUAGES } from '../lib/hreflang';
+import { TOOL_CATEGORIES } from '../lib/tools/categories';
 
 const kebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -59,7 +60,13 @@ export const toolContentFrontmatterSchema = z.object({
   intro: z.string().min(1),
   howToUse: z.array(z.string().min(1)).min(3).max(5),
   faq: z.array(faqEntry).min(4).max(6),
-  relatedTools: z.array(z.string().regex(kebabCase)).min(3).max(5),
+  relatedTools: z.array(z.string().regex(kebabCase)).min(0).max(5),
+  /**
+   * Flache Kategorie. Treibt das Category-Fallback in `resolveRelatedToolsWithFallback`.
+   * In Commit C1 noch optional — Commit C3 macht das Feld required, sobald alle
+   * Content-Files migriert sind.
+   */
+  category: z.enum(TOOL_CATEGORIES).optional(),
   aside: z
     .object({
       steps: z.array(asideStep).length(3),
