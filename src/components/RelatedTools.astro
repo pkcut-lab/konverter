@@ -25,16 +25,6 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
       {tools.map((t, i) => (
         <li style={`--index: ${i}`}>
           <a href={t.href}>
-            {t.hasIcon && (
-              <img
-                src={t.iconRel}
-                alt=""
-                width="48"
-                height="48"
-                loading="lazy"
-                decoding="async"
-              />
-            )}
             <h3>{t.title}</h3>
             <p>{t.tagline}</p>
           </a>
@@ -131,15 +121,6 @@ const tools = await resolveRelatedTools(lang, relatedSlugs);
   a:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
-  }
-  img {
-    width: var(--icon-size-md);
-    height: var(--icon-size-md);
-    object-fit: contain;
-    flex: 0 0 auto;
-  }
-  :global([data-theme='dark']) .related-tools img {
-    filter: var(--icon-filter);
   }
   h3 {
     margin: 0;

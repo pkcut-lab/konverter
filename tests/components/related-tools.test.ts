@@ -71,8 +71,12 @@ describe('RelatedTools — template invariants (source inspection)', () => {
     expect(componentSrc).toMatch(/tools\.length\s*>\s*0/);
   });
 
-  it('uses the Task-1 icon-size and stagger-step tokens (no arbitrary px)', () => {
-    expect(componentSrc).toMatch(/var\(--icon-size-md\)/);
+  it('uses the stagger-step token for the staggered IO fade-in (no arbitrary px)', () => {
+    // Runde 3 Session (No Tool Icons, 2026-04-20): the 48×48 tool-identity icon
+    // slot was removed site-wide. `--icon-size-md` is therefore no longer
+    // referenced here — the staggered fade-in contract is the remaining
+    // motion-token assertion.
+    expect(componentSrc).not.toMatch(/var\(--icon-size-md\)/);
     expect(componentSrc).toMatch(/var\(--stagger-step\)/);
   });
 

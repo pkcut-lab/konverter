@@ -42,17 +42,6 @@ const tools = await listToolsForLang(lang);
         {tools.map((tool) => (
           <li class="tool-card">
             <a class="tool-card__link" href={tool.href}>
-              {tool.hasIcon && (
-                <img
-                  class="tool-card__icon"
-                  src={tool.iconRel}
-                  alt=""
-                  width="48"
-                  height="48"
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
               <h3 class="tool-card__title">{tool.title}</h3>
               <p class="tool-card__tagline">{tool.tagline}</p>
             </a>
@@ -152,7 +141,7 @@ const tools = await listToolsForLang(lang);
   .tool-card__link {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-2);
     padding: var(--space-6);
     height: 100%;
     border: 1px solid var(--color-border);
@@ -178,16 +167,6 @@ const tools = await listToolsForLang(lang);
   }
   .tool-card__link:active {
     transform: scale(0.995);
-  }
-
-  .tool-card__icon {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    flex: 0 0 auto;
-  }
-  :global([data-theme='dark']) .tool-card__icon {
-    filter: var(--icon-filter);
   }
 
   .tool-card__title {
