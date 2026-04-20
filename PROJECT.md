@@ -21,6 +21,7 @@
 | tailwindcss | 3.4.15 | CSS utilities |
 | typescript | 5.7.2 | strict mode |
 | zod | 3.24.1 | Content-Validation |
+| mediabunny | 1.40.1 | Pure-client Video-Encoder (WebCodecs-backed); primär für FileTool-Video-Konverter ab Phase 1. MPL-2.0. Gewählt gegen `ffmpeg.wasm` wegen COOP/COEP-Freiheit (AdSense-kompatibel, NN #5), ~70 kB gzip statt ~25 MB, WebCodecs-Performance. Update-Policy: minor/major manuell reviewen (WebCodecs-Parity-Risiko), patches auto. Details: `docs/superpowers/specs/2026-04-20-hevc-zu-h264-design.md` §2.3. |
 
 ## Dev
 
