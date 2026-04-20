@@ -237,10 +237,28 @@ tasks/dossiers/
 - **Parent-Child-Inheritance:** Category-Root-Dossier wird einmal tief recherchiert (Top-Konkurrenten der Kategorie, gemeinsame UX-Patterns, kategorie-weite SEO-Landschaft). Child-Tool-Dossiers erben §§2, 5, 6 aus Parent und füllen nur §§1, 3, 4, 7, 8, 9, 10 tool-spezifisch auf. Dossier-Frontmatter `reuse_parent: laenge/_category-root`.
 - **Sprachen-Reuse:** de-Dossier wird zum en-Dossier gemerged; nur §4 (User-Pains aus EN-Communities) + §6 (EN-Keywords) + §8 (locale-Validation) werden neu recherchiert. Frontmatter `reuse_parent: laenge/meter-zu-fuss/de`.
 
+## Inheritance-Integrity-Gate (Category-Root-Citation-Verify)
+
+**Hart:** Bevor ein Child-Tool-Dossier von einem Category-Root erbt, MUSS `citation_verify_passed: true` am Root-Frontmatter stehen.
+
+Rationale (Pfad-B-Reject-Lehre, angewandt auf Inheritance-Chain): eine halluzinierte Konkurrenz-URL oder ein pseudonymisiertes Fake-Zitat im Root vergiftet sonst 8+ Tools gleichzeitig. Das ist kein Aggregations-Shortcut, sondern eine Blast-Radius-Multiplikation. Wir schließen diese Lücke durch einen zusätzlichen Verify-Pass **auf Root-Level**, bevor `reuse_parent: …/_category-root` im Child überhaupt gesetzt werden darf.
+
+Enforcement:
+
+1. **Dossier-Researcher** führt `scripts/citation-verify.ts` auf das Root-Dossier direkt nach Write aus. Exit-Code 1 → Root-File bleibt auf `verdict: citation_fail`, Child-Build-Queue der Kategorie pausiert automatisch (CEO-Gate blockt `dossier-request`-Tickets mit diesem Root als Parent).
+2. **CEO-Gate** (vor jedem `tool-build`-Dispatch mit `parent_dossier`) liest das Parent-File und prüft `citation_verify_passed: true`. Fail → `dossier-refresh` des Parents vor Child-Dispatch.
+3. **Kürzere Root-TTL** (siehe `CATEGORY_TTL.md`): Category-Root deckt mehr Konkurrenten, mehr User-Pain-Communities, mehr SEO-Keyword-Landschaft ab — d.h. größere Change-Surface. Daher Root-TTL = **ceil(Tool-TTL / 2), Minimum 30d**. Beispiel: `length` → Tool 365d, Root 180d. `image` → Tool 180d, Root 90d. `crypto` (wenn aktiv) → beide 30d (Minimum greift).
+4. **Parent-Refresh kaskadiert NICHT automatisch auf Children.** Ein frisches Parent invalidiert kein Child — der Child-TTL gilt unabhängig. Das verhindert Refresh-Stürme bei Kategorie-weiten Updates. Kaskade nur bei `refresh_trigger: competitor-launch` (Event, das ALLE Children betrifft).
+
 **Staleness-Check (vor jeder Dossier-Read-Operation durch CEO oder Critics):**
 
 ```
 IF now() - INDEX.yaml[cache_key].last_refresh > ttl_days * 86400:
   CEO öffnet `tool-research-dossier`-Ticket mit refresh_trigger: ttl-expiry
   UND: dossier wird als `stale: true` markiert, Builder darf stale lesen nur wenn Ticket priority != urgent
+
+Zusätzlich bei Parent-Dossiers:
+IF parent.citation_verify_passed != true:
+  ALLE Child-Build-Tickets mit diesem Parent → on-hold (CEO-Digest-Notiz)
+  Parent-Refresh bekommt Priority=high
 ```

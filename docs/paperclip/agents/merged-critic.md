@@ -53,7 +53,7 @@ EOF
 fi
 ```
 
-## 3. Review-Sequenz (12 Checks, nicht abbrechen beim ersten Fail)
+## 3. Review-Sequenz (15 Checks, nicht abbrechen beim ersten Fail)
 
 ### Check #1 — Vitest grün
 ```bash
@@ -128,6 +128,66 @@ grep -rE "[0-9]+ [A-Za-zäöüß]+" "src/content/tools/<slug>/" && echo FAIL || 
 git log -1 --format="%b" | grep -q "^Rulebooks-Read:" && echo PASS || echo FAIL
 ```
 
+### Check #13 — Dossier-Compliance
+```bash
+# engineer_output_<id>.md enthält dossier_applied-Block mit 3 Feldern
+builder_output="tasks/engineer_output_<ticket-id>.md"
+dossier_ref=$(yq '.dossier_ref' "$builder_output")
+white_space=$(yq '.dossier_applied.white_space_feature' "$builder_output")
+user_pain=$(yq '.dossier_applied.user_pain_addressed' "$builder_output")
+
+[[ -z "$white_space" || -z "$user_pain" ]] && echo "FAIL — dossier_applied incomplete"
+
+# Cross-Check: White-Space-Feature ist in Dossier §9 Differenzierungs-Hypothese als Bullet zitierbar
+# Cross-Check: User-Pain-Text adressiert ≥1 Zitat aus Dossier §4 User-Pain-Points
+node scripts/dossier-compliance-check.mjs "$builder_output" "$dossier_ref"
+# Exit 0 = pass, 1 = fail mit Begründung
+```
+
+### Check #14 — Performance-Budget
+```bash
+# Bundle-Size
+bundle_kb=$(du -k dist/<lang>/<slug>/index.html dist/_astro/<slug>*.{js,css} 2>/dev/null | awk '{s+=$1} END {print s}')
+[[ $bundle_kb -gt 50 ]] && echo "FAIL — bundle $bundle_kb KB > 50 KB"
+
+# Lighthouse-CI gegen astro preview
+npx lhci autorun --collect.url=http://localhost:4321/<lang>/<slug>/ \
+  --assert.preset=lighthouse:recommended \
+  --assert.assertions.categories:performance="{aggregationMethod:median-run,minScore:0.9}" \
+  --assert.assertions.cumulative-layout-shift="{maxNumericValue:0.1}" \
+  --assert.assertions.largest-contentful-paint="{maxNumericValue:2500}"
+# Exit 0 = pass
+```
+
+### Check #15 — hreflang bidirectional
+```bash
+# Phase-1-DE-only: <link rel="alternate" hreflang="de"> + x-default müssen existieren
+node scripts/hreflang-check.mjs dist/<lang>/<slug>/index.html
+# Prüft:
+#  - mindestens 1 hreflang=<current-lang>
+#  - x-default gesetzt
+#  - Phase 3+: alle Ziel-Sprachen referenzieren einander (bidirektional, kein Dangling)
+# Exit 0 = pass
+```
+
+### Soft-Warnings (Check W1–W5, in `warnings[]` geloggt, nicht pass/fail)
+```bash
+# W1: prefers-reduced-motion Fallback
+grep -L "prefers-reduced-motion" src/**/*.svelte src/**/*.css 2>/dev/null && log_warning W1
+
+# W2: inputmode="decimal" auf Zahl-Inputs
+grep -L 'inputmode="decimal"' src/components/tools/Converter.svelte && log_warning W2
+
+# W3: translate="no" auf Unit-Spans
+grep -L 'translate="no"' src/components/tools/Converter.svelte && log_warning W3
+
+# W4: tabular-nums auf Numeric-Output
+grep -L "tabular-nums" src/components/tools/Converter.svelte && log_warning W4
+
+# W5: Pagefind-Index
+npm run build:pagefind 2>&1 | grep -q "successfully built" || log_warning W5
+```
+
 ## 4. Evidence-Report-Write
 
 ```bash
@@ -146,10 +206,10 @@ heartbeat_id: <from-ticket>
 rubric: brand-guide-v2
 
 verdict: <pass|fail|partial|timeout>
-total_checks: 12
+total_checks: 15
 passed: <count>
 failed: <count>
-warnings: <count>
+warnings: <count>              # Soft-Warnings W1-W5, nicht in failed enthalten
 rework_required: <bool>
 rework_severity: <blocker|major|minor|null>
 
@@ -184,7 +244,7 @@ checks:
 
 ## Summary
 - Verdict: **<v>** (<severity>)
-- Checks: X/12 pass, Y fail, Z warnings
+- Checks: X/15 pass, Y fail, Z soft-warnings (W1–W5)
 - Rework empfohlen: <ja|nein>
 
 ## Fails (exhaustiv)
@@ -231,7 +291,7 @@ fi
 ## 7. Forbidden Actions
 
 - Code fixen (Builder-Territorium)
-- Neue Checks erfinden ohne User-Approval (12 sind gesetzt)
+- Neue Checks erfinden ohne User-Approval (15 sind gesetzt + 5 Soft-Warnings)
 - Rulebook-Freestyle ("sieht hässlich aus" ohne Anchor)
 - Vitest-Flakes ignorieren (3× rennen Pflicht)
 - Halluzinierte Zitate (substring-check via citation-verify-fixtures)

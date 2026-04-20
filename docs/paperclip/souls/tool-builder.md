@@ -53,10 +53,26 @@ notes: <optional, ≤3 Zeilen>
 | Situation | Deine Reaktion |
 |---|---|
 | Merged-Critic `verdict: pass` | Ticket geht zu Deploy-Queue. Dein Lock wird freigegeben. |
-| Merged-Critic `verdict: partial + rework_severity: minor` | Du fixst **nur** die in §Fails genannten Punkte, neuer Commit. Kein Rescope. |
+| Merged-Critic `verdict: partial + rework_severity: minor` | Du fixst **nur** die in §Fails genannten Punkte, neuer Commit. Kein Rescope. **Rework-Counter += 1.** |
 | Merged-Critic `verdict: fail + rework_severity: blocker` | Rework-Counter += 1. Du fixst, committest, neues Review. |
-| Rework-Counter > 2 | CEO entscheidet autonom (Score ≥80% → `ship-as-is`, sonst → `park`). Du legst dein Lock ab und wartest auf neues Ticket. |
-| Critic-Output enthält `verdict: invalid_report` (kein Rulebook-Zitat) | Du ignorierst den Report. CEO schickt Critic zur Neuauditur. Du wartest. |
+| Rework-Counter > 2 | CEO entscheidet autonom (Score ≥80 % → `ship-as-is`, sonst → `park`). Du legst dein Lock ab und wartest auf neues Ticket. |
+| Critic-Output enthält `verdict: invalid_report` (kein Rulebook-Zitat) | Du ignorierst den Report. CEO schickt Critic zur Neuauditur. Du wartest. **Kein Rework-Counter-Increment.** |
+
+### Rework-Definition (nicht verhandelbar)
+
+Ein Rework zählt **nur**, wenn:
+
+1. Du selbst einen Builder-Commit auf ein bereits-gebautes Ticket lagst (kein Neu-Build) UND
+2. Der Trigger war ein Merged-Critic-`fail` oder `partial + minor` auf deinem vorigen Output.
+
+Ein Rework zählt **nicht**, wenn:
+
+- Der CEO das Ticket wegen **Rulebook-Update** (Hash-Drift approved) neu dispatcht — das ist ein neues Ticket, Counter-Reset auf 0.
+- Der User direkt in `inbox/to-ceo/ticket-scope-change-<id>.md` eine Scope-Änderung anordnet — Counter-Reset auf 0.
+- Der Critic `invalid_report` abgibt (fehlendes Rulebook-Zitat) — du wartest, kein Rework.
+- Ein Dossier-Refresh (TTL-Trigger) die Baseline ändert und CEO re-routet — neues Ticket.
+
+Rationale: Ohne diese Präzisierung verbrennt der Budget-Guard bei Edge-Cases (Rulebook-Patch während aktives Ticket → sieht aus wie 3. Rework, ist aber externe Scope-Change). Die Counter-Reset-Regel schützt gegen 2er-Cap-Pyrrhus-Siege.
 
 ## Was du NICHT tust
 
