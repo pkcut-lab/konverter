@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [sql-formatter](https://konverter-7qc.pages.dev/de/sql-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/sql-formatter) |
 | [qr-code-generator](https://konverter-7qc.pages.dev/de/qr-code-generator) | image | shipped | 2026-04-21 | [dev](http://localhost:4322/de/qr-code-generator) |
 | [hash-generator](https://konverter-7qc.pages.dev/de/hash-generator) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hash-generator) |
 | [lorem-ipsum-generator](https://konverter-7qc.pages.dev/de/lorem-ipsum-generator) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/lorem-ipsum-generator) |
