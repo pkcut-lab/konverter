@@ -40,6 +40,7 @@ import { pfundZuKilogramm } from './tools/pfund-zu-kilogramm';
 import { tonneZuPfund } from './tools/tonne-zu-pfund';
 import { stoneZuKilogramm } from './tools/stone-zu-kilogramm';
 import { hektarZuAcre } from './tools/hektar-zu-acre';
+import { quadratkilometerZuQuadratmeile } from './tools/quadratkilometer-zu-quadratmeile';
 
 /**
  * Single source of truth for tool configurations.
@@ -93,6 +94,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'stone-to-kg': stoneZuKilogramm,
   'tonne-to-pound': tonneZuPfund,
   'hectare-to-acre': hektarZuAcre,
+  'km2-to-mi2': quadratkilometerZuQuadratmeile,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {

@@ -58,6 +58,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'stone-to-kg': { de: 'stone-zu-kilogramm' },
   'tonne-to-pound': { de: 'tonne-zu-pfund' },
   'hectare-to-acre': { de: 'hektar-zu-acre' },
+  'km2-to-mi2': { de: 'quadratkilometer-zu-quadratmeile' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
