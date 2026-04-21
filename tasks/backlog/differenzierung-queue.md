@@ -37,7 +37,52 @@ quadratfuss, webp-konverter, zentimeter-zu-zoll`.
 
 ---
 
-## Queue (20 Kandidaten, FIFO top→bottom)
+## Queue (FIFO top→bottom — Phase-1-Katalog §7 Session-Reihenfolge)
+
+**Priorisierung.** Neu-Tool-Typen (Template-Lock) zuerst, dann Converter-
+Scaling. Rationale: lockt neue Svelte-Component-Templates (Calculator,
+Generator, Formatter, Validator, Analyzer, Comparer), sodass Phase 1b
+Cluster-Scaling schnell parallelisieren kann. Quelle: `docs/superpowers/
+plans/2026-04-20-phase-1-tool-catalog.md` §7 + §2 Score-Framework.
+
+### Tier 1 — Template-Lock (9 Tool-Typen validieren)
+
+```
+zoll-zu-zentimeter           | length      | Zoll zu Zentimeter            | length-root
+hex-rgb-konverter            | color       | Hex zu RGB Konverter          | color-root
+passwort-generator           | dev         | Passwort-Generator            | dev-root
+uuid-generator               | dev         | UUID-Generator                | dev-root
+json-formatter               | dev         | JSON-Formatter                | dev-root
+zeichenzaehler               | text        | Zeichenzähler                 | text-root
+regex-tester                 | dev         | Regex-Tester                  | dev-root
+text-diff                    | text        | Text-Diff Tool                | text-root
+unix-timestamp               | time        | Unix-Timestamp-Konverter      | time-root
+```
+
+### Tier 2 — Cluster-Scaling (enum-kompatible Phase-1-Kandidaten)
+
+```
+base64-encoder               | dev         | Base64-Encoder/Decoder        | dev-root
+url-encoder-decoder          | dev         | URL-Encoder/Decoder           | dev-root
+roemische-zahlen             | text        | Römische Zahlen Konverter     | text-root
+zeitzonen-rechner            | time        | Zeitzonen-Umrechner           | time-root
+lorem-ipsum-generator        | text        | Lorem-Ipsum-Generator         | text-root
+hash-generator               | dev         | Hash-Generator (MD5/SHA)      | dev-root
+qr-code-generator            | image       | QR-Code-Generator             | image-root
+sql-formatter                | dev         | SQL-Formatter                 | dev-root
+xml-formatter                | dev         | XML-Formatter                 | dev-root
+css-formatter                | dev         | CSS-Formatter                 | dev-root
+jwt-decoder                  | dev         | JWT-Decoder                   | dev-root
+kontrast-pruefer             | color       | Kontrast-Prüfer (WCAG)        | color-root
+json-diff                    | dev         | JSON-Diff Tool                | dev-root
+bild-diff                    | image       | Bild-Diff Tool                | image-root
+heic-zu-jpg                  | image       | HEIC zu JPG Konverter         | image-root
+pdf-zu-jpg                   | document    | PDF zu JPG Konverter          | document-root
+jpg-zu-pdf                   | document    | JPG zu PDF Konverter          | document-root
+json-zu-csv                  | dev         | JSON zu CSV Konverter         | dev-root
+```
+
+### Tier 3 — Converter-Scaling (20 Varianten, length/weight/area/volume/temp/time)
 
 ```
 millimeter-zu-zoll           | length      | Millimeter zu Zoll            | length-root
@@ -65,22 +110,37 @@ monate-zu-tagen              | time        | Monate zu Tagen               | tim
 ## Parking-Lot (Enum-Extension nötig — nicht dispatch-fähig)
 
 Diese Slugs sind interessant, aber ihre Kategorien fehlen in `TOOL_CATEGORIES`.
-Erst nach User-Decision-Ticket für Enum-Extension in die Queue oben verschieben:
+`CATEGORY_TTL.md` §2 macht Enum-Extension explizit zu einem **User-Approval-
+Ticket** (nicht agent-autonom). Erst nach Approval wandern sie in Tier 1/2 hoch.
 
+**Kandidaten aus Phase-1-Katalog (13 Tools):**
+```
+ps-zu-kw                     | power       | PS zu Kilowatt (Score 46)
+prozentrechner               | math        | Prozentrechner (Score 47, DE-Top-1)
+bmi-rechner                  | math        | BMI-Rechner (Score 46)
+dreisatzrechner              | math        | Dreisatz-Rechner (Score 45)
+mehrwertsteuer-rechner       | finance     | Mehrwertsteuer-Rechner (Score 44)
+zinseszinsrechner            | finance     | Zinseszins-Rechner (Score 40)
+brutto-netto-rechner         | finance     | Brutto-Netto-Rechner (Score 38)
+iban-pruefer                 | finance     | IBAN-Prüfer (Score 44)
+ust-id-pruefer               | finance     | USt-ID-Prüfer (Score 43, White-Space)
+altersrechner                | math        | Alters-Rechner (Interactive)
+arbeitszeitrechner           | math        | Arbeitszeit-Rechner (Interactive)
+eisprungrechner              | math        | Eisprung-Rechner (Interactive, Privacy-USP)
+persoenlichkeitstest-16      | math        | 16-Persönlichkeiten (Interactive-Anchor)
+```
+
+**Weitere Converter-Kategorien (aus initialem Queue-Seed):**
 ```
 kmh-zu-mph                   | speed       | Kilometer/h zu Meilen/h
 knoten-zu-kmh                | speed       | Knoten zu Kilometer/h
 gigabyte-zu-gibibyte         | data        | Gigabyte zu Gibibyte
 megabit-zu-megabyte          | data        | Megabit zu Megabyte
 bar-zu-psi                   | pressure    | Bar zu PSI
-pascal-zu-bar                | pressure    | Pascal zu Bar
-kilowattstunden-zu-joule     | energy      | Kilowattstunden zu Joule
 kalorien-zu-joule            | energy      | Kalorien zu Joule
-ps-zu-kilowatt               | power       | Pferdestärke zu Kilowatt
-kilowatt-zu-btu              | power       | Kilowatt zu BTU/h
 liter-pro-100km-zu-mpg       | fuel        | l/100km zu Miles-per-Gallon
 grad-zu-radiant              | angle       | Grad zu Radiant
-euro-zu-dollar               | currency    | Euro zu Dollar (live-rate, Phase 3+)
+euro-zu-dollar               | currency    | Euro zu Dollar (Phase 3+)
 ```
 
 ## Auto-Refill-Log (wird vom CEO appended)
