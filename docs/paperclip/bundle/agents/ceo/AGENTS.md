@@ -322,10 +322,24 @@ if ! grep -qE "^  '${category}'," src/lib/tools/categories.ts; then
   return 1
 fi
 
-# 3. Zeile unter "<!-- CEO-APPEND -->"-Marker einfügen
+# 3. Zeile unter dem Anchor-Marker einfügen — ANCHORED-Regex (Zeilenanfang
+#    + Zeilenende), damit Referenzen im Fließtext nicht matchen. Body-Text
+#    in docs/completed-tools.md darf den Marker NIEMALS als eigenständige
+#    Zeile enthalten — nur hier und an der Insertion-Position.
 entry="| [${slug}](${prod}) | ${category} | ${state} | ${today} | [dev](${local_url}) |"
-awk -v e="$entry" '/<!-- CEO-APPEND -->/{print;print e;next}1' \
+awk -v e="$entry" 'BEGIN{re="^<!-- CEO-APPEND -->$"} $0 ~ re {print;print e;next}1' \
   "$list" > "${list}.tmp" && mv "${list}.tmp" "$list"
+
+# 3b. Post-Insert-Verify: Anzahl der Insertions muss 1 sein. Falls >1, ist
+#     entweder der Marker dupliziert oder der Body enthält ihn ungewollt
+#     als eigenständige Zeile → Auto-Rollback + Live-Alarm.
+new_count=$(grep -cF "| [${slug}](" "$list")
+if [ "$new_count" != "1" ]; then
+  # Rollback — Duplikate entfernen, Ersteintrag behalten:
+  awk -v s="[${slug}](" 'BEGIN{seen=0} index($0,s){if(seen)next;seen=1}1' \
+    "$list" > "${list}.tmp" && mv "${list}.tmp" "$list"
+  write_live_alarm "completed-tools-double-insert" "slug=${slug} count=${new_count}"
+fi
 
 # 4. Backlog-Skip-List synchronisieren (verhindert Auto-Refill-Redispatch)
 queue="tasks/backlog/differenzierung-queue.md"
