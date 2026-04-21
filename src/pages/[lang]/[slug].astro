@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
+import ColorConverter from '../../components/tools/ColorConverter.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig } from '../../lib/tool-registry';
@@ -13,23 +14,30 @@ import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 const componentByType = {
   converter: Converter,
   'file-tool': FileTool,
+  formatter: ColorConverter,
 } as const;
 
 export async function getStaticPaths() {
   const entries = await getCollection('tools');
-  return entries.map((entry) => {
-    const slug = getSlug(entry.data.toolId, entry.data.language);
-    if (!slug) {
-      throw new Error(
-        `No slug-map entry for toolId="${entry.data.toolId}", ` +
-          `lang="${entry.data.language}". Add it to src/lib/slug-map.ts.`,
-      );
-    }
-    return {
-      params: { lang: entry.data.language, slug },
-      props: { entry, slug },
-    };
-  });
+  // Types that have a Svelte component in componentByType. Defined inline
+  // because Astro isolates getStaticPaths from page-level consts.
+  const routableTypes = new Set(['converter', 'file-tool', 'formatter']);
+  return entries
+    .filter((entry) => {
+      const slug = getSlug(entry.data.toolId, entry.data.language);
+      const config = slug ? getToolConfig(entry.data.toolId) : undefined;
+      // Skip content entries whose toolId has no registry config or no component
+      // yet. This allows data-only tools (e.g. generator type without Generator.svelte)
+      // to exist in the content collection without breaking the build.
+      return slug && config && routableTypes.has(config.type);
+    })
+    .map((entry) => {
+      const slug = getSlug(entry.data.toolId, entry.data.language)!;
+      return {
+        params: { lang: entry.data.language, slug },
+        props: { entry, slug },
+      };
+    });
 }
 
 type Props = { entry: CollectionEntry<'tools'>; slug: string };
@@ -109,6 +117,7 @@ const jsonLd = buildToolJsonLd(
         >
           {config.type === 'converter' && <Converter config={config} client:load />}
           {config.type === 'file-tool' && <FileTool config={config} client:load />}
+          {config.type === 'formatter' && <ColorConverter config={config} client:load />}
         </section>
 
         {entry.data.kbdHints && entry.data.kbdHints.length > 0 && (

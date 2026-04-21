@@ -9,6 +9,7 @@ import { celsiusZuFahrenheit } from './tools/celsius-zu-fahrenheit';
 import { quadratmeterZuQuadratfuss } from './tools/quadratmeter-zu-quadratfuss';
 import { hevcZuH264 } from './tools/hevc-zu-h264';
 import { zollZuZentimeter } from './tools/zoll-zu-zentimeter';
+import { hexRgbKonverter } from './tools/hex-rgb-konverter';
 
 /**
  * Single source of truth for tool configurations.
@@ -31,6 +32,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'sqm-to-sqft': quadratmeterZuQuadratfuss,
   'hevc-to-h264': hevcZuH264,
   'inch-to-cm': zollZuZentimeter,
+  'hex-to-rgb': hexRgbKonverter,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
