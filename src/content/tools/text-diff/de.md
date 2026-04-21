@@ -25,7 +25,10 @@ faq:
     a: "Standardmäßig werden Leerzeichen-Änderungen angezeigt. Der Toggle 'Leerzeichen ignorieren' blendet reine Einrückungs- und Whitespace-Differenzen aus."
   - q: "Wie groß darf der Text sein?"
     a: "Es gibt kein festes Limit. Da die Berechnung im Browser läuft, hängt die Performance von deinem Gerät ab. Texte bis 200 KB verarbeitet das Tool in der Regel flüssig."
-relatedTools: []
+relatedTools:
+  - json-formatter
+  - regex-tester
+  - zeichenzaehler
 ---
 
 ## Was macht der Text-Diff?

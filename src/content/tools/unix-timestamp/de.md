@@ -25,7 +25,10 @@ faq:
     a: "Ja. Negative Werte repräsentieren Zeitpunkte vor dem 1. Januar 1970. Beispiel: −86400 entspricht dem 31. Dezember 1969. Viele Online-Tools behandeln negative Werte fälschlicherweise als Fehler."
   - q: "Werden meine Daten an einen Server geschickt?"
     a: "Nein. Die Umrechnung läuft vollständig im Browser — Multiplikation mit 1000, kein Netzwerk-Request. Kein Logging, kein Tracking. Besonders relevant, wenn Timestamps aus Produktions-Logs stammen."
-relatedTools: []
+relatedTools:
+  - json-formatter
+  - zeichenzaehler
+  - text-diff
 ---
 
 ## Was macht dieser Konverter?

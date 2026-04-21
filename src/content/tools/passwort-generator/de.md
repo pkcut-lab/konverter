@@ -23,7 +23,10 @@ faq:
     a: "Ein Passwort ist eine zufällige Zeichenkette, eine Passphrase besteht aus mehreren zufälligen Wörtern. Sechs Wörter ergeben ~77 Bit Entropie — merkbar und sicher zugleich."
   - q: "Funktioniert der Generator offline?"
     a: "Ja. Nach dem ersten Laden arbeitet er vollständig im Browser. Die Web Crypto API benötigt keine Netzwerkverbindung für die Zufallszahlen-Erzeugung."
-relatedTools: []
+relatedTools:
+  - uuid-generator
+  - zeichenzaehler
+  - regex-tester
 ---
 
 ## Was macht dieser Generator?

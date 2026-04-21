@@ -23,7 +23,10 @@ faq:
     a: "Kein technischer Unterschied. GUID (Globally Unique Identifier) ist der Microsoft-Terminus für dasselbe 128-Bit-Format."
   - q: "Funktioniert der Generator offline?"
     a: "Ja. Nach dem ersten Laden arbeitet er vollständig im Browser. Die Web Crypto API benötigt keine Netzwerkverbindung für die Zufallszahlen-Erzeugung."
-relatedTools: []
+relatedTools:
+  - passwort-generator
+  - unix-timestamp
+  - hex-rgb-konverter
 ---
 
 ## Was macht dieser Generator?

@@ -22,7 +22,9 @@ faq:
   - q: "Warum OKLCH statt nur RGB?"
     a: "OKLCH ist ein wahrnehmungsgleichmäßiger Farbraum — gleiche numerische Abstände erzeugen gleich empfundene Farbunterschiede. Seit 2024 unterstützen alle Browser oklch() in CSS, was präzisere Farbpaletten und Gradient-Definitionen ermöglicht."
 relatedTools:
-  - zentimeter-zu-zoll
+  - json-formatter
+  - regex-tester
+  - zeichenzaehler
 category: color
 contentVersion: 1
 ---

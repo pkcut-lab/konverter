@@ -25,7 +25,10 @@ faq:
     a: "Das Tool zeigt eine Fehlermeldung mit Beschreibung des Syntaxfehlers. Häufige Ursachen: fehlende Anführungszeichen, Trailing Commas oder Kommentare im Standard-JSON-Modus."
   - q: "Wie minifiziere ich JSON?"
     a: "Minifizierung entfernt alle Whitespaces und Zeilenumbrüche — spart Bandwidth bei API-Transfers. Nutze dafür den Minify-Modus, der den JSON auf eine einzige Zeile komprimiert."
-relatedTools: []
+relatedTools:
+  - regex-tester
+  - text-diff
+  - unix-timestamp
 ---
 
 ## Was macht dieser Formatter?

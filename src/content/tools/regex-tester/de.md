@@ -26,7 +26,10 @@ faq:
     a: "Ein Pattern wie (a+)+$ kann bei bestimmten Inputs exponentiell viele Pfade durchprobieren. Das führt zu Sekunden- oder minutenlangem Stillstand. Vermeidung: atomare Gruppen oder possessive Quantifier, in JS alternativ Pattern umschreiben."
   - q: "Unterstützt der Tester das /v-Flag?"
     a: "Ja, sofern dein Browser ES2024-kompatibel ist (Chrome 112+, Safari 17+, Firefox 116+). Das /v-Flag aktiviert Unicode-Set-Notation und schließt /u ein — beide zusammen sind ungültig."
-relatedTools: []
+relatedTools:
+  - json-formatter
+  - text-diff
+  - zeichenzaehler
 ---
 
 ## Was macht dieser Regex Tester?

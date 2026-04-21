@@ -26,7 +26,10 @@ faq:
     a: "Nein. Die gesamte Analyse läuft lokal im Browser. Kein Byte verlässt dein Gerät — kein Logging, kein Tracking, kein Cookie."
   - q: "Wie viele Zeichen hat eine SMS?"
     a: "Eine SMS im GSM-7-Standard hat 160 Zeichen. Enthält die Nachricht Umlaute (ä, ö, ü) oder Emojis, wechselt das Encoding zu Unicode — dann passen nur 70 Zeichen in eine einzelne SMS."
-relatedTools: []
+relatedTools:
+  - text-diff
+  - regex-tester
+  - passwort-generator
 ---
 
 ## Was macht der Zeichenzähler?
