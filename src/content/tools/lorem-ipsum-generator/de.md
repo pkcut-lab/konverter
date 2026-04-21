@@ -10,18 +10,18 @@ category: "text"
 contentVersion: 1
 eyebrow: "GENERATOR"
 howToUse:
-  - "Gib eine Zahl und optional die Einheit ein, z. B. „5 absätze" oder „20 wörter"."
-  - "Für deutschen Blindtext mit Umlauten ergänze „deutsch", z. B. „3 absätze deutsch"."
+  - "Gib eine Zahl und optional die Einheit ein, z.\u00a0B. 5 absätze oder 20 wörter."
+  - "Für deutschen Blindtext mit Umlauten ergänze deutsch, z.\u00a0B. 3 absätze deutsch."
   - "Der generierte Text erscheint sofort in der Ausgabe — inklusive Wort- und Zeichenstatistik."
 faq:
   - q: "Was ist Lorem Ipsum?"
-    a: "Lorem Ipsum ist ein standardisierter Platzhaltertext aus der Druckbranche. Er basiert auf einem verstümmelten Auszug aus Ciceros „De finibus bonorum et malorum" (45 v. Chr.) und wird seit den 1960er-Jahren für Layout-Entwürfe verwendet."
+    a: "Lorem Ipsum ist ein standardisierter Platzhaltertext aus der Druckbranche. Er basiert auf einem verstümmelten Auszug aus Ciceros De finibus bonorum et malorum (45 v. Chr.) und wird seit den 1960er-Jahren für Layout-Entwürfe verwendet."
   - q: "Warum deutschen Blindtext statt Latein?"
     a: "Deutscher Blindtext mit Umlauten (ä, ö, ü, ß) zeigt realistischer, wie das Layout mit tatsächlichen deutschen Zeichensätzen aussieht. Wortlängen und Sonderzeichen unterscheiden sich deutlich vom Lateinischen."
   - q: "Werden meine Texte an einen Server gesendet?"
     a: "Nein. Die Generierung läuft vollständig im Browser. Es werden keine Daten übertragen — weder an den Seitenbetreiber noch an Dritte."
   - q: "Welche Eingabeformate werden akzeptiert?"
-    a: "Eine Zahl gefolgt von der Einheit: „absätze", „sätze" oder „wörter". Ohne Einheit werden Absätze erzeugt. Die Variante „deutsch" oder „latein" ist optional — Standard ist Latein."
+    a: "Eine Zahl gefolgt von der Einheit: absätze, sätze oder wörter. Ohne Einheit werden Absätze erzeugt. Die Variante deutsch oder latein ist optional — Standard ist Latein."
   - q: "Wie viele Wörter enthält ein Absatz?"
     a: "Ein generierter Absatz besteht aus 3–6 Sätzen mit je 5–15 Wörtern. Das ergibt pro Absatz etwa 30–90 Wörter — vergleichbar mit echtem Fließtext."
 relatedTools:
