@@ -30,6 +30,7 @@ import { jwtDecoder } from './tools/jwt-decoder';
 import { kontrastPruefer } from './tools/kontrast-pruefer';
 import { jsonDiff } from './tools/json-diff';
 import { jsonZuCsv } from './tools/json-zu-csv';
+import { bildDiff } from './tools/bild-diff';
 
 /**
  * Single source of truth for tool configurations.
@@ -73,6 +74,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'contrast-checker': kontrastPruefer,
   'json-diff': jsonDiff,
   'json-to-csv': jsonZuCsv,
+  'image-diff': bildDiff,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {

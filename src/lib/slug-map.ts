@@ -48,6 +48,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'contrast-checker': { de: 'kontrast-pruefer' },
   'json-diff': { de: 'json-diff' },
   'json-to-csv': { de: 'json-zu-csv' },
+  'image-diff': { de: 'bild-diff' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
