@@ -35,6 +35,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'text-diff': { de: 'text-diff' },
   'unix-timestamp': { de: 'unix-timestamp' },
   'base64-encoder': { de: 'base64-encoder' },
+  'url-encoder-decoder': { de: 'url-encoder-decoder' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
