@@ -40,6 +40,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'lorem-ipsum-generator': { de: 'lorem-ipsum-generator' },
   'timezone-converter': { de: 'zeitzonen-rechner' },
   'hash-generator': { de: 'hash-generator' },
+  'qr-code-generator': { de: 'qr-code-generator' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

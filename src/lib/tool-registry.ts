@@ -22,6 +22,7 @@ import { roemischeZahlen } from './tools/roemische-zahlen';
 import { loremIpsumGenerator } from './tools/lorem-ipsum-generator';
 import { zeitzonenRechner } from './tools/zeitzonen-rechner';
 import { hashGenerator } from './tools/hash-generator';
+import { qrCodeGenerator } from './tools/qr-code-generator';
 
 /**
  * Single source of truth for tool configurations.
@@ -57,6 +58,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'lorem-ipsum-generator': loremIpsumGenerator,
   'timezone-converter': zeitzonenRechner,
   'hash-generator': hashGenerator,
+  'qr-code-generator': qrCodeGenerator,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
