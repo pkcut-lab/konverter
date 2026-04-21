@@ -140,9 +140,8 @@ awk '/^```$/{inblock=!inblock;next} inblock && /\|/ {print}' tasks/backlog/diffe
   [[ -z "$slug" || "$slug" =~ ^# ]] && continue
   [[ -d "src/content/tools/$slug" ]] && continue   # dedup
 
-  # Category-Enum-Check (must be in TOOL_CATEGORIES)
-  valid=$(node -e "const {TOOL_CATEGORIES}=require('./src/lib/tools/categories.ts');process.exit(TOOL_CATEGORIES.includes('$category')?0:1)" && echo "yes" || echo "no")
-  [[ "$valid" != "yes" ]] && continue
+  # Category-Enum-Check (must be in TOOL_CATEGORIES; grep weil categories.ts ist TS)
+  grep -qE "^  '${category}'," src/lib/tools/categories.ts || continue
 
   # Create Paperclip-Issue (POST /api/companies/<cid>/issues)
   curl -s -X POST -H "Content-Type: application/json" "$API" -d "$(cat <<EOF
