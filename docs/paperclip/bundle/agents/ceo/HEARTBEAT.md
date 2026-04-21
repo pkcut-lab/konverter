@@ -24,6 +24,9 @@ Bei jedem Aufwachen — in dieser Reihenfolge (12 Steps, v1.0):
 7. **Critic-Aggregation** — `tasks/awaiting-critics/<ticket-id>/*.md` aggregieren (verdict-Felder)
 8. **Autonomie-Gate-Resolve** — §3 Procedure: Auto-Resolve ship-as-is / Rework / Park
 9. **Backlog-Pick** — nächstes Ticket mit resolved dependencies + Dossier-Ready (`AGENTS.md` §2)
+9.5. **Pre-Dispatch-Invariant-Gate** — §7 Procedure: blockt Dispatch bei Meta-Tag-
+     oder CSP-Drift in globalen Files (BaseLayout, _headers). Audit 2026-04-21: ohne
+     diesen Gate wurden 18 Tools mit fehlenden canonical/og/twitter-Tags geshipped.
 10. **Dispatch** — `tasks/current_task.md` schreiben, Lock-File erzeugen
 11. **Daily-Digest-Update** — §3.4 Format (Auto-Resolves + Metrics-Highlights)
 12. **Memory-Update** — `memory/ceo-log.md` append, nach 5 Tasks → Rotation
@@ -295,11 +298,111 @@ Jeder Auto-Refill-Dispatch kommt in den Daily-Digest:
 So sieht der User morgens sofort, welche Tools er zum Testen hat, ohne dass
 der CEO jeden einzelnen Pick pingt.
 
-## §7 Context-Window-Management
+## §7 Pre-Dispatch-Invariant-Gate (Per-Deploy, NICHT Weekly)
+
+Audit 2026-04-21 Lessons-Learned (M-7-01, M-7-02, M-7-03, M-5-02): globale
+SEO- und Security-Invarianten in `BaseLayout.astro` und `public/_headers` sind
+beim Tool-Bau nicht geprüft worden. Ergebnis: 18 Tools ohne canonical-URL,
+ohne og:/twitter:-Meta, ohne CSP — alle live.
+
+**Prinzip:** Diese Invarianten müssen BEI JEDEM Heartbeat-Dispatch grün sein,
+nicht wöchentlich. Wenn sie fail → kein weiteres Tool wird gebaut, bis User
+den globalen Fix mergt. Lieber pausieren als kaputte Tools stapeln.
+
+### §7.1 Invariant-Checks
+
+Step 9.5 führt folgende Checks VOR jedem Dispatch aus:
+
+```bash
+invariant_fail=0
+invariant_reasons=()
+
+# I-1: BaseLayout hat canonical
+grep -q 'rel="canonical"' src/layouts/BaseLayout.astro || {
+  invariant_fail=1
+  invariant_reasons+=("I-1: canonical missing in BaseLayout")
+}
+
+# I-2: BaseLayout hat og: + twitter: Kernfelder
+for tag in 'property="og:title"' 'property="og:description"' 'name="twitter:card"'; do
+  grep -q "$tag" src/layouts/BaseLayout.astro || {
+    invariant_fail=1
+    invariant_reasons+=("I-2: $tag missing in BaseLayout")
+  }
+done
+
+# I-3: _headers hat Content-Security-Policy
+if [[ -f public/_headers ]]; then
+  grep -q "Content-Security-Policy" public/_headers || {
+    invariant_fail=1
+    invariant_reasons+=("I-3: CSP missing in public/_headers")
+  }
+else
+  invariant_fail=1
+  invariant_reasons+=("I-3: public/_headers file not found")
+fi
+
+# I-4: npm audit high/critical — redundant zu Pre-Commit-Gate 5b beim Builder,
+#      aber CEO-Snapshot vor Dispatch fängt Drift durch externe Änderungen
+#      (User hat Dep geupdated, Pre-Commit-Gate noch nicht gelaufen).
+npm audit --audit-level=high --production --json 2>/dev/null | \
+  node -e 'let s=""; process.stdin.on("data",d=>s+=d).on("end",()=>{
+    const r=JSON.parse(s); const c=r.metadata?.vulnerabilities||{};
+    if((c.high||0)+(c.critical||0)>0) process.exit(1);
+  })' || {
+  invariant_fail=1
+  invariant_reasons+=("I-4: npm audit high/critical > 0")
+}
+```
+
+### §7.2 Block-Action bei fail
+
+```bash
+if (( invariant_fail )); then
+  # Fix-Ticket an User schreiben
+  cat > "inbox/to-user/invariant-fail-$(date -I).md" <<EOF
+## Pre-Dispatch-Invariant-Gate FAIL
+
+**Zeitpunkt:** $(date -Iseconds)
+**Betroffen:** globale Files (BaseLayout.astro, _headers, deps)
+**Warum dringend:** Pipeline steht. Alle neuen Tools würden mit diesem Fehler shippen.
+
+### Fails
+$(printf '- %s\n' "${invariant_reasons[@]}")
+
+### Empfehlung
+Fix zuerst die Invarianten (entweder selbst oder via Fix-Agent).
+Nach Fix: Heartbeat läuft auto weiter beim nächsten Tick.
+
+### Keine Tools werden dispatched, bis Gate grün.
+EOF
+
+  # Digest-Entry
+  digest_append "- BLOCKED invariant-gate: ${#invariant_reasons[@]} fails — dispatch paused"
+
+  # Heartbeat endet HIER, kein Step 10 (Dispatch)
+  exit 0
+fi
+```
+
+### §7.3 Warum nicht Weekly
+
+Weekly-Sweeps akkumulieren 7 Tage Bugs, bevor jemand sie bemerkt. Per-Dispatch-
+Gate findet den Drift im selben Tick, in dem er entstanden ist. User-Cost:
+0 zusätzliche Token (Checks sind Grep + 1× `npm audit`), Time-Cost: ~3s.
+
+### §7.4 Resume-Path
+
+Sobald der Fix-Agent (oder User) den Invariant-Fail behoben hat und committed:
+- Nächster Heartbeat-Tick fährt §7.1 automatisch erneut
+- Grün → Step 10 Dispatch läuft wie gewohnt
+- Kein manueller Resume nötig (im Gegensatz zu §4 EMERGENCY_HALT)
+
+## §8 Context-Window-Management
 
 NotebookLM-Research (Citation 43): Nach 5 completed Tasks → CEO schreibt Summary in `memory/changelog-YYYY-MM-DD.md` und truncatet `tasks/backlog.md` um archived Einträge. Hält CEO-Context lean.
 
-## §8 Failure-Modes & Recovery
+## §9 Failure-Modes & Recovery
 
 | Symptom | Ursache | Recovery |
 |---------|---------|----------|
