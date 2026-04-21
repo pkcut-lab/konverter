@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Konverter">
+  <rect width="1200" height="630" fill="#FAFAF9"/>
+
+  <g transform="translate(96, 170)" fill="none" stroke="#1A1917" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 40 0 L 40 180"/>
+    <path d="M 40 90 L 160 0"/>
+    <path d="M 40 90 L 160 180"/>
+  </g>
+
+  <text x="300" y="300" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="112" fill="#1A1917" letter-spacing="-2">Konverter</text>
+
+  <text x="300" y="380" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="36" fill="#5C5A55">Schnelle Tools. Kein Upload. Kein Tracking.</text>
+
+  <g transform="translate(300, 450)" font-family="'JetBrains Mono', monospace" font-size="24" fill="#8F3A0C">
+    <text x="0" y="0">m → ft</text>
+    <text x="140" y="0">kg → lb</text>
+    <text x="300" y="0">°C → °F</text>
+    <text x="450" y="0">hex → rgb</text>
+    <text x="650" y="0">json</text>
+  </g>
+
+  <rect x="96" y="542" width="1008" height="2" fill="#1A1917" opacity="0.12"/>
+
+  <text x="96" y="585" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="22" fill="#5C5A55">konverter.pages.dev</text>
+  <text x="1104" y="585" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="22" fill="#8F3A0C">100% client-side</text>
+</svg>

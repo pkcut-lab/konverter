@@ -13,27 +13,15 @@ Default (der aber ohne explizites "OK" nicht implementiert wird).
 
 ---
 
-## Q1 — OG-Image-Strategie (Findings M-7-02, M-7-03)
+## Q1 — OG-Image-Strategie (Findings M-7-02, M-7-03) ✅ RESOLVED 2026-04-21
 
-**Status:** blockiert `og:image` und `twitter:image` Meta-Tags. Alle übrigen og:*/twitter:*
-Tags (title, description, url, type, card) werden vom Agent schon jetzt gebaut — fehlt nur
-das Bild-Asset.
+**Entscheidung:** Option 3 (Hybrid). Phase 1 jetzt: Global-Fallback
+`public/og-image.png` (1200×630, SVG-gerendert via `scripts/generate-og-image.mjs`).
+og:image, og:image:width/height/alt, twitter:card="summary_large_image" + twitter:image
+in `BaseLayout.astro` verdrahtet — gilt ab sofort für alle 18 Tools.
 
-**Optionen:**
-
-1. **Global-Fallback-Bild** — `public/og-image.png` (1200×630), für alle 18 Tools dasselbe.
-   - Aufwand: einmal Bild designen (~10 min in Figma/Photoshop), dann statisch referenzieren.
-   - Nachteil: SERP-/Social-Preview ist generisch, kein per-Tool-Signal.
-2. **Per-Tool Build-Time-Rendering via Satori** (`@vercel/satori` + `satori-html`).
-   - Aufwand: ~2 h (Template, Integration in Astro-Build-Hook, pro Tool generieren).
-   - Vorteil: einzigartige Preview pro Tool, starkes Social-Signal.
-3. **Hybrid:** globales Default + Satori für Priority-Tools (Top-5 nach Analytics später).
-   - Aufwand: Option 1 jetzt + Nachrüstung in Phase 2.
-
-**Agent-Empfehlung:** Option 3. Start mit Option 1 (Fallback-Bild) diese Woche, Satori-Rollout
-in Phase 2 nach AdSense-Aktivierung.
-
-**Warte auf:** User-Entscheidung 1/2/3.
+**Phase-2-TODO (nach AdSense-Aktivierung):** Satori-basiertes per-Tool-Rendering für
+Top-5 nach Analytics. Fallback bleibt als Default für unpriorisierte Tools.
 
 ---
 
