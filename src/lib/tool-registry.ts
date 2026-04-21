@@ -13,6 +13,7 @@ import { hexRgbKonverter } from './tools/hex-rgb-konverter';
 import { uuidGenerator } from './tools/uuid-generator';
 import { jsonFormatter } from './tools/json-formatter';
 import { characterCounter } from './tools/character-counter';
+import { regexTester } from './tools/regex-tester';
 
 /**
  * Single source of truth for tool configurations.
@@ -39,6 +40,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'uuid-generator': uuidGenerator,
   'json-formatter': jsonFormatter,
   'character-counter': characterCounter,
+  'regex-tester': regexTester,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
