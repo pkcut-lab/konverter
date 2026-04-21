@@ -44,6 +44,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'sql-formatter': { de: 'sql-formatter' },
   'xml-formatter': { de: 'xml-formatter' },
   'css-formatter': { de: 'css-formatter' },
+  'jwt-decoder': { de: 'jwt-decoder' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
