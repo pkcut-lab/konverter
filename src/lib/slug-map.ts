@@ -34,6 +34,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'regex-tester': { de: 'regex-tester' },
   'text-diff': { de: 'text-diff' },
   'unix-timestamp': { de: 'unix-timestamp' },
+  'base64-encoder': { de: 'base64-encoder' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

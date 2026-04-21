@@ -16,6 +16,7 @@ import { characterCounter } from './tools/character-counter';
 import { regexTester } from './tools/regex-tester';
 import { textDiff } from './tools/text-diff';
 import { unixTimestamp } from './tools/unix-timestamp';
+import { base64Encoder } from './tools/base64-encoder';
 
 /**
  * Single source of truth for tool configurations.
@@ -45,6 +46,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'regex-tester': regexTester,
   'text-diff': textDiff,
   'unix-timestamp': unixTimestamp,
+  'base64-encoder': base64Encoder,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
