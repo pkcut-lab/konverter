@@ -126,6 +126,43 @@ webfetch "https://caniuse.com/?search=<format>"
 
 Filter: nur Trends mit Hard-Constraints kompatibel (pure-client, MIT, AdSense, multilingual, Refined-Minimalism).
 
+### Schritt D2 — Tool-Type-Security-Research (conditional)
+
+Trigger: Ticket-`tool_type` ∈ {Generator, Validator, Analyzer, Formatter, Parser}
+ODER Dossier-Scope enthält Keywords: `regex`, `password`, `crypto`, `hash`,
+`random`, `parse`, `eval`, `sanitize`, `escape`.
+
+Lessons-Learned Audit 2026-04-21: `passwort-generator` wurde ohne CSPRNG-Advisory
+gebaut, `regex-tester` ohne ReDoS-Advisory. Dossier muss den Builder VORWARNEN.
+
+```bash
+case "$tool_type" in
+  Generator)
+    # Web-Crypto-API + CSPRNG-Pattern
+    webfetch "https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues"
+    # Research: wie ziehen Konkurrenten Randomness? Math.random (bad) vs crypto.getRandomValues (good)
+    # Quellen: competitor view-source + README-Scan
+    security_guidance="Pflicht: crypto.getRandomValues (CSPRNG). Math.random verboten."
+    ;;
+  Validator|Analyzer)
+    # ReDoS-Research wenn User-Regex-Input
+    webfetch "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+    webfetch "https://github.com/substack/safe-regex"
+    security_guidance="Pflicht: Timeout-Guard (AbortController) oder safe-regex Lib für User-Regex-Input."
+    ;;
+  Formatter|Parser)
+    # Malformed-Input-Handling, Prototype-Pollution bei JSON.parse-Varianten
+    webfetch "https://owasp.org/www-community/attacks/Prototype_pollution"
+    security_guidance="Pflicht: try/catch um Parser. Kein Merge-into-Object ohne hasOwnProperty-Guard."
+    ;;
+  *)
+    security_guidance=""
+    ;;
+esac
+```
+
+Output landet in Dossier-§11 (Schritt E Template).
+
 ### Schritt E — Dossier-Write
 
 ```bash
@@ -183,6 +220,17 @@ verdict: pending
 
 ## 10. Re-Evaluation-Trigger
 …
+
+## 11. Security-Guidance (tool-type-abhängig)
+
+Gefüllt in Schritt D2 wenn tool_type ∈ {Generator, Validator, Analyzer,
+Formatter, Parser} oder Keyword-Match. Sonst: "n/a — keine tool-type-spezifischen
+Security-Requirements".
+
+- **Threat-Model:** <1-2 Sätze, z.B. "User-Regex kann polynomial runaway">
+- **Pflicht-Pattern:** <Code-Schnipsel, z.B. `crypto.getRandomValues(new Uint8Array(n))`>
+- **Verboten:** <Code-Schnipsel, z.B. `Math.random()`, `eval(userInput)`>
+- **Quellen:** OWASP/MDN-Links
 
 ## Quellen
 
