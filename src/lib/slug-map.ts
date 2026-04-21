@@ -8,6 +8,12 @@ import { ACTIVE_LANGUAGES } from './hreflang';
  *
  * Shape: { [toolId]: { [lang]: slug } }. Partial per-lang record — a tool
  * may not yet have all active-language slugs filled.
+ *
+ * Phase 1 is DE-only by design: each entry has a `de:` slot and no others.
+ * `getSlug()` is defensive and `hreflang.ts` filters by `ACTIVE_LANGUAGES`,
+ * so missing slots never 404. Phase 3 fills `en`/`es`/`fr`/`pt-BR` slots
+ * as translations land (see docs/superpowers/specs/2026-04-17-konverter-
+ * webseite-design.md §6).
  */
 export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'meter-to-feet': { de: 'meter-zu-fuss' },

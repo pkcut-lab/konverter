@@ -116,7 +116,13 @@ const jsonLd = buildToolJsonLd(
           class:list={['tool-section', config.type === 'file-tool' && 'tool-section--wide']}
           aria-label="Konverter"
         >
-          {config.type === 'converter' && <Converter config={config} client:load />}
+          {config.type === 'converter' && (
+            <Converter
+              config={config}
+              locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language}
+              client:load
+            />
+          )}
           {config.type === 'file-tool' && <FileTool config={config} client:load />}
           {config.type === 'formatter' && <ColorConverter config={config} client:load />}
         </section>

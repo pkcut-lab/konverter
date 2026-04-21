@@ -39,6 +39,12 @@ const popularLabelByLang: Record<string, string> = {
 };
 const popularLabel = popularLabelByLang[lang] ?? popularLabelByLang.en!;
 
+const brandAriaByLang: Record<string, string> = {
+  de: 'Konverter — Startseite',
+  en: 'Konverter — Homepage',
+};
+const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
+
 type PopularEntry = { href: string; label: string; active: boolean };
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
@@ -51,7 +57,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
 ---
 <header class="site-header" data-pagefind-ignore>
   <div class="inner">
-    <a class="brand" href={`/${lang}/`} aria-label="Konverter — Startseite">
+    <a class="brand" href={`/${lang}/`} aria-label={brandAria}>
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="26" height="26">
           <rect width="24" height="24" rx="6" fill="var(--color-accent)" />
@@ -84,11 +90,11 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     </nav>
 
     <div class="search-slot">
-      <HeaderSearch client:load lang={lang} placeholder={placeholder} />
+      <HeaderSearch client:idle lang={lang} placeholder={placeholder} />
     </div>
 
     <div class="toggle-slot">
-      <ThemeToggle client:load />
+      <ThemeToggle client:idle />
     </div>
   </div>
 

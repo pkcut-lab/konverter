@@ -4,10 +4,11 @@
 
   interface Props {
     config: ConverterConfig;
+    locale?: string;
   }
   type CopyState = 'idle' | 'copied';
 
-  let { config }: Props = $props();
+  let { config, locale = 'de-DE' }: Props = $props();
 
   let inputValue = $state<number>(config.examples[0] ?? 1);
   let direction = $state<Direction>('forward');
@@ -28,7 +29,7 @@
 
   function formatDecimal(n: number, decimals: number): string {
     if (!Number.isFinite(n)) return '–';
-    return n.toLocaleString('de-DE', {
+    return n.toLocaleString(locale, {
       maximumFractionDigits: decimals,
       minimumFractionDigits: 0,
       useGrouping: false,
