@@ -32,6 +32,7 @@ already_built_skip_list:
   - url-encoder-decoder
   - roemische-zahlen
   - zeitzonen-rechner
+  - lorem-ipsum-generator
 total_tier_1_to_8: 122
 total_tier_9_psychology: 79
 total_parking_lot: ~90 (enum-ext-blocked)
