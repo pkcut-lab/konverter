@@ -92,6 +92,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'lb-to-kg': pfundZuKilogramm,
   'stone-to-kg': stoneZuKilogramm,
   'tonne-to-pound': tonneZuPfund,
+  'hectare-to-acre': hektarZuAcre,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
