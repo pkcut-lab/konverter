@@ -13,6 +13,7 @@ interface Props {
 }
 const { lang, title, description, pathWithoutLang } = Astro.props;
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
+const canonical = new URL(`/${lang}${pathWithoutLang}`, Astro.site).toString();
 ---
 <!DOCTYPE html>
 <html lang={lang}>
@@ -21,6 +22,18 @@ const hreflangs = buildHreflangLinks({ pathWithoutLang });
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Konverter" />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
 
     <ThemeScript />
 
@@ -35,6 +48,13 @@ const hreflangs = buildHreflangLinks({ pathWithoutLang });
     <link
       rel="preload"
       href="/fonts/Inter-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/JetBrainsMono-Variable.woff2"
       as="font"
       type="font/woff2"
       crossorigin
