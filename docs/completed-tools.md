@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [zeitzonen-rechner](https://konverter-7qc.pages.dev/de/zeitzonen-rechner) | time | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zeitzonen-rechner) |
 | [roemische-zahlen](https://konverter-7qc.pages.dev/de/roemische-zahlen) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/roemische-zahlen) |
 | [url-encoder-decoder](https://konverter-7qc.pages.dev/de/url-encoder-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/url-encoder-decoder) |
 | [base64-encoder](https://konverter-7qc.pages.dev/de/base64-encoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/base64-encoder) |
