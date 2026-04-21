@@ -15,15 +15,15 @@ howToUse:
   - "Kopiere das CSV über den Copy-Button oder nutze es direkt weiter."
 faq:
   - q: "Wie konvertiert man JSON in CSV?"
-    a: "JSON in das Eingabefeld einfuegen. Das Tool erkennt automatisch, ob ein Array von Objekten oder ein einzelnes Objekt vorliegt, flacht verschachtelte Strukturen und gibt CSV mit Kopfzeile aus."
+    a: "JSON in das Eingabefeld einfügen. Das Tool erkennt automatisch, ob ein Array von Objekten oder ein einzelnes Objekt vorliegt, flacht verschachtelte Strukturen und gibt CSV mit Kopfzeile aus."
   - q: "Was passiert mit verschachtelten JSON-Objekten?"
     a: "Verschachtelte Objekte werden mit Dot-Notation geflacht. Aus {address: {city: Berlin}} wird die Spalte address.city mit dem Wert Berlin."
   - q: "Wie werden Arrays in JSON-Werten behandelt?"
     a: "Arrays innerhalb von Objekten werden als kompakte JSON-Strings in die CSV-Zelle geschrieben, z. B. [1,2,3]. So bleibt die Information erhalten, ohne die Tabellenstruktur zu sprengen."
   - q: "Werden meine Daten an einen Server geschickt?"
-    a: "Nein. Die gesamte Konvertierung laeuft lokal im Browser ueber JSON.parse() und String-Operationen. Kein Byte verlaesst dein Geraet."
+    a: "Nein. Die gesamte Konvertierung läuft lokal im Browser über JSON.parse() und String-Operationen. Kein Byte verlässt dein Gerät."
   - q: "Welches CSV-Format wird erzeugt?"
-    a: "Standard-CSV nach RFC 4180: Komma als Trennzeichen, doppelte Anfuehrungszeichen fuer Felder mit Sonderzeichen, Zeilenumbruch als Zeilentrenner."
+    a: "Standard-CSV nach RFC 4180: Komma als Trennzeichen, doppelte Anführungszeichen für Felder mit Sonderzeichen, Zeilenumbruch als Zeilentrenner."
 relatedTools:
   - json-formatter
   - json-diff

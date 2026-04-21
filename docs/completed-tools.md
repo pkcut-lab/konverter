@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [json-zu-csv](https://konverter-7qc.pages.dev/de/json-zu-csv) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-zu-csv) |
 | [json-diff](https://konverter-7qc.pages.dev/de/json-diff) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-diff) |
 | [kontrast-pruefer](https://konverter-7qc.pages.dev/de/kontrast-pruefer) | color | shipped | 2026-04-21 | [dev](http://localhost:4322/de/kontrast-pruefer) |
 | [jwt-decoder](https://konverter-7qc.pages.dev/de/jwt-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/jwt-decoder) |
