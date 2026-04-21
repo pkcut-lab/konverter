@@ -5,16 +5,23 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
 import ColorConverter from '../../components/tools/ColorConverter.svelte';
+import Formatter from '../../components/tools/Formatter.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 
+// Tool-ids that need a specialised formatter UI. Everything else with
+// `type: 'formatter'` falls through to the generic textarea Formatter.
+// Keeps config.id out of the generic components (CONVENTIONS.md §Tool-
+// Components) — the switch lives at the route layer.
+const HEX_COLOR_TOOL_ID = 'hex-to-rgb';
+
 const componentByType = {
   converter: Converter,
   'file-tool': FileTool,
-  formatter: ColorConverter,
+  formatter: Formatter,
 } as const;
 
 export async function getStaticPaths() {
@@ -124,7 +131,12 @@ const jsonLd = buildToolJsonLd(
             />
           )}
           {config.type === 'file-tool' && <FileTool config={config} client:load />}
-          {config.type === 'formatter' && <ColorConverter config={config} client:load />}
+          {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
+            <ColorConverter config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id !== HEX_COLOR_TOOL_ID && (
+            <Formatter config={config} client:load />
+          )}
         </section>
 
         {entry.data.kbdHints && entry.data.kbdHints.length > 0 && (

@@ -48,36 +48,21 @@ Policy-Eintrag lebt in `CONVENTIONS.md` unter "Secrets-Rotation-Policy".
 
 ---
 
-## Q4 — json-formatter UI gleich ColorConverter (akut sichtbar im Build)
+## Q4 — json-formatter UI gleich ColorConverter ✅ RESOLVED 2026-04-21
 
-**Status:** Discovered während B-1-01 Verifikation. `[slug].astro:120` routet alle
-`type: 'formatter'`-Tools auf `ColorConverter.svelte` — ein hex-spezifisches UI mit
-`#FF5733`-Placeholder, Swatch-Preview und 6 Quick-Color-Buttons. Für `json-formatter`
-(auch `type: 'formatter'`) ergibt das eine unbenutzbare Seite: ein 20-Zeichen-Input-Feld
-statt Textarea, keine Formatierungs-Ausgabe für mehrzeiliges JSON.
+**Entscheidung:** Option 1 (neue `Formatter.svelte` + Routing-Split). `[slug].astro`
+routet jetzt:
+- `config.id === 'hex-to-rgb'` → `ColorConverter.svelte` (hex-only, behält Swatch
+  + Quick-Colors)
+- alle anderen `type: 'formatter'` → `Formatter.svelte` (generische Textarea-UI mit
+  Input-Textarea, Preformatted-Output, Copy + Leeren, Error-Banner für Throw).
 
-**Build-Blocker wurde narrow gefixt** durch `formatJson` → `''` auf Invalid-Input
-(statt Throw). Das UX-Problem bleibt: `/de/json-formatter` zeigt aktuell ColorConverter-
-UI, nicht JSON-Formatter-UI.
+Kompromiss gegen CONVENTIONS.md "Komponenten dürfen NICHT auf config.id switchen":
+Der Switch lebt am Route-Layer (`[slug].astro`), NICHT im Component. Die Components
+selbst bleiben generisch.
 
-**Optionen:**
-
-1. **`Formatter.svelte` bauen** — generisches Textarea-basiertes Formatter-Component
-   (Input-Textarea links, Output-Preformatted rechts). `[slug].astro` routet auf
-   `Formatter` oder `ColorConverter` basierend auf `config.id === 'hex-to-rgb'`.
-   - Aufwand: ~90 min (Component + Tests + Styling).
-2. **ColorConverter hex-only machen** — Komponente in `HexColorConverter.svelte`
-   umbenennen, json-formatter aus Auto-Route entfernen, später mit Formatter.svelte
-   wiederbeleben.
-   - Aufwand: ~30 min, aber User-sichtbarer Regress ("Tool verschwindet").
-3. **Status quo + Workaround-Warnung** — `json-formatter`-Route zeigt Banner
-   "UI wird überarbeitet", Tool bleibt technisch existent.
-   - Aufwand: ~15 min, aber schwaches Signal.
-
-**Agent-Empfehlung:** Option 1 — `Formatter.svelte` bauen. Matches Lego-Block-Strategie
-(7 generische Tool-Typen, 1 Component pro Typ).
-
-**Warte auf:** User-Entscheidung 1/2/3.
+Phase-2-Kandidat: wenn ein 3. Formatter-Subtyp auftaucht, wird ein `format` Sub-
+Discriminator im Zod-Schema sauberer (`formatter-textarea`, `formatter-color`, …).
 
 ---
 

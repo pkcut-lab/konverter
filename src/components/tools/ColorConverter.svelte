@@ -16,10 +16,8 @@
     try {
       return config.format(hexInput);
     } catch {
-      // Formatter contract allows throw for invalid input (see json-formatter).
-      // Hex-specific initial state would crash SSR for non-hex formatters that
-      // happen to route through this component. Swallow the error — the UI
-      // will simply render no output block until input becomes valid.
+      // Formatter contract allows throw for invalid input. Swallow —
+      // the Ungültig-banner (lines 139–142) takes over, no output block.
       return '';
     }
   });
