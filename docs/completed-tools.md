@@ -34,6 +34,9 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [hektar-zu-acre](https://konverter-7qc.pages.dev/de/hektar-zu-acre) | area | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hektar-zu-acre) |
+| [tonne-zu-pfund](https://konverter-7qc.pages.dev/de/tonne-zu-pfund) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/tonne-zu-pfund) |
+| [stone-zu-kilogramm](https://konverter-7qc.pages.dev/de/stone-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/stone-zu-kilogramm) |
 | [pfund-zu-kilogramm](https://konverter-7qc.pages.dev/de/pfund-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/pfund-zu-kilogramm) |
 | [gramm-zu-unzen](https://konverter-7qc.pages.dev/de/gramm-zu-unzen) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/gramm-zu-unzen) |
 | [seemeile-zu-kilometer](https://konverter-7qc.pages.dev/de/seemeile-zu-kilometer) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/seemeile-zu-kilometer) |

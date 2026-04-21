@@ -49,6 +49,9 @@ already_built_skip_list:
   - seemeile-zu-kilometer
   - gramm-zu-unzen
   - pfund-zu-kilogramm
+  - stone-zu-kilogramm
+  - tonne-zu-pfund
+  - hektar-zu-acre
 total_tier_1_to_8: 122
 total_tier_9_psychology: 79
 total_parking_lot: ~90 (enum-ext-blocked)
