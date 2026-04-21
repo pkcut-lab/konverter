@@ -1,0 +1,299 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { listToolsForLang, type ToolListItem } from '../../lib/tools/list';
+import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
+import type { ToolCategory } from '../../lib/tools/categories';
+
+export async function getStaticPaths() {
+  return ACTIVE_LANGUAGES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: ActiveLanguage };
+
+const categoryOrder: readonly ToolCategory[] = [
+  'length', 'weight', 'volume', 'area', 'distance', 'temperature',
+  'image', 'video', 'audio', 'document',
+  'text', 'color', 'time', 'dev',
+] as const;
+
+const labelsDe: Record<ToolCategory, string> = {
+  length: 'Länge',
+  weight: 'Gewicht',
+  area: 'Fläche',
+  volume: 'Volumen',
+  distance: 'Distanz',
+  temperature: 'Temperatur',
+  image: 'Bild',
+  video: 'Video',
+  audio: 'Audio',
+  document: 'Dokument',
+  text: 'Text',
+  color: 'Farbe',
+  time: 'Zeit',
+  dev: 'Entwickler',
+};
+const uncategorizedLabel = 'Weitere';
+
+const all = await listToolsForLang(lang);
+
+type Group = { id: string; label: string; items: ToolListItem[] };
+const byCat = new Map<string, ToolListItem[]>();
+for (const t of all) {
+  const key = t.category ?? '__other';
+  if (!byCat.has(key)) byCat.set(key, []);
+  byCat.get(key)!.push(t);
+}
+
+const groups: Group[] = [];
+for (const cat of categoryOrder) {
+  const items = byCat.get(cat);
+  if (items && items.length > 0) {
+    groups.push({ id: cat, label: labelsDe[cat] ?? cat, items });
+  }
+}
+const other = byCat.get('__other');
+if (other && other.length > 0) {
+  groups.push({ id: 'other', label: uncategorizedLabel, items: other });
+}
+
+const total = all.length;
+---
+<BaseLayout
+  lang={lang}
+  title="Alle Werkzeuge — Konverter"
+  description="Vollständige Übersicht aller Konverter-Werkzeuge, gruppiert nach Kategorie. Alles läuft im Browser, ohne Upload, ohne Tracking, ohne Anmeldung."
+  pathWithoutLang="/werkzeuge"
+>
+  <div class="index">
+    <header class="index-hero">
+      <p class="eyebrow">Übersicht</p>
+      <h1>Alle Werkzeuge</h1>
+      <p class="lede">
+        {total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser —
+        kein Upload, keine Anmeldung, kein Tracking.
+      </p>
+    </header>
+
+    <nav class="jump" aria-label="Kategorien">
+      {groups.map((g) => (
+        <a href={`#cat-${g.id}`} class="jump-pill">
+          <span>{g.label}</span>
+          <span class="jump-count">{g.items.length}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="groups">
+      {groups.map((g) => (
+        <section id={`cat-${g.id}`} class="group" aria-labelledby={`h-${g.id}`}>
+          <header class="group-head">
+            <h2 id={`h-${g.id}`}>{g.label}</h2>
+            <span class="group-count" aria-label={`${g.items.length} Werkzeuge`}>
+              {String(g.items.length).padStart(2, '0')}
+            </span>
+          </header>
+
+          <ul class="group-list" role="list">
+            {g.items.map((t) => (
+              <li class="tool-row">
+                <a class="tool-row__link" href={t.href}>
+                  <span class="tool-row__title">{t.shortTitle}</span>
+                  <span class="tool-row__tagline">{t.tagline}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .index {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding-top: var(--space-8);
+  }
+
+  .index-hero {
+    max-width: 44rem;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .eyebrow {
+    margin: 0;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .index-hero h1 {
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: var(--space-2) auto 0;
+    max-width: 36rem;
+    color: var(--color-text-muted);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    text-wrap: balance;
+  }
+
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+    max-width: 60rem;
+    margin: 0 auto;
+  }
+  .jump-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--font-size-small);
+    line-height: 1;
+    transition: border-color var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .jump-pill:hover {
+    border-color: var(--color-text-subtle);
+    background: var(--color-bg);
+  }
+  .jump-pill:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .jump-count {
+    font-family: var(--font-family-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-subtle);
+  }
+
+  .groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    max-width: 60rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    scroll-margin-top: var(--space-8);
+  }
+  .group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-3);
+  }
+  .group-head h2 {
+    margin: 0;
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+  }
+  .group-count {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+  }
+
+  .group-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 48rem) {
+    .group-list {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--space-8);
+    }
+  }
+
+  .tool-row {
+    border-top: 1px solid var(--color-border);
+  }
+  .tool-row:first-child,
+  .tool-row:nth-child(2) {
+    border-top: 0;
+  }
+  @media (max-width: 47.99rem) {
+    .tool-row:nth-child(2) {
+      border-top: 1px solid var(--color-border);
+    }
+  }
+
+  .tool-row__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) 0;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .tool-row__link:hover .tool-row__title {
+    color: var(--color-accent);
+  }
+  .tool-row__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: var(--r-xs, 4px);
+  }
+
+  .tool-row__title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .tool-row__tagline {
+    font-size: var(--font-size-small);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jump-pill,
+    .tool-row__link,
+    .tool-row__title {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .index {
+      gap: var(--space-8);
+      padding-top: var(--space-6);
+    }
+    .groups {
+      gap: var(--space-10);
+    }
+  }
+</style>
