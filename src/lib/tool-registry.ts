@@ -1,5 +1,6 @@
 import type { ToolConfig } from './tools/schemas';
 import { meterZuFuss } from './tools/meter-zu-fuss';
+import { fussZuMeter } from './tools/fuss-zu-meter';
 import { pngJpgToWebp } from './tools/png-jpg-to-webp';
 import { hintergrundEntferner } from './tools/hintergrund-entferner';
 import { zentimeterZuZoll } from './tools/zentimeter-zu-zoll';
@@ -31,6 +32,8 @@ import { kontrastPruefer } from './tools/kontrast-pruefer';
 import { jsonDiff } from './tools/json-diff';
 import { jsonZuCsv } from './tools/json-zu-csv';
 import { bildDiff } from './tools/bild-diff';
+import { yardZuMeter } from './tools/yard-zu-meter';
+import { millimeterZuZoll } from './tools/millimeter-zu-zoll';
 
 /**
  * Single source of truth for tool configurations.
@@ -44,6 +47,7 @@ import { bildDiff } from './tools/bild-diff';
  */
 export const toolRegistry: Record<string, ToolConfig> = {
   'meter-to-feet': meterZuFuss,
+  'foot-to-meter': fussZuMeter,
   'png-jpg-to-webp': pngJpgToWebp,
   'remove-background': hintergrundEntferner,
   'cm-to-inch': zentimeterZuZoll,
@@ -75,6 +79,8 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'json-diff': jsonDiff,
   'json-to-csv': jsonZuCsv,
   'image-diff': bildDiff,
+  'yard-to-meter': yardZuMeter,
+  'mm-to-inch': millimeterZuZoll,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {

@@ -17,6 +17,7 @@ import { ACTIVE_LANGUAGES } from './hreflang';
  */
 export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'meter-to-feet': { de: 'meter-zu-fuss' },
+  'foot-to-meter': { de: 'fuss-zu-meter' },
   'png-jpg-to-webp': { de: 'webp-konverter' },
   'remove-background': { de: 'hintergrund-entfernen' },
   'cm-to-inch': { de: 'zentimeter-zu-zoll' },
@@ -49,6 +50,8 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'json-diff': { de: 'json-diff' },
   'json-to-csv': { de: 'json-zu-csv' },
   'image-diff': { de: 'bild-diff' },
+  'yard-to-meter': { de: 'yard-zu-meter' },
+  'mm-to-inch': { de: 'millimeter-zu-zoll' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
