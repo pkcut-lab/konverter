@@ -40,15 +40,41 @@ Firecrawl-Calls + ~200 WebFetch-Calls.
    - D: 2026-Trends (caniuse, MDN BCD, Chrome Platform Status, W3C Drafts),
      gefiltert auf Hard-Constraints-Kompatibilität
 
-5. **Dossier-Write + Citation-Verify** — YAML-Frontmatter (`dossier_version: 1`,
+5. **Cache-Write → Verify → Publish** — Zwei-Schritt-Output (Cache = intern mit
+   TTL-365, Publish = spec-konform + git-trackbar).
+
+   **5a. Cache-Write** — YAML-Frontmatter (`dossier_version: 1`,
    `citation_verify_passed: pending`, `pii_scrub_version: 1.0`, `erasure_key`,
-   `tokens_in/out`, `firecrawl_calls`) + 10 Sektionen Body. Dann:
+   `tokens_in/out`, `firecrawl_calls`) + 10 Sektionen Body nach:
+   ```
+   tasks/dossiers/_cache/<category>/<slug>.dossier.md
+   ```
+   `tasks/dossiers/_cache/INDEX.yaml` appenden (Auto-maintained):
+   `last_refresh`, `ttl_days`, `sources_count`, `citation_verify_passed: pending`.
+
+   **5b. Citation-Verify** — Pflicht-Gate vor Publish:
    ```bash
-   npm run citation-verify -- "dossiers/<slug>/$(date -I).md"
+   npm run citation-verify -- "tasks/dossiers/_cache/<category>/<slug>.dossier.md"
    ```
    Exit 0 → Frontmatter-Update `citation_verify_passed: true`, `verdict: ready`.
-   Exit 1 → `verdict: citation_fail`, `inbox/to-ceo/dossier-citation-fail-<slug>.md`,
-   CEO entscheidet Retry (max 1) oder Park.
+   Exit 1 → Frontmatter `verdict: citation_fail`, `citation_verify_passed: false`,
+   `inbox/to-ceo/dossier-citation-fail-<slug>.md`, CEO entscheidet Retry (max 1)
+   oder Park. **Ticket darf NUR mit `true` oder `citation_fail` schließen —
+   `pending` ist ein Quality-Fail-Mode** (Critic Check #13 auto-rejects).
+
+   Wenn `npm run citation-verify` nicht existiert oder WebFetch unavailable:
+   `verdict: citation_fail`, `citation_verify_passed: false`, `skipped_reason:
+   verify-script-missing` — NIEMALS Ticket mit `pending` schließen.
+
+   **5c. Publish** — Nach verified-ready dossier:
+   ```bash
+   mkdir -p "dossiers/<slug>"
+   cp "tasks/dossiers/_cache/<category>/<slug>.dossier.md" \
+      "dossiers/<slug>/$(date -I).md"
+   ```
+   Cache bleibt für TTL-Reuse (365d default per CATEGORY_TTL.md), Publish ist
+   der git-trackbare, dated, spec-konforme Output für Builder + Critic +
+   Daily-Digest-Aggregation.
 
 6. **Index-Update + Task-End** — `memory/dossier-cache-index.md` appenden:
    `- <slug> | <date> | parent=<parent> | expires=<ttl-date>`. Output-File:

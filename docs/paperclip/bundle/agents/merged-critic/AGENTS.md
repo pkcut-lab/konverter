@@ -169,6 +169,15 @@ user_pain=$(yq '.dossier_applied.user_pain_addressed' "$builder_output")
 
 [[ -z "$white_space" || -z "$user_pain" ]] && echo "FAIL — dossier_applied incomplete"
 
+# Citation-Verify-Gate: Dossier muss citation_verify_passed=true haben.
+# pending oder false = Quality-Fail-Mode (Researcher HEARTBEAT.md §5b).
+verify_status=$(yq '.citation_verify_passed' "$dossier_ref")
+case "$verify_status" in
+  true)       ;;  # pass
+  false)      echo "FAIL — dossier citation_verify_passed=false (verdict: citation_fail)"; exit 1 ;;
+  pending|*)  echo "FAIL — dossier citation_verify_passed=$verify_status (must be true; pending = researcher did not finalize verify step)"; exit 1 ;;
+esac
+
 # Cross-Check: White-Space-Feature ist in Dossier §9 Differenzierungs-Hypothese als Bullet zitierbar
 # Cross-Check: User-Pain-Text adressiert ≥1 Zitat aus Dossier §4 User-Pain-Points
 node scripts/dossier-compliance-check.mjs "$builder_output" "$dossier_ref"
