@@ -22,6 +22,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'inch-to-cm': { de: 'zoll-zu-zentimeter' },
   'password-generator': { de: 'passwort-generator' },
   'hex-to-rgb': { de: 'hex-rgb-konverter' },
+  'uuid-generator': { de: 'uuid-generator' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
