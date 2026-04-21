@@ -19,6 +19,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'celsius-to-fahrenheit': { de: 'celsius-zu-fahrenheit' },
   'sqm-to-sqft': { de: 'quadratmeter-zu-quadratfuss' },
   'hevc-to-h264': { de: 'hevc-zu-h264' },
+  'inch-to-cm': { de: 'zoll-zu-zentimeter' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
