@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [millimeter-zu-zoll](https://konverter-7qc.pages.dev/de/millimeter-zu-zoll) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/millimeter-zu-zoll) |
 | [bild-diff](https://konverter-7qc.pages.dev/de/bild-diff) | image | shipped | 2026-04-21 | [dev](http://localhost:4322/de/bild-diff) |
 | [json-zu-csv](https://konverter-7qc.pages.dev/de/json-zu-csv) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-zu-csv) |
 | [json-diff](https://konverter-7qc.pages.dev/de/json-diff) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-diff) |
