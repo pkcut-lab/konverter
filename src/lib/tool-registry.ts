@@ -25,6 +25,7 @@ import { hashGenerator } from './tools/hash-generator';
 import { qrCodeGenerator } from './tools/qr-code-generator';
 import { sqlFormatter } from './tools/sql-formatter';
 import { xmlFormatter } from './tools/xml-formatter';
+import { cssFormatter } from './tools/css-formatter';
 
 /**
  * Single source of truth for tool configurations.
@@ -63,6 +64,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'qr-code-generator': qrCodeGenerator,
   'sql-formatter': sqlFormatter,
   'xml-formatter': xmlFormatter,
+  'css-formatter': cssFormatter,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
