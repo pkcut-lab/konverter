@@ -15,15 +15,15 @@ howToUse:
   - "Die Unterschiede erscheinen automatisch mit JSON-Path, Wert und Typ-Info."
 faq:
   - q: "Wie vergleicht man zwei JSON-Dateien?"
-    a: "Erstes JSON oben einfügen, Trennzeile === setzen, zweites JSON darunter. Das Tool zeigt jede Abweichung mit dem zugehoerigen JSON-Path an."
+    a: "Erstes JSON oben einfügen, Trennzeile === setzen, zweites JSON darunter. Das Tool zeigt jede Abweichung mit dem zugehörigen JSON-Path an."
   - q: "Was ist ein JSON-Path?"
-    a: "Ein JSON-Path beschreibt den Weg zu einem Wert im Dokument, z. B. $.users[0].name. So findest du die Stelle sofort, ohne manuell suchen zu muessen."
+    a: "Ein JSON-Path beschreibt den Weg zu einem Wert im Dokument, z. B. $.users[0].name. So findest du die Stelle sofort, ohne manuell suchen zu müssen."
   - q: "Werden meine Daten an einen Server geschickt?"
-    a: "Nein. Der gesamte Vergleich laeuft lokal im Browser. Kein Byte verlaesst dein Geraet."
+    a: "Nein. Der gesamte Vergleich läuft lokal im Browser. Kein Byte verlässt dein Gerät."
   - q: "Was passiert bei unterschiedlichen Array-Reihenfolgen?"
-    a: "Standardmaessig vergleicht das Tool Arrays positionsbasiert. Mit der Direktive // ignore-array-order in der ersten Zeile wird die Reihenfolge ignoriert und nach Wert-Gleichheit gematcht."
+    a: "Standardmäßig vergleicht das Tool Arrays positionsbasiert. Mit der Direktive // ignore-array-order in der ersten Zeile wird die Reihenfolge ignoriert und nach Wert-Gleichheit gematcht."
   - q: "Erkennt das Tool Typ-Wechsel?"
-    a: "Ja. Wenn ein Wert z. B. von String zu Number wechselt, wird das als Typ-Wechsel markiert — nicht nur als Wertaenderung."
+    a: "Ja. Wenn ein Wert z. B. von String zu Number wechselt, wird das als Typ-Wechsel markiert — nicht nur als Wertänderung."
 relatedTools:
   - json-formatter
   - text-diff
