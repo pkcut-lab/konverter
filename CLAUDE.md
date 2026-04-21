@@ -88,11 +88,14 @@ Muss green sein. `DennisJedlicka` ist in diesem Workspace **verboten**.
 ## Session-Ritual
 
 **Start (~60 Sek):**
-1. `PROGRESS.md` lesen
-2. `PROJECT.md` prüfen (Dep-Versionen unverändert?)
-3. Task-relevante Rulebooks
-4. `bash scripts/check-git-account.sh`
-5. Arbeiten beginnen
+1. **`inbox/to-claude/` checken** — wenn Files da liegen (Fix-Agent-Drift-Reports,
+   User-Notizen), ZUERST lesen und Paperclip-Rules patchen, BEVOR neue Tools
+   dispatched werden. Verarbeitete Reports wandern nach `inbox/processed/`.
+2. `PROGRESS.md` lesen
+3. `PROJECT.md` prüfen (Dep-Versionen unverändert?)
+4. Task-relevante Rulebooks
+5. `bash scripts/check-git-account.sh`
+6. Arbeiten beginnen
 
 **Ende (~60 Sek):**
 1. `PROGRESS.md` aktualisieren (welche Tools jetzt in welchem Zustand)

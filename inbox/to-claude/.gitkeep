@@ -1,0 +1,9 @@
+# Inbox: Fix-Agent → Claude
+
+Hier landen Drift-Reports vom Fix-Agent, wenn er bei Re-Audit-Runs dasselbe
+Problem-Muster ≥3× in verschiedenen Tools findet. Claude liest diesen Ordner
+ZUERST am Session-Start und patcht dann die Paperclip-Rulebooks, damit der
+Drift nicht weiter reproduziert wird.
+
+Dateiname-Konvention: `paperclip-drift-<kategorie>-<YYYY-MM-DD>.md`
+Verarbeitete Reports werden nach `inbox/processed/` verschoben.
