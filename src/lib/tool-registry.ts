@@ -34,6 +34,9 @@ import { jsonZuCsv } from './tools/json-zu-csv';
 import { bildDiff } from './tools/bild-diff';
 import { yardZuMeter } from './tools/yard-zu-meter';
 import { millimeterZuZoll } from './tools/millimeter-zu-zoll';
+import { seemeileZuKilometer } from './tools/seemeile-zu-kilometer';
+import { grammZuUnzen } from './tools/gramm-zu-unzen';
+import { pfundZuKilogramm } from './tools/pfund-zu-kilogramm';
 
 /**
  * Single source of truth for tool configurations.
@@ -81,6 +84,9 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'image-diff': bildDiff,
   'yard-to-meter': yardZuMeter,
   'mm-to-inch': millimeterZuZoll,
+  'nautical-mile-to-km': seemeileZuKilometer,
+  'gram-to-ounce': grammZuUnzen,
+  'lb-to-kg': pfundZuKilogramm,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {

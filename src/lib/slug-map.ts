@@ -52,6 +52,9 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'image-diff': { de: 'bild-diff' },
   'yard-to-meter': { de: 'yard-zu-meter' },
   'mm-to-inch': { de: 'millimeter-zu-zoll' },
+  'nautical-mile-to-km': { de: 'seemeile-zu-kilometer' },
+  'gram-to-ounce': { de: 'gramm-zu-unzen' },
+  'lb-to-kg': { de: 'pfund-zu-kilogramm' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
