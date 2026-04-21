@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [seemeile-zu-kilometer](https://konverter-7qc.pages.dev/de/seemeile-zu-kilometer) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/seemeile-zu-kilometer) |
 | [fuss-zu-meter](https://konverter-7qc.pages.dev/de/fuss-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/fuss-zu-meter) |
 | [yard-zu-meter](https://konverter-7qc.pages.dev/de/yard-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/yard-zu-meter) |
 | [millimeter-zu-zoll](https://konverter-7qc.pages.dev/de/millimeter-zu-zoll) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/millimeter-zu-zoll) |

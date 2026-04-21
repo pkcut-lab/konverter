@@ -3,7 +3,7 @@ toolId: nautical-mile-to-km
 language: de
 title: "Seemeilen in Kilometer umrechnen – Formel & Tabelle"
 headingHtml: "Seemeilen in <em>Kilometer</em> umrechnen"
-metaDescription: "Seemeilen in Kilometer umrechnen: exakte Formel (1 nmi = 1,852 km), Tabelle gängiger Werte und FAQ zu nautischen Meilen in Schifffahrt und Luftfahrt. Ohne Anmeldung."
+metaDescription: "Seemeilen in Kilometer umrechnen: exakte Formel (1 nmi = 1,852 km), Tabelle gängiger Werte und FAQ zu nautischen Meilen. Ohne Anmeldung, im Browser."
 tagline: "Präzise Distanz-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Seemeilen (nmi) in die entsprechende Angabe in Kilometern (km) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen nautischen Meilen und metrischen Distanzen pendelt — von der Schifffahrtsroute bis zum Flugplan. Seemeilen in Kilometer umrechnen ist dank internationaler Definition seit 1929 eindeutig."
 howToUse:
