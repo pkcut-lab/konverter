@@ -11,7 +11,17 @@
   let hexInput = $state<string>('#FF5733');
   let copyStates = $state<Record<string, CopyState>>({});
 
-  const output = $derived(config.format(hexInput));
+  const output = $derived.by(() => {
+    try {
+      return config.format(hexInput);
+    } catch {
+      // Formatter contract allows throw for invalid input (see json-formatter).
+      // Hex-specific initial state would crash SSR for non-hex formatters that
+      // happen to route through this component. Swallow the error — the UI
+      // will simply render no output block until input becomes valid.
+      return '';
+    }
+  });
   const lines = $derived(output ? output.split('\n') : []);
 
   const FORMAT_LABELS: Record<number, string> = { 0: 'RGB', 1: 'HSL', 2: 'OKLCH' };
