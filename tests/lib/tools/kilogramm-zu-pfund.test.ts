@@ -18,7 +18,7 @@ describe('kilogrammZuPfund config', () => {
     expect(kilogrammZuPfund.examples).toEqual([1, 5, 70, 100]);
   });
 
-  it('formula is linear with the exact inverse-of-0.45359237 factor', () => {
-    expect(kilogrammZuPfund.formula).toEqual({ type: 'linear', factor: 2.2046226218 });
+  it('formula is linear with the NIST-aligned inverse-of-0.45359237 factor', () => {
+    expect(kilogrammZuPfund.formula).toEqual({ type: 'linear', factor: 2.20462262185 });
   });
 });

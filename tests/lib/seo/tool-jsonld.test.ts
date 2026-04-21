@@ -7,6 +7,7 @@ describe('buildToolJsonLd', () => {
     lang: 'de',
     title: 'Hintergrund entfernen',
     description: 'Beschreibung',
+    category: 'image',
     faq: [
       { q: 'Funktioniert das offline?', a: 'Ja, nach dem ersten Modell-Download.' },
       { q: 'Ist es kostenlos?', a: 'Ja.' },
@@ -53,5 +54,29 @@ describe('buildToolJsonLd', () => {
   it('omits HowTo when steps are empty', () => {
     const out = buildToolJsonLd({ ...content, steps: [] }, 'https://example.com/x');
     expect(out.find((x) => x['@type'] === 'HowTo')).toBeUndefined();
+  });
+
+  it('emits a BreadcrumbList with Home + tool page', () => {
+    const out = buildToolJsonLd(content, 'https://example.com/de/hintergrund-entfernen');
+    const crumb = out.find((x) => x['@type'] === 'BreadcrumbList');
+    expect(crumb).toBeDefined();
+    const items = crumb?.itemListElement as Array<Record<string, unknown>>;
+    expect(items.length).toBe(2);
+    expect(items[0]).toMatchObject({ position: 1, name: 'Home', item: 'https://example.com/de' });
+    expect(items[1]).toMatchObject({
+      position: 2,
+      name: 'Hintergrund entfernen',
+      item: 'https://example.com/de/hintergrund-entfernen',
+    });
+  });
+
+  it('maps applicationCategory by category: dev → DeveloperApplication', () => {
+    const [soft] = buildToolJsonLd({ ...content, category: 'dev' }, 'https://example.com/x');
+    expect(soft.applicationCategory).toBe('DeveloperApplication');
+  });
+
+  it('falls back to UtilitiesApplication when category is unknown', () => {
+    const [soft] = buildToolJsonLd({ ...content, category: 'nonexistent' }, 'https://example.com/x');
+    expect(soft.applicationCategory).toBe('UtilitiesApplication');
   });
 });

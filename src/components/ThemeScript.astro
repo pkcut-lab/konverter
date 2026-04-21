@@ -19,5 +19,7 @@
     }
   })();
 </script>
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+{/* Must mirror --color-bg from tokens.css. meta[name=theme-color] does not
+    resolve CSS custom properties, so keep these in lockstep manually. */}
+<meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1A1917" media="(prefers-color-scheme: dark)" />

@@ -8,7 +8,7 @@ export const kilogrammZuPfund: ConverterConfig = {
     from: { id: 'kg', label: 'Kilogramm' },
     to: { id: 'lb', label: 'Pfund' },
   },
-  formula: { type: 'linear', factor: 2.2046226218 },
+  formula: { type: 'linear', factor: 2.20462262185 },
   decimals: 4,
   examples: [1, 5, 70, 100],
 };

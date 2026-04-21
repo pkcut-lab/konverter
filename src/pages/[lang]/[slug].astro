@@ -78,6 +78,7 @@ const jsonLd = buildToolJsonLd(
     lang: entry.data.language,
     title: entry.data.title,
     description: entry.data.metaDescription,
+    category: entry.data.category,
     faq: entry.data.faq ?? [],
     steps: (entry.data.howToUse ?? []).map((text, i) => ({
       title: `Schritt ${i + 1}`,
