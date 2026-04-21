@@ -21,6 +21,7 @@ import { urlEncoderDecoder } from './tools/url-encoder-decoder';
 import { roemischeZahlen } from './tools/roemische-zahlen';
 import { loremIpsumGenerator } from './tools/lorem-ipsum-generator';
 import { zeitzonenRechner } from './tools/zeitzonen-rechner';
+import { hashGenerator } from './tools/hash-generator';
 
 /**
  * Single source of truth for tool configurations.
@@ -55,6 +56,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'roman-numerals': roemischeZahlen,
   'lorem-ipsum-generator': loremIpsumGenerator,
   'timezone-converter': zeitzonenRechner,
+  'hash-generator': hashGenerator,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
