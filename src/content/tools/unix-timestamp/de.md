@@ -31,7 +31,7 @@ relatedTools:
   - text-diff
 ---
 
-## Was macht dieser Konverter?
+## Was macht der Konverter?
 
 Ein Unix-Timestamp zählt Sekunden seit dem 1.&nbsp;Januar 1970 00:00:00&nbsp;UTC — der sogenannten Epoch. POSIX-Systeme, C und Python verwenden Sekunden (10&nbsp;Stellen). JavaScript, Java und Kafka verwenden Millisekunden (13&nbsp;Stellen). Der Konverter rechnet zwischen beiden Darstellungen um: Sekunden × 1000 = Millisekunden, Millisekunden ÷ 1000 = Sekunden.
 
@@ -73,7 +73,7 @@ Merke: Ein Tag hat exakt 86.400&nbsp;Sekunden, eine Woche 604.800. Diese Werte s
 
 **Y2038-Assessment:** Unternehmen mit Legacy-Systemen prüfen aktuell, welche Komponenten noch 32-Bit-Timestamps verwenden. Der Maximalwert 2.147.483.647 (19.&nbsp;Januar 2038, 03:14:07&nbsp;UTC) ist die harte Grenze. Wer Timestamps über diesen Wert hinaus speichern muss, braucht 64-Bit-Integer.
 
-## Präzisions-Varianten im Überblick
+### Präzisions-Varianten im Überblick
 
 Neben Sekunden und Millisekunden existieren zwei weitere Präzisionsstufen:
 
@@ -86,7 +86,7 @@ Neben Sekunden und Millisekunden existieren zwei weitere Präzisionsstufen:
 
 Die Stellenzahl ist das zuverlässigste Erkennungsmerkmal: 10&nbsp;Stellen = Sekunden, 13&nbsp;Stellen = Millisekunden, 16&nbsp;Stellen = Mikrosekunden, 19&nbsp;Stellen = Nanosekunden.
 
-## Das Y2038-Problem
+### Das Y2038-Problem
 
 Am 19.&nbsp;Januar 2038 um 03:14:07&nbsp;UTC erreicht der Wert `2147483647` das Maximum eines 32-Bit-Signed-Integer. Systeme, die Timestamps in 32&nbsp;Bit speichern, interpretieren den nächsten Wert als −2.147.483.648 — ein Sprung zurück ins Jahr 1901.
 
