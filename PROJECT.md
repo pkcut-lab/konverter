@@ -13,11 +13,11 @@
 
 | Package | Version | Rolle |
 |---------|---------|-------|
-| astro | 5.0.0 | Meta-Framework, SSG, i18n-Routing |
+| astro | 5.18.1 | Meta-Framework, SSG, i18n-Routing (security-bump 2026-04-21: GHSA-wrwg-2hg8-v723 + GHSA-49w6-73cw-chjr) |
 | @astrojs/svelte | 7.0.0 | Svelte-Islands-Integration |
 | @astrojs/tailwind | 5.1.4 | Tailwind-Integration |
 | @astrojs/sitemap | 3.2.1 | Sitemap + Hreflang |
-| svelte | 5.1.16 | UI-Komponenten (Runes-only) |
+| svelte | 5.55.4 | UI-Komponenten (Runes-only); minor-bump 2026-04-21 (follow-on zum astro-security-bump) |
 | tailwindcss | 3.4.15 | CSS utilities |
 | typescript | 5.7.2 | strict mode |
 | zod | 3.24.1 | Content-Validation |

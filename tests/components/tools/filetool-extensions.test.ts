@@ -295,7 +295,7 @@ describe('FileTool.svelte — toggles (conditional visibility)', () => {
     const file2 = makeFile('4k-b.mp4', 'video/mp4', 2048);
     Object.defineProperty(input2, 'files', { value: [file2], configurable: true });
     input2.dispatchEvent(new Event('change', { bubbles: true }));
-    await flushAsync();
+    await flushAsync(30);
 
     // Second call should carry the toggle value
     const call2 = process.mock.calls[1];
