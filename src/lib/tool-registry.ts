@@ -15,6 +15,7 @@ import { jsonFormatter } from './tools/json-formatter';
 import { characterCounter } from './tools/character-counter';
 import { regexTester } from './tools/regex-tester';
 import { textDiff } from './tools/text-diff';
+import { unixTimestamp } from './tools/unix-timestamp';
 
 /**
  * Single source of truth for tool configurations.
@@ -43,6 +44,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'character-counter': characterCounter,
   'regex-tester': regexTester,
   'text-diff': textDiff,
+  'unix-timestamp': unixTimestamp,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
