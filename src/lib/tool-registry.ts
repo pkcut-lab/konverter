@@ -19,6 +19,7 @@ import { unixTimestamp } from './tools/unix-timestamp';
 import { base64Encoder } from './tools/base64-encoder';
 import { urlEncoderDecoder } from './tools/url-encoder-decoder';
 import { roemischeZahlen } from './tools/roemische-zahlen';
+import { zeitzonenRechner } from './tools/zeitzonen-rechner';
 
 /**
  * Single source of truth for tool configurations.
@@ -51,6 +52,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'base64-encoder': base64Encoder,
   'url-encoder-decoder': urlEncoderDecoder,
   'roman-numerals': roemischeZahlen,
+  'timezone-converter': zeitzonenRechner,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
