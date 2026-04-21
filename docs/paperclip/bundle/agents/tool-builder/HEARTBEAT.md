@@ -33,14 +33,35 @@ abhängig von Dossier-Umfang + Template-Divergenz.
    Zwischendurch `npm test -- <id>` und `npm run astro -- check` laufen lassen
    (exit 0 + 0/0/0 als Hard-Gate).
 
-5. **Commit + engineer_output** — `git add` der 3 Files + `git commit` mit
-   Trailer `Rulebooks-Read: PROJECT, CONVENTIONS, STYLE, CONTENT`. NIEMALS
-   `--no-verify`. Dann `tasks/engineer_output_<id>.md` mit YAML-Frontmatter
-   schreiben (Pflicht-Felder: `dossier_applied.baseline_features`,
+5. **Pre-Commit-Gate → Commit → engineer_output** — Drei Hard-Gates MÜSSEN
+   grün sein, BEVOR `git commit` läuft. Lessons-Learned Audit 2026-04-21:
+   ohne diese Gates landeten CVEs (astro 5.0.0 GHSA-wrwg-2hg8-v723) +
+   Schema-Fails (unix-timestamp metaDescription 138 chars) + Test-Regressions
+   in merged Commits.
+
+   ```bash
+   # Gate 5a — Full Prod-Build (fängt Collection-Schema, Route-Konflikte)
+   npm run build || { echo "BLOCK — build fail"; exit 1; }
+
+   # Gate 5b — npm audit high-severity (fängt CVE-Regressions bei Dep-Updates)
+   npm audit --audit-level=high --production || { echo "BLOCK — high/critical CVE"; exit 1; }
+
+   # Gate 5c — Full Test-Suite (nicht nur <id>-Tests; fängt Cross-Tool-Regressions)
+   npm test || { echo "BLOCK — tests red"; exit 1; }
+   ```
+
+   Bei `BLOCK`: nicht committen, stattdessen `inbox/to-ceo/pre-commit-fail-<id>.md`
+   mit Gate-Name + stderr-Tail + `rework_reason` schreiben. Lock NICHT entfernen,
+   CEO entscheidet retry vs. escalate.
+
+   Erst wenn 5a+5b+5c grün: `git add` der 3 Files + `git commit` mit Trailer
+   `Rulebooks-Read: PROJECT, CONVENTIONS, STYLE, CONTENT`. NIEMALS `--no-verify`.
+   Dann `tasks/engineer_output_<id>.md` mit YAML-Frontmatter schreiben
+   (Pflicht-Felder: `dossier_applied.baseline_features`,
    `dossier_applied.white_space_feature`, `dossier_applied.user_pain_addressed`,
-   `files_changed`, `tests`, `astro_check`, `word_count`). Nach Skill-Sequenz
-   (falls UI): `Skill: web-design-guidelines` als Audit-Pass auf die geänderten
-   Dateien.
+   `files_changed`, `tests`, `astro_check`, `build_ok: true`, `audit_ok: true`,
+   `word_count`). Nach Skill-Sequenz (falls UI): `Skill: web-design-guidelines`
+   als Audit-Pass auf die geänderten Dateien.
 
 6. **Task-End + Post-Review-Gate** — `rm tasks/task.lock`. Exit. Warten auf
    CEO-Dispatch. Wenn ein Rework-Ticket reinkommt (`rework_counter` im Header):
@@ -58,6 +79,7 @@ abhängig von Dossier-Umfang + Template-Divergenz.
 | B | Commit bricht wegen Git-Account-Hook | SOFORT stop, `inbox/to-ceo/git-account-fail-<id>.md`. **Kein** `--no-verify`. |
 | C | Rulebook-Konflikt entdeckt (CONTENT.md §X vs BRAND_GUIDE.md §Y) | `inbox/to-ceo/rulebook-conflict-<id>.md`, Status `blocked` |
 | D | Test nicht schreibbar weil Feature vage | `inbox/to-ceo/blocker-<id>.md` Typ D mit konkreten Unklarheiten |
+| E | Pre-Commit-Gate 5a/5b/5c fail | `inbox/to-ceo/pre-commit-fail-<id>.md` mit Gate + stderr-Tail, Lock bleibt, kein Commit |
 
 ## Budget-Gate (Pre-Tool-Call)
 
