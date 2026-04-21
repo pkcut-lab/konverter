@@ -42,6 +42,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'hash-generator': { de: 'hash-generator' },
   'qr-code-generator': { de: 'qr-code-generator' },
   'sql-formatter': { de: 'sql-formatter' },
+  'xml-formatter': { de: 'xml-formatter' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
