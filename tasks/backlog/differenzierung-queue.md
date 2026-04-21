@@ -44,6 +44,8 @@ already_built_skip_list:
   - json-zu-csv
   - bild-diff
   - millimeter-zu-zoll
+  - yard-zu-meter
+  - fuss-zu-meter
 total_tier_1_to_8: 122
 total_tier_9_psychology: 79
 total_parking_lot: ~90 (enum-ext-blocked)
