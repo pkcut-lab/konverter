@@ -53,6 +53,12 @@ Backlog-Pick → Auto-Refill-Fallback → Dispatch → Daily-Digest-Update → M
   hat eligible slugs → erstelle bis zu 3 neue Paperclip-Issues per API-Call
   (siehe §2.5 unten). Verhindert "Empty inbox → exit" wenn Backlog-Datei voll
   ist. Detail-Logik in `HEARTBEAT.md` §6.
+- **§7.5 Completed-Tools-List-Append** (Post-Deploy-Hook) — nach jedem
+  `route_to_deploy_queue` (regulär oder ship-as-is) appendet CEO eine Zeile in
+  `docs/completed-tools.md` (Markdown-Link auf prod + dev-URL, category, state,
+  ISO-Datum). Sync mit `already_built_skip_list` in
+  `tasks/backlog/differenzierung-queue.md` — verhindert Redispatch und gibt
+  User eine Live-Liste aller ausgelieferten Tools. Duplikat- + Enum-Guard hart.
 
 **Neu in v1.0:**
 - Step 1 **Kill-Switch** (`.paperclip/EMERGENCY_HALT`-File-Check) — vor ALLEM anderen. Existiert File → Heartbeat beenden, Live-Alarm Typ 5.
@@ -279,7 +285,81 @@ def resolve_gate(ticket, critic_reports):
     # 4. Partial-Rate Beobachtung
     if partial_rate_last_10() > 0.20:
         write_digest('- Partial-Rate > 20% — Observation')
+
+    # 5. Completed-Tools-List-Append (§7.5 — hard, nicht überspringbar)
+    if ticket_was_routed_to_deploy(ticket):
+        append_completed_tools_entry(ticket, state='shipped' or 'ship-as-is')
 ```
+
+## 7.5 Completed-Tools-List-Append (Post-Deploy-Hook, v1.1)
+
+**Wann invoken.** Immer wenn `route_to_deploy_queue(ticket)` aufgerufen wurde —
+egal ob regulär (`all_critics_pass`) oder via Auto-Resolve ship-as-is
+(`score ≥ 0.80` nach >2 Reworks). NICHT invoken bei `route_to_park` oder
+`route_to_rework`. Der Append ist Teil der Deploy-Transaktion: ohne Append
+ist der Deploy nicht CEO-seitig finalisiert.
+
+**Procedure (hard, nicht überspringbar).**
+
+```bash
+slug="<ticket.tool_slug>"        # z.B. "hex-rgb-konverter"
+category="<ticket.category>"     # z.B. "color" — muss in src/lib/tools/categories.ts sein
+state="shipped"                  # oder "ship-as-is" bei Auto-Resolve
+today="$(date -I)"
+prod="https://konverter-7qc.pages.dev/de/${slug}"
+local_url="http://localhost:4322/de/${slug}"
+list="docs/completed-tools.md"
+
+# 1. Duplikat-Guard (niemals denselben Slug zweimal appenden)
+if grep -q "| \[${slug}\](" "$list"; then
+  write_digest "- completed-tools.md: ${slug} bereits vorhanden — Append übersprungen"
+  return 0
+fi
+
+# 2. Enum-Guard (category muss in categories.ts liegen, sonst Live-Alarm)
+if ! grep -qE "^  '${category}'," src/lib/tools/categories.ts; then
+  write_live_alarm "category-unknown" "slug=${slug} category=${category}"
+  return 1
+fi
+
+# 3. Zeile unter "<!-- CEO-APPEND -->"-Marker einfügen
+entry="| [${slug}](${prod}) | ${category} | ${state} | ${today} | [dev](${local_url}) |"
+awk -v e="$entry" '/<!-- CEO-APPEND -->/{print;print e;next}1' \
+  "$list" > "${list}.tmp" && mv "${list}.tmp" "$list"
+
+# 4. Backlog-Skip-List synchronisieren (verhindert Auto-Refill-Redispatch)
+queue="tasks/backlog/differenzierung-queue.md"
+if ! grep -q "^  - ${slug}$" "$queue"; then
+  # Append unter already_built_skip_list im Frontmatter:
+  awk -v s="  - ${slug}" '/^already_built_skip_list:$/{print;in_list=1;next}
+    in_list && !/^  - /{print s;in_list=0}
+    {print}' "$queue" > "${queue}.tmp" && mv "${queue}.tmp" "$queue"
+fi
+
+# 5. Digest-Note
+write_digest "- Completed-Tools-List: ${slug} appended (${state}, ${category})"
+```
+
+**Git-Commit-Policy.** Nach §7.5 append committet CEO genau EINEN Commit mit
+beiden Files (`docs/completed-tools.md` + `tasks/backlog/differenzierung-queue.md`):
+
+```bash
+git add docs/completed-tools.md tasks/backlog/differenzierung-queue.md
+git commit -m "chore(ceo): list ${slug} as ${state} (auto-append §7.5)"
+```
+
+Kein Mix mit anderen Änderungen (Tool-Code, Dossiers, etc.) — diese
+Buchführung bleibt chirurgisch getrennt, damit `git log docs/completed-tools.md`
+eine saubere Chronik aller Ship-Events ergibt.
+
+**Failure-Modes.**
+
+| Symptom | Ursache | Reaktion |
+|---|---|---|
+| Duplikat-Guard blockt | Slug bereits in Liste (Re-Deploy nach Rework) | Digest-Note, Append skipped — NICHT als Fehler werten |
+| Enum-Guard blockt | Category nicht in `categories.ts` | Live-Alarm `category-unknown`, Deploy-Transaktion NICHT rollbacken (Tool ist ja gemerged), aber Liste NICHT appenden — User entscheidet Enum-Extension |
+| `<!-- CEO-APPEND -->`-Marker fehlt | Datei wurde manuell ge-trimmt | Live-Alarm `completed-tools-marker-missing`, User repariert Datei |
+| Git-Commit fail (pre-commit-hook) | z.B. git-account-check | Deploy-Transaktion steht, Liste ist lokal aktualisiert — Live-Alarm `commit-fail`, User repariert |
 
 ## 8. Dossier-Gate-Resolve (vor tool-build-Dispatch)
 
