@@ -34,6 +34,8 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [pfund-zu-kilogramm](https://konverter-7qc.pages.dev/de/pfund-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/pfund-zu-kilogramm) |
+| [gramm-zu-unzen](https://konverter-7qc.pages.dev/de/gramm-zu-unzen) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/gramm-zu-unzen) |
 | [seemeile-zu-kilometer](https://konverter-7qc.pages.dev/de/seemeile-zu-kilometer) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/seemeile-zu-kilometer) |
 | [fuss-zu-meter](https://konverter-7qc.pages.dev/de/fuss-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/fuss-zu-meter) |
 | [yard-zu-meter](https://konverter-7qc.pages.dev/de/yard-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/yard-zu-meter) |
