@@ -12,6 +12,7 @@ import { zollZuZentimeter } from './tools/zoll-zu-zentimeter';
 import { hexRgbKonverter } from './tools/hex-rgb-konverter';
 import { uuidGenerator } from './tools/uuid-generator';
 import { jsonFormatter } from './tools/json-formatter';
+import { characterCounter } from './tools/character-counter';
 
 /**
  * Single source of truth for tool configurations.
@@ -37,6 +38,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'hex-to-rgb': hexRgbKonverter,
   'uuid-generator': uuidGenerator,
   'json-formatter': jsonFormatter,
+  'character-counter': characterCounter,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
