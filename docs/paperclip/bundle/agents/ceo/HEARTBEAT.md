@@ -200,9 +200,100 @@ Wenn ein Lock älter als 4h wird (= 8 × Heartbeat), statt auto-release:
 
 User entscheidet, ob Worker-Environment kaputt ist oder neu gestartet werden muss.
 
-## §6 Idle-Behavior
+## §6 Auto-Refill-Rule (Backlog-Driven Throughput)
 
-`idle_behavior: wait` — CEO dreht keine leeren Zyklen wenn Backlog leer. Wartet auf User-Input oder neues Backlog-Import. Kein Digest-Eintrag für Idle-Heartbeats (sonst rauscht der Digest voll).
+### §6.1 Zweck
+
+Wenn die active queue leer ist, aber in `tasks/backlog/differenzierung-queue.md`
+noch Kandidaten warten, füllt der CEO autonom nach — statt idle zu gehen. So
+läuft Phase 1 über Nacht durch, ohne dass User morgens manuell 15 Tickets
+nachkippt. Hart gedeckelt, damit ein bug-infected Run nicht 30 schlechte Tools
+produziert, bevor der User aufwacht.
+
+### §6.2 Trigger-Gate (alle vier müssen grün sein)
+
+1. **Active queue leer** — keine offenen Tickets mit `status: todo|in_progress`
+   unter `in_flight`-Cap.
+2. **Backlog verfügbar** — `tasks/backlog/differenzierung-queue.md` Queue-
+   Sektion hat ≥1 nicht-schon-gebauten Slug (Dedup gegen `src/content/tools/`).
+3. **Tripwires green** — `tasks/tripwires.yaml`: keines der 5 Tripwires fired
+   (`critic_reject_rate_rolling_10`, `build_fail_cluster`, `design_score_min`,
+   `rate_limit_exhaustion`, `rulebook_drift_check`).
+4. **Konservativer Refill-Stop** — `critic_reject_rate_rolling_10 ≤ 0.20`.
+   Das ist strenger als der gleichnamige Haupt-Tripwire (`>0.30`). Rationale:
+   Refill soll FRÜHER pausieren, damit User morgens nicht 15 rejecteten
+   Tools gegenübersteht. Zwischen 0.20 und 0.30 läuft die Pipeline normal
+   weiter, aber OHNE Auto-Refill.
+
+### §6.3 Dispatch-Logic
+
+```bash
+# Hard-Caps (gelockt, User-Approval-Ticket für Änderung)
+MAX_TICKETS_PER_HEARTBEAT=3
+MAX_IN_FLIGHT=10
+
+# Pre-Flight
+in_flight=$(count_issues_status "todo,in_progress")
+(( in_flight >= MAX_IN_FLIGHT )) && { log "refill-skip: in_flight=$in_flight >= cap"; return; }
+
+# Refill-Stop (konservativ 0.20)
+reject_rate=$(compute_critic_reject_rate_rolling_10)
+awk -v r="$reject_rate" 'BEGIN{exit !(r > 0.20)}' && {
+  digest_append "- Auto-Refill paused: critic_reject_rate_rolling_10=$reject_rate > 0.20 (Threshold konservativer als Tripwire)"
+  return
+}
+
+# Pick next N aus Queue (top-of-file, FIFO), mit Dedup + Enum-Check
+slots=$(( MAX_TICKETS_PER_HEARTBEAT - (in_flight - prev_in_flight) ))
+(( slots <= 0 )) && return
+
+picked=0
+while IFS='|' read -r slug category label parent_hint; do
+  slug=$(echo "$slug" | xargs)   # trim
+  [[ -z "$slug" || "$slug" =~ ^# ]] && continue
+  # Dedup: skip wenn schon gebaut
+  [[ -d "src/content/tools/$slug" ]] && continue
+  # Enum-Check: Category muss in TOOL_CATEGORIES stehen
+  node -e "process.exit(require('./src/lib/tools/categories.ts').TOOL_CATEGORIES.includes('$category')?0:1)" || continue
+
+  dispatch_ticket "$slug" "$category" "$label" "$parent_hint"
+  append_refill_log "$slug" "$in_flight" "$reject_rate"
+  (( ++picked >= slots )) && break
+done < <(queue_section_of "tasks/backlog/differenzierung-queue.md")
+
+(( picked > 0 )) && digest_append "- Auto-Refill: ${picked} ticket(s) dispatched aus differenzierung-queue"
+```
+
+### §6.4 Hard-Caps (gelockt)
+
+| Parameter | Wert | Rationale |
+|---|---|---|
+| `max_tickets_per_heartbeat` | **3** | Genug für 5-min-Cadence-Throughput, nicht genug um einen Bug zu replizieren |
+| `max_in_flight` | **10** | Grobes Limit gegen Runaway (Rework-Stau + Critic-Queue); greift vor Tripwire |
+| `refill_pause_reject_rate` | **0.20** | Konservativer als Tripwire (`0.30`); schützt User-Morning-Surface |
+| `queue_order` | **FIFO top→bottom** | Deterministisch; User kann manuell reordern, Z.1 ist next |
+
+Änderung nur über User-Approval-Ticket (`inbox/from-user/refill-cap-change.md`).
+
+### §6.5 Idle-Fallback
+
+Wenn §6.2 fail (z.B. Backlog leer **oder** reject-rate > 0.20 **oder** in_flight
+am Cap) → CEO geht idle: kein Dispatch, kein Digest-Eintrag für den Idle-Tick
+(sonst rauscht der Digest voll). Wartet auf User-Input oder nächsten Heartbeat.
+
+### §6.6 Digest-Visibility
+
+Jeder Auto-Refill-Dispatch kommt in den Daily-Digest:
+
+```markdown
+## Auto-Refill (2026-04-22)
+- 02:40 — 3 tickets dispatched (millimeter-zu-zoll, yard-zu-meter, fuss-zu-meter); in_flight=5, reject_rate_10=0.08
+- 03:10 — refill paused: reject_rate_10=0.22 > 0.20 threshold
+- 03:40 — 2 tickets dispatched (seemeile-zu-kilometer, gramm-zu-unzen); in_flight=7, reject_rate_10=0.15
+```
+
+So sieht der User morgens sofort, welche Tools er zum Testen hat, ohne dass
+der CEO jeden einzelnen Pick pingt.
 
 ## §7 Context-Window-Management
 
