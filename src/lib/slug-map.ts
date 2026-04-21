@@ -20,6 +20,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'sqm-to-sqft': { de: 'quadratmeter-zu-quadratfuss' },
   'hevc-to-h264': { de: 'hevc-zu-h264' },
   'inch-to-cm': { de: 'zoll-zu-zentimeter' },
+  'password-generator': { de: 'passwort-generator' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
