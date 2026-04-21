@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [base64-encoder](https://konverter-7qc.pages.dev/de/base64-encoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/base64-encoder) |
 | [zoll-zu-zentimeter](https://konverter-7qc.pages.dev/de/zoll-zu-zentimeter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zoll-zu-zentimeter) |
 | [zeichenzaehler](https://konverter-7qc.pages.dev/de/zeichenzaehler) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zeichenzaehler) |
 | [uuid-generator](https://konverter-7qc.pages.dev/de/uuid-generator) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/uuid-generator) |
