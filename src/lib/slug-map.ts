@@ -23,6 +23,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'password-generator': { de: 'passwort-generator' },
   'hex-to-rgb': { de: 'hex-rgb-konverter' },
   'uuid-generator': { de: 'uuid-generator' },
+  'json-formatter': { de: 'json-formatter' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

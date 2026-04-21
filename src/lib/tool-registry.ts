@@ -11,6 +11,7 @@ import { hevcZuH264 } from './tools/hevc-zu-h264';
 import { zollZuZentimeter } from './tools/zoll-zu-zentimeter';
 import { hexRgbKonverter } from './tools/hex-rgb-konverter';
 import { uuidGenerator } from './tools/uuid-generator';
+import { jsonFormatter } from './tools/json-formatter';
 
 /**
  * Single source of truth for tool configurations.
@@ -35,6 +36,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'inch-to-cm': zollZuZentimeter,
   'hex-to-rgb': hexRgbKonverter,
   'uuid-generator': uuidGenerator,
+  'json-formatter': jsonFormatter,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
