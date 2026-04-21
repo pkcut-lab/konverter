@@ -36,6 +36,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'unix-timestamp': { de: 'unix-timestamp' },
   'base64-encoder': { de: 'base64-encoder' },
   'url-encoder-decoder': { de: 'url-encoder-decoder' },
+  'roman-numerals': { de: 'roemische-zahlen' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

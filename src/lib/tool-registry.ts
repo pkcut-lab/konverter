@@ -18,6 +18,7 @@ import { textDiff } from './tools/text-diff';
 import { unixTimestamp } from './tools/unix-timestamp';
 import { base64Encoder } from './tools/base64-encoder';
 import { urlEncoderDecoder } from './tools/url-encoder-decoder';
+import { roemischeZahlen } from './tools/roemische-zahlen';
 
 /**
  * Single source of truth for tool configurations.
@@ -49,6 +50,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'unix-timestamp': unixTimestamp,
   'base64-encoder': base64Encoder,
   'url-encoder-decoder': urlEncoderDecoder,
+  'roman-numerals': roemischeZahlen,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
