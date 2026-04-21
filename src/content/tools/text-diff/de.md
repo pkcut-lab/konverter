@@ -2,7 +2,7 @@
 toolId: "text-diff"
 language: "de"
 title: "Text vergleichen — Unterschiede sofort erkennen"
-headingHtml: "Texte <em>vergleichen</em> und Unterschiede finden"
+headingHtml: "Texte vergleichen und <em>Unterschiede</em> finden"
 metaDescription: "Zwei Texte online vergleichen und Unterschiede auf Wort- und Zeilenebene finden. 100 % im Browser, ohne Upload, ohne Tracking — DSGVO-konform."
 tagline: "Zwei Texte nebeneinander vergleichen — jede Änderung wird farblich markiert."
 intro: "Der Text-Diff zeigt dir sofort, was sich zwischen zwei Textversionen geändert hat. Gelöschte Zeilen, neue Zeilen und geänderte Wörter werden farblich hervorgehoben. Kein Server empfängt deinen Text — die gesamte Verarbeitung läuft lokal im Browser."
