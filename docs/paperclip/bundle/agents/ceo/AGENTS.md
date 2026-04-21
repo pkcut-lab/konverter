@@ -35,23 +35,30 @@ references:
   - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
 ---
 
-# AGENTS — CEO-Prozeduren (v1.0)
+# AGENTS — CEO-Prozeduren (v1.1)
 
-## 1. Heartbeat-Sequenz (30 min)
+## 1. Heartbeat-Sequenz (5 min nach Patch-1, ursprünglich 30 min)
 
-Detaillierter Ablauf in `HEARTBEAT.md`. Kurz (11 Steps, v1.0 Reihenfolge):
+Detaillierter Ablauf in `HEARTBEAT.md`. Kurz (13 Steps, v1.1 Reihenfolge):
 
 ```
 Kill-Switch → Identity → Git-Account → Rulebook-Integrity →
 Inbox → Active-Locks → Critic-Aggregation → Autonomie-Gate-Resolve →
-Backlog-Pick → Dispatch → Daily-Digest-Update → Memory
+Backlog-Pick → Auto-Refill-Fallback → Dispatch → Daily-Digest-Update → Memory
 ```
+
+**Neu in v1.1 (2026-04-21, Patch 5):**
+- Step 10 **Auto-Refill-Fallback** — wenn Step 9 `None` returned (keine open
+  tickets mit resolved dependencies) UND `tasks/backlog/differenzierung-queue.md`
+  hat eligible slugs → erstelle bis zu 3 neue Paperclip-Issues per API-Call
+  (siehe §2.5 unten). Verhindert "Empty inbox → exit" wenn Backlog-Datei voll
+  ist. Detail-Logik in `HEARTBEAT.md` §6.
 
 **Neu in v1.0:**
 - Step 1 **Kill-Switch** (`.paperclip/EMERGENCY_HALT`-File-Check) — vor ALLEM anderen. Existiert File → Heartbeat beenden, Live-Alarm Typ 5.
 - Step 7 **Critic-Aggregation** — liest `tasks/awaiting-critics/<ticket-id>/*.md` maschinell, aggregiert `verdict`-Felder.
 - Step 8 **Autonomie-Gate-Resolve** — statt User-Eskalation. Details §7 unten.
-- Step 11 **Daily-Digest-Update** — Auto-Resolves + Metrics-Highlights schreiben (nicht User-Ping).
+- Step 12 **Daily-Digest-Update** — Auto-Resolves + Metrics-Highlights schreiben (nicht User-Ping).
 
 ## 2. Ticket-Auswahl-Logik (Step 9)
 
@@ -82,6 +89,86 @@ def pick_next_ticket(backlog, in_progress, completed_today):
     ))
     return candidates[0] if candidates else None
 ```
+
+## 2.5 Auto-Refill-Fallback (Step 10, v1.1 Core)
+
+**Wann invoken.** Step 9 (§2 `pick_next_ticket`) returned `None` — keine open
+Tickets mit resolved dependencies + Dossier-Ready. Bevor du "Empty inbox, exit
+cleanly" loggst, MUSST du diesen Fallback durchlaufen. Sonst bleibt Pipeline
+stehen obwohl `tasks/backlog/differenzierung-queue.md` 40+ Kandidaten listet.
+
+**Procedure (hard, nicht überspringbar).**
+
+**A. Pre-flight gates** (alle 4 müssen grün sein — HEARTBEAT.md §6.2):
+
+1. Active queue leer (Step 9 hat `None` returned — verified).
+2. `tasks/backlog/differenzierung-queue.md` existiert + hat Tier-1/Tier-2/Tier-3
+   Sektionen mit Kandidaten (Format: `<slug> | <category> | <label> | <parent>`).
+3. Keine Tripwires fired (`tasks/tripwires.yaml` — kurze Pattern-Checks gegen
+   jüngste Critic-Verdicts + build-logs).
+4. `critic_reject_rate_rolling_10 ≤ 0.20` (konservativ, strenger als Tripwire
+   `>0.30`). Aggregiere aus letzten 10 `tasks/awaiting-critics/*/merged-critic.md`
+   verdict-Feldern: count(`fail`+`rework_required:true`) / 10.
+
+**B. Wenn ein Gate fail** → `inbox/daily-digest/$(date -I).md` appenden:
+```
+- Auto-Refill paused: <reason> (e.g. reject_rate=0.24 > 0.20, backlog-empty, tripwire-fired:critic_reject)
+```
+Dann exit heartbeat cleanly.
+
+**C. Wenn alle Gates grün** → picke Top-3 FIFO aus der Queue (Tier-1 first,
+dann Tier-2, dann Tier-3). Dedup-Regel: skippe Slugs, die bereits in
+`src/content/tools/<slug>/de.md` existieren.
+
+**D. Dispatch per Paperclip-API** (per Slug, max 3 pro Heartbeat, max 10
+in-flight gesamt inkl. `in_progress|in_review|blocked|todo`):
+
+```bash
+COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"   # Konverter Webseite
+API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
+
+# Pre-check in-flight-cap
+IN_FLIGHT=$(curl -s "$API" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const a=JSON.parse(d);console.log(a.filter(i=>['todo','in_progress','in_review','blocked'].includes(i.status)).length)})")
+(( IN_FLIGHT >= 10 )) && { echo "refill-skip: in_flight=$IN_FLIGHT >= cap=10"; exit 0; }
+
+SLOTS=$(( 3 < (10 - IN_FLIGHT) ? 3 : (10 - IN_FLIGHT) ))
+PICKED=0
+
+# Lese Queue-Datei, FIFO top→bottom über alle Tier-Sektionen
+awk '/^```$/{inblock=!inblock;next} inblock && /\|/ {print}' tasks/backlog/differenzierung-queue.md | while IFS='|' read -r slug category label parent; do
+  slug=$(echo "$slug" | xargs); category=$(echo "$category" | xargs); label=$(echo "$label" | xargs); parent=$(echo "$parent" | xargs)
+  [[ -z "$slug" || "$slug" =~ ^# ]] && continue
+  [[ -d "src/content/tools/$slug" ]] && continue   # dedup
+
+  # Category-Enum-Check (must be in TOOL_CATEGORIES)
+  valid=$(node -e "const {TOOL_CATEGORIES}=require('./src/lib/tools/categories.ts');process.exit(TOOL_CATEGORIES.includes('$category')?0:1)" && echo "yes" || echo "no")
+  [[ "$valid" != "yes" ]] && continue
+
+  # Create Paperclip-Issue (POST /api/companies/<cid>/issues)
+  curl -s -X POST -H "Content-Type: application/json" "$API" -d "$(cat <<EOF
+{
+  "title": "Overnight-Build: $slug (full pipeline + auto-merge)",
+  "description": "Auto-refilled by CEO §2.5 from tasks/backlog/differenzierung-queue.md.\n\n**Slug:** $slug\n**Category:** $category\n**Label:** $label\n**Parent-Dossier-Hint:** $parent\n\n**Pipeline (downstream-routines pick up):**\n1. Dossier-Research: $slug\n2. Tool-Build: $slug (DE content + config + tests)\n3. Critic-Audit: $slug (15-Check-Rubrik)\n4. Auto-merge if verdict=pass (auto-rollback-policy.yaml §5)",
+  "priority": "medium",
+  "status": "backlog"
+}
+EOF
+)" > /dev/null
+
+  echo "- Auto-Refill dispatch: $slug (category=$category, in_flight=$(( IN_FLIGHT + PICKED + 1 )))" >> "inbox/daily-digest/$(date -I).md"
+  PICKED=$(( PICKED + 1 ))
+  (( PICKED >= SLOTS )) && break
+done
+
+(( PICKED > 0 )) && echo "- Auto-Refill: $PICKED ticket(s) dispatched aus differenzierung-queue" >> "inbox/daily-digest/$(date -I).md"
+```
+
+**E. Exit heartbeat cleanly** nach Digest-Write. Nächster Heartbeat (5 min
+später) picked die neu-erstellten Issues regulär via Step 9 auf.
+
+**F. Wichtig.** Diese §2.5 ersetzt NIEMALS den normalen Step 9 — sie ist
+Fallback-only. Wenn Step 9 ein valid ticket returned hat, dispatche das, §2.5
+wird NICHT durchlaufen.
 
 ## 3. Assignment-Regeln (v1.0 — 4-Rollen-Core)
 
