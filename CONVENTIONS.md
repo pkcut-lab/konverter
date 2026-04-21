@@ -292,6 +292,28 @@ skalierbar bei 1000+ Tools.
 Fallback lebt weiter und wird von `YouMightAlsoLike` genutzt — dort ist die
 Semantik „nur expliziter Cross-Link, kein Fallback".
 
+## Secrets-Rotation-Policy (gelockt 2026-04-21)
+
+**Zwei-Kadenzen-Split** nach Blast-Radius:
+
+| Kadenz | Scope | Keys |
+|--------|-------|------|
+| **180 Tage** | Dev-Tooling (local-only, kein User-Traffic) | `STITCH_API_KEY`, `FIRECRAWL_API_KEY`, `FIRECRAWL_WEBHOOK_SIGNING_KEY` |
+| **90 Tage** | Prod-Credentials (ab Aktivierung) | AdSense-Publisher-ID-Secret, Cloudflare-Pages-API-Token, später: Analytics-Keys |
+
+**Ausnahme-Trigger (unabhängig von Kadenz):**
+- Kompromittierungs-Verdacht → sofort rotieren + Post-Mortem in `docs/security/`
+- Person-Wechsel (Account-Transfer) → sofort rotieren
+- Leak in Git-History / Logs → sofort rotieren + `git-filter-repo`-Cleanup
+
+**Verfahren:** Rotation wird in `docs/security/secrets-rotation.md` geloggt (Datum,
+Key-Name, Grund: `scheduled` | `incident` | `person-change`). Kein automatisiertes
+Rotation-Tool in Phase 1 — manueller Kalender-Reminder reicht bei ≤6 Keys.
+
+**Phase-2-Trigger:** Wenn > 8 aktive Secrets oder erste Prod-Rotation ansteht, wird
+ein Secret-Manager (1Password / Doppler / CF-Wrangler-Secrets) evaluiert. Bis dahin
+`.env.local` + `.gitignore`-Disziplin.
+
 ## Build-Gates
 
 - `npm run build` muss grün sein vor Commit

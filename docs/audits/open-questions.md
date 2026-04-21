@@ -76,25 +76,10 @@ Option 3 in Phase 2 wenn Zeit ist.
 
 ---
 
-## Q3 — Secrets-Rotation-Kadenz (Finding N-5-01)
+## Q3 — Secrets-Rotation-Kadenz (Finding N-5-01) ✅ RESOLVED 2026-04-21
 
-**Status:** keine Build-/Security-Auswirkung, aber `CONVENTIONS.md`-Policy-Eintrag fehlt.
-
-**Optionen:**
-
-1. **90 Tage** — standard-industry-Kadenz, aggressive Rotation.
-2. **180 Tage** — Halbjahres-Zyklus, weniger operative Last.
-3. **Nur bei Incident / Person-Wechsel** — reaktiv statt proaktiv.
-
-**Betroffene Keys:**
-- `STITCH_API_KEY` (design-gen, nur lokal)
-- `FIRECRAWL_API_KEY` + `FIRECRAWL_WEBHOOK_SIGNING_KEY` (research-subagent)
-- (später) AdSense-Publisher-ID, CF-Pages-API-Token
-
-**Agent-Empfehlung:** 180 Tage für Dev-Tooling (STITCH/FIRECRAWL), 90 Tage für Prod-Credentials
-(AdSense/CF) sobald aktiv.
-
-**Warte auf:** User-Entscheidung 1/2/3 (oder split wie empfohlen).
+**Entscheidung:** Split wie vom Agent empfohlen — 180 Tage Dev-Tooling, 90 Tage Prod.
+Policy-Eintrag lebt in `CONVENTIONS.md` unter "Secrets-Rotation-Policy".
 
 ---
 
