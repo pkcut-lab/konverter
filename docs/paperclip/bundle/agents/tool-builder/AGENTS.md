@@ -180,7 +180,7 @@ Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 - **Letzte H2 immer** `## Verwandte <Kat>-Tools` + wortgleiche Intro-Zeile + exakt 3 Bullets (§13.4). `<Kat>` aus Mapping §13.3 (`length → Längen`).
 - 4–6 FAQ-Einträge in Frontmatter (werden als FAQPage-JSON-LD gerendert).
 - NBSP zwischen ALLEN Zahl-Einheit-Paaren.
-- `relatedTools: []` ist OK — Category-Fallback trägt (CONVENTIONS.md §Category-Fallback-Contract). Kuration nur bei redaktionellem Wunsch, niemals Forward-Ref auf noch nicht existierende Slugs.
+- `relatedTools`: wenn leer `[]`, MUSS Category-Fallback ≥2 Siblings finden (CONVENTIONS.md §Category-Fallback-Contract). Wenn manuell kuratiert: **mindestens 2 Einträge**, geranked nach (1) selbe Category, (2) shared Keywords in Title/Intro (Jaccard-Similarity > 0.2), (3) selber `tool_type`. Niemals Forward-Ref auf noch nicht existierende Slugs. Audit 2026-04-21 M-2-01: 8 Tools mit leeren oder off-topic relatedTools — Critic-Check #19 fängt das jetzt.
 - Mindestens 300 Wörter Prose (thin-Content-Guard).
 
 ## 3. Test-Gate lokal

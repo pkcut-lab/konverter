@@ -84,7 +84,7 @@ EOF
 fi
 ```
 
-## 3. Review-Sequenz (18 Checks, nicht abbrechen beim ersten Fail)
+## 3. Review-Sequenz (19 Checks, nicht abbrechen beim ersten Fail)
 
 ### Check #1 — Vitest grün
 ```bash
@@ -274,6 +274,44 @@ case "$tool_type" in
 esac
 ```
 
+### Check #19 — relatedTools-Quality
+```bash
+# Lessons-Learned Audit 2026-04-21 M-2-01: 8 Tools mit leeren oder
+# off-topic relatedTools-Blöcken. Entweder Category-Fallback greift mit ≥2
+# Siblings, oder manuell ≥2 Einträge mit Jaccard > 0.2.
+related=$(yq '.relatedTools' "src/content/tools/<slug>/<lang>.md" | jq -r '.[].slug' 2>/dev/null)
+related_count=$(echo "$related" | grep -c .)
+
+if [[ $related_count -eq 0 ]]; then
+  # Leer → Category-Fallback muss greifen. Prüfe: Kategorie hat ≥2 andere Tools.
+  cat=$(yq '.category' "src/content/tools/<slug>/<lang>.md")
+  sibling_count=$(find src/content/tools -name "<lang>.md" -exec yq '.category' {} \; | \
+    grep -c "^$cat$")
+  # sibling_count inkludiert self, also ≥3 für ≥2 andere
+  if [[ $sibling_count -lt 3 ]]; then
+    echo "FAIL — relatedTools empty + only $((sibling_count-1)) category-siblings (need ≥2)"
+  else
+    echo "PASS — empty relatedTools, Category-Fallback hat genug Siblings"
+  fi
+elif [[ $related_count -lt 2 ]]; then
+  echo "FAIL — relatedTools has only $related_count entry (need ≥2 if manual)"
+else
+  # Jaccard-Similarity: share min 1 keyword zwischen Title-Tokens
+  # Leichte Heuristik: Category-Match ist automatisch PASS
+  src_cat=$(yq '.category' "src/content/tools/<slug>/<lang>.md")
+  off_topic=0
+  for r in $related; do
+    r_file=$(find src/content/tools/$r -name "*.md" | head -1)
+    [[ -z "$r_file" ]] && { off_topic=1; break; }
+    r_cat=$(yq '.category' "$r_file" 2>/dev/null)
+    [[ "$r_cat" != "$src_cat" ]] && off_topic=1
+  done
+  [[ $off_topic -eq 1 ]] && \
+    echo "WARN — relatedTools entries cross category (manual check)" || \
+    echo "PASS — relatedTools $related_count same-category"
+fi
+```
+
 ### Soft-Warnings (Check W1–W5, in `warnings[]` geloggt, nicht pass/fail)
 ```bash
 # W1: prefers-reduced-motion Fallback
@@ -310,7 +348,7 @@ heartbeat_id: <from-ticket>
 rubric: brand-guide-v2
 
 verdict: <pass|fail|partial|timeout>
-total_checks: 18
+total_checks: 19
 passed: <count>
 failed: <count>
 warnings: <count>              # Soft-Warnings W1-W5, nicht in failed enthalten
@@ -348,7 +386,7 @@ checks:
 
 ## Summary
 - Verdict: **<v>** (<severity>)
-- Checks: X/18 pass, Y fail, Z soft-warnings (W1–W5)
+- Checks: X/19 pass, Y fail, Z soft-warnings (W1–W5)
 - Rework empfohlen: <ja|nein>
 
 ## Fails (exhaustiv)
@@ -395,7 +433,7 @@ fi
 ## 7. Forbidden Actions
 
 - Code fixen (Builder-Territorium)
-- Neue Checks erfinden ohne User-Approval (18 sind gesetzt + 5 Soft-Warnings)
+- Neue Checks erfinden ohne User-Approval (19 sind gesetzt + 5 Soft-Warnings)
 - Rulebook-Freestyle ("sieht hässlich aus" ohne Anchor)
 - Vitest-Flakes ignorieren (3× rennen Pflicht)
 - Halluzinierte Zitate (substring-check via citation-verify-fixtures)
