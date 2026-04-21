@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [roemische-zahlen](https://konverter-7qc.pages.dev/de/roemische-zahlen) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/roemische-zahlen) |
 | [url-encoder-decoder](https://konverter-7qc.pages.dev/de/url-encoder-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/url-encoder-decoder) |
 | [base64-encoder](https://konverter-7qc.pages.dev/de/base64-encoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/base64-encoder) |
 | [zoll-zu-zentimeter](https://konverter-7qc.pages.dev/de/zoll-zu-zentimeter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zoll-zu-zentimeter) |
