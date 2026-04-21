@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
+  import { QUICK_COLORS } from '../../lib/tools/hex-rgb-konverter-presets';
 
   interface Props {
     config: FormatterConfig;
@@ -39,15 +40,6 @@
     }
     return null;
   });
-
-  const QUICK_COLORS = [
-    { hex: '#FF5733', label: 'Orange-Rot' },
-    { hex: '#000000', label: 'Schwarz' },
-    { hex: '#FFFFFF', label: 'Weiß' },
-    { hex: '#3B82F6', label: 'Blau' },
-    { hex: '#10B981', label: 'Grün' },
-    { hex: '#8B5CF6', label: 'Violett' },
-  ];
 
   function onInput(e: Event) {
     const target = e.target as HTMLInputElement;
