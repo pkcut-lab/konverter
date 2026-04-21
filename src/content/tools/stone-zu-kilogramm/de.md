@@ -3,7 +3,7 @@ toolId: stone-to-kg
 language: de
 title: "Stone in Kilogramm umrechnen – Formel & Tabelle"
 headingHtml: "Stone in <em>Kilogramm</em> umrechnen"
-metaDescription: "Stone in Kilogramm umrechnen: exakte Formel (1 st = 6,35029 kg), Tabelle und Rechner. Client-seitig, ohne Anmeldung, ohne Tracking."
+metaDescription: "Stone in Kilogramm umrechnen: exakte Formel (1 st = 6,35029 kg), Tabelle gängiger Werte und Rechner. Client-seitig, ohne Anmeldung, ohne Tracking."
 tagline: "Schnelle Stone-zu-Kilogramm-Umrechnung — client-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Stone (st) in die entsprechende Angabe in Kilogramm (kg) um und zeigt gleichzeitig den Rückweg. Stone ist die traditionelle britische Gewichtseinheit für Körpergewicht und wird in Großbritannien und Irland bis heute im Alltag verwendet. Mit diesem Tool rechnest du Stone-Angaben in Sekunden in metrische Kilogramm um."
 howToUse:
@@ -12,15 +12,15 @@ howToUse:
   - "Kopiere oder tausche die Richtung mit einem Klick"
 faq:
   - q: "Wie viele Kilogramm sind ein Stone?"
-    a: "Ein Stone entspricht exakt 6,35029 Kilogramm. Diese Definition gilt seit dem Weights and Measures Act von 1985 im Vereinigten Koenigreich."
+    a: "Ein Stone entspricht exakt 6,35029 Kilogramm. Diese Definition gilt seit dem Weights and Measures Act von 1985 im Vereinigten Königreich."
   - q: "Wo wird Stone heute noch verwendet?"
-    a: "Stone wird hauptsaechlich in Grossbritannien und Irland fuer Koerpergewicht genutzt. Aerzte, Fitness-Apps und Waagen in diesen Laendern zeigen Gewicht haeufig in Stone und Pfund an. In den USA, Kanada und dem Rest Europas ist die Einheit unueblich."
+    a: "Stone wird hauptsächlich in Großbritannien und Irland für Körpergewicht genutzt. Ärzte, Fitness-Apps und Waagen in diesen Ländern zeigen Gewicht häufig in Stone und Pfund an. In den USA, Kanada und dem Rest Europas ist die Einheit unüblich."
   - q: "Wie rechne ich Stone und Pfund zusammen in Kilogramm um?"
     a: "Multipliziere die Stone mit 6,35029 und addiere die restlichen Pfund mal 0,45359. Beispiel: 11 st 4 lb = 11 x 6,35029 + 4 x 0,45359 = 69,85 + 1,81 = 71,67 kg."
-  - q: "Warum benutzt Grossbritannien noch Stone?"
-    a: "Obwohl Grossbritannien offiziell das metrische System eingefuehrt hat, haelt sich Stone im Alltag hartnäckig. Koerpergewicht, Sport-Statistiken und Medienberichte verwenden die Einheit aus Tradition — aehnlich wie die USA am Pfund festhalten."
+  - q: "Warum benutzt Großbritannien noch Stone?"
+    a: "Obwohl Großbritannien offiziell das metrische System eingeführt hat, hält sich Stone im Alltag hartnäckig. Körpergewicht, Sport-Statistiken und Medienberichte verwenden die Einheit aus Tradition — ähnlich wie die USA am Pfund festhalten."
   - q: "Wie genau ist die Umrechnung?"
-    a: "Der Faktor 6,35029 kg je Stone ist die international anerkannte Definition. Der Konverter rechnet mit vier Nachkommastellen — praezise genug fuer jede Alltagsanwendung."
+    a: "Der Faktor 6,35029 kg je Stone ist die international anerkannte Definition. Der Konverter rechnet mit vier Nachkommastellen — präzise genug für jede Alltagsanwendung."
 relatedTools:
   - kilogramm-zu-pfund
   - pfund-zu-kilogramm
