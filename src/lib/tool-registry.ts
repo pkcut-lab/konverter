@@ -28,6 +28,7 @@ import { xmlFormatter } from './tools/xml-formatter';
 import { cssFormatter } from './tools/css-formatter';
 import { jwtDecoder } from './tools/jwt-decoder';
 import { kontrastPruefer } from './tools/kontrast-pruefer';
+import { jsonDiff } from './tools/json-diff';
 
 /**
  * Single source of truth for tool configurations.
@@ -69,6 +70,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'css-formatter': cssFormatter,
   'jwt-decoder': jwtDecoder,
   'contrast-checker': kontrastPruefer,
+  'json-diff': jsonDiff,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
