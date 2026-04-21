@@ -27,6 +27,7 @@ import { sqlFormatter } from './tools/sql-formatter';
 import { xmlFormatter } from './tools/xml-formatter';
 import { cssFormatter } from './tools/css-formatter';
 import { jwtDecoder } from './tools/jwt-decoder';
+import { kontrastPruefer } from './tools/kontrast-pruefer';
 
 /**
  * Single source of truth for tool configurations.
@@ -67,6 +68,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'xml-formatter': xmlFormatter,
   'css-formatter': cssFormatter,
   'jwt-decoder': jwtDecoder,
+  'contrast-checker': kontrastPruefer,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
