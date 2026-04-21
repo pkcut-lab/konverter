@@ -55,6 +55,9 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'nautical-mile-to-km': { de: 'seemeile-zu-kilometer' },
   'gram-to-ounce': { de: 'gramm-zu-unzen' },
   'lb-to-kg': { de: 'pfund-zu-kilogramm' },
+  'stone-to-kg': { de: 'stone-zu-kilogramm' },
+  'tonne-to-pound': { de: 'tonne-zu-pfund' },
+  'hectare-to-acre': { de: 'hektar-zu-acre' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

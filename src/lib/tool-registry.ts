@@ -37,6 +37,9 @@ import { millimeterZuZoll } from './tools/millimeter-zu-zoll';
 import { seemeileZuKilometer } from './tools/seemeile-zu-kilometer';
 import { grammZuUnzen } from './tools/gramm-zu-unzen';
 import { pfundZuKilogramm } from './tools/pfund-zu-kilogramm';
+import { tonneZuPfund } from './tools/tonne-zu-pfund';
+import { stoneZuKilogramm } from './tools/stone-zu-kilogramm';
+import { hektarZuAcre } from './tools/hektar-zu-acre';
 
 /**
  * Single source of truth for tool configurations.
@@ -87,6 +90,8 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'nautical-mile-to-km': seemeileZuKilometer,
   'gram-to-ounce': grammZuUnzen,
   'lb-to-kg': pfundZuKilogramm,
+  'stone-to-kg': stoneZuKilogramm,
+  'tonne-to-pound': tonneZuPfund,
 };
 
 export function getToolConfig(toolId: string): ToolConfig | undefined {
