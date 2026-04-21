@@ -6,11 +6,28 @@
 # Baseline security posture for every response. HSTS is safe because
 # *.pages.dev is HTTPS-only anyway; the preload list isn't relevant for
 # a subdomain we don't own the apex of.
+#
+# Content-Security-Policy (2026-04-21, Q2 Option 1):
+#   - 'unsafe-inline' für script-src: ThemeScript.astro emittiert einen
+#     inline Flash-Prevention-Block. Phase-2-Migration zu Nonce-basierter
+#     Policy (Q2 Option 3) wenn Zeit ist; jetzt ist die Gain-vs-Cost-Ratio
+#     für unsafe-inline-ersatz schlecht (ein einziges Inline-Script, das
+#     kein Nutzer-Input annimmt).
+#   - 'unsafe-inline' für style-src: Astro's scoped-style-Mechanismus +
+#     Svelte-Runtime-style-Injection erzeugen inline <style>-Blöcke.
+#   - connect-src 'self' + Huggingface-CDNs: `remove-background` (ONNX-
+#     Model-Download) und `hevc-zu-h264` (Transformers.js) brauchen
+#     https://huggingface.co + cdn-lfs.huggingface.co. Spec Section 7a
+#     ML-Worker-Exception.
+#   - worker-src 'self' blob:: @vite-pwa/astro plus Worker-Boundary in
+#     File-Tools (blob:-URLs für dynamisch instantiierte Worker).
+#   - frame-ancestors 'none': Clickjacking-Hard-Stop.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(self), microphone=(), geolocation=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 # Service Worker must never be cached by the browser itself — otherwise
 # users get stuck on an old build even after Workbox skipWaiting fires.

@@ -25,42 +25,17 @@ Top-5 nach Analytics. Fallback bleibt als Default für unpriorisierte Tools.
 
 ---
 
-## Q2 — CSP-Scope (Finding M-5-02)
+## Q2 — CSP-Scope (Finding M-5-02) ✅ RESOLVED 2026-04-21
 
-**Status:** blockiert `Content-Security-Policy` in `public/_headers`. Alle übrigen Security-
-Header sind bereits gesetzt (HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy).
+**Entscheidung:** Option 1 (globale CSP mit whitelisted connect-src). In
+`public/_headers` unter der `/*`-Rule als einzeiliger Content-Security-Policy-Header
+verdrahtet. Whitelist: `https://huggingface.co`, `https://cdn-lfs.huggingface.co`
+(ML-Worker-Exception nach Spec Section 7a). `'unsafe-inline'` bleibt für script-src
+(ThemeScript) + style-src (Astro scoped-styles + Svelte-Runtime) — Nonce-Migration
+ist Phase-2-Kandidat.
 
-**Optionen:**
-
-1. **Globale CSP mit whitelisted `connect-src`** für alle ML-Tool-CDNs (Huggingface).
-   - Aufwand: ~30 min (Header schreiben, 3-Tool-Sample testen).
-   - Policy-Draft:
-     ```
-     default-src 'self';
-     script-src 'self' 'unsafe-inline';
-     style-src 'self' 'unsafe-inline';
-     img-src 'self' data: blob:;
-     font-src 'self';
-     connect-src 'self' https://cdn-lfs.huggingface.co https://huggingface.co;
-     worker-src 'self' blob:;
-     frame-ancestors 'none';
-     base-uri 'self';
-     form-action 'self';
-     ```
-   - Nachteil: `'unsafe-inline'` für Scripts wegen ThemeScript — schwächt Schutz.
-2. **Tool-spezifische CSP via Astro-Middleware** — striktere Policy für reine Tools
-   (ohne `connect-src` extern), gelockerte Policy nur für `hintergrund-entfernen` +
-   `hevc-zu-h264`.
-   - Aufwand: ~90 min (Middleware + Tests).
-   - Vorteil: Prinzip Least-Privilege.
-3. **Nonce-basierte Policy** — alle inline-Scripts bekommen Nonce.
-   - Aufwand: ~3 h (ThemeScript umbauen, alle Inline-Styles prüfen).
-   - Vorteil: `'unsafe-inline'` fällt weg.
-
-**Agent-Empfehlung:** Option 1 jetzt (schnell, substantielle Verbesserung gegen Status-quo),
-Option 3 in Phase 2 wenn Zeit ist.
-
-**Warte auf:** User-Entscheidung 1/2/3.
+**Phase-2-TODO:** Option 3 (Nonce-basierte Policy) wenn Zeit ist. ThemeScript.astro
+würde den Nonce vom Astro-Middleware bekommen, `unsafe-inline` fällt weg.
 
 ---
 
