@@ -37,6 +37,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'base64-encoder': { de: 'base64-encoder' },
   'url-encoder-decoder': { de: 'url-encoder-decoder' },
   'roman-numerals': { de: 'roemische-zahlen' },
+  'lorem-ipsum-generator': { de: 'lorem-ipsum-generator' },
   'timezone-converter': { de: 'zeitzonen-rechner' },
 };
 

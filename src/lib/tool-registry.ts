@@ -19,6 +19,7 @@ import { unixTimestamp } from './tools/unix-timestamp';
 import { base64Encoder } from './tools/base64-encoder';
 import { urlEncoderDecoder } from './tools/url-encoder-decoder';
 import { roemischeZahlen } from './tools/roemische-zahlen';
+import { loremIpsumGenerator } from './tools/lorem-ipsum-generator';
 import { zeitzonenRechner } from './tools/zeitzonen-rechner';
 
 /**
@@ -52,6 +53,7 @@ export const toolRegistry: Record<string, ToolConfig> = {
   'base64-encoder': base64Encoder,
   'url-encoder-decoder': urlEncoderDecoder,
   'roman-numerals': roemischeZahlen,
+  'lorem-ipsum-generator': loremIpsumGenerator,
   'timezone-converter': zeitzonenRechner,
 };
 
