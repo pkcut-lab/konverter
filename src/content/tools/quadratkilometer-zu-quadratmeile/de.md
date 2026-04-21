@@ -1,7 +1,7 @@
 ---
 toolId: km2-to-mi2
 language: de
-title: "Quadratkilometer in Quadratmeile umrechnen – Formel & Tabelle"
+title: "Quadratkilometer in Quadratmeile umrechnen – Rechner"
 headingHtml: "Quadratkilometer in <em>Quadratmeile</em> umrechnen"
 metaDescription: "Quadratkilometer in Quadratmeile umrechnen: exakte Formel (1 km² = 0,386102 mi²), Tabelle für Geografie, Landflächen und Statistik. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise km²-zu-mi²-Umrechnung mit exaktem Faktor — client-seitig, ohne Tracking."

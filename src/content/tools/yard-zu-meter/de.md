@@ -3,7 +3,7 @@ toolId: yard-to-meter
 language: de
 title: "Yard in Meter umrechnen – Formel & Tabelle"
 headingHtml: "Yard in <em>Meter</em> umrechnen"
-metaDescription: "Yard in Meter umrechnen: exakte Formel (1 yd = 0,9144 m), Tabelle gängiger Werte und FAQ zur Geschichte des Yard. Ohne Anmeldung, ohne Ads."
+metaDescription: "Yard in Meter umrechnen: exakte Formel (1 yd = 0,9144 m), Tabelle gängiger Werte, kurze Geschichte des Yard und FAQ. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Längen-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Yard (yd) in die entsprechende Angabe in Metern (m) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen imperialem und metrischem Längenmaß wechselt — von Stoffbahnen über Sportplätze bis zu Grundstücksmaßen. Yard in Meter umrechnen ist dank internationaler Definition seit 1959 eindeutig."
 howToUse:

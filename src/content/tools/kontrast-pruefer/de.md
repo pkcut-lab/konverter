@@ -3,7 +3,7 @@ toolId: contrast-checker
 language: de
 title: "Kontrast-Prüfer – WCAG-Kontrastverhältnis berechnen"
 headingHtml: "<em>Kontrast</em> prüfen"
-metaDescription: "WCAG-Kontrastverhältnis zweier Farben berechnen: AA- und AAA-Konformität für Normal- und Großtext sofort prüfen. Ohne Tracking, im Browser."
+metaDescription: "WCAG-Kontrastverhältnis zweier Farben berechnen: AA- und AAA-Konformität für Normal- und Großtext sofort prüfen. Komplett im Browser, ohne Tracking."
 tagline: "Zwei Farben eingeben, Kontrastverhältnis und WCAG-Konformität sofort ablesen — client-seitig, ohne Tracking."
 intro: "Der Kontrast-Prüfer berechnet das Kontrastverhältnis zweier Hex-Farben nach WCAG 2.1 und zeigt sofort, ob die Kombination die Konformitätsstufen AA und AAA für Normal- und Großtext erfüllt. Die Berechnung läuft vollständig im Browser."
 howToUse:
