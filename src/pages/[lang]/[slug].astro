@@ -171,12 +171,12 @@ const jsonLd = buildToolJsonLd(
       relatedSlugs={entry.data.relatedTools}
     />
 
-    {/* Phase 2 aktiviert AdSense — der Platzhalter reserviert den Platz jetzt
-        schon, damit späteres Einblenden keinen CLS erzeugt. aria-hidden, weil
-        bis dahin keine sinnvolle Information drinsteht. */}
-    <aside class="ad-slot-placeholder" aria-hidden="true">
-      <span>Anzeigenplatz</span>
-    </aside>
+    {/* Phase 2 aktiviert AdSense — der reservierte Slot hält schon jetzt
+        die Höhe frei, damit späteres Einblenden keinen CLS erzeugt. Bis dahin
+        visuell komplett unsichtbar (kein Rahmen, keine Beschriftung), weil
+        die Seite ohne Werbung live geht und nichts nach Ad-Fläche aussehen
+        soll. aria-hidden + role="presentation" halten Screenreader raus. */}
+    <aside class="ad-slot-placeholder" aria-hidden="true" role="presentation"></aside>
 
     <article class="tool-article">
       <p class="intro">{entry.data.intro}</p>
@@ -390,20 +390,22 @@ const jsonLd = buildToolJsonLd(
     }
   }
 
+  /* Phase 1: Launch ohne Werbung — der Slot ist visuell komplett leer.
+     Kein Rahmen, kein Hintergrund, kein Text. Nur Höhe + Abstand bleiben,
+     damit Phase 2 (AdSense-Aktivierung) keinen Layout-Shift erzeugt, wenn
+     die Ad-Unit an dieser Stelle erscheint. */
   .ad-slot-placeholder {
     max-width: 42rem;
     width: 100%;
     margin: 0 auto var(--space-16);
     min-height: 5rem;
+  }
+  /* Phase 2 schaltet Ads via [data-ads-enabled="true"] am <html> (Consent-
+     gated). Erst dann bekommt der Slot die sichtbare Ad-Unit-Behandlung. */
+  :global(html[data-ads-enabled='true']) .ad-slot-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px dashed var(--color-border);
-    border-radius: var(--r-md);
-    background: var(--color-surface);
-    color: var(--color-text-subtle);
-    font-size: var(--font-size-small);
-    letter-spacing: 0.04em;
   }
 
   .tool-article {
