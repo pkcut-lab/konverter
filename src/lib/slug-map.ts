@@ -26,6 +26,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'json-formatter': { de: 'json-formatter' },
   'character-counter': { de: 'zeichenzaehler' },
   'regex-tester': { de: 'regex-tester' },
+  'text-diff': { de: 'text-diff' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
