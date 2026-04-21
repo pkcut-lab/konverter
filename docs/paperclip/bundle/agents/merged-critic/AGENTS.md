@@ -84,7 +84,7 @@ EOF
 fi
 ```
 
-## 3. Review-Sequenz (15 Checks, nicht abbrechen beim ersten Fail)
+## 3. Review-Sequenz (18 Checks, nicht abbrechen beim ersten Fail)
 
 ### Check #1 — Vitest grün
 ```bash
@@ -210,6 +210,70 @@ node scripts/hreflang-check.mjs dist/<lang>/<slug>/index.html
 # Exit 0 = pass
 ```
 
+### Check #16 — Prod-Build grün
+```bash
+# Voller Astro-Prod-Build. Fängt Collection-Schema-Fails, Route-Konflikte,
+# content-layer-Errors ab, die `astro check` (Check #2) nicht sieht.
+# Lessons-Learned Audit 2026-04-21 B-1-01: metaDescription <140 schlug nur
+# hier fehl, nicht in astro check.
+npm run build
+# Exit 0 = PASS; sonst FAIL mit tail -30 aus stderr
+```
+
+### Check #17 — metaDescription-Länge im Range
+```bash
+# CONTENT.md §13.1: metaDescription muss [140, 160] chars sein.
+# Zod-Schema erzwingt das beim Build (Check #16) — expliziter Check hier
+# gibt schnelleres Feedback + klarere Fehlermeldung.
+meta=$(yq '.metaDescription' "src/content/tools/<slug>/<lang>.md")
+len=${#meta}
+if [[ $len -lt 140 || $len -gt 160 ]]; then
+  echo "FAIL — metaDescription $len chars (required: 140-160)"
+else
+  echo PASS
+fi
+```
+
+### Check #18 — Tool-Type-Security-Matrix
+```bash
+# Pflicht-Security-Checks NACH tool_type. Lessons-Learned Audit 2026-04-21:
+# Generator-Tools (passwort-generator) ohne CSPRNG-Check ausgeliefert;
+# Validator-Tools (regex-tester) ohne ReDoS-Hardening. Pattern-Match:
+tool_type=$(yq '.type' "src/lib/tools/<slug>.ts" 2>/dev/null || \
+  grep -oE 'type: "[^"]+"' "src/lib/tools/<slug>.ts" | head -1 | cut -d'"' -f2)
+
+case "$tool_type" in
+  Generator)
+    # Kryptographisch: crypto.getRandomValues, nicht Math.random
+    grep -q "Math.random" "src/lib/tools/<slug>.ts" "src/components/tools/"*.svelte && \
+      echo "FAIL — Math.random in Generator; use crypto.getRandomValues (CSPRNG)" || \
+      echo "PASS — Generator nutzt CSPRNG"
+    ;;
+  Validator|Analyzer)
+    # Regex-User-Input → ReDoS-Risiko. Pflicht: Timeout-Guard oder safe-regex-Check
+    if grep -qE "new RegExp\(|RegExp\(" "src/components/tools/"*.svelte "src/lib/tools/<slug>.ts"; then
+      grep -qE "(AbortController|setTimeout.*regex|safe-regex)" "src/lib/tools/<slug>.ts" "src/components/tools/"*.svelte && \
+        echo "PASS — User-Regex mit Timeout/safe-regex-Guard" || \
+        echo "FAIL — User-Regex ohne ReDoS-Guard (AbortController/safe-regex fehlt)"
+    else
+      echo "PASS — kein User-Regex"
+    fi
+    ;;
+  Formatter|Parser)
+    # JSON/XML/CSV-Parser: try/catch-Coverage für malformed-input
+    grep -qE "(try\s*\{|\.catch\()" "src/components/tools/"*.svelte "src/lib/tools/<slug>.ts" && \
+      echo "PASS — Parser hat Error-Handling" || \
+      echo "FAIL — Parser ohne try/catch für malformed input"
+    ;;
+  Converter|Calculator|Comparer)
+    echo "PASS — keine spezifischen Security-Requirements für $tool_type"
+    ;;
+  *)
+    echo "WARN — unbekannter tool_type '$tool_type', Security-Matrix nicht anwendbar"
+    ;;
+esac
+```
+
 ### Soft-Warnings (Check W1–W5, in `warnings[]` geloggt, nicht pass/fail)
 ```bash
 # W1: prefers-reduced-motion Fallback
@@ -246,7 +310,7 @@ heartbeat_id: <from-ticket>
 rubric: brand-guide-v2
 
 verdict: <pass|fail|partial|timeout>
-total_checks: 15
+total_checks: 18
 passed: <count>
 failed: <count>
 warnings: <count>              # Soft-Warnings W1-W5, nicht in failed enthalten
@@ -284,7 +348,7 @@ checks:
 
 ## Summary
 - Verdict: **<v>** (<severity>)
-- Checks: X/15 pass, Y fail, Z soft-warnings (W1–W5)
+- Checks: X/18 pass, Y fail, Z soft-warnings (W1–W5)
 - Rework empfohlen: <ja|nein>
 
 ## Fails (exhaustiv)
@@ -331,7 +395,7 @@ fi
 ## 7. Forbidden Actions
 
 - Code fixen (Builder-Territorium)
-- Neue Checks erfinden ohne User-Approval (15 sind gesetzt + 5 Soft-Warnings)
+- Neue Checks erfinden ohne User-Approval (18 sind gesetzt + 5 Soft-Warnings)
 - Rulebook-Freestyle ("sieht hässlich aus" ohne Anchor)
 - Vitest-Flakes ignorieren (3× rennen Pflicht)
 - Halluzinierte Zitate (substring-check via citation-verify-fixtures)
