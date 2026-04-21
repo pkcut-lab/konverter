@@ -65,22 +65,50 @@ code, pre {
 }
 
 /* Ad-Slot CLS Prevention (Non-Negotiable — Spec 5.4)
-   Slot is reserved with min-height always; visible only when opt-in flag is on. */
+   Die Höhe wird IMMER reserviert (kein `display: none`, weil das die
+   min-height collabsiert). Phase 1: Slot ist layout-wirksam aber visuell
+   komplett leer — kein Rahmen, kein Hintergrund, kein Label. Phase 2
+   (AdSense-Aktivierung via [data-ads-enabled="true"] am <html>) gibt
+   dem Container dann die Ad-Unit-Behandlung (Surface-BG + Radius). */
 .ad-slot {
-  min-height: var(--ad-slot-1-height-mobile);
-  background: var(--color-surface);
-  border-radius: var(--r-md);
-  display: none;
+  width: 100%;
+  margin: 0 auto;
+  min-height: var(--ad-slot-1-height-mobile); /* 250px — Mobile default 300×250 */
+}
+
+/* --- AdSense-Standard-Unit-Modifier --- */
+
+/* In-Content Rectangle (300×250 / 336×280) — bleibt auf allen Breakpoints
+   eine rectangle, weil "in-content" mobile-first gedacht ist. */
+.ad-slot--in-content {
+  max-width: 336px;
+  min-height: var(--ad-slot-2-height); /* 250px */
+}
+
+/* Banner (Mobile 300×250 → Desktop 728×90). Höhe wechselt am md-Breakpoint,
+   Breite via max-width auf die tatsächliche Unit begrenzt damit AdSense
+   nicht seitlich cropt. */
+.ad-slot--banner {
+  max-width: 300px;
+  min-height: var(--ad-slot-1-height-mobile); /* 250px */
 }
 @media (min-width: 768px) {
   .ad-slot--banner {
-    min-height: var(--ad-slot-1-height-desktop);
+    max-width: 728px;
+    min-height: var(--ad-slot-1-height-desktop); /* 90px */
   }
 }
-.ad-slot--sidebar { min-height: var(--ad-slot-3-height); }
 
+/* Sidebar Wide-Skyscraper (300×600). */
+.ad-slot--sidebar {
+  max-width: 300px;
+  min-height: var(--ad-slot-3-height); /* 600px */
+}
+
+/* Phase 2: sichtbare Ad-Fläche erst wenn Consent-Flag am <html> steht. */
 [data-ads-enabled="true"] .ad-slot {
-  display: block;
+  background: var(--color-surface);
+  border-radius: var(--r-md);
 }
 
 /* Pagefind UI — remap its CSS vars onto our graphite tokens so the
