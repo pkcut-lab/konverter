@@ -65,7 +65,7 @@ function shuffleArray<T>(arr: readonly T[]): T[] {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    [copy[i], copy[j]] = [copy[j] as T, copy[i] as T];
   }
   return copy;
 }
@@ -80,7 +80,7 @@ export function pickWords(pool: readonly string[], count: number): string[] {
       shuffled = shuffleArray(pool);
       idx = 0;
     }
-    result.push(shuffled[idx]);
+    result.push(shuffled[idx] as string);
     idx++;
   }
   return result;
@@ -91,7 +91,8 @@ export function buildSentence(pool: readonly string[]): string {
   const len = 5 + Math.floor(Math.random() * 11); // 5–15
   const words = pickWords(pool, len);
   // Capitalize first word
-  words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  const first = words[0] as string;
+  words[0] = first.charAt(0).toUpperCase() + first.slice(1);
   return words.join(' ') + '.';
 }
 
@@ -130,7 +131,7 @@ export function parseInput(raw: string): ParsedInput {
   // Extract number
   const numMatch = trimmed.match(/(\d+)/);
   if (numMatch) {
-    count = parseInt(numMatch[1], 10);
+    count = parseInt(numMatch[1] as string, 10);
   } else {
     throw new Error(
       'Keine Zahl erkannt. Bitte eine Zahl eingeben, z. B. „5 absätze" oder „20 wörter".',
@@ -187,7 +188,8 @@ export function generate(params: ParsedInput): string {
     }
     case 'words': {
       const words = pickWords(pool, params.count);
-      words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+      const first = words[0] as string;
+      words[0] = first.charAt(0).toUpperCase() + first.slice(1);
       text = words.join(' ');
       break;
     }

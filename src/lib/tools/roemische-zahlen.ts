@@ -104,8 +104,8 @@ export function romanToArabic(roman: string): number {
 
   let total = 0;
   for (let i = 0; i < upper.length; i++) {
-    const current = SINGLE_VALUES[upper[i]];
-    const next = i + 1 < upper.length ? SINGLE_VALUES[upper[i + 1]] : 0;
+    const current = SINGLE_VALUES[upper[i] as string] as number;
+    const next = i + 1 < upper.length ? (SINGLE_VALUES[upper[i + 1] as string] as number) : 0;
     if (current < next) {
       total -= current;
     } else {

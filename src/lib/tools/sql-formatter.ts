@@ -115,12 +115,13 @@ function tokenize(sql: string): string[] {
   const tokens: string[] = [];
   let i = 0;
   while (i < sql.length) {
-    // Single-quoted string literal — preserve content
-    if (sql[i] === "'") {
+    const c = sql[i] as string;
+
+    if (c === "'") {
       let j = i + 1;
       while (j < sql.length) {
         if (sql[j] === "'" && sql[j + 1] === "'") {
-          j += 2; // escaped quote
+          j += 2;
         } else if (sql[j] === "'") {
           j++;
           break;
@@ -133,8 +134,7 @@ function tokenize(sql: string): string[] {
       continue;
     }
 
-    // Double-quoted identifier — preserve content
-    if (sql[i] === '"') {
+    if (c === '"') {
       let j = i + 1;
       while (j < sql.length && sql[j] !== '"') j++;
       tokens.push(sql.slice(i, j + 1));
@@ -142,49 +142,43 @@ function tokenize(sql: string): string[] {
       continue;
     }
 
-    // Whitespace
-    if (/\s/.test(sql[i])) {
+    if (/\s/.test(c)) {
       let j = i + 1;
-      while (j < sql.length && /\s/.test(sql[j])) j++;
+      while (j < sql.length && /\s/.test(sql[j] as string)) j++;
       tokens.push(' ');
       i = j;
       continue;
     }
 
-    // Parentheses and semicolons as individual tokens
-    if (sql[i] === '(' || sql[i] === ')' || sql[i] === ';') {
-      tokens.push(sql[i]);
+    if (c === '(' || c === ')' || c === ';') {
+      tokens.push(c);
       i++;
       continue;
     }
 
-    // Comma
-    if (sql[i] === ',') {
+    if (c === ',') {
       tokens.push(',');
       i++;
       continue;
     }
 
-    // Word token (keyword or identifier)
-    if (/[a-zA-Z_]/.test(sql[i])) {
+    if (/[a-zA-Z_]/.test(c)) {
       let j = i + 1;
-      while (j < sql.length && /[a-zA-Z0-9_.]/.test(sql[j])) j++;
+      while (j < sql.length && /[a-zA-Z0-9_.]/.test(sql[j] as string)) j++;
       tokens.push(sql.slice(i, j));
       i = j;
       continue;
     }
 
-    // Everything else (operators, numbers, etc.)
-    if (/[0-9]/.test(sql[i])) {
+    if (/[0-9]/.test(c)) {
       let j = i + 1;
-      while (j < sql.length && /[0-9.]/.test(sql[j])) j++;
+      while (j < sql.length && /[0-9.]/.test(sql[j] as string)) j++;
       tokens.push(sql.slice(i, j));
       i = j;
       continue;
     }
 
-    // Single-char fallback (operators like =, <, >, *, etc.)
-    tokens.push(sql[i]);
+    tokens.push(c);
     i++;
   }
   return tokens;
@@ -220,7 +214,7 @@ function matchMultiWordKeyword(
         ti++;
         consumed++;
       }
-      if (ti >= tokens.length || tokens[ti].toUpperCase() !== part) {
+      if (ti >= tokens.length || (tokens[ti] as string).toUpperCase() !== part) {
         matched = false;
         break;
       }
@@ -264,9 +258,8 @@ function formatSql(input: string): string {
 
   let i = 0;
   while (i < tokens.length) {
-    const token = tokens[i];
+    const token = tokens[i] as string;
 
-    // Skip whitespace — we control spacing ourselves
     if (token === ' ') {
       i++;
       continue;

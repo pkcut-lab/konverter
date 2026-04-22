@@ -67,7 +67,7 @@ function decodeJwt(input: string): string {
     );
   }
 
-  const [headerB64, payloadB64] = parts;
+  const [headerB64, payloadB64] = parts as [string, string, string];
 
   let header: Record<string, unknown>;
   try {

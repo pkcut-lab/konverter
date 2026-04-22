@@ -58,7 +58,7 @@ function collectDiffs(
   // Both arrays
   if (Array.isArray(a) && Array.isArray(b)) {
     if (ignoreArrayOrder) {
-      compareArraysUnordered(a, b, path, out, ignoreArrayOrder);
+      compareArraysUnordered(a, b, path, out);
     } else {
       const maxLen = Math.max(a.length, b.length);
       for (let i = 0; i < maxLen; i++) {
@@ -110,7 +110,6 @@ function compareArraysUnordered(
   b: unknown[],
   path: string,
   out: DiffEntry[],
-  ignoreArrayOrder: boolean,
 ): void {
   const usedB = new Set<number>();
 

@@ -91,8 +91,8 @@ function parseColors(input: string): { fg: string; bg: string } | null {
 
   if (parts.length < 2) return null;
 
-  const fg = normalizeHex(parts[0]);
-  const bg = normalizeHex(parts[1]);
+  const fg = normalizeHex(parts[0] as string);
+  const bg = normalizeHex(parts[1] as string);
 
   if (!fg || !bg) return null;
   return { fg, bg };

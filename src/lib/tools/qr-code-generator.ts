@@ -25,13 +25,13 @@ const GF_LOG = new Uint8Array(256);
     if (x & 0x100) x ^= 0x11d;
   }
   for (let i = 255; i < 512; i++) {
-    GF_EXP[i] = GF_EXP[i - 255];
+    GF_EXP[i] = GF_EXP[i - 255] as number;
   }
 })();
 
 function gfMul(a: number, b: number): number {
   if (a === 0 || b === 0) return 0;
-  return GF_EXP[GF_LOG[a] + GF_LOG[b]];
+  return GF_EXP[(GF_LOG[a] as number) + (GF_LOG[b] as number)] as number;
 }
 
 /** Generate Reed-Solomon generator polynomial for `ecLen` error correction codewords. */
@@ -39,10 +39,10 @@ function rsGeneratorPoly(ecLen: number): Uint8Array {
   let gen = new Uint8Array([1]);
   for (let i = 0; i < ecLen; i++) {
     const next = new Uint8Array(gen.length + 1);
-    const factor = GF_EXP[i];
+    const factor = GF_EXP[i] as number;
     for (let j = gen.length - 1; j >= 0; j--) {
-      next[j + 1] ^= gfMul(gen[j], factor);
-      next[j] ^= gen[j];
+      next[j + 1] = (next[j + 1] as number) ^ gfMul(gen[j] as number, factor);
+      next[j] = (next[j] as number) ^ (gen[j] as number);
     }
     gen = next;
   }
@@ -54,15 +54,15 @@ function rsEncode(data: Uint8Array, ecLen: number): Uint8Array {
   const gen = rsGeneratorPoly(ecLen);
   const result = new Uint8Array(ecLen);
   for (let i = 0; i < data.length; i++) {
-    const coef = data[i] ^ result[0];
+    const coef = (data[i] as number) ^ (result[0] as number);
     // Shift result left by 1
     for (let j = 0; j < ecLen - 1; j++) {
-      result[j] = result[j + 1];
+      result[j] = result[j + 1] as number;
     }
     result[ecLen - 1] = 0;
     if (coef !== 0) {
       for (let j = 0; j < ecLen; j++) {
-        result[j] ^= gfMul(gen[j + 1], coef);
+        result[j] = (result[j] as number) ^ gfMul(gen[j + 1] as number, coef);
       }
     }
   }
@@ -145,7 +145,7 @@ const VERSION_INFO: readonly number[] = [
 
 function selectVersion(dataLen: number): number {
   for (let v = 1; v <= 10; v++) {
-    if (dataLen <= BYTE_CAPACITY_M[v]) return v;
+    if (dataLen <= (BYTE_CAPACITY_M[v] as number)) return v;
   }
   throw new Error(`Text zu lang fuer QR-Code (max ~213 Bytes bei Version 10, EC-Level M). Eingabe: ${dataLen} Bytes.`);
 }
@@ -157,7 +157,7 @@ function encodeData(text: string): { version: number; codewords: Uint8Array } {
   const bytes = encoder.encode(text);
   const version = selectVersion(bytes.length);
 
-  const [totalCW, ecPerBlock, numBlocks] = EC_TABLE_M[version];
+  const [totalCW, ecPerBlock, numBlocks] = EC_TABLE_M[version] as readonly [number, number, number];
   const dataCW = totalCW - ecPerBlock * numBlocks;
 
   // Build data bitstream: mode indicator (0100 = byte) + character count + data + terminator + padding
@@ -195,7 +195,7 @@ function encodeData(text: string): { version: number; codewords: Uint8Array } {
   const padBytes = [0xec, 0x11];
   let padIdx = 0;
   while (bits.length < maxBits) {
-    pushBits(padBytes[padIdx % 2], 8);
+    pushBits(padBytes[padIdx % 2] as number, 8);
     padIdx++;
   }
 
@@ -204,7 +204,7 @@ function encodeData(text: string): { version: number; codewords: Uint8Array } {
   for (let i = 0; i < dataCW; i++) {
     let byte = 0;
     for (let b = 0; b < 8; b++) {
-      byte = (byte << 1) | (bits[i * 8 + b] || 0);
+      byte = (byte << 1) | ((bits[i * 8 + b] as number | undefined) || 0);
     }
     dataBytes[i] = byte;
   }
@@ -229,8 +229,9 @@ function encodeData(text: string): { version: number; codewords: Uint8Array } {
   const maxDataBlockLen = blockDataLen + (longBlocks > 0 ? 1 : 0);
   for (let i = 0; i < maxDataBlockLen; i++) {
     for (let b = 0; b < numBlocks; b++) {
-      if (i < dataBlocks[b].length) {
-        result.push(dataBlocks[b][i]);
+      const block = dataBlocks[b] as Uint8Array;
+      if (i < block.length) {
+        result.push(block[i] as number);
       }
     }
   }
@@ -238,7 +239,7 @@ function encodeData(text: string): { version: number; codewords: Uint8Array } {
   // Interleave EC codewords
   for (let i = 0; i < ecPerBlock; i++) {
     for (let b = 0; b < numBlocks; b++) {
-      result.push(ecBlocks[b][i]);
+      result.push((ecBlocks[b] as Uint8Array)[i] as number);
     }
   }
 
@@ -260,7 +261,7 @@ function cloneMatrix(m: Matrix): Matrix {
 /** Set a module and mark it as reserved (bit 1 = value, bit 7 = reserved flag). */
 function setReserved(m: Matrix, r: number, c: number, val: boolean) {
   if (r >= 0 && r < m.length && c >= 0 && c < m.length) {
-    m[r][c] = (val ? 1 : 0) | 0x80;
+    (m[r] as Uint8Array)[c] = (val ? 1 : 0) | 0x80;
   }
 }
 
@@ -283,7 +284,7 @@ function placeAlignmentPattern(m: Matrix, row: number, col: number) {
     for (let c = -2; c <= 2; c++) {
       const tr = row + r;
       const tc = col + c;
-      if (m[tr][tc] & 0x80) continue; // skip if reserved
+      if (((m[tr] as Uint8Array | undefined)?.[tc] ?? 0) & 0x80) continue; // skip if reserved
       const isEdge = r === -2 || r === 2 || c === -2 || c === 2;
       const isCenter = r === 0 && c === 0;
       setReserved(m, tr, tc, isEdge || isCenter);
@@ -301,18 +302,19 @@ function placeTimingPatterns(m: Matrix) {
 
 function reserveFormatArea(m: Matrix) {
   const size = m.length;
+  const row8 = m[8] as Uint8Array;
   // Around top-left finder
   for (let i = 0; i <= 8; i++) {
-    if (!(m[8][i] & 0x80)) setReserved(m, 8, i, false);
-    if (!(m[i][8] & 0x80)) setReserved(m, i, 8, false);
+    if (!((row8[i] as number) & 0x80)) setReserved(m, 8, i, false);
+    if (!(((m[i] as Uint8Array)[8] as number) & 0x80)) setReserved(m, i, 8, false);
   }
   // Around top-right finder
   for (let i = 0; i < 8; i++) {
-    if (!(m[8][size - 1 - i] & 0x80)) setReserved(m, 8, size - 1 - i, false);
+    if (!((row8[size - 1 - i] as number) & 0x80)) setReserved(m, 8, size - 1 - i, false);
   }
   // Around bottom-left finder
   for (let i = 0; i < 7; i++) {
-    if (!(m[size - 1 - i][8] & 0x80)) setReserved(m, size - 1 - i, 8, false);
+    if (!(((m[size - 1 - i] as Uint8Array)[8] as number) & 0x80)) setReserved(m, size - 1 - i, 8, false);
   }
   // Dark module
   setReserved(m, size - 8, 8, true);
@@ -321,7 +323,7 @@ function reserveFormatArea(m: Matrix) {
 function reserveVersionArea(m: Matrix, version: number) {
   if (version < 7) return;
   const size = m.length;
-  const info = VERSION_INFO[version];
+  const info = VERSION_INFO[version] as number;
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 3; j++) {
       const bit = (info >> (i * 3 + j)) & 1;
@@ -346,14 +348,15 @@ function placeDataBits(m: Matrix, codewords: Uint8Array) {
     const step = upward ? -1 : 1;
 
     for (let y = start; y !== end; y += step) {
+      const row = m[y] as Uint8Array;
       for (let dx = 0; dx <= 1; dx++) {
         const col = x - dx;
         if (col < 0) continue;
-        if (m[y][col] & 0x80) continue; // reserved
+        if ((row[col] as number) & 0x80) continue; // reserved
         if (bitIdx < totalBits) {
           const byteIdx = Math.floor(bitIdx / 8);
           const bitPos = 7 - (bitIdx % 8);
-          m[y][col] = (codewords[byteIdx] >> bitPos) & 1;
+          row[col] = ((codewords[byteIdx] as number) >> bitPos) & 1;
           bitIdx++;
         }
       }
@@ -381,13 +384,14 @@ const MASK_FNS: MaskFn[] = [
 
 function applyMask(m: Matrix, maskIdx: number): Matrix {
   const masked = cloneMatrix(m);
-  const fn = MASK_FNS[maskIdx];
+  const fn = MASK_FNS[maskIdx] as MaskFn;
   const size = m.length;
   for (let r = 0; r < size; r++) {
+    const row = masked[r] as Uint8Array;
     for (let c = 0; c < size; c++) {
-      if (masked[r][c] & 0x80) continue; // reserved
+      if ((row[c] as number) & 0x80) continue; // reserved
       if (fn(r, c)) {
-        masked[r][c] ^= 1;
+        row[c] = (row[c] as number) ^ 1;
       }
     }
   }
@@ -395,21 +399,22 @@ function applyMask(m: Matrix, maskIdx: number): Matrix {
 }
 
 function writeFormatInfo(m: Matrix, maskIdx: number) {
-  const bits = FORMAT_BITS_M[maskIdx];
+  const bits = FORMAT_BITS_M[maskIdx] as number;
   const size = m.length;
+  const row8 = m[8] as Uint8Array;
 
   // Horizontal (row 8)
   const hPositions = [0, 1, 2, 3, 4, 5, 7, 8, size - 8, size - 7, size - 6, size - 5, size - 4, size - 3, size - 2, size - 1];
   for (let i = 0; i < 15; i++) {
     const bit = (bits >> (14 - i)) & 1;
-    m[8][hPositions[i]] = bit | 0x80;
+    row8[hPositions[i] as number] = bit | 0x80;
   }
 
   // Vertical (col 8)
   const vPositions = [0, 1, 2, 3, 4, 5, 7, 8, size - 7, size - 6, size - 5, size - 4, size - 3, size - 2, size - 1];
   for (let i = 0; i < 15; i++) {
     const bit = (bits >> (14 - i)) & 1;
-    m[vPositions[14 - i]][8] = bit | 0x80;
+    (m[vPositions[14 - i] as number] as Uint8Array)[8] = bit | 0x80;
   }
 }
 
@@ -420,17 +425,18 @@ function penaltyScore(m: Matrix): number {
 
   // Rule 1: consecutive same-color modules (horizontal + vertical)
   for (let r = 0; r < size; r++) {
+    const rowR = m[r] as Uint8Array;
     let runH = 1;
     let runV = 1;
     for (let c = 1; c < size; c++) {
-      if ((m[r][c] & 1) === (m[r][c - 1] & 1)) {
+      if (((rowR[c] as number) & 1) === ((rowR[c - 1] as number) & 1)) {
         runH++;
         if (runH === 5) score += 3;
         else if (runH > 5) score += 1;
       } else {
         runH = 1;
       }
-      if ((m[c][r] & 1) === (m[c - 1][r] & 1)) {
+      if ((((m[c] as Uint8Array)[r] as number) & 1) === (((m[c - 1] as Uint8Array)[r] as number) & 1)) {
         runV++;
         if (runV === 5) score += 3;
         else if (runV > 5) score += 1;
@@ -442,9 +448,11 @@ function penaltyScore(m: Matrix): number {
 
   // Rule 2: 2x2 same-color blocks
   for (let r = 0; r < size - 1; r++) {
+    const rowR = m[r] as Uint8Array;
+    const rowR1 = m[r + 1] as Uint8Array;
     for (let c = 0; c < size - 1; c++) {
-      const v = m[r][c] & 1;
-      if ((m[r][c + 1] & 1) === v && (m[r + 1][c] & 1) === v && (m[r + 1][c + 1] & 1) === v) {
+      const v = (rowR[c] as number) & 1;
+      if (((rowR[c + 1] as number) & 1) === v && ((rowR1[c] as number) & 1) === v && ((rowR1[c + 1] as number) & 1) === v) {
         score += 3;
       }
     }
@@ -480,8 +488,9 @@ function matrixToSvg(m: Matrix, moduleSize: number = 4, quietZone: number = 4): 
 
   const paths: string[] = [];
   for (let r = 0; r < size; r++) {
+    const row = m[r] as Uint8Array;
     for (let c = 0; c < size; c++) {
-      if (m[r][c] & 1) {
+      if ((row[c] as number) & 1) {
         const x = (c + quietZone) * moduleSize;
         const y = (r + quietZone) * moduleSize;
         paths.push(`M${x},${y}h${moduleSize}v${moduleSize}h-${moduleSize}z`);
@@ -516,7 +525,7 @@ export function generateQrSvg(text: string): string {
 
   // Alignment patterns (V2+)
   if (version >= 2) {
-    const positions = ALIGNMENT_POSITIONS[version - 1];
+    const positions = ALIGNMENT_POSITIONS[version - 1] as readonly number[];
     for (const r of positions) {
       for (const c of positions) {
         // Skip if overlapping with finder patterns

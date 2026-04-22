@@ -54,7 +54,7 @@ export function parseTimezoneInput(input: string): {
   const hours = Number(match[1]);
   const minutes = Number(match[2]);
   const seconds = match[3] !== undefined ? Number(match[3]) : 0;
-  const sourceZone = match[4].trim();
+  const sourceZone = (match[4] as string).trim();
 
   if (hours > 23 || minutes > 59 || seconds > 59) {
     throw new Error('Ungültige Uhrzeit. Stunden: 0–23, Minuten/Sekunden: 0–59.');

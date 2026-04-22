@@ -81,9 +81,9 @@ function tokenize(css: string): CssToken[] {
     }
 
     // Whitespace — collapse to single space
-    if (/\s/.test(css[i])) {
+    if (/\s/.test(css[i] as string)) {
       let j = i + 1;
-      while (j < css.length && /\s/.test(css[j])) j++;
+      while (j < css.length && /\s/.test(css[j] as string)) j++;
       tokens.push({ kind: 'text', text: ' ' });
       i = j;
       continue;
@@ -93,14 +93,14 @@ function tokenize(css: string): CssToken[] {
     let j = i + 1;
     while (
       j < css.length &&
-      !/[\s{};"'/]/.test(css[j])
+      !/[\s{};"'/]/.test(css[j] as string)
     ) {
       j++;
     }
     // Handle single quote separately to not break the while check
     if (j === i + 1 && css[i] === "'") {
       // Should not reach here (caught above), safety fallback
-      tokens.push({ kind: 'text', text: css[i] });
+      tokens.push({ kind: 'text', text: css[i] as string });
       i++;
       continue;
     }
@@ -133,7 +133,7 @@ function formatCss(input: string): string {
   }
 
   for (let i = 0; i < tokens.length; i++) {
-    const token = tokens[i];
+    const token = tokens[i] as CssToken;
 
     switch (token.kind) {
       case 'comment': {
