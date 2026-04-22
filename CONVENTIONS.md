@@ -220,6 +220,99 @@ Außerdem: `tool-registry.ts` (Tool-Existenz) + `slug-map.ts` (Slug pro Lang) �
 - **CSS-Override-Punkt:** Pagefind-Styling geht AUSSCHLIESSLICH über `.pagefind-ui { --pagefind-ui-*: var(--color-*) }` in `src/styles/global.css`. Keine Komponenten-lokalen Overrides, sonst divergiert die Search-Drop-Down-Optik zwischen Layouts.
 - **bundlePath Invariante:** Heute hardcoded `/pagefind/`. Phase-5-Trigger: wenn R2-Proxy für Cloudflare-20k-Limit kommt, wird der Pfad zur build-time-Konstante (Env-Var + Vite `define`). Bis dahin nicht anfassen.
 
+## Performance-Mandate (gelockt 2026-04-22, Deep-Perf-Review)
+
+Bei 1000 Tools wird jede „harmlose" Static-Import-Entscheidung zur nicht-linearen
+Katastrophe: ein Tool-Chunk zieht die Runtime aller Tools mit. Die folgenden
+Regeln sind nicht verhandelbar — jeder Agent, der ein neues Tool baut oder ein
+bestehendes redesigned, muss sie **sofort** beim jeweiligen Tool anwenden.
+
+### 1. Registries müssen lazy sein (`() => import()`)
+
+Jede Registry, die Tool-Code einem `id`-String zuordnet, MUSS ihre Einträge
+hinter einem `() => Promise<…>`-Thunk verbergen. Static imports am Dateikopf
+sind verboten — sie kollabieren den Split zurück in einen einzigen Bundle und
+skalieren O(n) mit der Tool-Count.
+
+Betroffene Dateien (Vertrag, nicht nur Konvention):
+- `src/lib/tool-registry.ts` — `getToolConfig(id): Promise<ToolConfig>`; `hasTool(id): boolean` als Sync-Check für Filter-Pfade.
+- `src/lib/tools/tool-runtime-registry.ts` — Heavy-Deps (ML-Pipelines, WASM-Codecs, >100 KB Libs) MÜSSEN im Entry-Thunk dynamic-importiert werden, nie am Modul-Top. Singleton-Pattern: `Promise | null` + Capture nach erstem Resolve.
+- `src/lib/tools/formatter-runtime-registry.ts` — `loadFormatter(id): Promise<FormatterEntry | undefined>`.
+- `src/lib/tools/type-runtime-registry.ts` — `loadDiff / loadValidate / loadGenerate / loadAnalyze`.
+
+Consumers (Svelte-Komponenten) laden den passenden Fn in einem `$effect` mit
+Cancel-Flag:
+
+```svelte
+let fn = $state<FormatFn | undefined>(undefined);
+$effect(() => {
+  const id = config.id;
+  let cancelled = false;
+  void loadFormatter(id).then((e) => { if (!cancelled) fn = e?.format; });
+  return () => { cancelled = true; };
+});
+```
+
+**Kontrollfrage vor jedem Registry-Edit:** Wenn ich an der Dateispitze `import
+x from ...` schreibe — wird `x` von jedem Tool gebraucht? Wenn nein → `() =>
+import()`.
+
+### 2. Typed-Array / Binary-State → `$state.raw`
+
+`$state(value)` wickelt `value` in einen Svelte-Proxy. Für `Uint8Array` /
+`Uint8ClampedArray` / `Blob` / `ImageBitmap` / große geparste JSON-Objekte
+bedeutet das: jeder Lesezugriff triggert einen Proxy-Walk über Millionen
+Elemente. Das Bild-Diff-Tool zeigte 33 Mio. Proxy-Ops pro 4K-Vergleich — 2 s
+Jank statt 40 ms.
+
+Regel: **jede reaktive Variable, deren Wert ein typed array, Blob, Canvas,
+ImageBitmap oder eine >10 KB-JSON-Struktur ist, wird mit `$state.raw` deklariert.**
+`$state.raw` entfernt den Proxy; Zuweisungen triggern weiterhin Reaktivität.
+
+```svelte
+let slotA = $state.raw<Loaded | null>(null);
+```
+
+Nur wenn die Komponente wirklich tief in den Inhalt schreibt und darauf
+reaktiv reagieren muss, greift das reguläre `$state`. Das ist bei Binary-Daten
+nie der Fall.
+
+### 3. O(m×n)-Algorithmen hinter Debounce (≥150 ms)
+
+LCS-Diffs (`text-diff`), JSON-Deep-Diffs (`json-diff`), AST-Formatter und
+ähnliche Algorithmen mit quadratischer/größer-Komplexität DÜRFEN NICHT bei
+jedem Keystroke laufen. Regel: Input in `$state` schreiben, einen debounced
+Mirror in einem `$effect` mit `setTimeout`/`clearTimeout` (180 ms Default,
+150–250 ms OK) pflegen, Algorithmus nur auf dem Mirror rechnen.
+
+Referenz-Implementation: `src/components/tools/Comparer.svelte` lines 17–35.
+
+### 4. Keine preloads für dekorative Fonts
+
+Critical-path-preloads (`<link rel="preload" as="font">`) sind für Text
+reserviert, der beim ersten Paint sichtbar ist (bei uns: Inter + JetBrains
+Mono). Playfair Display trägt nur `<em>`-Akzente in H1/H2 und nutzt
+`font-display: swap` — die 38 KB WOFF2 auf den kritischen Pfad zu schieben
+kostet LCP ohne Ertrag. Regel: **dekorative Fonts bekommen `@font-face` +
+`font-display: swap`, aber KEINEN `<link rel="preload">`.**
+
+Referenz: `src/layouts/BaseLayout.astro` — Inter + JetBrains Mono preloaded,
+Playfair absichtlich nicht.
+
+### 5. Checkliste für jedes neue Tool
+
+Vor Commit prüft der Agent:
+
+- [ ] Tool-Config in `tool-registry.ts` als `() => import(...)` — kein static import.
+- [ ] FileTool-Entry mit `>100 KB`-Dep: dynamic-imported Singleton im Entry-Thunk.
+- [ ] Formatter/Diff/Validate/Generate/Analyze: über `load*`-Funktion, nicht Sync-Registry.
+- [ ] Reaktive Binary-Daten: `$state.raw`, nicht `$state`.
+- [ ] Quadratische Algorithmen auf Text-Input: 150–250 ms Debounce.
+- [ ] Keine neuen Font-`preload`-Links außer Inter / JetBrains Mono.
+
+Wer eine Regel bricht, schreibt einen inline-Kommentar mit Begründung —
+sonst kippt der PR.
+
 ## Commit-Disziplin (Karpathy-Prinzipien aus CLAUDE.md)
 
 - **Ein Commit = ein logisches Stück.** Keine Mix-Commits (`fix X + refactor Y`).

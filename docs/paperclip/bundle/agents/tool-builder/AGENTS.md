@@ -314,7 +314,89 @@ EOF
 - Build ohne Dossier-Ref starten
 - `@iconPrompt`-JSDoc oder `icon`-Feld schreiben (Runde 3 Session 4)
 
-## 9. Skill-Sequenz-Pflicht (CLAUDE.md §5)
+## 9. Performance-Mandate (gelockt 2026-04-22)
+
+Jedes neue Tool MUSS die folgenden fünf Checks bestehen — sie schützen die
+Bundle-Größe pro Tool-Seite unter `/de/<slug>` und sind bei 1000 Tools
+existenziell. Vollständige Begründung + Referenzen: CONVENTIONS.md
+§Performance-Mandate.
+
+### 9.1 Registry-Eintrag = `() => import()`
+
+Im `src/lib/tool-registry.ts`-Eintrag:
+
+```ts
+'my-new-tool': () => import('./tools/my-new-tool').then((m) => m.myNewTool),
+```
+
+Kein `import { myNewTool } from './tools/my-new-tool'` am Dateikopf. Gleiches
+gilt für `formatter-runtime-registry`, `type-runtime-registry` und den
+jeweiligen Tool-Eintrag in `tool-runtime-registry`.
+
+### 9.2 Heavy-Deps lazy im FileTool-Runtime-Entry
+
+Ein FileTool mit einer Dep > 100 KB (Beispiele: `@huggingface/transformers`,
+`mediabunny`, `heic2any`, ONNX-Runtime) DARF NICHT am Modul-Top seines Runtime-
+Moduls statisch importieren. Pattern: Promise-Singleton + Capture:
+
+```ts
+type Mod = typeof import('./my-heavy-module');
+let modulePromise: Promise<Mod> | null = null;
+let mod: Mod | null = null;
+function load(): Promise<Mod> {
+  if (!modulePromise) {
+    modulePromise = import('./my-heavy-module').then((m) => { mod = m; return m; });
+  }
+  return modulePromise;
+}
+```
+
+Runtime-Registry-Entry ruft `await load()` im `process` / `prepare`, und
+liest `mod?.someSync()` für sync-helper (`isPrepared`, `clearLastResult`).
+
+### 9.3 Binary-State mit `$state.raw`
+
+Jede reaktive Svelte-Variable, deren Wert eins von `Uint8Array` /
+`Uint8ClampedArray` / `Blob` / `File` / `ImageBitmap` / `HTMLCanvasElement`
+/ großes-geparsetes-JSON ist, wird mit `$state.raw` deklariert:
+
+```svelte
+let slotA = $state.raw<Loaded | null>(null);
+```
+
+`$state` wrapped den Wert in einen Svelte-Proxy — bei einem 4K-Bitmap sind
+das 33 Mio. Proxy-Ops pro Lesezugriff. `$state.raw` entfernt den Proxy,
+Zuweisungen triggern weiterhin Reaktivität.
+
+### 9.4 O(m×n) hinter Debounce
+
+Diff/Compare/Format-Tools mit quadratischer oder größerer Komplexität DÜRFEN
+NICHT bei jedem Keystroke rechnen. Input in `$state` schreiben, einen
+debounced Mirror (180 ms Default, 150–250 ms OK) in einem `$effect` pflegen,
+Algorithmus nur auf dem Mirror rechnen. Referenz:
+`src/components/tools/Comparer.svelte`.
+
+### 9.5 Keine neuen Font-`preload`-Links
+
+Inter + JetBrains Mono sind die einzigen preloaded Fonts. Jeder weitere Font
+(Playfair, neue dekorative Ergänzung) bekommt `@font-face` mit
+`font-display: swap`, aber keinen `<link rel="preload">` in `BaseLayout.astro`.
+
+### 9.6 Pre-Commit-Check
+
+```
+# Kontrollfrage-Checkliste für dein Tool (du, der Builder-Agent):
+[ ] Registry-Eintrag als () => import() geschrieben, nicht static import
+[ ] Heavy-Dep >100 KB: dynamic-imported Singleton im Runtime-Entry
+[ ] Reaktive Uint8Array/Blob/Canvas-State → $state.raw, nicht $state
+[ ] O(m×n)-Algorithmus auf Input → Debounce 150–250 ms
+[ ] Kein neuer Font-Preload außer Inter / JetBrains Mono
+```
+
+Wenn du eine Regel bewusst brichst, schreib einen inline-Kommentar mit
+Begründung — sonst kippt der Critic den PR.
+
+## 10. Skill-Sequenz-Pflicht (CLAUDE.md §5)
 
 Bei UI-Arbeit (neue generische Komponente, Tool-Template-Änderung, Redesign) MUSS diese Sequenz laufen, bevor du Code schreibst:
 
