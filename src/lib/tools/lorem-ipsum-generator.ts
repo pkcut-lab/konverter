@@ -216,4 +216,6 @@ export const loremIpsumGenerator: FormatterConfig = {
   categoryId: 'text',
   mode: 'custom',
   format: generateLoremIpsum,
+  placeholder:
+    'Anzahl + Einheit + Variante, z. B.:\n5 absätze deutsch\n10 sätze latein\n20 wörter',
 };

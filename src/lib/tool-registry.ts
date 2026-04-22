@@ -1,106 +1,100 @@
 import type { ToolConfig } from './tools/schemas';
-import { meterZuFuss } from './tools/meter-zu-fuss';
-import { fussZuMeter } from './tools/fuss-zu-meter';
-import { pngJpgToWebp } from './tools/png-jpg-to-webp';
-import { hintergrundEntferner } from './tools/hintergrund-entferner';
-import { zentimeterZuZoll } from './tools/zentimeter-zu-zoll';
-import { kilometerZuMeilen } from './tools/kilometer-zu-meilen';
-import { kilogrammZuPfund } from './tools/kilogramm-zu-pfund';
-import { celsiusZuFahrenheit } from './tools/celsius-zu-fahrenheit';
-import { quadratmeterZuQuadratfuss } from './tools/quadratmeter-zu-quadratfuss';
-import { hevcZuH264 } from './tools/hevc-zu-h264';
-import { zollZuZentimeter } from './tools/zoll-zu-zentimeter';
-import { hexRgbKonverter } from './tools/hex-rgb-konverter';
-import { uuidGenerator } from './tools/uuid-generator';
-import { jsonFormatter } from './tools/json-formatter';
-import { characterCounter } from './tools/character-counter';
-import { regexTester } from './tools/regex-tester';
-import { textDiff } from './tools/text-diff';
-import { unixTimestamp } from './tools/unix-timestamp';
-import { base64Encoder } from './tools/base64-encoder';
-import { urlEncoderDecoder } from './tools/url-encoder-decoder';
-import { roemischeZahlen } from './tools/roemische-zahlen';
-import { loremIpsumGenerator } from './tools/lorem-ipsum-generator';
-import { zeitzonenRechner } from './tools/zeitzonen-rechner';
-import { hashGenerator } from './tools/hash-generator';
-import { qrCodeGenerator } from './tools/qr-code-generator';
-import { sqlFormatter } from './tools/sql-formatter';
-import { xmlFormatter } from './tools/xml-formatter';
-import { cssFormatter } from './tools/css-formatter';
-import { jwtDecoder } from './tools/jwt-decoder';
-import { kontrastPruefer } from './tools/kontrast-pruefer';
-import { jsonDiff } from './tools/json-diff';
-import { jsonZuCsv } from './tools/json-zu-csv';
-import { bildDiff } from './tools/bild-diff';
-import { yardZuMeter } from './tools/yard-zu-meter';
-import { millimeterZuZoll } from './tools/millimeter-zu-zoll';
-import { seemeileZuKilometer } from './tools/seemeile-zu-kilometer';
-import { grammZuUnzen } from './tools/gramm-zu-unzen';
-import { pfundZuKilogramm } from './tools/pfund-zu-kilogramm';
-import { tonneZuPfund } from './tools/tonne-zu-pfund';
-import { stoneZuKilogramm } from './tools/stone-zu-kilogramm';
-import { hektarZuAcre } from './tools/hektar-zu-acre';
-import { quadratkilometerZuQuadratmeile } from './tools/quadratkilometer-zu-quadratmeile';
-import { literZuGallonen } from './tools/liter-zu-gallonen';
-import { milliliterZuUnzen } from './tools/milliliter-zu-unzen';
 
 /**
  * Single source of truth for tool configurations.
  *
+ * Lazy-load contract: every entry is `() => import('./tools/<file>')`. Static
+ * imports in this file are FORBIDDEN — they would collapse 44 (and eventually
+ * 1000+) tool modules into a single static graph that Vite must resolve for
+ * every page render during SSG, producing non-linear build-time degradation.
+ * With lazy loaders each page frontmatter only resolves the one tool config it
+ * actually needs.
+ *
  * Adding a new tool requires two edits:
- *   1. Add an entry to this registry (`toolId` → config import)
+ *   1. Add an entry to the `loaders` map below (`toolId` → `() => import(...)`)
  *   2. Add matching entries to `src/lib/slug-map.ts` for every language
  *
- * The dynamic route at `src/pages/[lang]/[slug].astro` reads from this
- * registry to resolve `toolId` → runtime config.
+ * The dynamic route at `src/pages/[lang]/[slug].astro` awaits `getToolConfig`
+ * at build time to resolve `toolId` → runtime config.
  */
-export const toolRegistry: Record<string, ToolConfig> = {
-  'meter-to-feet': meterZuFuss,
-  'foot-to-meter': fussZuMeter,
-  'png-jpg-to-webp': pngJpgToWebp,
-  'remove-background': hintergrundEntferner,
-  'cm-to-inch': zentimeterZuZoll,
-  'km-to-mile': kilometerZuMeilen,
-  'kg-to-lb': kilogrammZuPfund,
-  'celsius-to-fahrenheit': celsiusZuFahrenheit,
-  'sqm-to-sqft': quadratmeterZuQuadratfuss,
-  'hevc-to-h264': hevcZuH264,
-  'inch-to-cm': zollZuZentimeter,
-  'hex-to-rgb': hexRgbKonverter,
-  'uuid-generator': uuidGenerator,
-  'json-formatter': jsonFormatter,
-  'character-counter': characterCounter,
-  'regex-tester': regexTester,
-  'text-diff': textDiff,
-  'unix-timestamp': unixTimestamp,
-  'base64-encoder': base64Encoder,
-  'url-encoder-decoder': urlEncoderDecoder,
-  'roman-numerals': roemischeZahlen,
-  'lorem-ipsum-generator': loremIpsumGenerator,
-  'timezone-converter': zeitzonenRechner,
-  'hash-generator': hashGenerator,
-  'qr-code-generator': qrCodeGenerator,
-  'sql-formatter': sqlFormatter,
-  'xml-formatter': xmlFormatter,
-  'css-formatter': cssFormatter,
-  'jwt-decoder': jwtDecoder,
-  'contrast-checker': kontrastPruefer,
-  'json-diff': jsonDiff,
-  'json-to-csv': jsonZuCsv,
-  'image-diff': bildDiff,
-  'yard-to-meter': yardZuMeter,
-  'mm-to-inch': millimeterZuZoll,
-  'nautical-mile-to-km': seemeileZuKilometer,
-  'gram-to-ounce': grammZuUnzen,
-  'lb-to-kg': pfundZuKilogramm,
-  'stone-to-kg': stoneZuKilogramm,
-  'tonne-to-pound': tonneZuPfund,
-  'hectare-to-acre': hektarZuAcre,
-  'km2-to-mi2': quadratkilometerZuQuadratmeile,
-  'liter-to-gallon': literZuGallonen,
-  'ml-to-floz': milliliterZuUnzen,
+
+type ToolLoader = () => Promise<ToolConfig>;
+
+const loaders: Record<string, ToolLoader> = {
+  'meter-to-feet': () => import('./tools/meter-zu-fuss').then((m) => m.meterZuFuss),
+  'foot-to-meter': () => import('./tools/fuss-zu-meter').then((m) => m.fussZuMeter),
+  'png-jpg-to-webp': () => import('./tools/png-jpg-to-webp').then((m) => m.pngJpgToWebp),
+  'remove-background': () =>
+    import('./tools/hintergrund-entferner').then((m) => m.hintergrundEntferner),
+  'cm-to-inch': () => import('./tools/zentimeter-zu-zoll').then((m) => m.zentimeterZuZoll),
+  'km-to-mile': () => import('./tools/kilometer-zu-meilen').then((m) => m.kilometerZuMeilen),
+  'kg-to-lb': () => import('./tools/kilogramm-zu-pfund').then((m) => m.kilogrammZuPfund),
+  'celsius-to-fahrenheit': () =>
+    import('./tools/celsius-zu-fahrenheit').then((m) => m.celsiusZuFahrenheit),
+  'sqm-to-sqft': () =>
+    import('./tools/quadratmeter-zu-quadratfuss').then((m) => m.quadratmeterZuQuadratfuss),
+  'hevc-to-h264': () => import('./tools/hevc-zu-h264').then((m) => m.hevcZuH264),
+  'inch-to-cm': () => import('./tools/zoll-zu-zentimeter').then((m) => m.zollZuZentimeter),
+  'hex-to-rgb': () => import('./tools/hex-rgb-konverter').then((m) => m.hexRgbKonverter),
+  'uuid-generator': () => import('./tools/uuid-generator').then((m) => m.uuidGenerator),
+  'password-generator': () =>
+    import('./tools/passwort-generator').then((m) => m.passwortGenerator),
+  'json-formatter': () => import('./tools/json-formatter').then((m) => m.jsonFormatter),
+  'character-counter': () =>
+    import('./tools/character-counter').then((m) => m.characterCounter),
+  'regex-tester': () => import('./tools/regex-tester').then((m) => m.regexTester),
+  'text-diff': () => import('./tools/text-diff').then((m) => m.textDiff),
+  'unix-timestamp': () => import('./tools/unix-timestamp').then((m) => m.unixTimestamp),
+  'base64-encoder': () => import('./tools/base64-encoder').then((m) => m.base64Encoder),
+  'url-encoder-decoder': () =>
+    import('./tools/url-encoder-decoder').then((m) => m.urlEncoderDecoder),
+  'roman-numerals': () => import('./tools/roemische-zahlen').then((m) => m.roemischeZahlen),
+  'lorem-ipsum-generator': () =>
+    import('./tools/lorem-ipsum-generator').then((m) => m.loremIpsumGenerator),
+  'timezone-converter': () =>
+    import('./tools/zeitzonen-rechner').then((m) => m.zeitzonenRechner),
+  'hash-generator': () => import('./tools/hash-generator').then((m) => m.hashGenerator),
+  'qr-code-generator': () =>
+    import('./tools/qr-code-generator').then((m) => m.qrCodeGenerator),
+  'sql-formatter': () => import('./tools/sql-formatter').then((m) => m.sqlFormatter),
+  'xml-formatter': () => import('./tools/xml-formatter').then((m) => m.xmlFormatter),
+  'css-formatter': () => import('./tools/css-formatter').then((m) => m.cssFormatter),
+  'jwt-decoder': () => import('./tools/jwt-decoder').then((m) => m.jwtDecoder),
+  'contrast-checker': () => import('./tools/kontrast-pruefer').then((m) => m.kontrastPruefer),
+  'json-diff': () => import('./tools/json-diff').then((m) => m.jsonDiff),
+  'json-to-csv': () => import('./tools/json-zu-csv').then((m) => m.jsonZuCsv),
+  'image-diff': () => import('./tools/bild-diff').then((m) => m.bildDiff),
+  'yard-to-meter': () => import('./tools/yard-zu-meter').then((m) => m.yardZuMeter),
+  'mm-to-inch': () => import('./tools/millimeter-zu-zoll').then((m) => m.millimeterZuZoll),
+  'nautical-mile-to-km': () =>
+    import('./tools/seemeile-zu-kilometer').then((m) => m.seemeileZuKilometer),
+  'gram-to-ounce': () => import('./tools/gramm-zu-unzen').then((m) => m.grammZuUnzen),
+  'lb-to-kg': () => import('./tools/pfund-zu-kilogramm').then((m) => m.pfundZuKilogramm),
+  'stone-to-kg': () => import('./tools/stone-zu-kilogramm').then((m) => m.stoneZuKilogramm),
+  'tonne-to-pound': () => import('./tools/tonne-zu-pfund').then((m) => m.tonneZuPfund),
+  'hectare-to-acre': () => import('./tools/hektar-zu-acre').then((m) => m.hektarZuAcre),
+  'km2-to-mi2': () =>
+    import('./tools/quadratkilometer-zu-quadratmeile').then(
+      (m) => m.quadratkilometerZuQuadratmeile,
+    ),
+  'liter-to-gallon': () => import('./tools/liter-zu-gallonen').then((m) => m.literZuGallonen),
+  'ml-to-floz': () =>
+    import('./tools/milliliter-zu-unzen').then((m) => m.milliliterZuUnzen),
 };
 
-export function getToolConfig(toolId: string): ToolConfig | undefined {
-  return toolRegistry[toolId];
+/** Lightweight existence check — no module load. Use for filtering before
+ *  you commit to awaiting the config (e.g. inside getStaticPaths filter). */
+export function hasTool(toolId: string): boolean {
+  return toolId in loaders;
+}
+
+/** List every registered tool id without resolving any module. */
+export function getRegisteredToolIds(): string[] {
+  return Object.keys(loaders);
+}
+
+export async function getToolConfig(toolId: string): Promise<ToolConfig | undefined> {
+  const loader = loaders[toolId];
+  if (!loader) return undefined;
+  return loader();
 }

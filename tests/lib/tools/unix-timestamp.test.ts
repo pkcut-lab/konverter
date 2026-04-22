@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { unixTimestamp } from '../../../src/lib/tools/unix-timestamp';
+import { unixTimestamp, parseTimestampInput } from '../../../src/lib/tools/unix-timestamp';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
 
 describe('unixTimestamp config', () => {
-  it('parses as valid ConverterConfig', () => {
+  it('parses as valid FormatterConfig', () => {
     const r = parseToolConfig(unixTimestamp);
     expect(r.ok).toBe(true);
   });
@@ -16,28 +16,56 @@ describe('unixTimestamp config', () => {
 
   it('has the expected identity fields', () => {
     expect(unixTimestamp.id).toBe('unix-timestamp');
-    expect(unixTimestamp.type).toBe('converter');
+    expect(unixTimestamp.type).toBe('formatter');
     expect(unixTimestamp.categoryId).toBe('time');
-    expect(unixTimestamp.units.from.id).toBe('s');
-    expect(unixTimestamp.units.to.id).toBe('ms');
-    expect(unixTimestamp.decimals).toBe(0);
+    expect(unixTimestamp.mode).toBe('custom');
   });
 
-  it('formula is linear with factor 1000', () => {
-    expect(unixTimestamp.formula).toEqual({ type: 'linear', factor: 1000 });
+  it('ships a placeholder', () => {
+    expect(unixTimestamp.placeholder).toBeTruthy();
+    expect(unixTimestamp.placeholder).toContain('1700000000');
+  });
+});
+
+describe('parseTimestampInput', () => {
+  it('parses a 10-digit string as Unix seconds', () => {
+    const { date, interpretedAs } = parseTimestampInput('1700000000');
+    expect(date.getTime()).toBe(1700000000 * 1000);
+    expect(interpretedAs).toContain('Sekunden');
   });
 
-  it('converts 0 seconds to 0 milliseconds (epoch)', () => {
-    const factor = unixTimestamp.formula.type === 'linear' ? unixTimestamp.formula.factor : NaN;
-    expect(0 * factor).toBe(0);
+  it('parses a 13-digit string as Unix milliseconds', () => {
+    const { date, interpretedAs } = parseTimestampInput('1700000000000');
+    expect(date.getTime()).toBe(1700000000000);
+    expect(interpretedAs).toContain('Millisekunden');
   });
 
-  it('converts 86400 seconds to 86400000 milliseconds (1 day)', () => {
-    const factor = unixTimestamp.formula.type === 'linear' ? unixTimestamp.formula.factor : NaN;
-    expect(86400 * factor).toBe(86_400_000);
+  it('parses an ISO-8601 string as Date', () => {
+    const { date, interpretedAs } = parseTimestampInput('2024-03-15T12:00:00Z');
+    expect(date.toISOString()).toBe('2024-03-15T12:00:00.000Z');
+    expect(interpretedAs).toContain('Datum');
   });
 
-  it('examples include epoch, 1-day, current-era and Y2038 boundary', () => {
-    expect(unixTimestamp.examples).toEqual([0, 86400, 1745230000, 2147483647]);
+  it('parses epoch zero as 1970', () => {
+    const { date } = parseTimestampInput('0');
+    expect(date.getTime()).toBe(0);
+  });
+
+  it('throws on empty input', () => {
+    expect(() => parseTimestampInput('')).toThrow();
+  });
+
+  it('throws on unrecognised input', () => {
+    expect(() => parseTimestampInput('not a timestamp or date')).toThrow();
+  });
+});
+
+describe('unixTimestamp.format', () => {
+  it('produces a multi-line report with UTC, ISO and Unix lines', () => {
+    const out = unixTimestamp.format('1700000000');
+    expect(out).toContain('UTC:');
+    expect(out).toContain('ISO 8601:');
+    expect(out).toContain('Unix (s):    1700000000');
+    expect(out).toContain('Unix (ms):   1700000000000');
   });
 });

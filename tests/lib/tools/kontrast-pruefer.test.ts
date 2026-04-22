@@ -160,15 +160,15 @@ describe('format function (integration)', () => {
   it('reports 21:1 for black on white', () => {
     const result = kontrastPruefer.format('#000000 #FFFFFF');
     expect(result).toContain('21.00:1');
-    expect(result).toContain('\u2705'); // pass emoji
-    expect(result).not.toContain('\u274C'); // no fail emoji
+    expect(result).toContain('bestanden');
+    expect(result).not.toContain('nicht bestanden');
   });
 
   it('reports 1:1 for white on white', () => {
     const result = kontrastPruefer.format('#FFFFFF #FFFFFF');
     expect(result).toContain('1.00:1');
-    expect(result).not.toContain('\u2705'); // no pass emoji
-    expect(result).toContain('\u274C'); // fail emoji
+    // no pass badge expected
+    expect(result).toContain('nicht bestanden');
   });
 
   it('handles 3-digit hex shorthand', () => {

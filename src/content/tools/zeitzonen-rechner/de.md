@@ -1,5 +1,5 @@
 ---
-toolId: "zeitzonen-rechner"
+toolId: "timezone-converter"
 language: "de"
 title: "Zeitzonen umrechnen — Uhrzeit weltweit konvertieren"
 headingHtml: "Zeitzonen <em>umrechnen</em>"

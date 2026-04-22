@@ -154,9 +154,10 @@ function convertTimezone(input: string): string {
 }
 
 export const zeitzonenRechner: FormatterConfig = {
-  id: 'zeitzonen-rechner',
+  id: 'timezone-converter',
   type: 'formatter',
   categoryId: 'time',
   mode: 'custom',
   format: convertTimezone,
+  placeholder: '14:30 Europe/Berlin',
 };

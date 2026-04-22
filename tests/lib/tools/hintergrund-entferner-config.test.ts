@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { hintergrundEntferner } from '../../../src/lib/tools/hintergrund-entferner';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
-import { toolRegistry } from '../../../src/lib/tool-registry';
+import { getToolConfig, hasTool } from '../../../src/lib/tool-registry';
 import { slugMap } from '../../../src/lib/slug-map';
 import { getRuntime } from '../../../src/lib/tools/tool-runtime-registry';
 
@@ -41,8 +41,9 @@ describe('hintergrund-entferner config + registry', () => {
     expect(typeof hintergrundEntferner.prepare).toBe('function');
   });
 
-  it('is registered in tool-registry', () => {
-    expect(toolRegistry['remove-background']).toBe(hintergrundEntferner);
+  it('is registered in tool-registry', async () => {
+    expect(hasTool('remove-background')).toBe(true);
+    expect(await getToolConfig('remove-background')).toBe(hintergrundEntferner);
   });
 
   it('is registered in slug-map for de', () => {

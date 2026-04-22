@@ -64,23 +64,34 @@ export const formatterSchema = base.extend({
   type: z.literal('formatter'),
   mode: z.enum(['pretty', 'minify', 'custom']),
   format: z.function(),
+  // Optional inverse transform — if present, the Formatter shell renders an
+  // "Encode ↔ Decode" pill-toggle and calls this when decode is active.
+  // Used by base64-encoder, url-encoder-decoder.
+  inverse: z.function().optional(),
+  inverseLabel: z.string().optional(),
+  placeholder: z.string().optional(),
+  inversePlaceholder: z.string().optional(),
 });
 
 export const validatorSchema = base.extend({
   type: z.literal('validator'),
   rule: z.string().min(1),
   validate: z.function(),
+  placeholder: z.string().optional(),
 });
 
 export const analyzerSchema = base.extend({
   type: z.literal('analyzer'),
   metrics: z.array(idLabelPair).min(1),
+  placeholder: z.string().optional(),
 });
 
 export const comparerSchema = base.extend({
   type: z.literal('comparer'),
   diffMode: z.enum(['text', 'json', 'csv']),
   diff: z.function(),
+  placeholderA: z.string().optional(),
+  placeholderB: z.string().optional(),
 });
 
 export const toggleVisibleIfSchema = z.enum(['source-gt-1080p']);
@@ -157,8 +168,9 @@ export type GeneratorConfig = Omit<z.infer<typeof generatorSchema>, 'generate'> 
   generate: (config?: Record<string, unknown>) => string;
 };
 
-export type FormatterConfig = Omit<z.infer<typeof formatterSchema>, 'format'> & {
+export type FormatterConfig = Omit<z.infer<typeof formatterSchema>, 'format' | 'inverse'> & {
   format: (input: string) => string;
+  inverse?: (input: string) => string;
 };
 
 export type ValidatorConfig = Omit<z.infer<typeof validatorSchema>, 'validate'> & {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { hevcZuH264 } from '../../../src/lib/tools/hevc-zu-h264';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
-import { toolRegistry } from '../../../src/lib/tool-registry';
+import { getToolConfig, hasTool } from '../../../src/lib/tool-registry';
 import { slugMap } from '../../../src/lib/slug-map';
 import { getRuntime } from '../../../src/lib/tools/tool-runtime-registry';
 
@@ -45,8 +45,9 @@ describe('hevc-zu-h264 config + registry', () => {
     expect(() => hevcZuH264.process(new Uint8Array([0]))).toThrow();
   });
 
-  it('is registered in tool-registry', () => {
-    expect(toolRegistry['hevc-to-h264']).toBe(hevcZuH264);
+  it('is registered in tool-registry', async () => {
+    expect(hasTool('hevc-to-h264')).toBe(true);
+    expect(await getToolConfig('hevc-to-h264')).toBe(hevcZuH264);
   });
 
   it('is registered in slug-map for de as hevc-zu-h264', () => {

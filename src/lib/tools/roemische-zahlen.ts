@@ -219,4 +219,5 @@ export const roemischeZahlen: FormatterConfig = {
   categoryId: 'text',
   mode: 'custom',
   format: convertRomanNumerals,
+  placeholder: '2026\n\noder:\nMMXXVI',
 };

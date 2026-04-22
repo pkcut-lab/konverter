@@ -58,4 +58,8 @@ export const urlEncoderDecoder: FormatterConfig = {
   categoryId: 'dev',
   mode: 'custom',
   format: encodeUrl,
+  inverse: decodeUrl,
+  inverseLabel: 'Decode',
+  placeholder: 'https://example.com/suche?q=hallo welt&lang=de',
+  inversePlaceholder: 'https%3A%2F%2Fexample.com%2Fsuche%3Fq%3Dhallo%20welt',
 };

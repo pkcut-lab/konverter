@@ -28,4 +28,5 @@ export const jsonFormatter: FormatterConfig = {
   categoryId: 'dev',
   mode: 'pretty',
   format: formatJson,
+  placeholder: '{"name":"Ada","role":"dev","tags":["astro","svelte"]}',
 };

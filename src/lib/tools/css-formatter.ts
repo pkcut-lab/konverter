@@ -222,4 +222,5 @@ export const cssFormatter: FormatterConfig = {
   categoryId: 'dev',
   mode: 'pretty',
   format: formatCss,
+  placeholder: '.card{display:flex;gap:1rem;padding:24px 16px;border:1px solid #e5e5e5;}',
 };

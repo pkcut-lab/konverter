@@ -503,4 +503,5 @@ export const hashGenerator: FormatterConfig = {
   categoryId: 'dev',
   mode: 'custom',
   format: formatAllHashes,
+  placeholder: 'Hallo Welt',
 };

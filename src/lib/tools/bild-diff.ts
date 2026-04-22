@@ -21,7 +21,7 @@ const SEPARATOR = '===';
  * (or regular Canvas in older browsers).
  * Returns { width, height, data: Uint8ClampedArray }.
  */
-async function decodeImageData(
+export async function decodeImageData(
   dataUrl: string,
 ): Promise<{ width: number; height: number; data: Uint8ClampedArray }> {
   // Validate data URL format
@@ -58,7 +58,7 @@ async function decodeImageData(
  * Compare two RGBA pixel arrays of the same length. Returns the count of
  * pixels that differ and per-channel total absolute error.
  */
-function comparePixels(
+export function comparePixels(
   a: Uint8ClampedArray,
   b: Uint8ClampedArray,
   tolerance: number,
@@ -100,11 +100,11 @@ function parseTolerance(lines: string[]): { tolerance: number; startLine: number
   return { tolerance: 0, startLine: 0 };
 }
 
-function formatPercent(ratio: number): string {
+export function formatPercent(ratio: number): string {
   return (ratio * 100).toFixed(2).replace('.', ',') + ' %';
 }
 
-function formatNumber(n: number): string {
+export function formatNumber(n: number): string {
   return n.toLocaleString('de-DE');
 }
 

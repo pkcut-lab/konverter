@@ -1,14 +1,13 @@
-import type { FormatterConfig } from './schemas';
+import type { ComparerConfig } from './schemas';
 
 /**
  * JSON-Diff — compares two JSON documents and reports differences with
  * JSON-Path locations and type-change detection.
  * Pure client-side, no server contact, no dependencies.
  *
- * Input convention: both JSON documents separated by a line containing
- * only "===" (the Formatter component provides a single textarea).
- * Output: human-readable diff report with one line per difference,
- * each prefixed by its JSON-Path (e.g. $.items[0].name).
+ * Renders via the generic Comparer component: two textareas A/B. The
+ * `diff(a, b)` entry point parses each document independently and walks
+ * them recursively.
  */
 
 interface DiffEntry {
@@ -156,69 +155,28 @@ function deepEqual(a: unknown, b: unknown): boolean {
   return false;
 }
 
-const SEPARATOR = '===';
-
-function formatJsonDiff(input: string): string {
-  const trimmed = input.trim();
+function parseJson(raw: string, label: 'A' | 'B'): unknown {
+  const trimmed = raw.trim();
   if (trimmed === '') {
-    throw new Error('Bitte zwei JSON-Dokumente eingeben, getrennt durch eine Zeile mit "===".');
+    throw new Error(`JSON ${label} ist leer.`);
   }
 
-  // Split on the first line that is exactly "==="
-  const lines = trimmed.split('\n');
-  let sepIndex = -1;
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i]!.trim() === SEPARATOR) {
-      sepIndex = i;
-      break;
-    }
-  }
-
-  if (sepIndex === -1) {
-    throw new Error(
-      'Trennzeile "===" nicht gefunden. Füge zwischen den beiden JSON-Dokumenten eine Zeile mit "===" ein.',
-    );
-  }
-
-  const leftRaw = lines.slice(0, sepIndex).join('\n').trim();
-  const rightRaw = lines.slice(sepIndex + 1).join('\n').trim();
-
-  if (leftRaw === '') {
-    throw new Error('Das erste JSON-Dokument (vor "===") ist leer.');
-  }
-  if (rightRaw === '') {
-    throw new Error('Das zweite JSON-Dokument (nach "===") ist leer.');
-  }
-
-  let left: unknown;
-  let right: unknown;
-
+  // Support a leading "// ignore-array-order" directive in either pane
+  const withoutDirective = trimmed.replace(/^\/\/\s*ignore-array-order\s*\n?/i, '');
   try {
-    left = JSON.parse(leftRaw);
+    return JSON.parse(withoutDirective);
   } catch (e) {
     const msg = e instanceof SyntaxError ? e.message : 'Unbekannter Fehler';
-    throw new Error(`Syntaxfehler im ersten JSON: ${msg}`);
+    throw new Error(`Syntaxfehler in JSON ${label}: ${msg}`);
   }
+}
 
-  try {
-    right = JSON.parse(rightRaw);
-  } catch (e) {
-    const msg = e instanceof SyntaxError ? e.message : 'Unbekannter Fehler';
-    throw new Error(`Syntaxfehler im zweiten JSON: ${msg}`);
-  }
+function diffJson(a: string, b: string): string {
+  const ignoreArrayOrder =
+    /^\s*\/\/\s*ignore-array-order/i.test(a) || /^\s*\/\/\s*ignore-array-order/i.test(b);
 
-  // Detect ignore-array-order flag: if the first line before the separator
-  // starts with "// ignore-array-order" we enable it.
-  const ignoreArrayOrder = lines[0]!.trim().toLowerCase() === '// ignore-array-order';
-  const effectiveLeft = ignoreArrayOrder ? lines.slice(1, sepIndex).join('\n').trim() : leftRaw;
-  if (ignoreArrayOrder) {
-    try {
-      left = JSON.parse(effectiveLeft);
-    } catch (e) {
-      const msg = e instanceof SyntaxError ? e.message : 'Unbekannter Fehler';
-      throw new Error(`Syntaxfehler im ersten JSON: ${msg}`);
-    }
-  }
+  const left = parseJson(a, 'A');
+  const right = parseJson(b, 'B');
 
   const diffs: DiffEntry[] = [];
   collectDiffs(left, right, '$', diffs, ignoreArrayOrder);
@@ -229,8 +187,9 @@ function formatJsonDiff(input: string): string {
 
   const summary = buildSummary(diffs);
   const details = diffs.map(formatDiffEntry).join('\n');
+  const hint = ignoreArrayOrder ? '\n\n(Array-Reihenfolge wird ignoriert)' : '';
 
-  return `${summary}\n\n${details}`;
+  return `${summary}\n\n${details}${hint}`;
 }
 
 function buildSummary(diffs: DiffEntry[]): string {
@@ -261,10 +220,12 @@ function formatDiffEntry(entry: DiffEntry): string {
   }
 }
 
-export const jsonDiff: FormatterConfig = {
+export const jsonDiff: ComparerConfig = {
   id: 'json-diff',
-  type: 'formatter',
+  type: 'comparer',
   categoryId: 'dev',
-  mode: 'custom',
-  format: formatJsonDiff,
+  diffMode: 'json',
+  diff: diffJson,
+  placeholderA: '{\n  "name": "Ada",\n  "langs": ["de", "en"]\n}',
+  placeholderB: '{\n  "name": "Ada",\n  "langs": ["de", "fr"],\n  "active": true\n}',
 };

@@ -359,4 +359,5 @@ export const sqlFormatter: FormatterConfig = {
   categoryId: 'dev',
   mode: 'pretty',
   format: formatSql,
+  placeholder: 'select u.id, u.email, count(o.id) from users u left join orders o on o.user_id=u.id where u.active=1 group by u.id order by 3 desc limit 10;',
 };

@@ -1,11 +1,4 @@
 import { processWebp } from './process-webp';
-import {
-  removeBackground,
-  prepareBackgroundRemovalModel,
-  reencodeLastResult,
-  clearLastResult,
-  isPrepared,
-} from './remove-background';
 
 /**
  * Client-side runtime registry for FileTools.
@@ -19,11 +12,34 @@ import {
  *   - `process` — required, the actual conversion
  *   - `prepare` — optional, lazy-load step (e.g. ML model download)
  *
+ * Heavy dependencies (ML pipelines, WASM codecs, >100 KB libs) MUST be
+ * dynamic-imported inside the entry thunks, never at module top. Static
+ * imports in this file fan out to every FileTool page regardless of whether
+ * that page uses the dependency. See `remove-background` and `hevc-to-h264`
+ * below for the lazy-load + sync-shim pattern.
+ *
  * Adding a new file-tool requires three edits:
  *   1. Pure module(s) under `src/lib/tools/`
  *   2. Tool config in `src/lib/tool-registry.ts`
  *   3. Runtime entry below
  */
+
+// Lazy singleton for remove-background. `@huggingface/transformers` is ~1 MB
+// of ONNX runtime scaffolding — we must keep it out of the shared bundle and
+// off /de/png-jpg-zu-webp (which doesn't use ML at all). Load the first time
+// the user actually invokes the background-remover.
+type RemoveBgModule = typeof import('./remove-background');
+let removeBgModulePromise: Promise<RemoveBgModule> | null = null;
+let removeBgModule: RemoveBgModule | null = null;
+function loadRemoveBg(): Promise<RemoveBgModule> {
+  if (!removeBgModulePromise) {
+    removeBgModulePromise = import('./remove-background').then((m) => {
+      removeBgModule = m;
+      return m;
+    });
+  }
+  return removeBgModulePromise;
+}
 
 export type ProgressCallback = (progress: number) => void;
 
@@ -56,18 +72,31 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       }),
   },
   'remove-background': {
-    process: (input, config) =>
-      removeBackground(input, {
+    process: async (input, config) => {
+      const m = await loadRemoveBg();
+      return m.removeBackground(input, {
         format:
           typeof config?.format === 'string' &&
           (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
             ? config.format
             : 'png',
-      }),
-    prepare: (onProgress) => prepareBackgroundRemovalModel(onProgress),
-    reencode: (format) => reencodeLastResult(format as 'png' | 'webp' | 'jpg'),
-    isPrepared: () => isPrepared(),
-    clearLastResult: () => clearLastResult(),
+      });
+    },
+    prepare: async (onProgress) => {
+      const m = await loadRemoveBg();
+      return m.prepareBackgroundRemovalModel(onProgress);
+    },
+    reencode: async (format) => {
+      const m = await loadRemoveBg();
+      return m.reencodeLastResult(format as 'png' | 'webp' | 'jpg');
+    },
+    // isPrepared + clearLastResult stay sync so FileTool.svelte can call them
+    // in its `$derived` / reset path without turning them into effects. Before
+    // the first process/prepare call the module isn't loaded yet, so isPrepared
+    // is `false` (correct: no model in memory) and clearLastResult is a no-op
+    // (correct: no cached bitmap yet).
+    isPrepared: () => removeBgModule?.isPrepared() ?? false,
+    clearLastResult: () => removeBgModule?.clearLastResult(),
   },
   'hevc-to-h264': {
     process: async (input, config, onProgress) => {

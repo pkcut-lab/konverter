@@ -2,12 +2,10 @@
  * BG-Remover pure module.
  *
  * Singleton-cached pipeline (Transformers.js v4 + onnx-community/BEN2-ONNX).
- * Module is dynamic-imported by the FileTool runtime so the Hauptbundle
- * stays under 100 KB gzip — this file itself is fine to import statically.
- * We use a static import for `@huggingface/transformers` here: by the time
- * this module is loaded, the FileTool has already decided to use it, so
- * deferring transformers.js further doesn't save bytes (the chunk split
- * happens at the consumer).
+ * Entry-points are dynamic-imported by `tool-runtime-registry.ts` (thunk +
+ * memoized module promise) so `@huggingface/transformers` splits into its
+ * own chunk and never ships to pages that don't use it. Any static import
+ * of this file from the shared bundle will re-introduce the regression.
  *
  * Cache lifetime: pipeline + lastResultCanvas live at module scope. The
  * FileTool component calls `clearLastResult()` on its reset path to avoid

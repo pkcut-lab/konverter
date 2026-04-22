@@ -116,4 +116,5 @@ export const jsonZuCsv: FormatterConfig = {
   categoryId: 'dev',
   mode: 'custom',
   format: formatJsonToCsv,
+  placeholder: '[\n  {"name":"Ada","city":"Berlin","score":92},\n  {"name":"Ben","city":"Wien","score":87}\n]',
 };

@@ -121,4 +121,5 @@ export const jwtDecoder: FormatterConfig = {
   categoryId: 'dev',
   mode: 'custom',
   format: decodeJwt,
+  placeholder: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFkYSIsImlhdCI6MTcwMDAwMDAwMH0.hKXMRsqB7JvYPzgNzgPjgKoN3R5i5TcJj0h8v7v_d14',
 };

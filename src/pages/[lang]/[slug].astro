@@ -6,9 +6,17 @@ import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
 import ColorConverter from '../../components/tools/ColorConverter.svelte';
 import Formatter from '../../components/tools/Formatter.svelte';
+import BildDiffTool from '../../components/tools/BildDiffTool.svelte';
+import QrCodeGeneratorTool from '../../components/tools/QrCodeGeneratorTool.svelte';
+import ContrastCheckerTool from '../../components/tools/ContrastCheckerTool.svelte';
+import RegexTesterTool from '../../components/tools/RegexTesterTool.svelte';
+import Comparer from '../../components/tools/Comparer.svelte';
+import Analyzer from '../../components/tools/Analyzer.svelte';
+import Generator from '../../components/tools/Generator.svelte';
+import Validator from '../../components/tools/Validator.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
-import { getToolConfig } from '../../lib/tool-registry';
+import { getToolConfig, hasTool } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 
@@ -17,39 +25,66 @@ import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 // Keeps config.id out of the generic components (CONVENTIONS.md §Tool-
 // Components) — the switch lives at the route layer.
 const HEX_COLOR_TOOL_ID = 'hex-to-rgb';
+const IMAGE_DIFF_TOOL_ID = 'image-diff';
+const QR_GENERATOR_TOOL_ID = 'qr-code-generator';
+const CONTRAST_CHECKER_TOOL_ID = 'contrast-checker';
+const REGEX_TESTER_TOOL_ID = 'regex-tester';
+const CUSTOM_FORMATTER_IDS = new Set<string>([
+  HEX_COLOR_TOOL_ID,
+  IMAGE_DIFF_TOOL_ID,
+  QR_GENERATOR_TOOL_ID,
+  CONTRAST_CHECKER_TOOL_ID,
+]);
 
 const componentByType = {
   converter: Converter,
   'file-tool': FileTool,
   formatter: Formatter,
+  comparer: Comparer,
+  analyzer: Analyzer,
+  generator: Generator,
+  validator: Validator,
 } as const;
 
 export async function getStaticPaths() {
   const entries = await getCollection('tools');
   // Types that have a Svelte component in componentByType. Defined inline
   // because Astro isolates getStaticPaths from page-level consts.
-  const routableTypes = new Set(['converter', 'file-tool', 'formatter']);
-  return entries
-    .filter((entry) => {
+  const routableTypes = new Set([
+    'converter',
+    'file-tool',
+    'formatter',
+    'comparer',
+    'analyzer',
+    'generator',
+    'validator',
+  ]);
+
+  // Resolve every candidate entry's config in parallel so SSG builds don't
+  // serialise module loads across 1000+ tools. tool-registry is lazy now
+  // (see `src/lib/tool-registry.ts` docstring) — calling `getToolConfig` for
+  // each entry only loads that entry's config module, not all 44+.
+  const resolved = await Promise.all(
+    entries.map(async (entry) => {
       const slug = getSlug(entry.data.toolId, entry.data.language);
-      const config = slug ? getToolConfig(entry.data.toolId) : undefined;
-      // Skip content entries whose toolId has no registry config or no component
-      // yet. This allows data-only tools (e.g. generator type without Generator.svelte)
-      // to exist in the content collection without breaking the build.
-      return slug && config && routableTypes.has(config.type);
-    })
-    .map((entry) => {
-      const slug = getSlug(entry.data.toolId, entry.data.language)!;
-      return {
-        params: { lang: entry.data.language, slug },
-        props: { entry, slug },
-      };
-    });
+      if (!slug || !hasTool(entry.data.toolId)) return null;
+      const config = await getToolConfig(entry.data.toolId);
+      if (!config || !routableTypes.has(config.type)) return null;
+      return { entry, slug };
+    }),
+  );
+
+  return resolved
+    .filter((r): r is { entry: (typeof entries)[number]; slug: string } => r !== null)
+    .map(({ entry, slug }) => ({
+      params: { lang: entry.data.language, slug },
+      props: { entry, slug },
+    }));
 }
 
 type Props = { entry: CollectionEntry<'tools'>; slug: string };
 const { entry, slug } = Astro.props;
-const config = getToolConfig(entry.data.toolId);
+const config = await getToolConfig(entry.data.toolId);
 
 if (!config) {
   throw new Error(
@@ -134,8 +169,49 @@ const jsonLd = buildToolJsonLd(
           {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
             <ColorConverter config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id !== HEX_COLOR_TOOL_ID && (
-            <Formatter config={config} client:load />
+          {config.type === 'formatter' && config.id === IMAGE_DIFF_TOOL_ID && (
+            <BildDiffTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === QR_GENERATOR_TOOL_ID && (
+            <QrCodeGeneratorTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === CONTRAST_CHECKER_TOOL_ID && (
+            <ContrastCheckerTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
+            <Formatter
+              config={config}
+              placeholder={config.placeholder ?? ''}
+              inversePlaceholder={config.inversePlaceholder ?? ''}
+              inverseLabel={config.inverseLabel ?? 'Decode'}
+              client:load
+            />
+          )}
+          {config.type === 'comparer' && (
+            <Comparer
+              config={config}
+              placeholderA={config.placeholderA ?? ''}
+              placeholderB={config.placeholderB ?? ''}
+              client:load
+            />
+          )}
+          {config.type === 'analyzer' && (
+            <Analyzer
+              config={config}
+              placeholder={config.placeholder ?? ''}
+              client:load
+            />
+          )}
+          {config.type === 'generator' && <Generator config={config} client:load />}
+          {config.type === 'validator' && config.id === REGEX_TESTER_TOOL_ID && (
+            <RegexTesterTool config={config} client:load />
+          )}
+          {config.type === 'validator' && config.id !== REGEX_TESTER_TOOL_ID && (
+            <Validator
+              config={config}
+              placeholder={config.placeholder ?? ''}
+              client:load
+            />
           )}
         </section>
 

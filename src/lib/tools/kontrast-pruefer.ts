@@ -112,8 +112,8 @@ function formatContrastReport(input: string): string {
   const ratio = round2(contrastRatio(lumFg, lumBg));
   const result = evaluateContrast(ratio);
 
-  const pass = '\u2705';
-  const fail = '\u274C';
+  const pass = 'bestanden';
+  const fail = 'nicht bestanden';
 
   const lines: string[] = [];
   lines.push(`Vordergrund: #${fg.toUpperCase()}`);
@@ -141,6 +141,26 @@ export {
   evaluateContrast,
   parseColors,
 };
+
+/**
+ * Structured evaluation for the live UI. Returns null for invalid hex input
+ * so the component can gate preview rendering.
+ */
+export function evaluatePair(
+  fgHex: string,
+  bgHex: string,
+): { ratio: number; fg: string; bg: string; result: WcagResult } | null {
+  const fg = normalizeHex(fgHex);
+  const bg = normalizeHex(bgHex);
+  if (!fg || !bg) return null;
+
+  const rgbFg = hexToRgb(fg);
+  const rgbBg = hexToRgb(bg);
+  const lumFg = relativeLuminance(rgbFg.r, rgbFg.g, rgbFg.b);
+  const lumBg = relativeLuminance(rgbBg.r, rgbBg.g, rgbBg.b);
+  const ratio = round2(contrastRatio(lumFg, lumBg));
+  return { ratio, fg, bg, result: evaluateContrast(ratio) };
+}
 
 export const kontrastPruefer: FormatterConfig = {
   id: 'contrast-checker',

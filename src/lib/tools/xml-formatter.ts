@@ -167,4 +167,5 @@ export const xmlFormatter: FormatterConfig = {
   categoryId: 'dev',
   mode: 'pretty',
   format: formatXml,
+  placeholder: '<?xml version="1.0"?><book><title>Astro</title><author>Ada</author></book>',
 };

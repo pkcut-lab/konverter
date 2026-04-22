@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
   import { QUICK_COLORS } from '../../lib/tools/hex-rgb-konverter-presets';
+  import { loadFormatter, type FormatFn } from '../../lib/tools/formatter-runtime-registry';
 
   interface Props {
     config: FormatterConfig;
@@ -9,12 +10,28 @@
 
   let { config }: Props = $props();
 
+  // Lazy-load the formatter module so only the hex-rgb-konverter chunk ships
+  // on this page, not all 17 formatters. See formatter-runtime-registry.ts.
+  let format = $state<FormatFn | undefined>(undefined);
+  $effect(() => {
+    const id = config.id;
+    let cancelled = false;
+    void loadFormatter(id).then((entry) => {
+      if (cancelled) return;
+      format = entry?.format;
+    });
+    return () => {
+      cancelled = true;
+    };
+  });
+
   let hexInput = $state<string>('#FF5733');
   let copyStates = $state<Record<string, CopyState>>({});
 
   const output = $derived.by(() => {
+    if (!format) return '';
     try {
-      return config.format(hexInput);
+      return format(hexInput);
     } catch {
       // Formatter contract allows throw for invalid input. Swallow —
       // the Ungültig-banner (lines 139–142) takes over, no output block.

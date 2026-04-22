@@ -1,20 +1,120 @@
-import type { ConverterConfig } from './schemas';
+import type { FormatterConfig } from './schemas';
 
 /**
- * Unix Timestamp — converts between seconds (POSIX/Unix) and
- * milliseconds (JavaScript Date.now()). Linear factor 1000.
+ * Unix Timestamp — converts between Unix timestamps (seconds or milliseconds)
+ * and human-readable dates. Auto-detects the direction from the input shape:
+ *  - 10-digit integer → seconds since epoch
+ *  - 13-digit integer → milliseconds since epoch
+ *  - Anything else → parsed as a date string (ISO-8601 preferred).
  * Pure client-side, no server contact.
  */
 
-export const unixTimestamp: ConverterConfig = {
+const TEN_DIGIT_RE = /^-?\d{1,11}$/; // tolerate 1..11 digits for historical dates & future
+const THIRTEEN_DIGIT_RE = /^-?\d{12,14}$/;
+
+function pad(n: number, w = 2): string {
+  return String(n).padStart(w, '0');
+}
+
+function formatUtc(d: Date): string {
+  return (
+    `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
+    `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`
+  );
+}
+
+function formatLocal(d: Date): string {
+  return new Intl.DateTimeFormat('de-DE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  }).format(d);
+}
+
+function formatRelative(d: Date, now = new Date()): string {
+  const diffMs = d.getTime() - now.getTime();
+  const absMs = Math.abs(diffMs);
+  const units: Array<[number, string]> = [
+    [1000, 'Sekunden'],
+    [60 * 1000, 'Minuten'],
+    [60 * 60 * 1000, 'Stunden'],
+    [24 * 60 * 60 * 1000, 'Tagen'],
+    [30 * 24 * 60 * 60 * 1000, 'Monaten'],
+    [365 * 24 * 60 * 60 * 1000, 'Jahren'],
+  ];
+  if (absMs < units[0]![0]) return 'gerade eben';
+  let value = 0;
+  let label = 'Sekunden';
+  for (let i = units.length - 1; i >= 0; i--) {
+    if (absMs >= units[i]![0]) {
+      value = Math.floor(absMs / units[i]![0]);
+      label = units[i]![1];
+      break;
+    }
+  }
+  return diffMs > 0 ? `in ${value} ${label}` : `vor ${value} ${label}`;
+}
+
+function buildReport(d: Date, interpretedAs: string): string {
+  const s = Math.floor(d.getTime() / 1000);
+  const ms = d.getTime();
+  return [
+    `Interpretiert als: ${interpretedAs}`,
+    '',
+    `UTC:         ${formatUtc(d)}`,
+    `Lokalzeit:   ${formatLocal(d)}`,
+    `ISO 8601:    ${d.toISOString()}`,
+    '',
+    `Unix (s):    ${s}`,
+    `Unix (ms):   ${ms}`,
+    '',
+    `Relativ:     ${formatRelative(d)}`,
+  ].join('\n');
+}
+
+export function parseTimestampInput(raw: string): { date: Date; interpretedAs: string } {
+  const trimmed = raw.trim();
+  if (trimmed === '') {
+    throw new Error(
+      'Bitte Timestamp (z. B. 1700000000) oder Datum (z. B. 2024-03-15) eingeben.',
+    );
+  }
+
+  if (TEN_DIGIT_RE.test(trimmed)) {
+    const n = Number(trimmed);
+    return { date: new Date(n * 1000), interpretedAs: `Unix-Timestamp in Sekunden (${n})` };
+  }
+  if (THIRTEEN_DIGIT_RE.test(trimmed)) {
+    const n = Number(trimmed);
+    return {
+      date: new Date(n),
+      interpretedAs: `Unix-Timestamp in Millisekunden (${n})`,
+    };
+  }
+
+  const parsed = new Date(trimmed);
+  if (isNaN(parsed.getTime())) {
+    throw new Error(
+      'Eingabe nicht erkannt. Unterstützt: Unix-Sekunden (10 Stellen), Unix-ms (13 Stellen), ISO-8601 oder jedes vom Browser erkannte Datum.',
+    );
+  }
+  return { date: parsed, interpretedAs: `Datum (${trimmed})` };
+}
+
+function formatUnixTimestamp(input: string): string {
+  const { date, interpretedAs } = parseTimestampInput(input);
+  return buildReport(date, interpretedAs);
+}
+
+export const unixTimestamp: FormatterConfig = {
   id: 'unix-timestamp',
-  type: 'converter',
+  type: 'formatter',
   categoryId: 'time',
-  units: {
-    from: { id: 's', label: 'Sekunden (Unix)' },
-    to: { id: 'ms', label: 'Millisekunden (JS)' },
-  },
-  formula: { type: 'linear', factor: 1000 },
-  decimals: 0,
-  examples: [0, 86400, 1745230000, 2147483647],
+  mode: 'custom',
+  format: formatUnixTimestamp,
+  placeholder: '1700000000\n\noder:\n2024-03-15T12:00:00Z',
 };

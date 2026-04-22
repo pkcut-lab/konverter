@@ -65,4 +65,6 @@ export const textDiff: ComparerConfig = {
   categoryId: 'text',
   diffMode: 'text',
   diff: diffText,
+  placeholderA: 'Der schnelle braune Fuchs\nspringt über den faulen Hund.',
+  placeholderB: 'Der schnelle rote Fuchs\nspringt über den faulen Hund.\nPunkt.',
 };

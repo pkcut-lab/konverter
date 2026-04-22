@@ -14,7 +14,7 @@ describe('zeitzonenRechner config', () => {
   });
 
   it('has the expected identity fields', () => {
-    expect(zeitzonenRechner.id).toBe('zeitzonen-rechner');
+    expect(zeitzonenRechner.id).toBe('timezone-converter');
     expect(zeitzonenRechner.type).toBe('formatter');
     expect(zeitzonenRechner.categoryId).toBe('time');
     expect(zeitzonenRechner.mode).toBe('custom');
