@@ -6,20 +6,6 @@
 import type { ActiveLanguage } from '../hreflang';
 export type Lang = ActiveLanguage;
 
-export const TOOL_TYPES = [
-  'converter',
-  'calculator',
-  'generator',
-  'formatter',
-  'validator',
-  'analyzer',
-  'comparer',
-  'file-tool',
-  'interactive',
-] as const;
-
-export type ToolType = (typeof TOOL_TYPES)[number];
-
 export type Result<T, E = string> =
   | { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly error: E };

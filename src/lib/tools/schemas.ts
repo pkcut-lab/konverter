@@ -30,7 +30,7 @@ const base = z.object({
  * null. `linear` covers m↔ft, km↔mi, kg↔lb, etc. (~95% of converters).
  * `affine` covers °C↔°F, °C↔K. Extend with `power` (m²↔ft²) when needed.
  */
-export const formulaSchema = z.discriminatedUnion('type', [
+const formulaSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('linear'), factor: z.number() }),
   z.object({
     type: z.literal('affine'),
@@ -94,15 +94,15 @@ export const comparerSchema = base.extend({
   placeholderB: z.string().optional(),
 });
 
-export const toggleVisibleIfSchema = z.enum(['source-gt-1080p']);
+const toggleVisibleIfSchema = z.enum(['source-gt-1080p']);
 
-export const fileToolToggleSchema = z.object({
+const fileToolToggleSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
   visibleIf: toggleVisibleIfSchema.optional(),
 });
 
-export const fileToolPresetsSchema = z.object({
+const fileToolPresetsSchema = z.object({
   id: z.string().min(1),
   options: z
     .array(
@@ -182,9 +182,6 @@ export type AnalyzerConfig = z.infer<typeof analyzerSchema>;
 export type ComparerConfig = Omit<z.infer<typeof comparerSchema>, 'diff'> & {
   diff: (a: string, b: string) => string;
 };
-
-export type FileToolToggle = z.infer<typeof fileToolToggleSchema>;
-export type FileToolPresets = z.infer<typeof fileToolPresetsSchema>;
 
 export type FileToolConfig = Omit<z.infer<typeof fileToolSchema>, 'process' | 'prepare'> & {
   process: (

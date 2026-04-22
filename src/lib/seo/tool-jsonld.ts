@@ -1,4 +1,4 @@
-export interface ToolContentForJsonLd {
+interface ToolContentForJsonLd {
   toolId: string;
   lang: string;
   title: string;

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
+  import type { Direction } from '../../lib/tools/compute';
   import {
     loadFormatter,
     type FormatFn,
@@ -13,7 +14,6 @@
     inverseLabel?: string;
   }
   type CopyState = 'idle' | 'copied';
-  type Direction = 'forward' | 'inverse';
 
   let {
     config,

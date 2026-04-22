@@ -9,7 +9,7 @@ import type { Lang } from './tools/types';
  * Each entry uses the toolId (not the slug) so the Header.astro can resolve
  * the correct language-slug via slug-map.ts at render time.
  */
-export interface PopularTool {
+interface PopularTool {
   toolId: string;
   /** Short tab label shown in the bar. Kept short (≤20 chars) so all tabs fit.
    *  Map keyed by ISO-2 language code. Phase 1 is DE-only; more keys get added

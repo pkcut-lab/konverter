@@ -22,7 +22,7 @@ src/
 │   ├── site.ts             # SITE_URL constant
 │   ├── slug-map.ts         # Tool-ID ↔ Slug pro Lang
 │   └── tools/
-│       ├── types.ts        # Lang, Result<T,E>, TOOL_TYPES, ToolType
+│       ├── types.ts        # Lang, Result<T,E>
 │       ├── schemas.ts      # Zod-Schemas für 9 Tool-Typen + parseToolConfig()
 │       └── {tool-id}.ts    # Pro Tool: Config-Export (kein iconPrompt — entfernt 2026-04-20)
 ├── components/
