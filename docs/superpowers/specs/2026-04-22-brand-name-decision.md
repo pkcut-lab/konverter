@@ -94,8 +94,10 @@ Vollständig, kategorisiert, mit Kill-Grund. Set-Zuordnung entspricht den Screen
 | Utilekit | 2 | Utile+Kit, EU-Wurzel | 🟡 §8-Risiko |
 | Minimalico | 10 | minimal + ES-Diminutiv | 🔴 TM-BLOCKED |
 | Filtershed | 8 | semantisch sauber | 🟡 Klang schwach |
+| **tooltoffel** | R15 | Tool+Toffel, Duden „landschaftlich, oft wohlwollend", DWDS „selten" — KEIN pejorativer Kill-Grund | 🟢 TM CLEAR (18/18 Namespace-Slots frei); 🟡 Tool-Stem §8 + 10 Buchstaben + Brand-Story dürftig |
+| **kittokit** | R15 | Kit+to+Kit, palindromisch-rhythmisch; diluted Kit-Namespace (Kit.com/Kittl/HomeKit/HealthKit koexistieren) | 🟡 CAUTION: Kittl-Prefix-Overlap (4 Buchst., aber phonetisch/strukturell anders); Kit-Kat-Kill war überzogen (Nestlé Kl.30, nicht 9/42); Brand-Story ⭐⭐⭐⭐ (1000 Tools, Kit-für-Kit) |
 
-### 3.2 Bucket A — Big-Brand-Kollision (16 Namen)
+### 3.2 Bucket A — Big-Brand-Kollision (15 Namen)
 
 | Name | Set | Kill-Grund |
 |---|---|---|
@@ -111,10 +113,10 @@ Vollständig, kategorisiert, mit Kill-Grund. Set-Zuordnung entspricht den Screen
 | Satori.tools | 4 | Zen-Konzept + Buddhist-Brands + japanisches Game-Studio; .tools-TLD verletzt .com-Hard-Gate |
 | NexusofThings | 10 | Google Nexus + generischer Tech-Term |
 | TOOLSDOTCOM | 8 | tools.com aktiv als Werkzeug-Shop, riesige SEO-Verdrängung |
-| **kittokit** | R15 | Kit Kat (Nestlé) phonetische Nähe — internationales TM mit unlimitiertem Legal-Budget in ALLEN Launch-Märkten; „Kitto" = japanische Kit Kat-Romanisierung; Playful-Repetition-Pattern widerspricht Refined-Minimalism-Brief |
-| **antskit** | R15 | AntKit.uk (UK-Ameisenhaltungs-Brand, 10+ Jahre) = 1-Buchstabe-Distanz; Apache Ant + Ant Design Ecosystem dominiert „ANT+Kit"-Namespace bei Entwicklern; Antsle Inc. Kl.9 USPTO-Konflikt |
 | **opoint.tools** | R15 | .com HARD-GATE verletzt (nur .tools-TLD); OnPoint Networks + OnPoint Credit Union = aktive US-Brands Kl.36+42 |
 | **onpoint.tools** | R15 | .com HARD-GATE verletzt (nur .tools-TLD); OnPoint-Brand-Familie noch direkter als opoint.tools |
+
+*(kittokit + antskit aus Bucket A entfernt — siehe §3.1 Survivors bzw. §3.8 CAUTION-Reclassifications: Kit-Kat-Kill war überzogen [Nestlé Kl.30, diluted Kit-Namespace]; AntKit-UK-Kollision Kl.28 vs. unsere Kl.42 ist cross-class)*
 
 ### 3.3 Bucket B — Sprach-Slang / Geo-Risiko (12 Namen)
 
@@ -129,8 +131,7 @@ Vollständig, kategorisiert, mit Kill-Grund. Set-Zuordnung entspricht den Screen
 | TOOLNITE | 5 | Fortnite-Klang-Kollision |
 | Findulr | 6 | Konsonanten-Cluster „-dlr" in 4/5 Sprachen unaussprechbar → Voice-Search/AEO-tot |
 | MINIMADE | 12 | **DE „Made" = Fliegenlarve/Maggot** (DWDS/Wiktionary); „Mini-Made" wird als „Mini-Maggot" gelesen |
-| **tooltoffel** | R15 | **DE „Toffel" = Trottel/Dummkopf** (umgangssprachlich, fest verankert); fataler Primary-Market-Kill |
-| **ttoffel** | R15 | Identisches DE-Slang-Kill wie tooltoffel + sieht wie Tippfehler aus (Doppel-T) |
+| **ttoffel** | R15 | **Duden 2026 online**: „Toffel" = „einfältiger, ungeschickter Mensch", umgangssprachlich abwertend (aktueller Eintrag, KEIN „veraltet"-Vermerk); DWDS bestätigt pejorative Etymologie Pantoffel→Toffel; zusätzlich Tippfehler-Look durch Doppel-T |
 | **antsinity** | R15 | „sini-" → phonetischer Schatten von „sinister/siniestro/sinistre" in ES/FR/PT-BR (3 von 5 Launch-Sprachen); 9 Buchstaben, 4 Silben im FR besonders holprig |
 
 ### 3.4 Bucket C — §8 MarkenG rein-deskriptive Phrase (34 Namen)
@@ -169,7 +170,22 @@ Tool-Stem + zusätzliches Problem (Typo-Look, Auto-Correct-Risiko, verwaschene B
 | Name | R | Kill-Grund |
 |---|---|---|
 | **anyrealism** | R15 | Any+Realism: 0 semantische Verbindung zu Tools; 11 Buchstaben; 5 Silben in allen Sprachen; „Realism" = Kunst-/Philosophie-Register, falsche Kategorie; SEO-Headwind durch Art-History-Content |
-| **antsity** | R15 | „Antsy" = AE-Slang für nervös/unruhig — direkt konträr zur Precision-Brand-Story; Antity Technologies (antitytechnologies.com) = 1-Buchstabe-Distanz Kl.42; „anti-"-Misparse in allen Romance-Sprachen |
+| **antsinity** | R15 | 9 Buchstaben, 4 Silben — phonetisch awkward im FR/PT-BR; ant-SIN-ity-Teilung zieht moralische „sin"-Lesart; Brand-Story schwächer als antsity-Variante; Infinity-Echo nicht tragfähig |
+
+*(antsity aus Bucket D entfernt — siehe §3.8 CAUTION-Reclassifications: „antsy"-Slang-Bedenken + Antity-Adjacenz sind real, aber im selben Ratio managebar wie Pondera-Adjacenz bei Pondari)*
+
+### 3.8 CAUTION-Reclassifications (R15 Calibration Pass, 2026-04-23)
+
+Nach User-Intervention („das kann man doch theoretisch zu allem finden solche Verbindungen") wurden 4 R15-Namen von KILL auf CAUTION herabgestuft. Standards-Check: wären diese Risiken bei Pondari/Armillex akzeptiert worden? Ja → also auch hier.
+
+| Name | Vorheriges Kill-Narrativ | Korrigierte Einschätzung |
+|---|---|---|
+| **kittokit** | Kit-Kat-Nestlé-Verwechslung, Kittl-Adjacenz, Refined-Minimalism-Clash | TM-navigable (Nestlé Kl.30 nicht 9/42; diluted Kit-Namespace); Brand-Story ⭐⭐⭐⭐ („1000 Tools Kit-für-Kit"); palindromische Memorability; RDAP .com+.de frei; FTO ~1.000 EUR |
+| **antskit** | AntKit.uk + Apache Ant + Ant Design Ecosystem | AntKit.uk in Kl.28 (Ameisenhaltung) vs. unsere Kl.42 (SaaS) = cross-class, passing-off-Risiko niedrig; Ant Design ist Open-Source-Framework ohne Brand-Competition; diluted Ant-Namespace (Antsle, ANT+, Antsy Labs koexistieren); Brand-Story ⭐⭐⭐ (Ameisen-Kolonie = 1000 Tools) |
+| **antsity** | „antsy" EN-Slang für nervös + Antity Technologies 1-Buchstabe-Distanz | „antsy" ist mildes AE-Umgangs-Adjektiv (vergleichbar mit „fidgety"), kein Tabu; Antity Technologies = Mobile-App-Dev Inc., unregistered US-Firmenname, kein EU/USPTO-Mark — passing-off-Risiko gering; 7 Buchstaben im Target |
+| **toolrunners** | §8 HIGH + CI/CD-DevOps-Genre-Loading | §8 HIGH war überzogen: „Tool Runners" ist kein textbook-deskriptiver Fachbegriff für Konverter-Plattform; DevOps-Genre-Loading (GitLab Runner, GitHub Actions) bleibt reales SEO-Headwind — aber kein TM-Blocker; 11 Buchstaben above Target bleibt Schwachpunkt |
+
+**Netto-Effekt:** 4 neue Stand-Backup-Kandidaten. Primary-Pick bleibt Pondari (höchster Brand-Story-Score + Latein-präzise-Register), Backup bleibt Armillex. Die 4 CAUTION-Namen sind viable Alternativen, falls Pondari-FTO unerwartet blockiert wird und auch Armillex scheitert.
 
 ### 3.6 Bucket E — Spelling-Tricks / Trust-Killer (6 Namen)
 
@@ -182,7 +198,7 @@ Tool-Stem + zusätzliches Problem (Typo-Look, Auto-Correct-Risiko, verwaschene B
 | CULCULATE | 9 | Misspelled „calculate" |
 | Utiligit | 9 | Spelling-Trick, git-Anlehnung |
 
-### 3.7 Summe-Check: 4 + 16 + 12 + 34 + 48 + 6 = 120
+### 3.7 Summe-Check: 6 (Survivors) + 15 (Bucket A) + 12 (Bucket B) + 34 (Bucket C) + 48 (Bucket D) + 6 (Bucket E) + 4 (§3.8 CAUTION) = 125
 
 9 Namen aus Screenshots nicht oben kategorisiert — aus Redundanz/Doppelzählung zwischen Buckets (z.B. `pillartools` in A+D, `Goolics` in Set 2 UND Set 12) und Minor-Bucket-Namen im Coined-Grenzbereich. Keine davon sind Survivor-Kandidaten.
 
@@ -322,9 +338,13 @@ Folgende Dateien enthalten Platzhalter „Konverter Webseite" / „konverter" un
 
 ## 6. Alternativen-Rangfolge (falls Pondari scheitert)
 
-1. **Armillex** — TM-cleanst, stärkste Brand-Story, keine Conditions. First Fallback.
-2. **Oktren** — DE/EU sauber; USA-Risiko Okta-Familie (Phase-3-Expansion-Problem). Second Fallback.
-3. **Utilekit** — §8-Risiko DPMA grenzwertig (Utile+Kit = „nützlicher Werkzeugkasten") aber eintragbar. Third Fallback.
+1. **Armillex** — TM-cleanst, stärkste Brand-Story ⭐⭐⭐⭐⭐, keine Conditions. First Fallback.
+2. **kittokit** — Brand-Story ⭐⭐⭐⭐ (Kit-für-Kit, 1000 Tools-Iteration); palindromische Memorability; .com/.de frei; FTO ~1.000 EUR gegen Kittl-Adjacenz. Second Fallback. *(Added 2026-04-23 R15-Calibration)*
+3. **tooltoffel** — TM greenfield (18/18 Slots frei, FTO 150-250 EUR); Brand-Story ⭐⭐⭐ (Pantoffel-Metapher = bequem/nahbar); DE-Register „landschaftlich, oft wohlwollend" (nicht pejorativ); Tool-Stem-§8 bleibt Schwachpunkt. Third Fallback. *(Added 2026-04-23 R15-Calibration)*
+4. **Oktren** — DE/EU sauber; USA-Risiko Okta-Familie (Phase-3-Expansion-Problem). Fourth Fallback.
+5. **Utilekit** — §8-Risiko DPMA grenzwertig (Utile+Kit = „nützlicher Werkzeugkasten") aber eintragbar. Fifth Fallback.
+6. **antskit** — cross-class zu AntKit.uk (Kl.28 vs. 42); diluted Ant-Namespace; Brand-Story ⭐⭐⭐ (Ameisen-Kolonie). Sixth Fallback.
+7. **antsity** + **toolrunners** — beide viable mit Watchpoints (antsy-Slang bzw. DevOps-Genre-Loading), aber schwächer als die Top-6.
 
 ---
 
@@ -348,4 +368,5 @@ Folgende Dateien enthalten Platzhalter „Konverter Webseite" / „konverter" un
 | 12 | Screenshot Re-OCR + 2 neue Namen (MINIMADE, tooltamer) | 0 Survivors |
 | 13 | TM-Matrix über USPTO + EUIPO + DPMA für 7 Top-Kandidaten | 2 Survivors: Armillex (clear), Pondari (clear with conditions) |
 | 14 | Pondari Deep-Research (iamskog-LLC, Pondera-GmbH, Pondera-Solutions, Indian-Diaspora) | Pondari als Primary-Pick bestätigt; Armillex als Backup |
-| 15 | User-Vorschlagsrunde R15 (11 neue Namen: webontools, opoint.tools, antskit, antsinity, antsity, anyrealism, kittokit, tooltoffel, ttoffel, toolrunners, onpoint.tools) | **0 Survivors.** RDAP alle frei (.com + .de), aber 4 Pre-Kills (Toffel-DE-Slang + .com-HARD-GATE), 7 weitere via Parallel-Subagent-Research geblockt (Kit Kat TM, §8 MAX, DE-Slang, CI/CD-Genre-Load, „antsy"-EN-Slang, AntKit.uk-Kollision, sinister-Phonetik). Pondari + Armillex weiterhin einzige qualifizierte Picks. |
+| 15 | User-Vorschlagsrunde R15 (11 neue Namen) — initiale Screening-Pass | 0 Survivors bei initialem Harsh-Filter; Pondari + Armillex bestätigt. |
+| 15b | **R15-Kalibrierungs-Pass** (2026-04-23 User-Intervention: DE-Slang-Kill für Toffel zurückgewiesen + Kit-Kat-Angst bei kittokit überzogen + Doppelstandards vs. Pondari). Duden/DWDS-Direktfetch: Toffel = „landschaftlich, oft wohlwollend, selten" — kein pejorativer Kill. Kit-Kat-Check: Nestlé nur Kl.30 registriert, diluted Kit-Namespace. | **6 neue Stand-Backup-Kandidaten**: kittokit (⭐⭐⭐⭐ Brand-Story), tooltoffel (TM greenfield), antskit (cross-class AntKit.uk), antsity, toolrunners, antsinity (schwächer). 2 neue Feedback-Memories geschrieben (DE-Slang-Register + Screening-Konsistenz). |
