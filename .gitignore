@@ -40,3 +40,17 @@ evals/*/last-*-result.txt
 
 # Paperclip runtime flags (EMERGENCY_HALT etc. — per-workspace, nicht im repo)
 .paperclip/
+
+# User-local skill caches (adapter/animate/audit/... — global installed, nicht repo-versioned)
+.agents/
+.claude/
+.kiro/
+
+# Audit artifacts (Screenshots, Reports — volatile, >20 MB, lokal regenerierbar)
+audit/
+
+# Local git-account-override (liegt nur rum, nicht via include.path aktiv)
+.gitconfig-konverter
+
+# Generated skill-lockfile
+skills-lock.json
