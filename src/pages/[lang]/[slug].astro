@@ -155,7 +155,12 @@ const jsonLd = buildToolJsonLd(
     <div class:list={['tool-main', entry.data.aside && 'tool-main--with-aside']}>
       <div class="tool-main__primary">
         <section
-          class:list={['tool-section', config.type === 'file-tool' && 'tool-section--wide']}
+          class:list={[
+            'tool-section',
+            (config.type === 'file-tool' ||
+              config.type === 'comparer' ||
+              config.id === 'image-diff') && 'tool-section--wide',
+          ]}
           aria-label="Konverter"
         >
           {config.type === 'converter' && (
@@ -316,7 +321,7 @@ const jsonLd = buildToolJsonLd(
        dass der Playfair-<em>-Accent die Zeile sprengt. */
     font-size: clamp(2rem, 1rem + 2vw, 3.5rem);
     line-height: 1.1;
-    letter-spacing: -0.03em;
+    letter-spacing: var(--tracking-tightest);
     font-weight: 600;
     text-wrap: balance;
   }
