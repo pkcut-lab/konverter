@@ -34,6 +34,9 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [quadratkilometer-zu-quadratmeile](https://konverter-7qc.pages.dev/de/quadratkilometer-zu-quadratmeile) | area | shipped | 2026-04-24 | [dev](http://localhost:4322/de/quadratkilometer-zu-quadratmeile) |
+| [milliliter-zu-unzen](https://konverter-7qc.pages.dev/de/milliliter-zu-unzen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/milliliter-zu-unzen) |
+| [liter-zu-gallonen](https://konverter-7qc.pages.dev/de/liter-zu-gallonen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/liter-zu-gallonen) |
 | [hektar-zu-acre](https://konverter-7qc.pages.dev/de/hektar-zu-acre) | area | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hektar-zu-acre) |
 | [tonne-zu-pfund](https://konverter-7qc.pages.dev/de/tonne-zu-pfund) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/tonne-zu-pfund) |
 | [stone-zu-kilogramm](https://konverter-7qc.pages.dev/de/stone-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/stone-zu-kilogramm) |
