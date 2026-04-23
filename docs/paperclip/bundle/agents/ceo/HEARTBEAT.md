@@ -207,18 +207,26 @@ User entscheidet, ob Worker-Environment kaputt ist oder neu gestartet werden mus
 
 ### §6.1 Zweck
 
-Wenn die active queue leer ist, aber in `tasks/backlog/differenzierung-queue.md`
-noch Kandidaten warten, füllt der CEO autonom nach — statt idle zu gehen. So
-läuft Phase 1 über Nacht durch, ohne dass User morgens manuell 15 Tickets
-nachkippt. Hart gedeckelt, damit ein bug-infected Run nicht 30 schlechte Tools
-produziert, bevor der User aufwacht.
+Wenn die active queue leer ist, aber Kandidaten auf der Roadmap warten, füllt
+der CEO autonom nach — statt idle zu gehen. So läuft Phase 1 über Nacht durch,
+ohne dass User morgens manuell 15 Tickets nachkippt. Hart gedeckelt, damit ein
+bug-infected Run nicht 30 schlechte Tools produziert, bevor der User aufwacht.
+
+**Prio-Quelle (v1.2, 2026-04-23):**
+- **`docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md`** — verbindliche Dispatch-Reihenfolge.
+  Extraktions-Muster: Zeilen mit `| **N** | \`slug\``, N aufsteigend (Prio 1 → 789).
+- **`tasks/backlog/differenzierung-queue.md`** — Lookup-Tabelle für Metadata
+  (category, label, parent_hint) pro Slug. Die Tier-Struktur der Queue ist
+  **NICHT mehr Dispatch-Order** — die Tiers gelten nur als grobe Kategorisierung
+  fürs Nachschlagen.
 
 ### §6.2 Trigger-Gate (alle vier müssen grün sein)
 
 1. **Active queue leer** — keine offenen Tickets mit `status: todo|in_progress`
    unter `in_flight`-Cap.
-2. **Backlog verfügbar** — `tasks/backlog/differenzierung-queue.md` Queue-
-   Sektion hat ≥1 nicht-schon-gebauten Slug (Dedup gegen `src/content/tools/`).
+2. **Masterplan verfügbar** — `docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md`
+   existiert und hat ≥1 Prio-Zeile mit nicht-schon-gebauten Slug
+   (Dedup gegen `src/content/tools/`).
 3. **Tripwires green** — `tasks/tripwires.yaml`: keines der 5 Tripwires fired
    (`critic_reject_rate_rolling_10`, `build_fail_cluster`, `design_score_min`,
    `rate_limit_exhaustion`, `rulebook_drift_check`).
@@ -228,7 +236,7 @@ produziert, bevor der User aufwacht.
    Tools gegenübersteht. Zwischen 0.20 und 0.30 läuft die Pipeline normal
    weiter, aber OHNE Auto-Refill.
 
-### §6.3 Dispatch-Logic
+### §6.3 Dispatch-Logic (Masterplan-Priority-Driven, v1.2)
 
 ```bash
 # Hard-Caps (gelockt, User-Approval-Ticket für Änderung)
@@ -246,26 +254,61 @@ awk -v r="$reject_rate" 'BEGIN{exit !(r > 0.20)}' && {
   return
 }
 
-# Pick next N aus Queue (top-of-file, FIFO), mit Dedup + Enum-Check
 slots=$(( MAX_TICKETS_PER_HEARTBEAT - (in_flight - prev_in_flight) ))
 (( slots <= 0 )) && return
 
+# 1. Masterplan-Extraktion: Prio-Reihenfolge (N=1..789)
+masterplan="docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md"
+[[ ! -f "$masterplan" ]] && {
+  live_alarm "masterplan-missing" "$masterplan nicht gefunden — Dispatch blockiert"
+  return
+}
+
+# Extrahiert aus "| **42** | `mehrwertsteuer-rechner` | ..." → "42|mehrwertsteuer-rechner"
+# Dann numerisch sort nach Prio-Nummer (aufsteigend: 1 → 789).
+grep -oE '^\| \*\*[0-9]+\*\* \| `[a-z0-9-]+`' "$masterplan" | \
+  sed -E 's/^\| \*\*([0-9]+)\*\* \| `([a-z0-9-]+)`/\1|\2/' | \
+  sort -t '|' -k1 -n -u > /tmp/prio-order.txt
+
+# 2. Pro Slug in Prio-Reihenfolge: Queue-Lookup für Metadata + Dedup + Enum + Dispatch
+queue="tasks/backlog/differenzierung-queue.md"
 picked=0
-while IFS='|' read -r slug category label parent_hint; do
-  slug=$(echo "$slug" | xargs)   # trim
-  [[ -z "$slug" || "$slug" =~ ^# ]] && continue
+
+while IFS='|' read -r prio slug; do
+  [[ -z "$slug" ]] && continue
+
   # Dedup: skip wenn schon gebaut
   [[ -d "src/content/tools/$slug" ]] && continue
+
+  # Queue-Lookup: grep die Zeile mit diesem Slug (Format "| `slug` | category | label | parent_hint")
+  queue_line=$(grep -E "^\| +\`${slug}\` +\|" "$queue" | head -1)
+  if [[ -z "$queue_line" ]]; then
+    # Slug in Masterplan aber nicht in Queue — skip mit Digest-Note
+    digest_append "- Auto-Refill skip: prio=$prio slug=$slug nicht in differenzierung-queue.md"
+    continue
+  fi
+
+  # Metadata aus Queue-Zeile extrahieren (Pipe-separated)
+  category=$(echo "$queue_line" | awk -F'|' '{print $3}' | xargs)
+  label=$(echo "$queue_line"    | awk -F'|' '{print $4}' | xargs)
+  parent_hint=$(echo "$queue_line" | awk -F'|' '{print $5}' | xargs)
+
   # Enum-Check: Category muss in TOOL_CATEGORIES stehen
-  node -e "process.exit(require('./src/lib/tools/categories.ts').TOOL_CATEGORIES.includes('$category')?0:1)" || continue
+  node -e "process.exit(require('./src/lib/tools/categories.ts').TOOL_CATEGORIES.includes('$category')?0:1)" \
+    || { digest_append "- Auto-Refill skip: prio=$prio slug=$slug category=$category not in TOOL_CATEGORIES"; continue; }
 
-  dispatch_ticket "$slug" "$category" "$label" "$parent_hint"
-  append_refill_log "$slug" "$in_flight" "$reject_rate"
+  # Dispatch in Prio-Reihenfolge
+  dispatch_ticket "$slug" "$category" "$label" "$parent_hint" "prio=$prio"
+  append_refill_log "$slug" "$in_flight" "$reject_rate" "prio=$prio"
   (( ++picked >= slots )) && break
-done < <(queue_section_of "tasks/backlog/differenzierung-queue.md")
+done < /tmp/prio-order.txt
 
-(( picked > 0 )) && digest_append "- Auto-Refill: ${picked} ticket(s) dispatched aus differenzierung-queue"
+(( picked > 0 )) && digest_append "- Auto-Refill: ${picked} ticket(s) dispatched in Masterplan-Prio-Reihenfolge"
 ```
+
+**Kritische Invariante:** CEO dispatcht IMMER Prio 1 vor Prio 2 vor Prio 3 —
+unabhängig von dem Tier, in dem der Slug in `differenzierung-queue.md` steht.
+Die Queue-Reihenfolge ist für den Dispatch irrelevant.
 
 ### §6.4 Hard-Caps (gelockt)
 

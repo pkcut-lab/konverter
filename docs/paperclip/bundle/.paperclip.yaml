@@ -1,20 +1,42 @@
-# .paperclip.yaml — Runtime-Config für bundle-subpath Import
+# .paperclip.yaml — Runtime-Config (v2.0, 2026-04-23)
 #
 # Gelesen von `paperclipai company import docs/paperclip/bundle`. Alle Pfade
-# relativ zum Bundle-Root (= `docs/paperclip/bundle/`). Telemetry explizit
-# false — Scope unbekannt, strategische Metadaten-Leaks möglich, reversibel.
+# relativ zum Bundle-Root (= `docs/paperclip/bundle/`).
 #
-# Schema-Annahmen in v1 best-guess. Phase B verifiziert via
-# `paperclipai configure --help` + Dry-Run-Import.
+# v2.0 Updates:
+# - +activation.phase_X_active (16 → 29 → 33 Agenten-Gating)
+# - +routines[] mit Cron-Schedules (12 routinen)
+# - +budgets.per_model_monthly_cap (Opus / Sonnet / Haiku Split)
+# - +budgets.api_caps (Brave, Perplexity, Firecrawl)
+# - +heartbeat.per_agent_override (für Agenten mit routine statt 30m)
+# - rulebooks.shared[] um 4 neue Files erweitert + AGENTS-SCHEMA
 
 company: konverter
 
 telemetry: false
 
+# Default-Heartbeat für coordinator (CEO). Per-Agent-Override über Agent-
+# Frontmatter `heartbeat: routine` + optional `heartbeat_cadence: cron-...`.
+# Agenten mit `heartbeat: event-driven` werden NICHT in Loop gezogen.
 heartbeat:
   cadence: 30m
-  idle_behavior: wait         # kein Leer-Zyklus bei leerem Backlog
-  phase_1_warmup: 60m         # erste Woche Phase 2 langsamer
+  idle_behavior: wait
+  phase_1_warmup: 60m
+  # v2.0: Override-Protokoll
+  per_agent_override:
+    # Agenten, die statt 30m via Cron laufen (siehe routines[] unten)
+    - seo-geo-monitor
+    - analytics-interpreter
+    - competitor-watcher
+    - content-refresher
+    - internal-linking-strategist
+    - skill-scout
+    - uptime-sentinel
+    - legal-auditor          # monthly-rulings + event
+    - retro-audit-agent      # monthly + 20-tool-event
+    - cross-tool-consistency-auditor
+    - meta-reviewer
+    - performance-auditor    # event + weekly-prod
 
 git:
   required_user: pkcut-lab
@@ -22,9 +44,6 @@ git:
     - DennisJedlicka
   check_before_commit: scripts/check-git-account.sh
 
-# Runtime-Pfade — relativ zum Projekt-Root, NICHT zum Bundle-Root
-# Konvention: paperclip resolved `runtime.*` gegen die Working-Directory
-# (projekt-root), alles andere gegen das Bundle.
 runtime:
   tasks_root: tasks
   memory_root: memory
@@ -35,16 +54,93 @@ runtime:
   budgets_config: tasks/budgets.yaml
   metrics_log: tasks/metrics.jsonl
 
+# v2.0: Budget-Strategy mit Per-Model-Split + API-Caps
+# STATUS (2026-04-23, ehrlich):
+#   - per_model_monthly_cap: TRACKED in YAML, NICHT enforced.
+#     scripts/budget-guard.mjs v1.0 kennt nur anthropic_monthly_token_cap +
+#     daily_tokens_cap. Extension auf per_model_monthly_cap = Tranche B.
+#   - api_caps: TRACKED in YAML, NICHT enforced.
+#     budget-guard.mjs kennt weder firecrawl/brave/perplexity noch die
+#     Per-Ticket-Limits. Agents müssen aktuell manuell respektieren was hier
+#     steht — enforcement wird in Tranche B via budget-guard-extension
+#     implementiert.
+#   - forbidden_apis: TRACKED in YAML, NICHT enforced.
+#     Hard-Block auf serpapi/ahrefs/semrush/moz_api passiert heute via
+#     Agent-SOUL/TOOLS-Doc "Forbidden"-Klauseln, NICHT via Runtime-Gate.
 budgets:
   config_path: tasks/budgets.yaml
-  fail_secure: true           # fehlt Config → alle kostenpflichtigen Calls blockiert
-  firecrawl_monthly_usd_cap: 0
+  fail_secure: true
+
+  # Aggregate Caps (aktuell enforced via scripts/budget-guard.mjs)
   anthropic_monthly_token_cap: 50_000_000
   daily_tokens_cap: 2_000_000
 
+  # Cap-Precedence (Evaluation-Order, FIRST-HIT blocks — wie Firewall-Rules)
+  # ==========================================================================
+  # Parser-Semantik: Der Cap-Stack wird in dieser Reihenfolge abgearbeitet.
+  # Der ERSTE Cap, dessen Prüfung fehlschlägt (= Call würde Cap verletzen),
+  # blockt den Call. Nachfolgende Caps werden nicht mehr evaluiert
+  # (Short-Circuit). Kein "restriktiver gewinnt" / "min-of-all" — sondern
+  # First-Match.
+  #
+  # Beispiel: Opus-Agent will 800k Tokens, Aggregate bei 49.5M/50M,
+  # per_model_opus bei 14.8M/15M:
+  #   1. forbidden_apis: pass (Claude nicht in Liste)
+  #   2. api_caps_per_ticket: pass (kein Firecrawl/Brave/Perplexity)
+  #   3. api_caps_period: pass
+  #   4. daily_tokens_cap: pass
+  #   5. per_model_monthly_cap: BLOCK (14.8M + 0.8M = 15.6M > 15M)
+  #   → Call blockiert bei Schritt 5. anthropic_monthly_token_cap (Schritt 6)
+  #     wird nicht mehr geprüft.
+  #
+  # forbidden_apis ist Boolean-Liste (kein Numerik-Cap): Short-Circuit wenn
+  # der angeforderte API-Name in der Liste enthalten ist.
+  cap_precedence:
+    - forbidden_apis              # Boolean short-circuit
+    - api_caps_per_ticket         # Per-Call-Limits
+    - api_caps_period             # Tag/Woche/Monat pro API
+    - daily_tokens_cap            # Anthropic daily aggregate
+    - per_model_monthly_cap       # Opus/Sonnet/Haiku monthly split
+    - anthropic_monthly_token_cap # Aggregate monthly cap
+
+  # Per-Model Monthly Caps (v2.0 — TRACKED, enforcement = Tranche B)
+  # Summe: 15+30+5 = 50M, matched anthropic_monthly_token_cap exakt
+  per_model_monthly_cap:
+    opus_4_7: 15_000_000
+    sonnet_4_6: 30_000_000
+    haiku_4_5: 5_000_000
+  _per_model_monthly_cap_enforcement: planned  # flag für validate-agent-activation.mjs
+
+  # Per-API Caps (v2.0 — TRACKED, enforcement = Tranche B)
+  api_caps:
+    firecrawl:
+      monthly_usd_cap: 0         # free-tier (hard-enforced via FIRECRAWL_API_KEY = empty)
+      per_ticket_cap: 3
+      monthly_calls_cap: 60
+    brave_search:
+      monthly_calls_cap: 2000    # free-tier
+    perplexity:
+      per_minute_cap: 5          # free-tier
+      weekly_calls_cap: 300
+    webfetch:
+      per_ticket_cap: 200
+    google_search_console:
+      daily_cache_hours: 24      # OAuth, read-only
+  _api_caps_enforcement: planned   # flag für validate-agent-activation.mjs
+
+  # Forbidden-APIs — hard-block (aktuell via Agent-Doc-Forbidden-Klauseln)
+  # Runtime-Block via budget-guard.mjs = Tranche B
+  forbidden_apis:
+    - serpapi
+    - ahrefs
+    - semrush
+    - moz_api
+  _forbidden_apis_enforcement: doc-only  # flag für validate-agent-activation.mjs
+
 rulebooks:
-  base: ../..                 # = docs/paperclip/
+  base: ../..
   shared:
+    # v1.0
     - BRAND_GUIDE.md
     - TICKET_TEMPLATE.md
     - DOSSIER_REPORT.md
@@ -54,9 +150,15 @@ rulebooks:
     - EMERGENCY_HALT.md
     - SKILLS.md
     - README.md
+    # v2.0 NEU
+    - SEO-GEO-GUIDE.md
+    - PERFORMANCE-BUDGET.md
+    - ANALYTICS-RUBRIC.md
+    - LEGAL-CHECKLIST.md
+    - AGENTS-SCHEMA.md
 
 project_rulebooks:
-  base: ../../..              # = projekt-root
+  base: ../../..
   files:
     - CLAUDE.md
     - CONVENTIONS.md
@@ -67,11 +169,183 @@ project_rulebooks:
     - PROJECT.md
     - PROGRESS.md
 
-# Skills-Sequenz für UI-Arbeit (CLAUDE.md §5)
+# Skill-Sequenz für UI-Arbeit (CLAUDE.md §5) — unverändert
 skills:
   ui_sequence_pre:
     - minimalist-ui
     - frontend-design
   ui_sequence_post:
     - web-design-guidelines
-  hard_caps_override: true    # Rulebook-Hard-Caps überstimmen Skill-Defaults
+  hard_caps_override: true
+
+# Modell-Strategy (v2.0 NEU) — Paperclip setzt beim Hiring das Modell
+# basierend auf diesem Mapping (Default: sonnet-4-6 wenn Agent nicht gelistet)
+models:
+  default: sonnet-4-6
+  assignments:
+    opus_4_7:
+      - ceo
+      - legal-auditor
+      - differenzierungs-researcher
+      - seo-geo-strategist
+      - analytics-interpreter
+      - internal-linking-strategist
+      - meta-reviewer
+      - polish-agent
+      - cto
+    sonnet_4_6:
+      - tool-dossier-researcher
+      - tool-builder
+      - merged-critic
+      - content-critic
+      - design-critic
+      - a11y-auditor
+      - performance-auditor
+      - security-auditor
+      - seo-auditor
+      - platform-engineer
+      - seo-geo-monitor
+      - retro-audit-agent
+      - cross-tool-consistency-auditor
+      - conversion-critic
+      - faq-gap-finder
+      - schema-markup-enricher
+      - image-optimizer
+      - content-refresher
+      - competitor-watcher
+      - brand-voice-auditor
+      - translator
+      - i18n-specialist
+    haiku_4_5:
+      - skill-scout
+      - uptime-sentinel
+
+# Phase-Gating (v2.0 NEU)
+# Paperclip liest current_phase aus `runtime/current-phase.txt` (Default: 1)
+# und hired NUR Agenten aus dem entsprechenden phase_X_active-Array
+activation:
+  current_phase: 1
+  phase_1_active:
+    - ceo
+    - tool-dossier-researcher
+    - tool-builder
+    - merged-critic
+    - content-critic
+    - design-critic
+    - a11y-auditor
+    - performance-auditor
+    - security-auditor
+    - legal-auditor
+    - platform-engineer
+    - differenzierungs-researcher
+    - seo-geo-strategist
+    - schema-markup-enricher
+    - image-optimizer
+    - faq-gap-finder
+  phase_2_active:
+    # inherit phase_1 + zusätzlich
+    - seo-auditor
+    - seo-geo-monitor
+    - analytics-interpreter
+    - competitor-watcher
+    - content-refresher
+    - internal-linking-strategist
+    - conversion-critic
+    - retro-audit-agent
+    - cross-tool-consistency-auditor
+    - meta-reviewer
+    - polish-agent
+    - skill-scout
+    - uptime-sentinel
+  phase_3_active:
+    # inherit phase_1+2 + zusätzlich
+    - translator
+    - i18n-specialist
+    - brand-voice-auditor
+    - cto
+
+# Pre-Activation-Gate (v2.0 NEU) — Agent darf NUR gehired werden wenn:
+# 1. Slug in current_phase_active
+# 2. evals/<slug>/run-smoke.sh existiert UND exit 0
+# 3. Alle in AGENTS.md referenzierten Scripts existieren
+# Details in GAPS-AND-NEXT-STEPS.md §Per-Agent-Activation-Gate
+activation_gate:
+  require_evals: true
+  require_scripts: true
+  require_smoke_green: true
+
+# Scheduled Routines (v2.0 NEU) — registriert über Paperclip-Routine-API
+# nach Company-Import. Cron-Expressions in Europe/Berlin-Timezone.
+routines:
+  # Daily
+  - slug: uptime-daily
+    agent: uptime-sentinel
+    cron: "0 5 * * *"
+    time_zone: Europe/Berlin
+    description: "Tool-URL + Sitemap/Robots/LLMs Health-Check"
+
+  # Weekly (Mo-Fr, jeden Werktag ein anderer Routinen-Agent)
+  - slug: seo-geo-monitor-weekly
+    agent: seo-geo-monitor
+    cron: "0 6 * * 1"
+    time_zone: Europe/Berlin
+    description: "Rankings + AI-Citations Tracker"
+  - slug: analytics-interpreter-weekly
+    agent: analytics-interpreter
+    cron: "0 7 * * 2"
+    time_zone: Europe/Berlin
+    description: "Rework-Score Compute + Trigger"
+  - slug: skill-scout-weekly
+    agent: skill-scout
+    cron: "0 9 * * 3"
+    time_zone: Europe/Berlin
+    description: "Skill-Marketplace-Scan"
+  - slug: internal-linking-weekly
+    agent: internal-linking-strategist
+    cron: "0 8 * * 4"
+    time_zone: Europe/Berlin
+    description: "Topic-Cluster + Orphan-Report"
+  - slug: competitor-watcher-weekly
+    agent: competitor-watcher
+    cron: "0 6 * * 5"
+    time_zone: Europe/Berlin
+    description: "Competitor-Diff + Launch-Detection"
+  - slug: content-refresher-weekly
+    agent: content-refresher
+    cron: "0 9 * * 5"
+    time_zone: Europe/Berlin
+    description: "Stale-Trigger-Konsolidierung"
+  - slug: uptime-weekly-deep
+    agent: uptime-sentinel
+    cron: "0 4 * * 0"
+    time_zone: Europe/Berlin
+    description: "Broken-Link-Scan + CWV-Live"
+
+  # Monthly
+  - slug: legal-rulings-monthly
+    agent: legal-auditor
+    cron: "0 2 1 * *"
+    time_zone: Europe/Berlin
+    description: "BGH/EuGH-Sweep + Datenschutz-Aktualität"
+  - slug: retro-audit-monthly
+    agent: retro-audit-agent
+    cron: "0 3 1 * *"
+    time_zone: Europe/Berlin
+    description: "Full-Rulebook-Drift-Audit"
+  - slug: consistency-audit-monthly
+    agent: cross-tool-consistency-auditor
+    cron: "0 4 1 * *"
+    time_zone: Europe/Berlin
+    description: "Intra-Category-Drift pro Kategorie"
+  - slug: meta-review-monthly
+    agent: meta-reviewer
+    cron: "0 3 15 * *"
+    time_zone: Europe/Berlin
+    description: "Quis-custodiet — Critics auditieren"
+
+  # Weekly-Prod-Scan für Performance-Auditor
+  - slug: performance-prod-weekly
+    agent: performance-auditor
+    cron: "0 5 * * 6"
+    time_zone: Europe/Berlin
+    description: "Lighthouse gegen Prod-URLs"

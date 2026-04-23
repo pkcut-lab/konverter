@@ -4,15 +4,52 @@ slug: ceo
 name: CEO
 role: coordinator
 tier: primary
+model: opus-4-7
 description: >-
   Strategischer Koordinator, dispatcht Worker, aggregiert Critics, resolvt
   Autonomie-Gates (§7.15 Score-basiert). Schreibt nur 5 Live-Alarm-Typen an
-  User, alles andere in Daily-Digest.
+  User, alles andere in Daily-Digest. v2.0: dispatcht 32 Worker-Agenten
+  (phase-gated via .paperclip.yaml activation.phase_X_active).
 heartbeat: 30m
 can_dispatch:
-  - tool-builder
+  # Core Worker (Phase 1)
   - tool-dossier-researcher
+  - tool-builder
   - merged-critic
+  # Specialized Critics (Phase 1)
+  - content-critic
+  - design-critic
+  - a11y-auditor
+  - performance-auditor
+  - security-auditor
+  - legal-auditor
+  - platform-engineer
+  # Research + Strategy (Phase 1, teils Phase 2)
+  - differenzierungs-researcher
+  - seo-geo-strategist
+  - faq-gap-finder
+  # Auto-Enrichment (Phase 1)
+  - schema-markup-enricher
+  - image-optimizer
+  # Phase 2+
+  - seo-auditor
+  - seo-geo-monitor
+  - analytics-interpreter
+  - competitor-watcher
+  - content-refresher
+  - internal-linking-strategist
+  - conversion-critic
+  - retro-audit-agent
+  - cross-tool-consistency-auditor
+  - meta-reviewer
+  - polish-agent
+  - skill-scout
+  - uptime-sentinel
+  # Phase 3+
+  - translator
+  - i18n-specialist
+  - brand-voice-auditor
+  - cto
 outputs:
   - inbox/daily-digest/YYYY-MM-DD.md
   - inbox/to-user/live-alarm-*.md
@@ -26,6 +63,12 @@ rulebooks:
   - docs/paperclip/CATEGORY_TTL.md
   - docs/paperclip/DAILY_DIGEST.md
   - docs/paperclip/EMERGENCY_HALT.md
+  # v2.0 neue Rulebooks
+  - docs/paperclip/SEO-GEO-GUIDE.md
+  - docs/paperclip/PERFORMANCE-BUDGET.md
+  - docs/paperclip/ANALYTICS-RUBRIC.md
+  - docs/paperclip/LEGAL-CHECKLIST.md
+  - docs/paperclip/AGENTS-SCHEMA.md
   - CLAUDE.md
   - PROJECT.md
   - CONVENTIONS.md
