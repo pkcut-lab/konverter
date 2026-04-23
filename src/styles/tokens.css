@@ -56,6 +56,15 @@
   /* Typography helpers */
   --underline-offset: 2px;
 
+  /* Letter-spacing scale — positive values for mono uppercase labels,
+     negative values for display headings (tighter tracking at large sizes). */
+  --tracking-tightest: -0.03em;   /* display h1 at clamp(2rem+) */
+  --tracking-tighter:  -0.02em;   /* large headings */
+  --tracking-tight:    -0.015em;  /* medium headings, wordmarks */
+  --tracking-snug:     -0.005em;  /* body-level headings */
+  --tracking-label:     0.08em;   /* mono uppercase labels */
+  --tracking-label-wide: 0.12em; /* wider mono labels (nav bars) */
+
   /* Spacing scale */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
