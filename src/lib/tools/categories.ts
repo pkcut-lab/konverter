@@ -20,6 +20,16 @@ export const TOOL_CATEGORIES = [
   'dev',
   'color',
   'time',
+  'finance',
+  'construction',
+  'math',
+  'health',
+  'science',
+  'engineering',
+  'sport',
+  'automotive',
+  'education',
+  'agriculture',
 ] as const;
 
 export type ToolCategory = (typeof TOOL_CATEGORIES)[number];
