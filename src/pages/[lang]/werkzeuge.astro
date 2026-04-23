@@ -11,12 +11,26 @@ export async function getStaticPaths() {
 const { lang } = Astro.params as { lang: ActiveLanguage };
 
 const categoryOrder: readonly ToolCategory[] = [
+  'finance', 'construction',
+  'math', 'science', 'engineering',
+  'health', 'sport',
+  'automotive', 'agriculture', 'education',
   'length', 'weight', 'volume', 'area', 'distance', 'temperature',
   'image', 'video', 'audio', 'document',
   'text', 'color', 'time', 'dev',
 ] as const;
 
 const labelsDe: Record<ToolCategory, string> = {
+  finance: 'Finanzen',
+  construction: 'Bauen & Renovieren',
+  math: 'Mathematik',
+  science: 'Wissenschaft',
+  engineering: 'Technik & Ingenieur',
+  health: 'Gesundheit',
+  sport: 'Sport & Fitness',
+  automotive: 'Auto & Fahrzeug',
+  agriculture: 'Landwirtschaft',
+  education: 'Bildung & Schule',
   length: 'Länge',
   weight: 'Gewicht',
   area: 'Fläche',
@@ -66,7 +80,7 @@ const total = all.length;
 >
   <div class="index">
     <header class="index-hero">
-      <p class="eyebrow">Übersicht</p>
+      <p class="index-eyebrow">Übersicht</p>
       <h1>Alle Werkzeuge</h1>
       <p class="lede">
         {total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser —
@@ -84,9 +98,12 @@ const total = all.length;
     </nav>
 
     <div class="groups">
-      {groups.map((g) => (
+      {groups.map((g, idx) => (
         <section id={`cat-${g.id}`} class="group" aria-labelledby={`h-${g.id}`}>
           <header class="group-head">
+            <span class="group-head__num" aria-hidden="true">
+              {String(idx + 1).padStart(2, '0')}
+            </span>
             <h2 id={`h-${g.id}`}>{g.label}</h2>
             <span class="group-count" aria-label={`${g.items.length} Werkzeuge`}>
               {String(g.items.length).padStart(2, '0')}
@@ -114,7 +131,7 @@ const total = all.length;
     display: flex;
     flex-direction: column;
     gap: var(--space-12);
-    padding-top: var(--space-8);
+    padding-top: var(--space-12);
   }
 
   .index-hero {
@@ -125,17 +142,17 @@ const total = all.length;
     flex-direction: column;
     gap: var(--space-3);
   }
-  .eyebrow {
+  .index-eyebrow {
     margin: 0;
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     color: var(--color-text-subtle);
   }
   .index-hero h1 {
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tighter);
     text-wrap: balance;
   }
   .lede {
@@ -168,12 +185,11 @@ const total = all.length;
     font-size: var(--font-size-small);
     line-height: 1;
     transition: border-color var(--dur-fast) var(--ease-out),
-                background var(--dur-fast) var(--ease-out),
                 color var(--dur-fast) var(--ease-out);
   }
   .jump-pill:hover {
     border-color: var(--color-text-subtle);
-    background: var(--color-bg);
+    color: var(--color-text);
   }
   .jump-pill:focus-visible {
     outline: 2px solid var(--color-accent);
@@ -188,7 +204,7 @@ const total = all.length;
   .groups {
     display: flex;
     flex-direction: column;
-    gap: var(--space-12);
+    gap: var(--space-16);
     max-width: 60rem;
     width: 100%;
     margin: 0 auto;
@@ -197,27 +213,40 @@ const total = all.length;
   .group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-4);
     scroll-margin-top: var(--space-8);
   }
+
+  /* 3-column editorial header: orange counter | large H2 | mono count */
   .group-head {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: baseline;
-    justify-content: space-between;
+    gap: 0 var(--space-5);
+    padding-bottom: var(--space-4);
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-3);
+  }
+  .group-head__num {
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-accent);
+    white-space: nowrap;
   }
   .group-head h2 {
     margin: 0;
-    font-size: 1.375rem;
-    letter-spacing: -0.01em;
+    font-size: var(--font-size-h2);
+    letter-spacing: var(--tracking-tighter);
+    line-height: var(--font-lh-h2);
   }
   .group-count {
     font-family: var(--font-family-mono);
-    font-size: var(--font-size-small);
+    font-size: 0.6875rem;
     font-variant-numeric: tabular-nums;
     color: var(--color-text-subtle);
-    letter-spacing: 0.04em;
+    letter-spacing: var(--tracking-label);
+    white-space: nowrap;
   }
 
   .group-list {
@@ -270,7 +299,7 @@ const total = all.length;
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.35;
-    letter-spacing: -0.005em;
+    letter-spacing: var(--tracking-snug);
     transition: color var(--dur-fast) var(--ease-out);
   }
   .tool-row__tagline {
@@ -287,13 +316,22 @@ const total = all.length;
     }
   }
 
+  @media (max-width: 47.99rem) {
+    .group-head {
+      grid-template-columns: auto 1fr;
+    }
+    .group-count {
+      display: none;
+    }
+  }
+
   @media (max-width: 40rem) {
     .index {
       gap: var(--space-8);
-      padding-top: var(--space-6);
+      padding-top: var(--space-8);
     }
     .groups {
-      gap: var(--space-10);
+      gap: var(--space-12);
     }
   }
 </style>
