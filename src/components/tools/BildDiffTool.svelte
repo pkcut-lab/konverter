@@ -94,6 +94,54 @@
     else slotB = null;
   }
 
+  // Structured diff result — drives BOTH the big-number summary above
+  // and the detailed ASCII report below. Computing once avoids running
+  // comparePixels twice on every tolerance tick (33M-entry typed array).
+  type DiffResult =
+    | { kind: 'none' }
+    | { kind: 'incomparable' }
+    | {
+        kind: 'identical';
+        totalPixels: number;
+      }
+    | {
+        kind: 'different';
+        totalPixels: number;
+        diffCount: number;
+        channelDelta: [number, number, number, number];
+      };
+
+  const diffResult = $derived.by<DiffResult>(() => {
+    if (!slotA || !slotB) return { kind: 'none' };
+    const a = slotA;
+    const b = slotB;
+    if (a.width !== b.width || a.height !== b.height) {
+      return { kind: 'incomparable' };
+    }
+    const { diffCount, totalPixels, channelDelta } = comparePixels(
+      a.data,
+      b.data,
+      tolerance,
+    );
+    if (diffCount === 0) return { kind: 'identical', totalPixels };
+    return { kind: 'different', totalPixels, diffCount, channelDelta };
+  });
+
+  const sizeDiffBytes = $derived(
+    slotA && slotB ? Math.abs(slotA.sizeBytes - slotB.sizeBytes) : 0,
+  );
+  const largerFile = $derived(
+    slotA && slotB && slotA.sizeBytes !== slotB.sizeBytes
+      ? (slotA.sizeBytes > slotB.sizeBytes ? 'A' : 'B')
+      : null,
+  );
+
+  function formatSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }
+
   const report = $derived.by<string>(() => {
     if (!slotA || !slotB) return '';
     const a = slotA;
@@ -118,14 +166,13 @@
     lines.push('└──────────────────────────────────────────');
     lines.push('');
 
-    const sameSize = a.width === b.width && a.height === b.height;
     lines.push('┌─ Größenvergleich ────────────────────────');
     if (a.sizeBytes === b.sizeBytes) {
       lines.push('│  Dateigröße:   identisch');
     } else {
-      const diff = Math.abs(a.sizeBytes - b.sizeBytes);
-      const larger = a.sizeBytes > b.sizeBytes ? 'A' : 'B';
-      lines.push(`│  Differenz:    ${formatNumber(diff)} Bytes (Bild ${larger} größer)`);
+      lines.push(
+        `│  Differenz:    ${formatNumber(sizeDiffBytes)} Bytes (Bild ${largerFile} größer)`,
+      );
     }
     if (a.mime !== b.mime) {
       lines.push(`│  Hinweis:      Unterschiedliche Formate (${a.mime} vs. ${b.mime})`);
@@ -134,37 +181,30 @@
     lines.push('');
 
     lines.push('┌─ Pixel-Vergleich ────────────────────────');
-    if (!sameSize) {
+    if (diffResult.kind === 'incomparable') {
       lines.push('│  Status:       NICHT VERGLEICHBAR');
       lines.push('│  Die Bilder haben unterschiedliche Abmessungen.');
       lines.push('│  Pixelgenauer Vergleich braucht identische w × h.');
-    } else {
-      const { diffCount, totalPixels, channelDelta } = comparePixels(
-        a.data,
-        b.data,
-        tolerance,
+    } else if (diffResult.kind === 'identical') {
+      lines.push('│  Status:       IDENTISCH');
+      lines.push(`│  Alle ${formatNumber(diffResult.totalPixels)} Pixel stimmen überein.`);
+    } else if (diffResult.kind === 'different') {
+      const ratio = diffResult.diffCount / diffResult.totalPixels;
+      lines.push('│  Status:       UNTERSCHIEDLICH');
+      lines.push(
+        `│  Abweichende Pixel:  ${formatNumber(diffResult.diffCount)} von ${formatNumber(diffResult.totalPixels)}`,
       );
-      const ratio = totalPixels > 0 ? diffCount / totalPixels : 0;
-      if (diffCount === 0) {
-        lines.push('│  Status:       IDENTISCH');
-        lines.push(`│  Alle ${formatNumber(totalPixels)} Pixel stimmen überein.`);
-      } else {
-        lines.push('│  Status:       UNTERSCHIEDLICH');
-        lines.push(
-          `│  Abweichende Pixel:  ${formatNumber(diffCount)} von ${formatNumber(totalPixels)}`,
-        );
-        lines.push(`│  Abweichung:         ${formatPercent(ratio)}`);
-        lines.push(`│  Übereinstimmung:    ${formatPercent(1 - ratio)}`);
-        lines.push('│');
-        lines.push('│  Summe absoluter Deltas je Kanal (0–255):');
-        lines.push(`│    R: ${formatNumber(channelDelta[0])}`);
-        lines.push(`│    G: ${formatNumber(channelDelta[1])}`);
-        lines.push(`│    B: ${formatNumber(channelDelta[2])}`);
-        lines.push(`│    A: ${formatNumber(channelDelta[3])}`);
-      }
-      if (tolerance > 0) {
-        lines.push(`│  Toleranz:     ±${tolerance} pro Kanal`);
-      }
+      lines.push(`│  Abweichung:         ${formatPercent(ratio)}`);
+      lines.push(`│  Übereinstimmung:    ${formatPercent(1 - ratio)}`);
+      lines.push('│');
+      lines.push('│  Summe absoluter Deltas je Kanal (0–255):');
+      lines.push(`│    R: ${formatNumber(diffResult.channelDelta[0])}`);
+      lines.push(`│    G: ${formatNumber(diffResult.channelDelta[1])}`);
+      lines.push(`│    B: ${formatNumber(diffResult.channelDelta[2])}`);
+      lines.push(`│    A: ${formatNumber(diffResult.channelDelta[3])}`);
+    }
+    if (diffResult.kind !== 'incomparable' && tolerance > 0) {
+      lines.push(`│  Toleranz:     ±${tolerance} pro Kanal`);
     }
     lines.push('└──────────────────────────────────────────');
 
@@ -247,8 +287,85 @@
     </div>
   {/if}
 
+  {#if slotA && slotB && diffResult.kind !== 'none'}
+    {@const ratio =
+      diffResult.kind === 'different'
+        ? diffResult.diffCount / diffResult.totalPixels
+        : 0}
+    <section class="bd__summary" aria-label="Ergebnis-Übersicht">
+      <div
+        class="bd__status"
+        class:bd__status--identical={diffResult.kind === 'identical'}
+        class:bd__status--different={diffResult.kind === 'different'}
+        class:bd__status--incomparable={diffResult.kind === 'incomparable'}
+      >
+        <span class="bd__status-dot" aria-hidden="true"></span>
+        <span class="bd__status-label">
+          {#if diffResult.kind === 'identical'}Identisch
+          {:else if diffResult.kind === 'different'}Unterschiedlich
+          {:else}Nicht vergleichbar{/if}
+        </span>
+      </div>
+
+      <div class="bd__stats">
+        {#if diffResult.kind === 'incomparable'}
+          <div class="bd__stat bd__stat--wide">
+            <span class="bd__stat-label">Abmessungen</span>
+            <span class="bd__stat-value bd__stat-value--muted">
+              {slotA.width} × {slotA.height}
+              <span class="bd__stat-vs" aria-hidden="true">·</span>
+              {slotB.width} × {slotB.height}
+            </span>
+            <span class="bd__stat-sub">
+              Pixelgenauer Vergleich braucht identische Abmessungen.
+            </span>
+          </div>
+        {:else}
+          <div class="bd__stat">
+            <span class="bd__stat-label">Abweichung</span>
+            <span class="bd__stat-value" translate="no">
+              {diffResult.kind === 'identical' ? '0' : formatPercent(ratio).replace('%', '')}
+              <span class="bd__stat-unit">%</span>
+            </span>
+          </div>
+          <div class="bd__stat">
+            <span class="bd__stat-label">Übereinstimmung</span>
+            <span class="bd__stat-value bd__stat-value--success" translate="no">
+              {diffResult.kind === 'identical' ? '100' : formatPercent(1 - ratio).replace('%', '')}
+              <span class="bd__stat-unit">%</span>
+            </span>
+          </div>
+          <div class="bd__stat">
+            <span class="bd__stat-label">Abweichende Pixel</span>
+            <span class="bd__stat-value" translate="no">
+              {formatNumber(diffResult.kind === 'identical' ? 0 : diffResult.diffCount)}
+            </span>
+            <span class="bd__stat-sub">
+              von {formatNumber(diffResult.totalPixels)}
+            </span>
+          </div>
+        {/if}
+
+        <div class="bd__stat">
+          <span class="bd__stat-label">Größen-Diff</span>
+          {#if sizeDiffBytes === 0}
+            <span class="bd__stat-value bd__stat-value--success" translate="no">0 B</span>
+            <span class="bd__stat-sub">identisch</span>
+          {:else}
+            <span class="bd__stat-value" translate="no">
+              {formatSize(sizeDiffBytes)}
+            </span>
+            <span class="bd__stat-sub">
+              Bild {largerFile} größer
+            </span>
+          {/if}
+        </div>
+      </div>
+    </section>
+  {/if}
+
   <div class="bd__output-head">
-    <span class="bd__label">Vergleichsbericht</span>
+    <span class="bd__label">Detailbericht</span>
     <button
       type="button"
       class="bd__ghost-btn"
@@ -411,6 +528,133 @@
     outline: 2px solid var(--color-accent);
     outline-offset: var(--space-1);
   }
+  /* ---------- Summary block: big-number status card ---------------
+     Lifts the key metrics (Status, Abweichung %, Übereinstimmung %,
+     Abweichende Pixel, Größen-Diff) out of the ASCII report so users
+     see the answer immediately. The detailed report stays below for
+     copy/export. Pattern: editorial stat-grid, tokens only. */
+  .bd__summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+  }
+  .bd__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    align-self: flex-start;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-bg);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .bd__status-dot {
+    width: var(--space-2);
+    height: var(--space-2);
+    border-radius: 9999px;
+    background: var(--color-text-subtle);
+  }
+  .bd__status--identical .bd__status-dot {
+    background: var(--color-success);
+  }
+  .bd__status--identical .bd__status-label {
+    color: var(--color-text);
+  }
+  .bd__status--different .bd__status-dot {
+    background: var(--color-accent);
+  }
+  .bd__status--different .bd__status-label {
+    color: var(--color-text);
+  }
+
+  .bd__stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  @media (min-width: 32rem) {
+    .bd__stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 48rem) {
+    .bd__stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .bd__stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-border);
+  }
+  @media (min-width: 48rem) {
+    .bd__stat {
+      border-top: 0;
+      border-left: 1px solid var(--color-border);
+      padding: 0 var(--space-4);
+    }
+    .bd__stat:first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+  }
+  .bd__stat--wide {
+    grid-column: 1 / -1;
+  }
+  .bd__stat-label {
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .bd__stat-value {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .bd__stat-value--success {
+    color: var(--color-success);
+  }
+  .bd__stat-value--muted {
+    font-size: var(--font-size-body);
+    font-family: var(--font-family-mono);
+    color: var(--color-text-muted);
+  }
+  .bd__stat-unit {
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    color: var(--color-text-subtle);
+  }
+  .bd__stat-vs {
+    color: var(--color-text-subtle);
+    margin: 0 var(--space-1);
+  }
+  .bd__stat-sub {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text-subtle);
+    letter-spacing: 0.02em;
+  }
+
   .bd__output-head {
     display: flex;
     align-items: baseline;
