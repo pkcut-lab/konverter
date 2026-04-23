@@ -17,12 +17,17 @@ const overflow = Math.max(0, tools.length - CAP);
   <h2>Werkzeuge</h2>
   <ul>
     {visible.map((t) => (
-      <li><a href={t.href}>{t.title}</a></li>
+      <li>
+        <a href={t.href}>
+          <span class="tool-title">{t.shortTitle}</span>
+          <span class="tool-tagline">{t.tagline}</span>
+        </a>
+      </li>
     ))}
     {overflow > 0 && (
       <li class="overflow">
         {/* NBSP zwischen `+` und Zahl damit es nicht umbricht */}
-        <a href={`/${lang}/`}>{`+\u00A0${overflow} weitere Werkzeuge →`}</a>
+        <a href={`/${lang}`}>{`+ ${overflow} weitere Werkzeuge →`}</a>
       </li>
     )}
   </ul>
@@ -40,25 +45,59 @@ const overflow = Math.max(0, tools.length - CAP);
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-6);
     font-size: var(--font-size-small);
   }
+  li {
+    min-width: 0;
+  }
+  .overflow {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 40rem) {
+    ul {
+      grid-template-columns: 1fr;
+    }
+  }
   a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
     color: var(--color-text-muted);
     text-decoration: none;
     transition: color var(--dur-fast) var(--ease-out);
   }
-  a:hover,
+  /* Bold tool name vs. muted tagline creates a clear hierarchy in the
+     dense 2-column footer grid. Mirrors the editorial pattern from the
+     tool-overview page (werkzeuge.astro) at a smaller scale. */
+  .tool-title {
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: var(--tracking-snug);
+  }
+  .tool-tagline {
+    color: var(--color-text-subtle);
+    line-height: 1.4;
+  }
+  a:hover .tool-title,
+  a:focus-visible .tool-title {
+    color: var(--color-accent);
+  }
   a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+  .overflow a {
+    color: var(--color-text-muted);
+  }
+  .overflow a:hover,
+  .overflow a:focus-visible {
     color: var(--color-text);
     text-decoration: underline;
     text-underline-offset: var(--underline-offset);
-  }
-  a:focus-visible {
-    outline: 2px solid var(--color-text);
-    outline-offset: 2px;
   }
   .overflow {
     margin-top: var(--space-2);

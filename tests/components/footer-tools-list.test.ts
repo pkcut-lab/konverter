@@ -78,8 +78,11 @@ describe('FooterToolsList', () => {
     expect(idxBg).toBeGreaterThanOrEqual(0);
     expect(idxMeter).toBeGreaterThan(idxBg);
 
-    // Template side: component maps each tool to <a href={t.href}>{t.title}</a>.
-    expect(componentSrc).toMatch(/<a\s+href=\{t\.href\}>\{t\.title\}<\/a>/);
+    // Template side: component maps each tool to an anchor containing a
+    // bold shortTitle + muted tagline (two-line editorial hierarchy).
+    expect(componentSrc).toMatch(
+      /<a\s+href=\{t\.href\}>[\s\S]*?\{t\.shortTitle\}[\s\S]*?\{t\.tagline\}[\s\S]*?<\/a>/,
+    );
   });
 
   it('renders heading "Werkzeuge"', () => {
