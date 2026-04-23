@@ -187,6 +187,23 @@ Nach User-Intervention („das kann man doch theoretisch zu allem finden solche 
 
 **Netto-Effekt:** 4 neue Stand-Backup-Kandidaten. Primary-Pick bleibt Pondari (höchster Brand-Story-Score + Latein-präzise-Register), Backup bleibt Armillex. Die 4 CAUTION-Namen sind viable Alternativen, falls Pondari-FTO unerwartet blockiert wird und auch Armillex scheitert.
 
+### 3.9 R16-Pass (2026-04-23) — 8 Bucket-D-Namen neu evaluiert
+
+User-Initiative: „bei den screenshots warst du offt auch zu kleinlig — bitte prüfe diese 8". Gleiche kalibrierte Methodik wie R15b. Alle 8 Namen: 6/6 Namespace-Slots frei (.com/.de/npm/PyPI/GitHub-Org/-User).
+
+| Name | Brand-Story | TM-Verdict | FTO-Budget | Refined-Min-Fit | Gesamt-Verdict |
+|---|---|---|---|---|---|
+| **Simplegator** | ⭐⭐⭐⭐ | 🟢 CLEAR | 150-250 EUR | ★★ (Gator-Maskottchen-Clash) | CAUTION |
+| **DittoTool** | ⭐⭐⭐⭐ | 🟡 CAUTION (Ditto.live Kl.42) | 500-800 EUR | ★★★ | CAUTION |
+| **TOOLIDIAN** | ⭐⭐ | 🟢 CLEAR | 150-250 EUR | ★★★ | CAUTION (Story schwach) |
+| **tooltunnel** | ⭐⭐⭐ | 🟢 CLEAR | 150-250 EUR | ★★★ | CAUTION (VPN-Genre-Loading SEO-Headwind) |
+| **UltraSnips** | ⭐⭐⭐ | 🟡 CAUTION (UltiSnips Vim-Plugin Common-Law) | 500-800 EUR | ★★★ | CAUTION (Story deckt nur Text-Tool-Scope) |
+| **TOOLIZILLA** | ⭐⭐ | 🟡 CAUTION (Toho-Watch-Policy) | 500-800 EUR | ★★ (maximal-pop-Bruch) | CAUTION (tonal-dissonant zu Brief) |
+| **AllSimplify** | ⭐⭐ | 🟡 CAUTION (Simplifier AG DE-HQ) | 500-800 EUR | ★★ | WEAK (§8-Werbeanpreisung + Lifestyle-Register) |
+| **ModulaTools** | ⭐⭐⭐ | 🔴 BLOCKED (Modula S.p.A. Kl.7/9 + Modular Inc. $100M + textbook-§8) | — | ★★★ | **BLOCKED** |
+
+**Netto-Effekt R16:** 1 neuer BLOCKED (ModulaTools), 7 CAUTION/WEAK. Keiner erreicht Pondari/Armillex-Niveau. Aufnehmenswert als weitere Fallbacks: **Simplegator** (Position 8) und **DittoTool** (Position 9).
+
 ### 3.6 Bucket E — Spelling-Tricks / Trust-Killer (6 Namen)
 
 | Name | Set | Kill-Grund |
@@ -336,15 +353,31 @@ Folgende Dateien enthalten Platzhalter „Konverter Webseite" / „konverter" un
 
 ---
 
-## 6. Alternativen-Rangfolge (falls Pondari scheitert)
+## 6. Alternativen-Rangfolge (falls Pondari scheitert) — Stand 2026-04-23
 
-1. **Armillex** — TM-cleanst, stärkste Brand-Story ⭐⭐⭐⭐⭐, keine Conditions. First Fallback.
-2. **kittokit** — Brand-Story ⭐⭐⭐⭐ (Kit-für-Kit, 1000 Tools-Iteration); palindromische Memorability; .com/.de frei; FTO ~1.000 EUR gegen Kittl-Adjacenz. Second Fallback. *(Added 2026-04-23 R15-Calibration)*
-3. **tooltoffel** — TM greenfield (18/18 Slots frei, FTO 150-250 EUR); Brand-Story ⭐⭐⭐ (Pantoffel-Metapher = bequem/nahbar); DE-Register „landschaftlich, oft wohlwollend" (nicht pejorativ); Tool-Stem-§8 bleibt Schwachpunkt. Third Fallback. *(Added 2026-04-23 R15-Calibration)*
-4. **Oktren** — DE/EU sauber; USA-Risiko Okta-Familie (Phase-3-Expansion-Problem). Fourth Fallback.
-5. **Utilekit** — §8-Risiko DPMA grenzwertig (Utile+Kit = „nützlicher Werkzeugkasten") aber eintragbar. Fifth Fallback.
-6. **antskit** — cross-class zu AntKit.uk (Kl.28 vs. 42); diluted Ant-Namespace; Brand-Story ⭐⭐⭐ (Ameisen-Kolonie). Sixth Fallback.
-7. **antsity** + **toolrunners** — beide viable mit Watchpoints (antsy-Slang bzw. DevOps-Genre-Loading), aber schwächer als die Top-6.
+**Top-Tier (Pondari / Armillex-Niveau mit Conditions):**
+
+1. **Armillex** ⭐⭐⭐⭐⭐ — TM-cleanst, stärkste Brand-Story (Armillarsphäre = Präzisions-Instrument), keine Conditions. First Fallback.
+
+**Strong-Tier (starke Brand-Story + TM-navigable, FTO ≤1.000 EUR):**
+
+2. **kittokit** ⭐⭐⭐⭐ — Kit-für-Kit-Modularität, palindromische Memorability (K-I-T-T-O-K-I-T), .com/.de frei, diluted Kit-Namespace (Kit.com/Kittl/HomeKit koexistieren). FTO ~1.000 EUR gegen Kittl-Adjacenz. *(R15-Calibration)*
+3. **Oktren** ⭐⭐⭐⭐ — DE/EU sauber, USA-Okta-Risiko (Phase-3-Expansion-Problem).
+
+**Mid-Tier (solide Kandidaten, kleinere Schwächen):**
+
+4. **tooltoffel** ⭐⭐⭐ — TM greenfield (18/18 Slots frei, FTO 150-250 EUR); Pantoffel-Metapher „bequem/nahbar"; DE-Register „landschaftlich, oft wohlwollend" (nicht pejorativ); Tool-Stem-§8 Schwachpunkt. *(R15-Calibration)*
+5. **Utilekit** ⭐⭐ — §8-DPMA grenzwertig aber eintragbar.
+6. **antskit** ⭐⭐⭐ — cross-class zu AntKit.uk (Kl.28 vs. unsere 42); diluted Ant-Namespace; Ameisen-Kolonie-Story. *(R15-Calibration)*
+
+**R16-Additions (2026-04-23 Bucket-D-Rehabilitation):**
+
+7. **Simplegator** ⭐⭐⭐⭐ — Gator=„frisst alle Formate"; TM CLEAR (150-250 EUR); ABER: Maskottchen-Richtung clasht mit Refined-Minimalism-Brief. Nur bei Brand-Direction-Pivot nutzbar.
+8. **DittoTool** ⭐⭐⭐⭐ — Ditto=Replikation/Kopieren, perfekte Konversions-Metapher; Ditto.live ist Kl.42-Adjacenz (FTO 500-800 EUR); Tool-Stem bleibt §8-Schwachpunkt.
+
+**Tail (dokumentiert, aber nicht empfohlen):**
+
+9. **tooltunnel / UltraSnips / TOOLIDIAN / antsity / toolrunners / TOOLIZILLA / antsinity / AllSimplify** — alle viable mit spezifischen Watch-Items (siehe §3.8 + §3.9), aber qualitativ unter Top-8.
 
 ---
 
@@ -370,3 +403,4 @@ Folgende Dateien enthalten Platzhalter „Konverter Webseite" / „konverter" un
 | 14 | Pondari Deep-Research (iamskog-LLC, Pondera-GmbH, Pondera-Solutions, Indian-Diaspora) | Pondari als Primary-Pick bestätigt; Armillex als Backup |
 | 15 | User-Vorschlagsrunde R15 (11 neue Namen) — initiale Screening-Pass | 0 Survivors bei initialem Harsh-Filter; Pondari + Armillex bestätigt. |
 | 15b | **R15-Kalibrierungs-Pass** (2026-04-23 User-Intervention: DE-Slang-Kill für Toffel zurückgewiesen + Kit-Kat-Angst bei kittokit überzogen + Doppelstandards vs. Pondari). Duden/DWDS-Direktfetch: Toffel = „landschaftlich, oft wohlwollend, selten" — kein pejorativer Kill. Kit-Kat-Check: Nestlé nur Kl.30 registriert, diluted Kit-Namespace. | **6 neue Stand-Backup-Kandidaten**: kittokit (⭐⭐⭐⭐ Brand-Story), tooltoffel (TM greenfield), antskit (cross-class AntKit.uk), antsity, toolrunners, antsinity (schwächer). 2 neue Feedback-Memories geschrieben (DE-Slang-Register + Screening-Konsistenz). |
+| 16 | **R16-Bucket-D-Rehabilitation** (2026-04-23). 8 Kandidaten aus Bucket D (Coined Tool-Stem) mit kalibrierter Methodik neu geprüft: TOOLIZILLA, DittoTool, ModulaTools, AllSimplify, Simplegator, UltraSnips, TOOLIDIAN, tooltunnel. Alle 8 Namespace-sauber (48/48 Slots frei). | **2 neue Fallbacks**: Simplegator (⭐⭐⭐⭐ TM CLEAR aber Maskottchen-Clash) + DittoTool (⭐⭐⭐⭐ perfekte Metapher, Ditto.live-Adjacenz). 1 neuer BLOCKED: ModulaTools (Modula S.p.A. + Modular Inc. + textbook-§8). 5 weitere dokumentierte CAUTION-Kandidaten mit Watch-Items. |
