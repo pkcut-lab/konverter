@@ -31,6 +31,7 @@
   let presetValue = $state<string>(config.presets?.default ?? '');
   let isDragging = $state<boolean>(false);
   let pasteStatus = $state<'idle' | 'error'>('idle');
+  let fileInputEl: HTMLInputElement | undefined = $state();
   const initialToggles: Record<string, boolean> = {};
   for (const t of config.toggles ?? []) initialToggles[t.id] = false;
   let toggleValues = $state<Record<string, boolean>>(initialToggles);
@@ -347,6 +348,17 @@
     if (file) void processFile(file);
   }
 
+  // Full-area click-to-pick. The nested "Datei wählen" label + "Einfügen"
+  // button handle their own clicks natively — we only fire when the click
+  // originated on the empty dropzone surface (icon, title, hint, mime pills).
+  // Without this guard, clicking the label would open the picker twice.
+  function onDropzoneClick(e: MouseEvent) {
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    if (target.closest('button, a, label, input')) return;
+    fileInputEl?.click();
+  }
+
   // Paste-button handler: async Clipboard API. Falls back to a short error flash
   // if the user's browser doesn't grant permission or has nothing pasteable.
   // The global document paste-listener in $effect still handles Ctrl+V directly.
@@ -454,6 +466,7 @@
       ondragover={onDragOver}
       ondragleave={onDragLeave}
       ondrop={onDrop}
+      onclick={onDropzoneClick}
       role="region"
       aria-label="Dateien hierher ziehen oder auswählen"
     >
@@ -484,6 +497,7 @@
         <label class="btn btn--primary dropzone__browse">
           <span>Datei wählen</span>
           <input
+            bind:this={fileInputEl}
             class="dropzone__input"
             type="file"
             accept={acceptAttr}
@@ -742,6 +756,9 @@
     border: 1px dashed var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface);
+    /* Whole surface is click-to-pick — nested button/label handle their
+       own clicks via onDropzoneClick guard. */
+    cursor: pointer;
     transition:
       border-color var(--dur-fast) var(--ease-out),
       background var(--dur-fast) var(--ease-out);
