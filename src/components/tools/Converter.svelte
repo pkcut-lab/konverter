@@ -172,7 +172,7 @@
 <style>
   .converter {
     padding: var(--space-8);
-    background: var(--color-bg);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     box-shadow: var(--shadow-sm);
