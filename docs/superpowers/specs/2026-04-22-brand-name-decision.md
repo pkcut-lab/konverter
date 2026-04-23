@@ -204,6 +204,44 @@ User-Initiative: „bei den screenshots warst du offt auch zu kleinlig — bitte
 
 **Netto-Effekt R16:** 1 neuer BLOCKED (ModulaTools), 7 CAUTION/WEAK. Keiner erreicht Pondari/Armillex-Niveau. Aufnehmenswert als weitere Fallbacks: **Simplegator** (Position 8) und **DittoTool** (Position 9).
 
+### 3.10 R17-Pass (2026-04-24) — kitokit-Variante + Nigerianisch-Slang-Fund
+
+User-Frage: Schwankung zwischen Pondari/kittokit/kitokit — ist die Einzel-T-Variante (7 Buchstaben) besser als die Doppel-T-Variante (8 Buchstaben)?
+
+**kitokit — KILL**
+
+Zwei harte Gründe:
+1. **kitokit.com TAKEN** (registriert 2025-01-15 via Webnic/NetAfraz MENA-Reseller, DNS-Squat-Muster, Ablauf 2027-01-15) → .com HARD-GATE-Verletzung per §1.2 Spec. Akquise über Broker 800-3.500 USD mit Hold-out-Risiko.
+2. **„Kito"-Morphem am Wortanfang direkt sichtbar** (KI-TO-KIT) — triggert dokumentierte Negativ-Bedeutungen:
+   - **Nigerianisches Englisch**: „kito" = LGBT-Erpressungs-Slang (Wikipedia + UK-Gov-Policy-Note Juni 2025 + Mail & Guardian + CNN). Aktueller Wortschatz, ~220M EN-Sprecher.
+   - **Central Bikol** (Philippinen, 2,5M Sprecher): „kito" = Geschlechtsverkehr (Wiktionary). Kleinerer Sprachraum.
+
+**kittokit — Nigerianisch-Slang Watch-Item hinzugefügt (KEIN Upgrade zu KILL)**
+
+Das Doppel-T in kittokit maskiert das „Kito"-Morphem semantisch — natürlicher Parse ist KIT-TO-KIT (Wiederholung), nicht KI-TO-KIT. Nigerianisch-EN-Sprecher lesen primär „Kit zu Kit", nicht „Kito-Kit". Verbleibender Watch:
+- **Phase-3-EN-Expansion**: AdSense-Review bei Nigeria-Traffic-Volume beobachten (präventiv Brand-Safety-Audit vor großer Afrika-Kampagne)
+- **Niveau vergleichbar Pondari's Tamil-Homophon-Watch** (Phase-5-Indien) — dokumentiert, nicht Launch-Blocker
+
+### 3.11 Finale Pondari vs kittokit Vergleichsmatrix
+
+Detaillierte Gegenüberstellung nach 17 Kalibrierungs-Pässen. Beide Kandidaten TM-grün über 3 Register + Domain-.com-.de-frei + Refined-Minimalism-fit. Unterscheidungs-Dimensionen:
+
+| Kategorie | Pondari | kittokit |
+|---|---|---|
+| **Länge** | 7 Buchst., 3 Silben | 8 Buchst., 3 Silben |
+| **Brand-Story** | ⭐⭐⭐⭐ abwägen/gewichten (Latein ponderare) | ⭐⭐⭐⭐ Kit-für-Kit-Iteration |
+| **Namespace-Score** | 18/22 Slots frei | 14/22 Slots frei |
+| **TM-Status** | 🟢 clear (3 Conditions) | 🟢 clear (Kittl-Watch) |
+| **FTO-Budget** | 150-250 EUR | 800-1.500 EUR |
+| **Phase-3-Risiko** | Pondera-Solutions-Watch | Nigerianisch-EN-Slang-Watch |
+| **Phase-5-Risiko** | Indien-Sub-Brand-Pflicht | JP-Brand-Safety-Audit |
+| **Total Launch-Budget** | ~700 EUR | ~1.500-2.200 EUR |
+| **Memorability** | 7/10 | 9/10 |
+| **Refined-Minimalism-Fit** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Brand-Persönlichkeit** | leise-präzise-editorial | rhythmisch-modular-catchy |
+
+**Pondari** = sicherere Option (kleineres FTO, mehr Namespace, editorial-konform). **kittokit** = memorabler (Reduplication-Rhythmus), aber teurerer Launch + Phase-3-Watch.
+
 ### 3.6 Bucket E — Spelling-Tricks / Trust-Killer (6 Namen)
 
 | Name | Set | Kill-Grund |
@@ -404,3 +442,4 @@ Folgende Dateien enthalten Platzhalter „Konverter Webseite" / „konverter" un
 | 15 | User-Vorschlagsrunde R15 (11 neue Namen) — initiale Screening-Pass | 0 Survivors bei initialem Harsh-Filter; Pondari + Armillex bestätigt. |
 | 15b | **R15-Kalibrierungs-Pass** (2026-04-23 User-Intervention: DE-Slang-Kill für Toffel zurückgewiesen + Kit-Kat-Angst bei kittokit überzogen + Doppelstandards vs. Pondari). Duden/DWDS-Direktfetch: Toffel = „landschaftlich, oft wohlwollend, selten" — kein pejorativer Kill. Kit-Kat-Check: Nestlé nur Kl.30 registriert, diluted Kit-Namespace. | **6 neue Stand-Backup-Kandidaten**: kittokit (⭐⭐⭐⭐ Brand-Story), tooltoffel (TM greenfield), antskit (cross-class AntKit.uk), antsity, toolrunners, antsinity (schwächer). 2 neue Feedback-Memories geschrieben (DE-Slang-Register + Screening-Konsistenz). |
 | 16 | **R16-Bucket-D-Rehabilitation** (2026-04-23). 8 Kandidaten aus Bucket D (Coined Tool-Stem) mit kalibrierter Methodik neu geprüft: TOOLIZILLA, DittoTool, ModulaTools, AllSimplify, Simplegator, UltraSnips, TOOLIDIAN, tooltunnel. Alle 8 Namespace-sauber (48/48 Slots frei). | **2 neue Fallbacks**: Simplegator (⭐⭐⭐⭐ TM CLEAR aber Maskottchen-Clash) + DittoTool (⭐⭐⭐⭐ perfekte Metapher, Ditto.live-Adjacenz). 1 neuer BLOCKED: ModulaTools (Modula S.p.A. + Modular Inc. + textbook-§8). 5 weitere dokumentierte CAUTION-Kandidaten mit Watch-Items. |
+| 17 | **R17-kitokit-Variante + Semantik-Deep-Dive** (2026-04-24). User-Schwankung Pondari/kittokit/kitokit. Einzel-T-Variante „kitokit" geprüft. | **kitokit = KILL**: .com seit 2025-01-15 bei MENA-Squatter + „Kito"-Morphem triggert dokumentierten Nigerianisch-EN-Slang (UK-Gov-Policy 2025). **kittokit behält CAUTION**: Doppel-T maskiert Morphem semantisch, Nigerianisch-EN als Phase-3-Watch-Item dokumentiert (nicht Launch-Blocker). Finale Pondari-vs-kittokit-Vergleichsmatrix in §3.11 ergänzt. |
