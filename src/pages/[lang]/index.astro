@@ -22,7 +22,7 @@ const tools = await listToolsForLang(lang);
 >
   <div class="home">
     <header class="home-hero">
-      <p class="eyebrow">Konverter</p>
+      <p class="home-eyebrow">Konverter</p>
       <h1>Werkzeuge, die im Browser bleiben.</h1>
       <p class="lede">
         Freisteller, Format-Umwandlung, Umrechnungen. Alles läuft auf deinem Gerät —
@@ -68,17 +68,17 @@ const tools = await listToolsForLang(lang);
     flex-direction: column;
     gap: var(--space-3);
   }
-  .eyebrow {
+  .home-eyebrow {
     margin: 0;
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     color: var(--color-text-subtle);
   }
   .home-hero h1 {
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tighter);
     text-wrap: balance;
   }
   .lede {
@@ -105,7 +105,7 @@ const tools = await listToolsForLang(lang);
   }
   .tools-head h2 {
     margin: 0;
-    letter-spacing: -0.01em;
+    letter-spacing: var(--tracking-tight);
     text-wrap: balance;
   }
   .count {
@@ -152,13 +152,11 @@ const tools = await listToolsForLang(lang);
     box-shadow: var(--shadow-sm);
     transition:
       border-color var(--dur-fast) var(--ease-out),
-      background var(--dur-fast) var(--ease-out),
       box-shadow var(--dur-fast) var(--ease-out),
       transform var(--dur-fast) var(--ease-out);
   }
   .tool-card__link:hover {
     border-color: var(--color-text-subtle);
-    background: var(--color-bg);
     box-shadow: var(--shadow-md);
   }
   .tool-card__link:focus-visible {
@@ -174,7 +172,7 @@ const tools = await listToolsForLang(lang);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.35;
-    letter-spacing: -0.005em;
+    letter-spacing: var(--tracking-snug);
     color: var(--color-text);
   }
   .tool-card__tagline {
