@@ -21,12 +21,12 @@ const navByLang: Record<string, NavItem[]> = {
   de: [
     { label: 'Werkzeuge', href: `/${lang}/werkzeuge` },
     { label: 'Über', href: '#', disabled: true },
-    { label: 'Sprache ▾', href: '#', disabled: true },
+    { label: 'Sprache', href: '#', disabled: true },
   ],
   en: [
     { label: 'Tools', href: `/${lang}/werkzeuge` },
     { label: 'About', href: '#', disabled: true },
-    { label: 'Language ▾', href: '#', disabled: true },
+    { label: 'Language', href: '#', disabled: true },
   ],
 };
 const nav = navByLang[lang] ?? navByLang.en!;
@@ -57,7 +57,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
 ---
 <header class="site-header" data-pagefind-ignore>
   <div class="inner">
-    <a class="brand" href={`/${lang}/`} aria-label={brandAria}>
+    <a class="brand" href={`/${lang}`} aria-label={brandAria}>
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="26" height="26">
           <rect width="24" height="24" rx="6" fill="var(--color-accent)" />
@@ -126,7 +126,11 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: var(--color-bg);
+    /* Semi-transparent bg so backdrop-blur shows content scrolling beneath.
+       color-mix keeps us token-only without hardcoding rgba values. */
+    background: color-mix(in oklch, var(--color-bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--color-border);
   }
   .inner {
@@ -152,12 +156,11 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
   }
   .brand-mark svg {
     display: block;
-    border-radius: 6px;
   }
   .wordmark {
     font-weight: 600;
     font-size: 1.125rem;
-    letter-spacing: -0.015em;
+    letter-spacing: var(--tracking-tight);
   }
 
   .nav {
@@ -227,7 +230,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     font-family: var(--font-family-mono);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: var(--tracking-label-wide);
     text-transform: uppercase;
     color: var(--color-text-subtle);
     white-space: nowrap;
