@@ -86,6 +86,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/rabatt-rechner').then((m) => m.rabattRechner),
   'interest-calculator': () => import('./tools/zinsrechner').then((m) => m.zinsrechner),
   'loan-calculator': () => import('./tools/kreditrechner').then((m) => m.kreditrechner),
+  'hourly-to-annual': () =>
+    import('./tools/stundenlohn-jahresgehalt').then((m) => m.stundenlohnJahresgehalt),
   'compound-interest-calculator': () =>
     import('./tools/zinseszins-rechner').then((m) => m.zinseszinsRechner),
 };

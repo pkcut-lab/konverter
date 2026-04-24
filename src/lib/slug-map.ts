@@ -65,6 +65,8 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'discount-calculator': { de: 'rabatt-rechner' },
   'interest-calculator': { de: 'zinsrechner' },
   'loan-calculator': { de: 'kreditrechner' },
+  'hourly-to-annual': { de: 'stundenlohn-jahresgehalt' },
+  'compound-interest-calculator': { de: 'zinseszins-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
