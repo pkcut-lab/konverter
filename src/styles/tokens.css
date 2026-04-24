@@ -14,9 +14,10 @@
   --color-bg: #FAFAF9;
   --color-surface: #FFFFFF;
   --color-surface-sunk: #F3F0EA;
+  --color-surface-raised: color-mix(in oklch, var(--color-surface), var(--color-text) 3%);
   --color-border: #E8E6E1;
   --color-text: #1A1917;
-  --color-text-muted: #5C5A55;
+  --color-text-muted: #52504B;
   --color-text-subtle: #9C9A94;
   --color-accent: #8F3A0C;
   --color-accent-hover: #6B2A08;
