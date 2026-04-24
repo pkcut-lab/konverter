@@ -55,6 +55,7 @@ already_built_skip_list:
   - liter-zu-gallonen
   - milliliter-zu-unzen
   - quadratkilometer-zu-quadratmeile
+  - mehrwertsteuer-rechner
 total_tier_1_to_8: 172
 total_tier_9_psychology: 79
 total_tier_10_to_19: 650 (alle 8 neuen Enums freigegeben 2026-04-23: math, health, science, engineering, sport, automotive, education, agriculture)

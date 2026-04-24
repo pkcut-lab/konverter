@@ -79,6 +79,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | [kilogramm-zu-pfund](https://konverter-7qc.pages.dev/de/kilogramm-zu-pfund) | weight | shipped | 2026-04-19 | [dev](http://localhost:4322/de/kilogramm-zu-pfund) |
 | [hintergrund-entfernen](https://konverter-7qc.pages.dev/de/hintergrund-entfernen) | image | shipped | 2026-04-19 | [dev](http://localhost:4322/de/hintergrund-entfernen) |
 | [celsius-zu-fahrenheit](https://konverter-7qc.pages.dev/de/celsius-zu-fahrenheit) | temperature | shipped | 2026-04-19 | [dev](http://localhost:4322/de/celsius-zu-fahrenheit) |
+| [mehrwertsteuer-rechner](https://konverter-7qc.pages.dev/de/mehrwertsteuer-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/mehrwertsteuer-rechner) |
 
 ## Duplikat-Guard
 
