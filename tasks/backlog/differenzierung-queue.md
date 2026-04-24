@@ -56,6 +56,9 @@ already_built_skip_list:
   - milliliter-zu-unzen
   - quadratkilometer-zu-quadratmeile
   - mehrwertsteuer-rechner
+  - tilgungsplan-rechner
+  - kreditrechner
+  - rabatt-rechner
 total_tier_1_to_8: 172
 total_tier_9_psychology: 79
 total_tier_10_to_19: 650 (alle 8 neuen Enums freigegeben 2026-04-23: math, health, science, engineering, sport, automotive, education, agriculture)
@@ -1414,6 +1417,16 @@ allergen-datenbank           | health      | Allergen-Datenbank-Suche (Top-14 EU
 | `hashtag-ranking-live` | 701-750er | Braucht Live-Index. |
 | `engagement-history-analyse` | 701-750er | Historical Data = API-Zugang. |
 | `twitter-x-scheduler` | 701-750er | Posting-Tool = Auth + Server. |
+
+### R10 — Server-Side-Protokoll (Phase 3+ via CF Workers freischaltbar)
+
+Tools die aktuell gegen Non-Negotiable §7 (keine externen Network-Deps zur Runtime) verstoßen, aber in Phase 3+ mit einem Cloudflare Worker als Thin-Proxy realisierbar sind. Re-Evaluation-Trigger: CF-Workers-Schicht ist live + AdSense-Revenue deckt Worker-Kosten.
+
+| Slug-Kandidat | Kategorie | Warum jetzt nicht | Warum Phase 3+ okay |
+|---|---|---|---|
+| `whois-abfrage` | `dev` | WHOIS = TCP Port 43, kein Browser-Zugriff; externe REST-APIs (whoisjsonapi.com etc.) verstoßen §7 | CF Worker macht TCP-WHOIS-Request server-seitig, Browser bekommt JSON — kein Drittanbieter-Tracking |
+| `internet-speedtest` | `dev` | Speedtest braucht Test-Server zum Up/Download-Messen (NDT, LibreSpeed, Ookla-Protokoll) | CF Workers + eigene Test-Endpoint-Instanz (LibreSpeed Open-Source); alternativ: reiner Download-Speed via Worker-Stream (schlanke Variante) |
+| `domain-verfuegbarkeit` | `dev` | Domain-Availability via WHOIS/RDAP + Registry-APIs; pure-client nicht möglich | CF Worker pollt IANA-RDAP-API (`rdap.org` öffentlich, kostenlos, kein API-Key); schlanker als WHOIS |
 
 ### R9 — Unseriös/Low-Value-Content
 
