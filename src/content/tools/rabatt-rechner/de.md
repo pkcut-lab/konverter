@@ -7,7 +7,7 @@ tagline: "Alle drei Richtungen, Kettenrabatt-Erklärung und Copy-Button — sofo
 intro: "Rechne Rabatte in alle Richtungen: vom Ursprungspreis zum Endpreis, zurück zum Originalpreis oder ermittle den Rabattsatz aus zwei Preisen. Der Kettenrabatt-Modus zeigt direkt, warum zwei Rabattstufen sich nicht einfach addieren — der meistgenannte Rechenfehler bei Preisnachlässen."
 category: "finance"
 contentVersion: 1
-headingHtml: "Rabatt <em>berechnen</em>"
+headingHtml: "<em>Rabatt</em> berechnen"
 howToUse:
   - "Wähle den Modus: Standard (Endpreis), Rückrechnung Preis, Rückrechnung Rabatt% oder Kettenrabatt."
   - "Gib die bekannten Werte ein — Berechnung startet sofort beim Tippen."
