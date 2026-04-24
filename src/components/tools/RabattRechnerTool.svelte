@@ -208,12 +208,13 @@
             bind:value={ursprungspreisStr}
             aria-label="Ursprungspreis in Euro"
             aria-invalid={ursprungspreisError !== null}
+            aria-describedby={ursprungspreisError ? 'err-ursprungspreis' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">€</span>
         </div>
         {#if ursprungspreisError}
-          <p class="field-error" role="alert">{ursprungspreisError}</p>
+          <p id="err-ursprungspreis" class="field-error" role="alert">{ursprungspreisError}</p>
         {/if}
       </div>
     {/if}
@@ -234,12 +235,13 @@
             bind:value={endpreisStr}
             aria-label="Endpreis in Euro"
             aria-invalid={endpreisError !== null}
+            aria-describedby={endpreisError ? 'err-endpreis' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">€</span>
         </div>
         {#if endpreisError}
-          <p class="field-error" role="alert">{endpreisError}</p>
+          <p id="err-endpreis" class="field-error" role="alert">{endpreisError}</p>
         {/if}
       </div>
     {/if}
@@ -258,12 +260,13 @@
             bind:value={rabattStr}
             aria-label="Rabatt in Prozent"
             aria-invalid={rabattError !== null}
+            aria-describedby={rabattError ? 'err-rabatt' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">%</span>
         </div>
         {#if rabattError}
-          <p class="field-error" role="alert">{rabattError}</p>
+          <p id="err-rabatt" class="field-error" role="alert">{rabattError}</p>
         {/if}
       </div>
     {/if}
@@ -282,12 +285,13 @@
             bind:value={rabatt1Str}
             aria-label="Erster Rabattsatz in Prozent"
             aria-invalid={rabatt1Error !== null}
+            aria-describedby={rabatt1Error ? 'err-rabatt1' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">%</span>
         </div>
         {#if rabatt1Error}
-          <p class="field-error" role="alert">{rabatt1Error}</p>
+          <p id="err-rabatt1" class="field-error" role="alert">{rabatt1Error}</p>
         {/if}
       </div>
       <div class="input-field">
@@ -302,12 +306,13 @@
             bind:value={rabatt2Str}
             aria-label="Zweiter Rabattsatz in Prozent"
             aria-invalid={rabatt2Error !== null}
+            aria-describedby={rabatt2Error ? 'err-rabatt2' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">%</span>
         </div>
         {#if rabatt2Error}
-          <p class="field-error" role="alert">{rabatt2Error}</p>
+          <p id="err-rabatt2" class="field-error" role="alert">{rabatt2Error}</p>
         {/if}
       </div>
     {/if}
@@ -376,7 +381,7 @@
       <!-- Copy-Button -->
       <div class="copy-row">
         <button type="button" class="copy-btn" onclick={copyResult} aria-label="Ergebnis in Zwischenablage kopieren">
-          {#if copied}Kopiert ✓{:else}Ergebnis kopieren{/if}
+          {#if copied}Kopiert{:else}Ergebnis kopieren{/if}
         </button>
       </div>
 
@@ -460,6 +465,10 @@
   }
   .modus-pill:hover {
     background: var(--color-surface-raised);
+  }
+  .modus-pill:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
   .modus-pill--active {
     background: var(--color-text);
@@ -597,6 +606,10 @@
     border-color: var(--color-text);
     color: var(--color-text);
   }
+  .copy-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 
   /* ---- Additivfallen-Erklärung (White-Space-Feature Dossier §9 H1) ---- */
   .additiv-box {
@@ -700,6 +713,10 @@
   .reset-btn:hover {
     border-color: var(--color-text);
     color: var(--color-text);
+  }
+  .reset-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
 
   /* ---- Privacy Badge ---- */

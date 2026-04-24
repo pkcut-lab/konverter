@@ -83,7 +83,7 @@ export function computeRabattProzent(ursprungspreis: number, endpreis: number): 
   return {
     endpreis: round2(endpreis),
     ursprungspreis: round2(ursprungspreis),
-    rabattProzent: round2(r * 100) / 100,
+    rabattProzent: round2(r),
     rabattBetrag,
   };
 }
@@ -101,7 +101,7 @@ export function computeKettenrabatt(
   const factor1 = 1 - rabatt1Prozent / 100;
   const factor2 = 1 - rabatt2Prozent / 100;
   const e = round2(ursprungspreis * factor1 * factor2);
-  const gesamtRabattProzent = round2((1 - factor1 * factor2) * 100 * 100) / 100;
+  const gesamtRabattProzent = round2((1 - factor1 * factor2) * 100);
   const rabattBetrag = round2(ursprungspreis - e);
   return {
     endpreis: e,

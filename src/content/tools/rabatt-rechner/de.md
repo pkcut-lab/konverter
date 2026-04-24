@@ -25,7 +25,7 @@ faq:
   - q: "Was ist der Unterschied zwischen Rabatt und Skonto?"
     a: "Rabatt ist ein allgemeiner Preisnachlass — zum Beispiel Saisonschlussverkauf oder Mengenrabatt. Skonto ist ein Nachlass bei vorzeitiger Zahlung (z.&nbsp;B. 2&nbsp;% bei Zahlung innerhalb von 10&nbsp;Tagen) und ist ein separater Rechenfall."
   - q: "Warum addieren sich Kettenrabatte nicht?"
-    a: "Weil jeder folgende Rabatt auf den bereits reduzierten Preis angewendet wird, nicht auf den Originalpreis. 20&nbsp;%&nbsp;+ 10&nbsp;% scheinen 30&nbsp;% zu sein, ergeben aber nur 28&nbsp;% Gesamtrabatt, weil der zweite Rabatt von 90&nbsp;€ (nicht 100&nbsp;€) berechnet wird."
+    a: "Weil jeder folgende Rabatt auf den bereits reduzierten Preis angewendet wird, nicht auf den Originalpreis. 20&nbsp;%&nbsp;+ 10&nbsp;% scheinen 30&nbsp;% zu sein, ergeben aber nur 28&nbsp;% Gesamtrabatt, weil der zweite Rabatt von 80&nbsp;€ (nicht 100&nbsp;€) berechnet wird."
 relatedTools: []
 ---
 
