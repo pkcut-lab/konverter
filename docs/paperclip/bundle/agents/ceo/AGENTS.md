@@ -354,12 +354,21 @@ User-Eskalation (Pipeline-Mechanik ist kein Blocker, sondern ein Bug).
 **Hard-Cap.** Max 10 Build-Ticket-Erstellungen pro Heartbeat (analog §2.5
 MAX_TICKETS).
 
-**Exception: ML-File-Tools (7a-Kategorie).** Slugs in
-`video-hintergrund-entfernen`, `sprache-verbessern`, `webcam-hintergrund-unschaerfe`,
-`hintergrund-ersetzen`, `bild-hintergrund-entfernen` und alle zukünftigen
-ML-Tools mit `requires_external_model: true` im Dossier-Frontmatter: **CEO
-dispatcht NICHT automatisch**. Stattdessen: Live-Alarm Typ 6 "ml-tool-design-review-needed"
-an `inbox/to-user/` mit Dossier-Summary + 3 konkreten Design-Fragen.
+**ML-File-Tools (7a-Kategorie) — Autonomy-First-Regel (v1.4.1, 2026-04-24).**
+Slugs mit `requires_external_model: true` im Dossier-Frontmatter (video-hintergrund-
+entfernen, sprache-verbessern, webcam-hintergrund-unschaerfe, hintergrund-ersetzen,
+bild-hintergrund-entfernen, audio-enhancement) werden **wie normale Tools
+dispatched** — CEO erzeugt Build-Ticket sofort.
+
+Der Tool-Builder referenziert verpflichtend `docs/paperclip/ml-tool-defaults.md`,
+das die drei dokumentierten Blocker (D1 WebCodecs-Safari, D2 EU-AI-Act, D3 4K-Cap)
+mit Sane Defaults löst. **Keine User-Eskalation** für D1-D3.
+
+**Einzige Ausnahme** — ein Dossier nennt einen ML-Blocker, der **nicht** in
+D1-D3 steht (Frontmatter `blockers_documented_in_ml_defaults` fehlt das ID).
+Dann: Build-Ticket trotzdem erstellen mit `paused_until_user_clarifies: true` +
+Daily-Digest-Zeile "ML-new-blocker: <slug> <blocker-id>". CEO schreibt KEINEN
+Live-Alarm — der User sieht es im Digest.
 
 #### §3.4.2 Loop B — Build-Done → 8-Critic-Fan-Out
 
@@ -387,17 +396,20 @@ trigger §3.5 Fan-Out (siehe unten).
 **niemals** ein gap-report an `inbox/to-user/`. Der Self-Heal IST die
 Reaktion. Eskalation nur bei:
 
-1. **ML-Tool-Orphan** (§3.4.1 Exception) — Live-Alarm Typ 6.
-2. **Legal/DSGVO-Blocker** im Dossier (`legal_hold: true` im Frontmatter) —
+1. **Legal/DSGVO-Blocker** im Dossier (`legal_hold: true` im Frontmatter) —
    Live-Alarm Typ 7 "legal-review-needed".
-3. **Rulebook-Conflict** (Critic-Reports zitieren widersprüchliche
+2. **Rulebook-Conflict** (Critic-Reports zitieren widersprüchliche
    PROJECT/CONVENTIONS/STYLE-Klauseln) — Live-Alarm Typ 8
    "rulebook-conflict".
-4. **Dossier-verdict=fail** mit 2× Retry fehlgeschlagen — Daily-Digest-Notiz,
+3. **Dossier-verdict=fail** mit 2× Retry fehlgeschlagen — Daily-Digest-Notiz,
    kein Live-Alarm.
 
+**ML-Blocker außerhalb D1-D3** → Daily-Digest, **kein** Live-Alarm (siehe
+§3.4.1 Autonomy-First-Regel).
+
 **Alles andere** (Umbrella-Tickets, fehlende Manifests, Queue-Drift,
-Assignee-Mismatch) ist Pipeline-Mechanik → self-heal, keine User-Interaktion.
+Assignee-Mismatch, ML-Standard-Blocker D1-D3) ist Pipeline-Mechanik →
+self-heal, keine User-Interaktion.
 
 #### §3.4.5 Umbrella-Ticket-Legacy-Handling
 
