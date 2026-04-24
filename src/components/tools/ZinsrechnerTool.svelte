@@ -383,6 +383,7 @@
     border-radius: var(--r-sm);
     background: var(--color-bg);
     padding: 0 var(--space-3);
+    min-height: 2.75rem; /* WCAG 2.5.5 — 44px touch target */
     transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
   }
 
@@ -521,6 +522,7 @@
 
   .reset-btn {
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem; /* WCAG 2.5.5 — 44px touch target */
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-muted);

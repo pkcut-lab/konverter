@@ -7,7 +7,7 @@ tagline: "Brutto, netto und real — Zinsen in einem Schritt berechnen."
 intro: "Berechne Zinsen mit Zinseszins-Formel, Abgeltungssteuer (26,375&nbsp;%) und Realrendite nach Fisher-Gleichung. Statt nur das Endkapital zu zeigen, liefert dieser Rechner drei Ergebniszeilen: was nominell drin ist, was nach Steuern übrig bleibt und was der Betrag kaufkraftbereinigt wert ist."
 category: "finance"
 contentVersion: 1
-headingHtml: "Zinsen <em>berechnen</em>"
+headingHtml: "<em>Zinsen</em> berechnen"
 howToUse:
   - "Anfangskapital in Euro eingeben (z.&nbsp;B. 10.000)."
   - "Zinssatz in % p.a. eingeben — Dezimalzahlen mit Komma oder Punkt (z.&nbsp;B. 3,5)."
@@ -27,7 +27,7 @@ faq:
     a: "Ja. Zwischen 2020 und 2022 gaben viele Banken Negativzinsen (Verwahrentgelte bis −0,5&nbsp;%) auf größere Kapitalbeträge weiter. Der Rechner verarbeitet Zinssätze ab −10&nbsp;% und zeigt in diesem Fall den Kapitalverlust korrekt an."
   - q: "Was bedeutet Sparerpauschbetrag und wie wirkt er sich aus?"
     a: "Der Sparerpauschbetrag ist ein Freibetrag auf Kapitalerträge. 2026 beträgt er 1.000&nbsp;€ für Einzelpersonen und 2.000&nbsp;€ für Ehepaare. Zinserträge bis zu diesem Betrag sind vollständig steuerfrei. Erst der darüberliegende Teil wird mit 26,375&nbsp;% (Abgeltungssteuer + SolZ) belastet. Mit einem Freistellungsauftrag bei der Bank wird dieser Betrag automatisch berücksichtigt."
-relatedTools: ['mehrwertsteuer-rechner']
+relatedTools: ['mehrwertsteuer-rechner', 'kreditrechner']
 ---
 
 ## Was macht dieser Rechner?
@@ -102,5 +102,5 @@ Die naive Subtraktion (z.&nbsp;B. 7&nbsp;% − 2,5&nbsp;% = 4,5&nbsp;%) ist math
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
 - **[Mehrwertsteuer-Rechner](/de/mehrwertsteuer-rechner)** — Netto-, MwSt- und Bruttobeträge bidirektional berechnen, z.&nbsp;B. für die Steuerplanung rund um Kapitalerträge.
-- **[Unix-Timestamp](/de/unix-timestamp)** — Zinslaufzeiten und Stichtage in maschinenlesbares Format konvertieren für Buchhaltungs-APIs.
-- **[Zeitzonen-Rechner](/de/zeitzonen-rechner)** — Internationale Handelszeiten und Überweisungs-Deadlines über Zeitzonen hinweg koordinieren.
+- **[Kreditrechner](/de/kreditrechner)** — Monatliche Rate, Gesamtzinsen und Tilgungsplan für Darlehen berechnen — das Gegenstück zum Zinsrechner für die Kreditseite.
+- **[Rabatt-Rechner](/de/rabatt-rechner)** — Preisnachlässe und Sparquoten sofort ausrechnen, nützlich für Rendite-Vergleiche und Kaufentscheidungen.
