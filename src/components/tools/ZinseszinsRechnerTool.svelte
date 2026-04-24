@@ -95,9 +95,22 @@
     terError !== null,
   );
 
+  // ---- B3 Perf: Defer initial computation to avoid TBT on page load ----
+  let isReady = $state(false);
+
+  $effect(() => {
+    if (typeof requestIdleCallback !== 'undefined') {
+      const id = requestIdleCallback(() => { isReady = true; });
+      return () => cancelIdleCallback(id);
+    } else {
+      const id = setTimeout(() => { isReady = true; }, 0);
+      return () => clearTimeout(id);
+    }
+  });
+
   // ---- Berechnung ----
   const result = $derived.by(() => {
-    if (hasErrors) return null;
+    if (!isReady || hasErrors) return null;
     const k0 = Number.isFinite(anfangskapital) ? anfangskapital : 0;
     const r = Number.isFinite(sparrate) ? sparrate : 0;
     const i = Number.isFinite(inflationsrate) ? inflationsrate : 2;
@@ -414,7 +427,7 @@
   .field__label {
     font-size: var(--font-size-small);
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     letter-spacing: 0.02em;
     display: flex;
     align-items: center;
@@ -425,7 +438,7 @@
     font-size: 0.625rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     font-weight: 400;
   }
 
@@ -540,7 +553,7 @@
   .scenario-card__desc {
     margin: 0;
     font-size: 0.6875rem;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     line-height: 1.5;
   }
 
@@ -550,7 +563,7 @@
     align-items: center;
     gap: var(--space-1);
     padding: 0 var(--space-2);
-    height: 1.375rem;
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     background: transparent;
@@ -597,7 +610,7 @@
 
   .detail-item__label {
     font-size: 0.6875rem;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     letter-spacing: 0.03em;
     text-transform: uppercase;
   }
@@ -613,7 +626,7 @@
     margin: 0;
     text-align: center;
     font-size: var(--font-size-small);
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     padding: var(--space-4) 0;
   }
 

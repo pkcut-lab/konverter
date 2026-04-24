@@ -7,7 +7,7 @@ tagline: "Nominal, nach Steuer und in heutiger Kaufkraft — drei ehrliche Zahle
 intro: "Berechne, wie sich dein Kapital durch den Zinseszinseffekt entwickelt — mit monatlicher Sparrate, Abgeltungssteuer (26,375&nbsp;%), Sparerpauschbetrag (1.000&nbsp;€/Jahr), Inflationsrate und Kostenquote (TER). Der Rechner zeigt drei Szenarien parallel: nominales Endkapital, Wert nach Steuern und reale Kaufkraft. Alle Berechnungen laufen ausschließlich in deinem Browser — kein Server-Upload, kein Tracking."
 category: "finance"
 contentVersion: 1
-headingHtml: "Zinseszins <em>berechnen</em>"
+headingHtml: "<em>Zinseszins</em> berechnen"
 howToUse:
   - "Gib dein Anfangskapital ein — 0 ist erlaubt für einen reinen Sparplan ohne Startguthaben."
   - "Trage die monatliche Sparrate und den erwarteten Jahreszinssatz (% p. a.) ein."
@@ -27,7 +27,7 @@ faq:
     a: "TER (Total Expense Ratio) ist die jährliche Kostenquote eines Fonds oder ETFs. Sie wird nicht explizit abgezogen, sondern mindert direkt die Wertentwicklung. Eine Kostendifferenz von nur 0,5&nbsp;% p. a. kann über 20&nbsp;Jahre bei einer monatlichen Sparrate von 200&nbsp;€ bis zu 25.000&nbsp;€ Endkapital-Differenz ausmachen — laut Finanzfluss-Modellrechnung."
   - q: "Warum unterscheidet sich dieses Ergebnis von anderen Rechnern?"
     a: "Viele Rechner zeigen nur den nominalen Bruttowert ohne Steuern und Inflation. Dieser Rechner bezieht standardmäßig Abgeltungssteuer (26,375&nbsp;%) mit Sparerpauschbetrag und Inflationsbereinigung ein. Zudem rechnet er monatlich (nicht jährlich), was die tatsächliche Dynamik eines Sparplans genauer abbildet. Alle Berechnungen laufen ausschließlich im Browser — kein Datentransfer."
-relatedTools: ['mehrwertsteuer-rechner']
+relatedTools: ['mehrwertsteuer-rechner', 'kreditrechner']
 ---
 
 ## Was macht dieser Rechner?
