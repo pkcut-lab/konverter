@@ -350,7 +350,12 @@ Format: `inbox/to-user/live-alarm-YYYY-MM-DD-<kurz>.md`, max 5 Sätze (What / Wh
 - Kleine Blocker die du selbst lösen kannst
 - Partial-Report bei erstem Versuch (Retry-Queue)
 
-## 7. Autonomie-Gate-Resolve (Step 8, v1.0 Core)
+## 7. Autonomie-Gate-Resolve (Step 8, v1.2 — 2026-04-24 „keine Kompromisse")
+
+**User-Decision 2026-04-24:** Pipeline hat einen Polish-Pflicht-Gate zwischen
+Review-Round 1 und Ship. Partial-Tickets mit Score 80-94% gehen NICHT direkt
+zu ship-as-is, sondern durch polish-agent → Builder-Rework → Review-Round 2.
+Erst wenn nach Polish-Round immer noch partial: ship-as-is.
 
 ```python
 def resolve_gate(ticket, critic_reports):
@@ -361,20 +366,32 @@ def resolve_gate(ticket, critic_reports):
 
     # 2. Critic-Aggregation
     if all_critics_pass(critic_reports):
-        route_to_deploy_queue(ticket)
+        # Score ≥95% ODER alle passed — direkt zu Ship-Gates
+        route_to_meta_review(ticket)  # Meta-Reviewer checkt Critics-Konsistenz (v1.2)
+        # Meta-Review-Verdict pass → Ship-Gates (Legal + Consistency) → Deploy
+        return
     elif any(r.verdict == 'self-disabled' for r in critic_reports):
         write_live_alarm('critic-drift', critic=r.critic)
         return
     elif all(r.verdict in ['pass', 'partial'] and r.severity in [None, 'minor']
              for r in critic_reports):
+        score = compute_rubric_score(critic_reports)
+
+        # v1.2 POLISH-GATE: Score 80-94% → polish-agent dispatch (Pflicht)
+        # Wenn Polish-Loop schon 1× durchlaufen: direkt zu rework/park/ship
+        if 0.80 <= score < 0.95 and ticket.polish_rounds < 1:
+            route_to_polish(ticket, target_slug=ticket.tool_slug,
+                           score=score, critic_reports=critic_reports)
+            write_digest(f'- Polish-Dispatch: {ticket.id} (score={score:.2f}, polish-round 1/1)')
+            return
+        # Score <80% ODER Polish-Loop bereits durchlaufen
         if ticket.rework_counter <= 2:
             route_to_rework(ticket, failed_checks=collect_fails(critic_reports))
         else:
             # Auto-Resolve nach >2 Reworks
-            score = compute_rubric_score(critic_reports)
             if score >= 0.80:
                 route_to_deploy_queue(ticket, tag='ship-as-is')
-                write_digest(f'- Auto-Resolve ship-as-is: {ticket.id} (score={score:.2f})')
+                write_digest(f'- Auto-Resolve ship-as-is: {ticket.id} (score={score:.2f}, polish_rounds={ticket.polish_rounds})')
             else:
                 route_to_park(ticket)
                 write_digest(f'- Auto-Resolve park: {ticket.id} (score={score:.2f})')
@@ -398,6 +415,36 @@ def resolve_gate(ticket, critic_reports):
     # 5. Completed-Tools-List-Append (§7.5 — hard, nicht überspringbar)
     if ticket_was_routed_to_deploy(ticket):
         append_completed_tools_entry(ticket, state='shipped' or 'ship-as-is')
+
+
+def route_to_polish(ticket, target_slug, score, critic_reports):
+    """v1.2 Polish-Dispatch. Erzeugt Issue für polish-agent."""
+    POLISH_AGENT_ID = "2bde473a-71a5-498d-a6ee-5f7b6985c430"  # Live-ID polish-agent
+    issue = paperclip_create_issue(
+        title=f"Polish-Round: {target_slug} (score={score:.2f})",
+        description=f"Ticket {ticket.id} nach partial-verdict 80-94%. Polish-agent "
+                    f"produziert Suggestions → tool-builder rework → Review-Round 2.",
+        priority="high",
+        assigneeAgentId=POLISH_AGENT_ID,
+        # Meta-Felder für polish-agent
+        target_slug=target_slug,
+        critic_reports_ref=[r.path for r in critic_reports],
+        upstream_ticket_id=ticket.id,  # für Rückverlinkung
+    )
+    # Ticket selbst bleibt in-progress, nicht in Rework-Queue — wartet auf Polish-Rework
+    ticket.polish_rounds += 1
+
+def route_to_meta_review(ticket):
+    """v1.2 Meta-Review-Dispatch. Pflicht vor Ship."""
+    META_REVIEWER_ID = "46ba39a7-3d4a-4659-8ba6-0f2b3babae1f"
+    issue = paperclip_create_issue(
+        title=f"Meta-Review: {ticket.tool_slug}",
+        description=f"Post-Critic-Round Meta-Audit. Prüft Critics-Konsistenz, "
+                    f"Rubric-Ambiguität, Hidden-Success-Patterns für {ticket.tool_slug}.",
+        priority="high",
+        assigneeAgentId=META_REVIEWER_ID,
+        target_slug=ticket.tool_slug,
+    )
 ```
 
 ## 7.5 Completed-Tools-List-Append (Post-Deploy-Hook, v1.1)
@@ -521,8 +568,43 @@ Ein File pro Tag: `inbox/daily-digest/YYYY-MM-DD.md`. Sections:
 3. **Rulebook-Snapshots** (neue Hashes + File)
 4. **Metrics-Highlights** (rework-rate, partial-rate, tokens-today, F1-per-critic)
 5. **Offene Blocker** (nicht auto-resolved, nicht Live-Alarm)
+6. **Meta-Review-Findings (v1.2, 2026-04-24)** — pro Tool, direkt nach Meta-Review-Run:
+   Lies `tasks/meta-review-<slug>-<date>.md` Frontmatter-`findings[]` und zeige im
+   Digest Summary-Zeile pro Tool (z.B. "- `mehrwertsteuer-rechner`: Meta-Review
+   2 Findings (Critic-Konsistenz OK, Rubric-Ambiguität Check 7)"). Gibt dem User
+   1-Zeilen-Quality-Pulse pro ausgeliefertes Tool.
+7. **Consistency-Audit-Findings** — lies `tasks/consistency-audit-<category>-<date>.md`
+   (cross-tool-consistency-auditor Output). Zeige pro Kategorie Drift-Count, wenn >0.
+8. **Analytics-Highlights** (Phase 2+) — lies `tasks/analytics-report-<YYYY-WW>.md`
+   top-3 Rework-Candidates aus Analytics-Interpreter.
 
 Format-Details in `docs/paperclip/DAILY_DIGEST.md`.
+
+**Konkrete Append-Pattern (für Step 12 Digest-Write):**
+```bash
+today=$(date -I)
+digest="inbox/daily-digest/$today.md"
+
+# Meta-Review-Summary pro Tool aus letztem Run
+for meta in tasks/meta-review-*.md; do
+  [[ -f "$meta" ]] || continue
+  mtime=$(stat -c %Y "$meta" 2>/dev/null || echo 0)
+  (( $(date +%s) - mtime < 86400 )) || continue  # nur letzte 24h
+  slug=$(basename "$meta" | sed -E 's/meta-review-(.+)-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md/\1/')
+  findings=$(yq '.findings | length' "$meta" 2>/dev/null || echo 0)
+  echo "- Meta-Review \`$slug\`: $findings findings" >> "$digest"
+done
+
+# Consistency-Drift pro Kategorie
+for cons in tasks/consistency-audit-*.md; do
+  [[ -f "$cons" ]] || continue
+  mtime=$(stat -c %Y "$cons" 2>/dev/null || echo 0)
+  (( $(date +%s) - mtime < 86400 )) || continue
+  cat=$(basename "$cons" | sed -E 's/consistency-audit-(.+)-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md/\1/')
+  drift=$(yq '.drift_needs_rework' "$cons" 2>/dev/null || echo 0)
+  (( drift > 0 )) && echo "- Consistency-Drift \`$cat\`: $drift tools" >> "$digest"
+done
+```
 
 ## 10. Memory-Update (Step 12)
 

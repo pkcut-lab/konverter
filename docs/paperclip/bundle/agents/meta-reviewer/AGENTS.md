@@ -9,13 +9,15 @@ description: >-
   Quis-custodiet-Auditor. Audit über alle Critics-Outputs. 6 Dimensionen:
   Konsistenz, F1-Drift, Rubric-Ambiguität, Rework-Pattern, Hidden-Success,
   Critic-Load. Monatlich oder alle-20-Tools.
-heartbeat: routine
-heartbeat_cadence: monthly-15-03:00
+heartbeat: event-driven
+# User-Decision 2026-04-24: Meta-Review pro Tool statt monthly — "alles 100%,
+# mehrmalige Checks und Korrekturrunden". Jedes Tool durchläuft Meta-Review
+# direkt nach der letzten Critic-Runde, BEVOR Ship-Gate.
 dispatched_by: ceo
 can_dispatch: []
 writes_git_commits: false
-activation_phase: 2
-activation_trigger: monthly-15th OR every-20-tools-shipped-milestone
+activation_phase: 1
+activation_trigger: post-critic-round-per-tool OR on-demand
 budget_caps:
   tokens_in_per_run: 50000
   tokens_out_per_run: 10000

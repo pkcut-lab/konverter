@@ -180,7 +180,15 @@ Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 - **Letzte H2 immer** `## Verwandte <Kat>-Tools` + wortgleiche Intro-Zeile + exakt 3 Bullets (§13.4). `<Kat>` aus Mapping §13.3 (`length → Längen`).
 - 4–6 FAQ-Einträge in Frontmatter (werden als FAQPage-JSON-LD gerendert).
 - NBSP zwischen ALLEN Zahl-Einheit-Paaren.
-- `relatedTools`: wenn leer `[]`, MUSS Category-Fallback ≥2 Siblings finden (CONVENTIONS.md §Category-Fallback-Contract). Wenn manuell kuratiert: **mindestens 2 Einträge**, geranked nach (1) selbe Category, (2) shared Keywords in Title/Intro (Jaccard-Similarity > 0.2), (3) selber `tool_type`. Niemals Forward-Ref auf noch nicht existierende Slugs. Audit 2026-04-21 M-2-01: 8 Tools mit leeren oder off-topic relatedTools — Critic-Check #19 fängt das jetzt.
+- `relatedTools`: **PRIMÄRQUELLE v1.2 ab 2026-04-24:** `src/data/internal-links-manifest.json` (gepflegt vom `internal-linking-strategist`). Lese beim Build den Eintrag für diesen Slug:
+  ```bash
+  manifest="src/data/internal-links-manifest.json"
+  if [[ -f "$manifest" ]]; then
+    siblings=$(jq -r ".\"<slug>\".siblings // [] | .[] | \"\(.slug)|\(.anchor)\"" "$manifest" 2>/dev/null)
+    # Siblings enthalten Slug + kuratierten Anchor-Text vom Linking-Strategist
+  fi
+  ```
+  Wenn Manifest-Eintrag existiert: nutze diese Siblings (sie sind Topic-Cluster-optimiert, Orphan-free, anchor-diversifiziert). Wenn Manifest NICHT existiert oder dieser Slug nicht drin: Category-Fallback ≥2 Siblings (CONVENTIONS.md §Category-Fallback-Contract). Wenn manuell kuratiert: **mindestens 2 Einträge**, geranked nach (1) selbe Category, (2) shared Keywords in Title/Intro (Jaccard-Similarity > 0.2), (3) selber `tool_type`. Niemals Forward-Ref auf noch nicht existierende Slugs. Audit 2026-04-21 M-2-01 + Architecture-Review 2026-04-24.
 - Mindestens 300 Wörter Prose (thin-Content-Guard).
 
 ## 3. Test-Gate lokal
@@ -280,6 +288,55 @@ elif [[ $rework_counter -gt 2 ]]; then
   exit 0
 fi
 ```
+
+## 6.5 Polish-Rework-Handling (v1.2 Pipeline-Step, 2026-04-24)
+
+Nach Score 80-94% partial-verdict dispatcht CEO den polish-agent. Polish-Agent
+schreibt Suggestions + öffnet **neues Ticket** `ticket_type: polish-rework` an dich.
+
+**Procedure:**
+
+```bash
+# Ticket-Type-Check
+ticket_type=$(yq '.ticket_type' tasks/polish-rework-<ticket-id>.md 2>/dev/null)
+if [[ "$ticket_type" == "polish-rework" ]]; then
+  suggestions_ref=$(yq '.polish_suggestions_ref' tasks/polish-rework-<ticket-id>.md)
+  target_slug=$(yq '.target_slug' tasks/polish-rework-<ticket-id>.md)
+
+  # Lies Polish-Suggestions-File
+  # Format: YAML mit suggestions[] array, jedes mit {dim, current, variants[], rationale, priority}
+  suggestions=$(yq -o=json ".suggestions" "$suggestions_ref")
+
+  # Wähle Top-5 nach priority (high > medium > low), max 5
+  top5=$(echo "$suggestions" | jq 'map(. + {_p: (if .priority=="high" then 0 elif .priority=="medium" then 1 else 2 end)}) | sort_by(._p) | .[:5]')
+
+  # Für jede Suggestion: wende auf Content/Config/Tests an
+  # - P1 Copy-Varianten: ersetze metaDescription/tagline/intro/headingHtml
+  # - P2 Spacing-Feintuning: NICHT in Tool-Content (das ist Component-Domäne) — SKIP
+  # - P3 FAQ-Verbesserung: ersetze faq[].a
+  # - P4 Hero-Micro-Copy: ersetze Eyebrow-Label/Sub-Heading
+  # - P5 Tool-UI-Mikro: NICHT in Tool-Content (Component-Domäne) — SKIP
+  # NUR P1+P3+P4 sind Content-Domain. P2+P5 werden vom Builder dokumentiert aber
+  # nicht appliziert (Component-Changes = User-Approval-Ticket).
+
+  # Test-Gate: npm test + astro check müssen grün bleiben
+  # Commit mit Trailer: "Polish-Rework-Reference: <polish-suggestions-ref>"
+  git add src/content/tools/$target_slug/de.md
+  git commit -m "polish($target_slug): apply top-5 polish-suggestions (Rework-Round 2)"
+
+  # engineer_output überschreiben mit polish_applied[]-Block
+  # Status: done → CEO triggert Review-Round 2 (quick)
+
+  rm tasks/task.lock
+  exit 0
+fi
+```
+
+**Hard-Caps Polish-Rework:**
+- Max 1 Polish-Rework pro Tool (2. Aufruf = ship-as-is via CEO-Autonomie-Gate)
+- NUR Top-5 Suggestions applizieren (nicht alle 25)
+- Nur Content-Domain (P1/P3/P4) — Component-Changes (P2/P5) dokumentieren, nicht appliziern
+- Commit-Trailer `Polish-Rework-Reference: <path>` pflicht — Audit-Trail
 
 ## 7. Blocker-Behandlung
 

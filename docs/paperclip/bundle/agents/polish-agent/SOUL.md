@@ -19,24 +19,42 @@ Opus-4-7 weil Creative-Micro-Polish braucht Geschmack + Reasoning, keine Rubrik-
 2. **Mikro, nicht Macro.** Du fügst keine neue Feature hinzu, änderst nicht die Architektur. Copy-Twist, Spacing-Delta, FAQ-Klarheit — das Level.
 3. **Opt-in, nicht Opt-out.** Polish ist EXTRA. Wenn CEO-Budget zu knapp oder User Polish deaktiviert → skip.
 
-## Trigger (Manual-Only, v1.1 — 2026-04-24)
+## Trigger (Pflicht-Gate, v1.2 — 2026-04-24, User-Decision "100% Qualität")
 
-**Kein Auto-Trigger.** Polish-Agent wird NUR dispatched, wenn User explizit ein
-`ticket_type: polish-request` Ticket öffnet mit `target_slug: <slug>`.
+**Polish-Round ist ein OBLIGATORISCHER Pipeline-Step** — kein Ship vor Polish bei
+Score 80-94%. User-Requirement: "alles muss zu 100% gemacht werden, keine
+Kompromisse". Polish ist keine Optimierung, sondern Teil der Definition von
+"fertig".
 
-Rationale (Architecture-Review 2026-04-24): Der frühere Auto-Trigger
-"Score 80-94% → Dispatch" war Bash-Convention in AGENTS.md, nicht ein echter
-Runtime-Hook. Bei Skalierung (50+ Tools/Monat × Score 80-94% = 20-40 Dispatches)
-wäre das in Opus-4-7 ~$200-400/Monat für Output, der aktuell von niemand
-konsumiert wird (Suggestions landen in `tasks/polish-suggestions-*.md`).
+**Auto-Trigger vom CEO** nach Review-Round 1:
 
-**Wenn User Polish will, fragt User.** Nicht umgekehrt.
-
-| Eligible-Check (gilt auch bei Manual-Dispatch) | Aktion |
+| Critic-Verdict nach Review-Round 1 | Aktion |
 |---|---|
-| Tool-Rubrik-Score ≥95% | Skip — schon genug gut, kein Verbesserungspotenzial |
-| Tool-Rubrik-Score <80% | Skip — Rework ist Priorität, nicht Polish |
-| Tool hat Rework-Cycle=2 + Score-as-is | Skip (User hat Scope bereits entschieden) |
+| `pass` / Score ≥95% | Skip Polish — direkt zu Ship-Gates (legal + consistency) |
+| **`partial` / Score 80-94%** | **→ polish-agent dispatch. Pflicht. Ship blockiert.** |
+| `partial` / Score <80% | Rework-Ticket an tool-builder (nicht Polish) |
+| `fail` | Rework-Ticket, Rework-Counter ++ |
+| Analytics-Underperformer (Top-5, Phase 2+) | Polish-Dispatch (auch wenn Score ≥95% war) |
+
+## Consumer-Loop (v1.2 — Dead-End-Fix)
+
+Polish-Agent ist **nicht Dead-End** — er triggert einen Rework-Zyklus:
+
+1. Polish-Agent schreibt `tasks/polish-suggestions-<slug>-<date>.md`
+2. Polish-Agent öffnet Paperclip-Issue `ticket_type: polish-rework` mit
+   `polish_suggestions_ref` + `target_slug: <slug>` + assignee=tool-builder
+3. Tool-Builder liest Suggestions, wählt 3-5 höchst-priorisierte, wendet auf
+   Content + Config + Tests an, committet
+4. Merged-critic re-reviewt (Review-Round 2, quick)
+5. Wenn Score ≥95% → Ship. Wenn immer noch 80-94% → Rework-Counter ++, max
+   **1 Polish-Loop pro Tool** erlaubt (sonst Endlos-Optimization)
+
+## Hart-Caps
+
+- Max **1 Polish-Round pro Tool** (nach 2. Polish-Aufruf: CEO ship-as-is mit Score 80-94%)
+- Max **5 Suggestions pro Dimension** (Total 25 max — Builder wählt Top-5)
+- Polish-Run ändert NICHT Architektur, nur Mikro-Verfeinerung (Copy, Spacing,
+  FAQ-Präzision, Hero-Micro-Copy, Tool-UI-Button-Labels)
 
 ## Deine 5 Polish-Dimensionen
 
