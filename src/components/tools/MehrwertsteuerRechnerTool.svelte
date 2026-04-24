@@ -463,7 +463,7 @@
     box-shadow: 0 0 0 2px var(--color-focus-ring, var(--color-accent));
   }
   .custom-rate__input--error {
-    border-color: var(--color-error, #c0392b);
+    border-color: var(--color-error);
   }
   .custom-rate__unit {
     font-size: var(--font-size-small);
@@ -581,8 +581,8 @@
     cursor: default;
   }
   .copy-btn--copied {
-    border-color: var(--color-success, #5a7a3a);
-    color: var(--color-success, #5a7a3a);
+    border-color: var(--color-success);
+    color: var(--color-success);
   }
 
   .formula-tip {
@@ -610,7 +610,7 @@
     box-shadow: 0 0 0 2px var(--color-focus-ring, var(--color-accent));
   }
   .field__input-wrap--error {
-    border-color: var(--color-error, #c0392b);
+    border-color: var(--color-error);
   }
 
   .field__input {
@@ -634,7 +634,7 @@
   .field-error {
     margin: 0;
     font-size: var(--font-size-small);
-    color: var(--color-error, #c0392b);
+    color: var(--color-error);
     line-height: 1.4;
   }
 

@@ -9,24 +9,24 @@ category: "finance"
 contentVersion: 1
 headingHtml: "Mehrwertsteuer <em>berechnen</em>"
 howToUse:
-  - "Wähle den Steuersatz: 19 %, 7 %, 0 % oder einen individuellen Wert."
+  - "Wähle den Steuersatz: 19 %, 7 %, 0 % oder einen individuellen Wert."
   - "Gib Nettobetrag, MwSt-Betrag oder Bruttobetrag in das entsprechende Feld ein."
   - "Die anderen beiden Felder berechnen sich sofort — tippe (i) neben dem Ergebnis für die verwendete Formel."
   - "Kopiere einzelne Werte mit dem Kopieren-Button direkt aus dem Feld."
 faq:
   - q: "Wie berechnet man die enthaltene Mehrwertsteuer aus dem Bruttopreis?"
-    a: "Korrekte Formel: Netto = Brutto ÷ 1,19 (bei 19 %). MwSt-Betrag = Brutto − Netto. Der häufige Fehler ist Brutto × 0,19 — das ergibt 22,61 € statt der tatsächlich enthaltenen 19,00 € bei einem Brutto von 119 €."
+    a: "Korrekte Formel: Netto = Brutto ÷ 1,19 (bei 19 %). MwSt-Betrag = Brutto − Netto. Der häufige Fehler ist Brutto × 0,19 — das ergibt 22,61 € statt der tatsächlich enthaltenen 19,00 € bei einem Brutto von 119 €."
   - q: "Was gilt ab Januar 2026 für die Gastronomie?"
-    a: "Ab dem 1. Januar 2026 gilt dauerhaft 7 % Mehrwertsteuer für Restaurantspeisen in jeder Form — Verzehr vor Ort, Takeaway und Lieferung. Ausnahme: Getränke bleiben bei 19 %. Dies ist eine gesetzliche Regelung (§ 12 Abs. 2 UStG), keine zeitlich begrenzte Maßnahme."
-  - q: "Welche Produkte und Leistungen haben 7 % MwSt?"
-    a: "Lebensmittel (außer Alkohol und Getränke), Bücher und Zeitschriften (Print und digital), ÖPNV-Tickets, Hotelübernachtungen, Kulturveranstaltungen, Zahnwerkstätten sowie ab Januar 2026 auch Restaurantspeisen. Photovoltaik-Anlagen bis 30 kW fallen seit Januar 2023 unter den 0 %-Nullsteuersatz."
+    a: "Ab dem 1. Januar 2026 gilt dauerhaft 7 % Mehrwertsteuer für Restaurantspeisen in jeder Form — Verzehr vor Ort, Takeaway und Lieferung. Ausnahme: Getränke bleiben bei 19 %. Dies ist eine gesetzliche Regelung (§ 12 Abs. 2 UStG), keine zeitlich begrenzte Maßnahme."
+  - q: "Welche Produkte und Leistungen haben 7 % MwSt?"
+    a: "Lebensmittel (außer Alkohol und Getränke), Bücher und Zeitschriften (Print und digital), ÖPNV-Tickets, Hotelübernachtungen, Kulturveranstaltungen, Zahnwerkstätten sowie ab Januar 2026 auch Restaurantspeisen. Photovoltaik-Anlagen bis 30 kW fallen seit Januar 2023 unter den 0 %-Nullsteuersatz."
   - q: "Was ist die Kleinunternehmerregelung bei der Mehrwertsteuer?"
-    a: "Selbstständige und Freiberufler mit einem Vorjahresumsatz unter 25.000 € und einem laufenden Jahresumsatz unter 100.000 € können nach § 19 UStG die Kleinunternehmerregelung nutzen. Sie weisen dann keine Mehrwertsteuer auf Rechnungen aus und haben keinen Vorsteuerabzug. Die Grenzen wurden 2025 erhöht (zuvor: 17.500 € / 50.000 €)."
+    a: "Selbstständige und Freiberufler mit einem Vorjahresumsatz unter 25.000 € und einem laufenden Jahresumsatz unter 100.000 € können nach § 19 UStG die Kleinunternehmerregelung nutzen. Sie weisen dann keine Mehrwertsteuer auf Rechnungen aus und haben keinen Vorsteuerabzug. Die Grenzen wurden 2025 erhöht (zuvor: 17.500 € / 50.000 €)."
   - q: "Was bedeutet Netto und Brutto?"
     a: "Netto ist der Betrag ohne Mehrwertsteuer — der Preis, den der Unternehmer verlangt, bevor die Steuer aufgeschlagen wird. Brutto ist der Endpreis inklusive Mehrwertsteuer, den du als Verbraucher an der Kasse zahlst. Kassenpreise in Deutschland sind grundsätzlich Bruttopreise."
   - q: "Gilt dieser Rechner auch für Österreich oder die Schweiz?"
-    a: "Nein. Dieser Rechner ist auf deutsche Steuersätze ausgelegt (19 %, 7 %, 0 %). Österreich verwendet 20 % und 10 % als Hauptsätze, die Schweiz 8,1 % und 2,6 %. Über das Individuell-Feld kannst du jeden anderen Steuersatz manuell eingeben."
-relatedTools: []
+    a: "Nein. Dieser Rechner ist auf deutsche Steuersätze ausgelegt (19 %, 7 %, 0 %). Österreich verwendet 20 % und 10 % als Hauptsätze, die Schweiz 8,1 % und 2,6 %. Über das Individuell-Feld kannst du jeden anderen Steuersatz manuell eingeben."
+relatedTools: ['zeichenzaehler', 'base64-encoder', 'zeitzonen-rechner']
 ---
 
 ## Was macht dieser Rechner?
