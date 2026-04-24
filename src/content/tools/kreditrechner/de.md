@@ -25,7 +25,7 @@ faq:
   - q: "Wie viel Kredit kann ich mir leisten?"
     a: "Die Faustregel der Kreditwirtschaft lautet: maximale monatliche Rate = 35&nbsp;% des monatlichen Nettoeinkommens. Bei 3.000&nbsp;€ Netto sind das 1.050&nbsp;€ Rate. Ziehe davon fixe Ausgaben (Miete, Versicherungen) ab. Unser Rechner zeigt dir die Monatsrate für jeden Kreditbetrag — gib iterativ verschiedene Beträge ein, bis die Rate in dein Budget passt."
   - q: "Lohnt sich eine Sondertilgung?"
-    a: "Fast immer, wenn du die Möglichkeit hast. Eine Sondertilgung von 5.000&nbsp;€ bei einem 100.000-€-Kredit mit 4&nbsp;% auf 10&nbsp;Jahre spart rund 600–800&nbsp;€ Zinsen und verkürzt die Laufzeit um mehrere Monate. Der genaue Wert hängt vom Zeitpunkt der Sondertilgung ab: Je früher, desto mehr sparst du, weil die Zinsersparnis über die restliche Laufzeit kumuliert."
+    a: "Fast immer, wenn du die Möglichkeit hast. Eine jährliche Sondertilgung von 5.000&nbsp;€ bei einem 100.000-€-Kredit mit 4&nbsp;% auf 10&nbsp;Jahre spart rund 6.700&nbsp;€ Zinsen und verkürzt die Laufzeit um ca. 3&nbsp;Jahre — der Rechner zeigt das Delta live. Der genaue Wert hängt vom Zeitpunkt der Sondertilgung ab: Je früher, desto mehr sparst du, weil die Zinsersparnis über die restliche Laufzeit kumuliert."
 relatedTools: ['mehrwertsteuer-rechner']
 ---
 
@@ -75,7 +75,7 @@ Unser Rechner zeigt dir das Delta direkt: „Du sparst **X&nbsp;€** Zinsen und
 **Beispiel — Sondertilgung 5.000&nbsp;€ p.a.:**
 - Kredit: 100.000&nbsp;€, Sollzins: 4&nbsp;%, Laufzeit: 10&nbsp;Jahre
 - Ohne Sondertilgung: Gesamtzinsen ca. 21.494&nbsp;€, Laufzeit 120&nbsp;Monate
-- Mit 5.000&nbsp;€ Sondertilgung p.a.: Einsparung ca. 3.000&nbsp;€ Zinsen, Laufzeit kürzer um mehrere Monate
+- Mit 5.000&nbsp;€ Sondertilgung p.a.: Einsparung ca. 6.736&nbsp;€ Zinsen, Laufzeit um 36 Monate (3 Jahre) kürzer
 
 Die Höhe der Einsparung hängt vom Zeitpunkt der Sondertilgung ab: Je früher im Kreditverlauf, desto größer die Zinseinsparung, weil der Effekt über mehr verbleibende Monate kumuliert.
 
@@ -94,8 +94,6 @@ Der Rechner zeigt dir die **Restschuld nach deiner Zinsbindungsperiode** — tra
 **Risiko-Szenario:** Bei einer Restschuld von 150.000&nbsp;€ nach 10&nbsp;Jahren und einem Zinssatz von 4,0&nbsp;% (statt bisher 1,5&nbsp;%) steigt deine Monatsrate für die Anschlussfinanzierung erheblich an. Der Rechner erlaubt dir, dieses Szenario jederzeit durchzurechnen.
 
 ## Häufige Fragen
-
-(FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
 ## Verwandte Finanz-Tools
 
