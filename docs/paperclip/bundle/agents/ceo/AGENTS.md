@@ -113,9 +113,12 @@ Backlog-Pick → Auto-Refill-Fallback → Dispatch → Daily-Digest-Update → M
 
 ```python
 def pick_next_ticket(backlog, in_progress, completed_today):
-    # Hard-Gate: parallele Locks
-    if len(in_progress_locks()) > 0:
-        return None   # ein Builder aktiv → nichts Neues starten
+    # v1.3 (2026-04-24): Gate auf in-flight-Cap statt "any lock blocks"
+    # User-Intent "alles 100%, parallel arbeiten, Liste abarbeiten" —
+    # Paperclip unterstuetzt parallel via maxConcurrentRuns pro Agent.
+    # Nur bei echtem Overflow (>30 in_flight) stoppen.
+    if count_in_flight_issues() >= 30:
+        return None   # Max-Pipeline-Capacity erreicht, warten
 
     # Kostenlos-Budget-Check (§7.16)
     if budget_guard_today() > threshold:
@@ -175,9 +178,9 @@ Dann exit heartbeat cleanly.
 **C. Dispatch-Logic (Masterplan-Priority, v1.2):**
 
 ```bash
-# Hard-Caps (gelockt, User-Approval-Ticket für Änderung)
-MAX_TICKETS_PER_HEARTBEAT=3
-MAX_IN_FLIGHT=10
+# Hard-Caps (v1.3 2026-04-24 — User-Decision "Liste abarbeiten, parallel")
+MAX_TICKETS_PER_HEARTBEAT=10   # vorher 3 — User will dass CEO direkt die Queue fuellt
+MAX_IN_FLIGHT=30               # vorher 10 — Buffer fuer parallele Pipelines
 
 COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"   # Konverter Webseite
 API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
