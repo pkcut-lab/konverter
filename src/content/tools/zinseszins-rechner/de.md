@@ -2,7 +2,7 @@
 toolId: "compound-interest-calculator"
 language: "de"
 title: "Zinseszinsrechner — Sparplan mit Steuer berechnen"
-metaDescription: "Zinseszinsrechner: Sparplan mit Abgeltungssteuer (26,375&nbsp;%), Sparerpauschbetrag, TER-Kosten und Inflation. 100&nbsp;% clientseitig, kein Tracking. Kostenlos."
+metaDescription: "Zinseszinsrechner: Sparplan mit Abgeltungssteuer (26,375&nbsp;%), Sparerpauschbetrag, TER-Kosten und Inflation. 100 % clientseitig, kein Tracking. Kostenlos."
 tagline: "Nominal, nach Steuer und in heutiger Kaufkraft — drei ehrliche Zahlen für deinen Sparplan."
 intro: "Berechne, wie sich dein Kapital durch den Zinseszinseffekt entwickelt — mit monatlicher Sparrate, Abgeltungssteuer (26,375&nbsp;%), Sparerpauschbetrag (1.000&nbsp;€/Jahr), Inflationsrate und Kostenquote (TER). Der Rechner zeigt drei Szenarien parallel: nominales Endkapital, Wert nach Steuern und reale Kaufkraft. Alle Berechnungen laufen ausschließlich in deinem Browser — kein Server-Upload, kein Tracking."
 category: "finance"

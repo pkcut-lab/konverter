@@ -47,7 +47,7 @@ Die monatliche Rate (Annuität) A ergibt sich aus:
 - **q** = 1 + i (Aufzinsungsfaktor)
 - **n** = Gesamtlaufzeit in Monaten
 
-**Beispiel:** 300.000&nbsp;€ Darlehensbetrag, 3,5&nbsp;% Sollzins, 2&nbsp;% Anfangstilgung ergibt eine Monatsrate von 1.375&nbsp;€. Bei einer Zinsbindung von 10&nbsp;Jahren beträgt die Restschuld nach 120&nbsp;Monaten rund 247.000&nbsp;€. Die vollständige Tilgung dauert bei dieser Rate ca. 29&nbsp;Jahre.
+**Beispiel:** 300.000&nbsp;€ Darlehensbetrag, 3,5&nbsp;% Sollzins, 2&nbsp;% Anfangstilgung ergibt eine Monatsrate von 1.375&nbsp;€. Bei einer Zinsbindung von 10&nbsp;Jahren beträgt die Restschuld nach 120&nbsp;Monaten rund 228.000&nbsp;€. Die vollständige Tilgung dauert bei dieser Rate ca. 29&nbsp;Jahre.
 
 **Restschuld nach m Monaten:**
 
@@ -58,13 +58,13 @@ Diese Formel wird intern für jeden Monat des Tilgungsplans berechnet.
 ## Anwendungsbeispiele
 
 **Beispiel 1 — Neubaufinanzierung (300.000&nbsp;€, 3,5&nbsp;% Zins, 2&nbsp;% Anfangstilgung):**
-Monatsrate: 1.375&nbsp;€ | Gesamtzinsen: ca. 148.000&nbsp;€ | Laufzeit: ca. 29&nbsp;Jahre | Restschuld nach 10&nbsp;Jahren: ca. 247.000&nbsp;€
+Monatsrate: 1.375&nbsp;€ | Gesamtzinsen: ca. 178.000&nbsp;€ | Laufzeit: ca. 29&nbsp;Jahre | Restschuld nach 10&nbsp;Jahren: ca. 228.000&nbsp;€
 
 **Beispiel 2 — Umschuldung (180.000&nbsp;€, 4,2&nbsp;% Zins, Laufzeit 20&nbsp;Jahre):**
-Monatsrate: 1.115&nbsp;€ | Gesamtzinsen: ca. 87.000&nbsp;€ | vollständige Tilgung in 240&nbsp;Monaten
+Monatsrate: ca. 1.110&nbsp;€ | Gesamtzinsen: ca. 87.000&nbsp;€ | vollständige Tilgung in 240&nbsp;Monaten
 
 **Beispiel 3 — Mit Sondertilgung (300.000&nbsp;€, 3,5&nbsp;% Zins, 2&nbsp;% Anfangstilgung, 5.000&nbsp;€/Jahr Sondertilgung):**
-Einsparung: ca. 18.000&nbsp;€ Zinsen | Laufzeitverkürzung: ca. 30&nbsp;Monate | Die Einsparung durch Sondertilgung ist besonders hoch in den ersten Jahren, wenn die Restschuld noch groß ist.
+Einsparung: ca. 63.000&nbsp;€ Zinsen | Laufzeitverkürzung: ca. 115&nbsp;Monate (ca. 9,6&nbsp;Jahre) | Die Einsparung durch Sondertilgung ist besonders hoch in den ersten Jahren, wenn die Restschuld noch groß ist.
 
 ## Häufige Einsatzgebiete
 

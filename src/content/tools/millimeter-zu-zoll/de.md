@@ -3,7 +3,7 @@ toolId: mm-to-inch
 language: de
 title: "Millimeter in Zoll umrechnen – Formel & Tabelle"
 headingHtml: "Millimeter in <em>Zoll</em> umrechnen"
-metaDescription: "Millimeter in Zoll umrechnen: exakte Formel (1&nbsp;mm = 0,0393701 in), Tabelle gängiger Werte und FAQ zu Zoll-Brüchen und Technik-Maßen. Ohne Anmeldung, ohne Ads."
+metaDescription: "Millimeter in Zoll umrechnen: exakte Formel (1&nbsp;mm = 0,0393701 in), Tabelle gängiger Werte und FAQ zu Zoll-Brüchen und Technik-Maßen. Ohne Anmeldung."
 tagline: "Präzise Längen-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Millimetern (mm) in die entsprechende Angabe in Zoll (inch, in) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen metrischem und imperialem Kleinmaß pendelt — von der Schraubengröße bis zur Bildschirmdiagonale. Millimeter in Zoll umrechnen ist dank der exakten Definition von 1 Zoll = 25,4&nbsp;mm seit 1959 eindeutig."
 howToUse:
