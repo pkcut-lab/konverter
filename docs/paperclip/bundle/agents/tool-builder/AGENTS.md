@@ -30,9 +30,17 @@ rulebooks:
   - DESIGN.md
 references:
   - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
+  - graphify-out/GRAPH_REPORT.md   # god nodes + registry community — welche IDs/Einträge bereits existieren
 ---
 
 # AGENTS — Tool-Builder-Prozeduren (v1.1)
+
+## Vor dem Build: Kontext-Check
+
+Lies `graphify-out/GRAPH_REPORT.md` (Community „Tool Category Taxonomy" +
+„Project Configuration + Rules") bevor du `src/lib/tools/` oder die Registries
+anfasst. Zeigt welche IDs bereits registriert sind und welche Einträge du
+hinzufügen musst — verhindert doppelte IDs und vergessene Registry-Einträge.
 
 ## 0. Definition of Done (HART — ohne diese Checkliste ist kein Commit zulässig)
 

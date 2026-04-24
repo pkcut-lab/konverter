@@ -28,6 +28,7 @@ rulebooks:
     - CONTENT.md
     - DESIGN.md
 inputs:
+  - graphify-out/GRAPH_REPORT.md   # community map — zeigt welche Tools pro Kategorie existieren und ihre Verbindungen
   - src/content/tools/*/de.md (per-category batch)
   - dossiers/*/*.md (§9 divergence-rationale)
 outputs:

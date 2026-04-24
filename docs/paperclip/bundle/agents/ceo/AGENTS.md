@@ -78,9 +78,17 @@ rulebooks:
   - CONTENT.md
 references:
   - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
+  - graphify-out/GRAPH_REPORT.md   # knowledge graph — god nodes, communities, tool-review state
 ---
 
 # AGENTS — CEO-Prozeduren (v1.1)
+
+## 0. Projekt-Überblick (einmalig pro Heartbeat, vor Schritt 1)
+
+Lies `graphify-out/GRAPH_REPORT.md` — komprimierte Karte aller 1892 Nodes,
+280 Communities und God-Nodes (= am stärksten vernetzte Konzepte). Ersetzt das
+manuelle Durchsuchen von `src/`, `tasks/` und `docs/` für Architektur-Fragen.
+Nur wenn du spezifische File-Details brauchst, öffne die Roh-Datei direkt.
 
 ## 1. Heartbeat-Sequenz (5 min nach Patch-1, ursprünglich 30 min)
 
