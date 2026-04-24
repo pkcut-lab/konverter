@@ -14,7 +14,12 @@ dispatched_by: ceo
 can_dispatch: []
 writes_git_commits: false
 activation_phase: 2
-activation_trigger: post-critic-pass-score-80-95 OR analytics-underperformer-top-5
+# NO AUTO-TRIGGER (2026-04-24 Architecture-Review):
+# Auto-Trigger 'post-critic-pass-score-80-95' war Bash-Convention ohne Runtime-Hook
+# und wäre bei Skalierung teuer (Opus pro Tool mit Score 80-94%). Polish-Agent ist
+# jetzt MANUAL-DISPATCH only: User öffnet Ticket mit `ticket_type: polish-request`
+# + `target_slug: <slug>` wenn echter Polish-Bedarf besteht.
+activation_trigger: manual-dispatch-only
 budget_caps:
   tokens_in_per_run: 8000
   tokens_out_per_run: 3000

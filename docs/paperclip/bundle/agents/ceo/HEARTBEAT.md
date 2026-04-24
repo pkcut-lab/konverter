@@ -257,7 +257,7 @@ awk -v r="$reject_rate" 'BEGIN{exit !(r > 0.20)}' && {
 slots=$(( MAX_TICKETS_PER_HEARTBEAT - (in_flight - prev_in_flight) ))
 (( slots <= 0 )) && return
 
-# 1. Masterplan-Extraktion: Prio-Reihenfolge (N=1..789)
+# 1. Masterplan-Extraktion: Prio-Reihenfolge (N=1..788)
 masterplan="docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md"
 [[ ! -f "$masterplan" ]] && {
   live_alarm "masterplan-missing" "$masterplan nicht gefunden — Dispatch blockiert"
@@ -265,10 +265,29 @@ masterplan="docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md"
 }
 
 # Extrahiert aus "| **42** | `mehrwertsteuer-rechner` | ..." → "42|mehrwertsteuer-rechner"
-# Dann numerisch sort nach Prio-Nummer (aufsteigend: 1 → 789).
+# Dann numerisch sort nach Prio-Nummer (aufsteigend: 1 → 788).
 grep -oE '^\| \*\*[0-9]+\*\* \| `[a-z0-9-]+`' "$masterplan" | \
   sed -E 's/^\| \*\*([0-9]+)\*\* \| `([a-z0-9-]+)`/\1|\2/' | \
   sort -t '|' -k1 -n -u > /tmp/prio-order.txt
+
+# Sanity-Check: Extraktion muss plausible Zeilenzahl liefern, sonst Format-Drift.
+# Erwartet: ~788 Einträge (Stand 2026-04-23). Toleranz: ±20% (630..950).
+# Außerhalb = vermutlich Format-Änderung (z.B. extra Space, Emphasis) oder File-Edit-Bug.
+prio_count=$(wc -l < /tmp/prio-order.txt)
+if (( prio_count < 100 )); then
+  live_alarm "masterplan-regex-broken" "Nur $prio_count Prio-Zeilen extrahiert (erwartet ~788). Format-Drift in $masterplan? — Dispatch blockiert"
+  return
+fi
+if (( prio_count < 630 || prio_count > 950 )); then
+  # Soft-Warning, nicht blockieren — aber Digest-Notiz für User
+  digest_append "- Masterplan-Regex: $prio_count Prios extrahiert (erwartet 630-950). Format-Drift prüfen."
+fi
+
+# Dedup-Guard: doppelte Slugs im Masterplan = User-Edit-Bug
+unique_slugs=$(awk -F'|' '{print $2}' /tmp/prio-order.txt | sort -u | wc -l)
+if (( unique_slugs != prio_count )); then
+  digest_append "- Masterplan-Dedup: $prio_count Zeilen / $unique_slugs unique Slugs. Duplikat-Prios?"
+fi
 
 # 2. Pro Slug in Prio-Reihenfolge: Queue-Lookup für Metadata + Dedup + Enum + Dispatch
 queue="tasks/backlog/differenzierung-queue.md"

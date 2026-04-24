@@ -139,84 +139,150 @@ def pick_next_ticket(backlog, in_progress, completed_today):
     return candidates[0] if candidates else None
 ```
 
-## 2.5 Auto-Refill-Fallback (Step 10, v1.1 Core)
+## 2.5 Auto-Refill-Fallback — MASTERPLAN-PRIORITY-DRIVEN (v1.2, 2026-04-24)
 
 **Wann invoken.** Step 9 (§2 `pick_next_ticket`) returned `None` — keine open
 Tickets mit resolved dependencies + Dossier-Ready. Bevor du "Empty inbox, exit
-cleanly" loggst, MUSST du diesen Fallback durchlaufen. Sonst bleibt Pipeline
-stehen obwohl `tasks/backlog/differenzierung-queue.md` 40+ Kandidaten listet.
+cleanly" loggst, MUSST du diesen Fallback durchlaufen.
+
+**Prio-Quelle (v1.2 — GEÄNDERT gegenüber v1.1):**
+- **`docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md`** — verbindliche
+  Dispatch-Reihenfolge. Extraktion: Zeilen mit `| **N** | \`slug\``, N aufsteigend
+  (Prio 1 → 788).
+- **`tasks/backlog/differenzierung-queue.md`** — Lookup-Tabelle für Metadata
+  (category, label, parent_hint) pro Slug. **Die Tier-Struktur der Queue ist NICHT
+  mehr Dispatch-Order** — Tiers dienen nur der groben Kategorisierung fürs
+  Nachschlagen.
+
+**Kritische Invariante:** CEO dispatcht IMMER Prio 1 vor Prio 2 vor Prio 3 —
+unabhängig vom Tier, in dem der Slug in `differenzierung-queue.md` steht.
 
 **Procedure (hard, nicht überspringbar).**
 
-**A. Pre-flight gates** (alle 4 müssen grün sein — HEARTBEAT.md §6.2):
+**A. Pre-flight gates** (alle 4 müssen grün sein):
 
 1. Active queue leer (Step 9 hat `None` returned — verified).
-2. `tasks/backlog/differenzierung-queue.md` existiert + hat Tier-1/Tier-2/Tier-3
-   Sektionen mit Kandidaten (Format: `<slug> | <category> | <label> | <parent>`).
-3. Keine Tripwires fired (`tasks/tripwires.yaml` — kurze Pattern-Checks gegen
-   jüngste Critic-Verdicts + build-logs).
-4. `critic_reject_rate_rolling_10 ≤ 0.20` (konservativ, strenger als Tripwire
-   `>0.30`). Aggregiere aus letzten 10 `tasks/awaiting-critics/*/merged-critic.md`
-   verdict-Feldern: count(`fail`+`rework_required:true`) / 10.
+2. Masterplan-File verfügbar + plausible Zeilenzahl (Sanity-Check unten).
+3. Keine Tripwires fired (`tasks/tripwires.yaml`).
+4. `critic_reject_rate_rolling_10 ≤ 0.20` (konservativ).
 
 **B. Wenn ein Gate fail** → `inbox/daily-digest/$(date -I).md` appenden:
 ```
-- Auto-Refill paused: <reason> (e.g. reject_rate=0.24 > 0.20, backlog-empty, tripwire-fired:critic_reject)
+- Auto-Refill paused: <reason> (e.g. reject_rate=0.24 > 0.20, masterplan-missing, tripwire-fired)
 ```
 Dann exit heartbeat cleanly.
 
-**C. Wenn alle Gates grün** → picke Top-3 FIFO aus der Queue (Tier-1 first,
-dann Tier-2, dann Tier-3). Dedup-Regel: skippe Slugs, die bereits in
-`src/content/tools/<slug>/de.md` existieren.
-
-**D. Dispatch per Paperclip-API** (per Slug, max 3 pro Heartbeat, max 10
-in-flight gesamt inkl. `in_progress|in_review|blocked|todo`):
+**C. Dispatch-Logic (Masterplan-Priority, v1.2):**
 
 ```bash
+# Hard-Caps (gelockt, User-Approval-Ticket für Änderung)
+MAX_TICKETS_PER_HEARTBEAT=3
+MAX_IN_FLIGHT=10
+
 COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"   # Konverter Webseite
 API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
 
 # Pre-check in-flight-cap
 IN_FLIGHT=$(curl -s "$API" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const a=JSON.parse(d);console.log(a.filter(i=>['todo','in_progress','in_review','blocked'].includes(i.status)).length)})")
-(( IN_FLIGHT >= 10 )) && { echo "refill-skip: in_flight=$IN_FLIGHT >= cap=10"; exit 0; }
+(( IN_FLIGHT >= MAX_IN_FLIGHT )) && { echo "refill-skip: in_flight=$IN_FLIGHT >= cap=$MAX_IN_FLIGHT"; exit 0; }
 
-SLOTS=$(( 3 < (10 - IN_FLIGHT) ? 3 : (10 - IN_FLIGHT) ))
+SLOTS=$(( MAX_TICKETS_PER_HEARTBEAT < (MAX_IN_FLIGHT - IN_FLIGHT) ? MAX_TICKETS_PER_HEARTBEAT : (MAX_IN_FLIGHT - IN_FLIGHT) ))
+(( SLOTS <= 0 )) && exit 0
+
+# 1. Masterplan-Extraktion: Prio-Reihenfolge (N=1..788)
+masterplan="docs/superpowers/plans/2026-04-23-tool-priority-masterplan.md"
+if [[ ! -f "$masterplan" ]]; then
+  echo "- Live-Alarm: masterplan-missing — Dispatch blockiert" >> "inbox/to-user/live-alarm-$(date -I)-masterplan-missing.md"
+  exit 0
+fi
+
+# Extrahiert aus "| **42** | `mehrwertsteuer-rechner` | ..." → "42|mehrwertsteuer-rechner"
+# Dann numerisch sort nach Prio-Nummer (aufsteigend: 1 → 788).
+grep -oE '^\| \*\*[0-9]+\*\* \| `[a-z0-9-]+`' "$masterplan" | \
+  sed -E 's/^\| \*\*([0-9]+)\*\* \| `([a-z0-9-]+)`/\1|\2/' | \
+  sort -t '|' -k1 -n -u > /tmp/prio-order.txt
+
+# Sanity-Check: Extraktion muss plausible Zeilenzahl liefern
+# Erwartet: ~788 (Stand 2026-04-23). Unter 100 = Format-Drift, Dispatch blockiert.
+PRIO_COUNT=$(wc -l < /tmp/prio-order.txt)
+if (( PRIO_COUNT < 100 )); then
+  echo "- Live-Alarm: masterplan-regex-broken — nur $PRIO_COUNT Prios extrahiert (erwartet ~788)" \
+    >> "inbox/to-user/live-alarm-$(date -I)-masterplan-regex.md"
+  exit 0
+fi
+if (( PRIO_COUNT < 630 || PRIO_COUNT > 950 )); then
+  echo "- Masterplan-Regex: $PRIO_COUNT Prios extrahiert (erwartet 630-950). Format-Drift prüfen." \
+    >> "inbox/daily-digest/$(date -I).md"
+fi
+
+# Dedup-Guard: doppelte Slugs im Masterplan = User-Edit-Bug
+UNIQUE_SLUGS=$(awk -F'|' '{print $2}' /tmp/prio-order.txt | sort -u | wc -l)
+if (( UNIQUE_SLUGS != PRIO_COUNT )); then
+  echo "- Masterplan-Dedup: $PRIO_COUNT Zeilen / $UNIQUE_SLUGS unique Slugs. Duplikat-Prios?" \
+    >> "inbox/daily-digest/$(date -I).md"
+fi
+
+# 2. Pro Slug in Prio-Reihenfolge: Queue-Lookup für Metadata + Dedup + Enum + Dispatch
+queue="tasks/backlog/differenzierung-queue.md"
 PICKED=0
 
-# Lese Queue-Datei, FIFO top→bottom über alle Tier-Sektionen
-awk '/^```$/{inblock=!inblock;next} inblock && /\|/ {print}' tasks/backlog/differenzierung-queue.md | while IFS='|' read -r slug category label parent; do
-  slug=$(echo "$slug" | xargs); category=$(echo "$category" | xargs); label=$(echo "$label" | xargs); parent=$(echo "$parent" | xargs)
-  [[ -z "$slug" || "$slug" =~ ^# ]] && continue
-  [[ -d "src/content/tools/$slug" ]] && continue   # dedup
+while IFS='|' read -r prio slug; do
+  [[ -z "$slug" ]] && continue
 
-  # Category-Enum-Check (must be in TOOL_CATEGORIES; grep weil categories.ts ist TS)
-  grep -qE "^  '${category}'," src/lib/tools/categories.ts || continue
+  # Dedup: skip wenn schon gebaut
+  [[ -d "src/content/tools/$slug" ]] && continue
 
-  # Create Paperclip-Issue (POST /api/companies/<cid>/issues)
+  # Queue-Lookup: grep die Zeile mit diesem Slug (Format "slug | category | label | parent_hint")
+  queue_line=$(grep -E "^[[:space:]]*${slug}[[:space:]]*\|" "$queue" | head -1)
+  if [[ -z "$queue_line" ]]; then
+    echo "- Auto-Refill skip: prio=$prio slug=$slug nicht in differenzierung-queue.md" \
+      >> "inbox/daily-digest/$(date -I).md"
+    continue
+  fi
+
+  # Metadata aus Queue-Zeile extrahieren (Pipe-separated)
+  category=$(echo "$queue_line" | awk -F'|' '{print $2}' | xargs)
+  label=$(echo "$queue_line"    | awk -F'|' '{print $3}' | xargs)
+  parent_hint=$(echo "$queue_line" | awk -F'|' '{print $4}' | xargs)
+
+  # Enum-Check: Category muss in TOOL_CATEGORIES stehen
+  grep -qE "^  '${category}'," src/lib/tools/categories.ts || {
+    echo "- Auto-Refill skip: prio=$prio slug=$slug category=$category not in TOOL_CATEGORIES" \
+      >> "inbox/daily-digest/$(date -I).md"
+    continue
+  }
+
+  # Dispatch in Prio-Reihenfolge (Paperclip Issue erstellen)
   curl -s -X POST -H "Content-Type: application/json" "$API" -d "$(cat <<EOF
 {
-  "title": "Overnight-Build: $slug (full pipeline + auto-merge)",
-  "description": "Auto-refilled by CEO §2.5 from tasks/backlog/differenzierung-queue.md.\n\n**Slug:** $slug\n**Category:** $category\n**Label:** $label\n**Parent-Dossier-Hint:** $parent\n\n**Pipeline (downstream-routines pick up):**\n1. Dossier-Research: $slug\n2. Tool-Build: $slug (DE content + config + tests)\n3. Critic-Audit: $slug (15-Check-Rubrik)\n4. Auto-merge if verdict=pass (auto-rollback-policy.yaml §5)",
+  "title": "Overnight-Build: $slug (Prio $prio, full pipeline + auto-merge)",
+  "description": "Auto-refilled by CEO §2.5 in Masterplan-Prio-Order (v1.2).\n\n**Slug:** $slug\n**Masterplan-Prio:** $prio\n**Category:** $category\n**Label:** $label\n**Parent-Dossier-Hint:** $parent_hint\n\n**Pipeline (downstream-routines pick up):**\n1. Dossier-Research: $slug\n2. Tool-Build: $slug (DE content + config + tests)\n3. Critic-Audit: $slug (19-Check-Rubrik)\n4. Auto-merge if verdict=pass (auto-rollback-policy.yaml §5)",
   "priority": "medium",
   "status": "backlog"
 }
 EOF
 )" > /dev/null
 
-  echo "- Auto-Refill dispatch: $slug (category=$category, in_flight=$(( IN_FLIGHT + PICKED + 1 )))" >> "inbox/daily-digest/$(date -I).md"
+  echo "- Auto-Refill dispatch: prio=$prio slug=$slug category=$category (in_flight=$(( IN_FLIGHT + PICKED + 1 )))" \
+    >> "inbox/daily-digest/$(date -I).md"
   PICKED=$(( PICKED + 1 ))
   (( PICKED >= SLOTS )) && break
-done
+done < /tmp/prio-order.txt
 
-(( PICKED > 0 )) && echo "- Auto-Refill: $PICKED ticket(s) dispatched aus differenzierung-queue" >> "inbox/daily-digest/$(date -I).md"
+(( PICKED > 0 )) && echo "- Auto-Refill: $PICKED ticket(s) dispatched in Masterplan-Prio-Reihenfolge" \
+  >> "inbox/daily-digest/$(date -I).md"
 ```
 
-**E. Exit heartbeat cleanly** nach Digest-Write. Nächster Heartbeat (5 min
+**D. Exit heartbeat cleanly** nach Digest-Write. Nächster Heartbeat (5 min
 später) picked die neu-erstellten Issues regulär via Step 9 auf.
 
-**F. Wichtig.** Diese §2.5 ersetzt NIEMALS den normalen Step 9 — sie ist
+**E. Wichtig.** Diese §2.5 ersetzt NIEMALS den normalen Step 9 — sie ist
 Fallback-only. Wenn Step 9 ein valid ticket returned hat, dispatche das, §2.5
 wird NICHT durchlaufen.
+
+**Sync mit HEARTBEAT.md §6.3:** Beide Files beschreiben dieselbe Prozedur.
+AGENTS.md ist die authoritative Quelle (Paperclip-Runtime lädt AGENTS.md als
+`instructionsFilePath`). HEARTBEAT.md ist Human-Reference.
 
 ## 3. Assignment-Regeln (v1.0 — 4-Rollen-Core)
 

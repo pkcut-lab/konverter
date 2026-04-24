@@ -19,15 +19,24 @@ Opus-4-7 weil Creative-Micro-Polish braucht Geschmack + Reasoning, keine Rubrik-
 2. **Mikro, nicht Macro.** Du fügst keine neue Feature hinzu, änderst nicht die Architektur. Copy-Twist, Spacing-Delta, FAQ-Klarheit — das Level.
 3. **Opt-in, nicht Opt-out.** Polish ist EXTRA. Wenn CEO-Budget zu knapp oder User Polish deaktiviert → skip.
 
-## Trigger
+## Trigger (Manual-Only, v1.1 — 2026-04-24)
 
-| Trigger | Aktion |
+**Kein Auto-Trigger.** Polish-Agent wird NUR dispatched, wenn User explizit ein
+`ticket_type: polish-request` Ticket öffnet mit `target_slug: <slug>`.
+
+Rationale (Architecture-Review 2026-04-24): Der frühere Auto-Trigger
+"Score 80-94% → Dispatch" war Bash-Convention in AGENTS.md, nicht ein echter
+Runtime-Hook. Bei Skalierung (50+ Tools/Monat × Score 80-94% = 20-40 Dispatches)
+wäre das in Opus-4-7 ~$200-400/Monat für Output, der aktuell von niemand
+konsumiert wird (Suggestions landen in `tasks/polish-suggestions-*.md`).
+
+**Wenn User Polish will, fragt User.** Nicht umgekehrt.
+
+| Eligible-Check (gilt auch bei Manual-Dispatch) | Aktion |
 |---|---|
-| Tool-Rubrik-Score 80–94% (partial) | Dispatch |
-| Tool-Rubrik-Score ≥95% | Skip — schon genug gut |
-| Tool-Rubrik-Score <80% | Skip — Rework ist Priorität |
-| Tool hat Rework-Cycle=2 + Score-as-is | Skip (User-Territorium) |
-| Tool in Analytics-Underperformer-Top-5 | Dispatch unabhängig vom Score |
+| Tool-Rubrik-Score ≥95% | Skip — schon genug gut, kein Verbesserungspotenzial |
+| Tool-Rubrik-Score <80% | Skip — Rework ist Priorität, nicht Polish |
+| Tool hat Rework-Cycle=2 + Score-as-is | Skip (User hat Scope bereits entschieden) |
 
 ## Deine 5 Polish-Dimensionen
 

@@ -1,15 +1,17 @@
-# SCRIPT-INVENTORY (v1.1, 2026-04-23, reconciled)
+# SCRIPT-INVENTORY (v1.2, 2026-04-24, reconciled after architecture review)
 
-> **Zweck:** Ehrliche Inventur aller von Agenten-AGENTS.md-Files referenzierten Scripts. Zeigt was existiert, was fehlt, und wer Owner ist.
+> **Zweck:** Ehrliche Inventur aller von Agenten-AGENTS.md-Files referenzierten Scripts. Zeigt was existiert, was von Agenten tatsächlich genutzt wird (= keine Orphans), was fehlt.
 >
-> **Generiert aus:** `grep -rohE 'scripts/[a-zA-Z0-9/_-]+\.mjs' docs/paperclip/bundle/agents/ | sort -u | wc -l`
+> **Generiert aus:** `grep -rohE 'scripts/[a-zA-Z0-9/_-]+\.mjs' docs/paperclip/bundle/agents/ | sort -u | wc -l` + `find scripts -name "*.mjs" -type f | wc -l`
 >
-> **Ground-Truth-Count (2026-04-23):**
+> **Ground-Truth-Count (2026-04-24, empirisch neu gezählt):**
 > - Referenzen unique: **150**
-> - Existierend (scripts/**/*.mjs): **13**
-> - Fehlend: **137**
+> - Existierend total (`scripts/**/*.mjs`): **14**
+> - Davon von Agenten tatsächlich referenziert (keine Orphans): **6**
+> - Orphan-Scripts (existieren, nutzt niemand): **8** — `audit-screenshot.mjs`, `eval-fixture-gen.mjs`, `eval-runner.mjs`, `generate-og-image.mjs`, `generate-pwa-icons.mjs`, `stitch/generate.mjs`, `stitch/list.mjs`, `validate-frontmatter.mjs`
+> - Fehlend (referenziert aber nicht existent): **144**
 >
-> **v1.1 Korrektur:** v1.0 hatte 141/8/133 (falsch). Korrigiert nach Review-Feedback.
+> **v1.2 Korrektur:** v1.1 sagte 150/13/137 — falsch gezählt (Orphans mitgerechnet). Empirische Ground-Truth: **150/14/144**, davon **6/14 effektiv Agent-relevant**. Korrigiert nach externem Architecture-Review 2026-04-24.
 >
 > **Konsequenz:** Ohne diese Scripts crashen 29 von 33 Agenten beim ersten Heartbeat (`No such file`). Siehe `GAPS-AND-NEXT-STEPS.md` für Tranche-B-Plan.
 
