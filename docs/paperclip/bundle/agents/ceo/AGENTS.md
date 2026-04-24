@@ -55,6 +55,7 @@ outputs:
   - inbox/to-user/live-alarm-*.md
   - tasks/current_task.md
   - memory/ceo-log.md
+  - memory/error-register.md
 rulebooks:
   - docs/paperclip/BRAND_GUIDE.md
   - docs/paperclip/TICKET_TEMPLATE.md
@@ -89,7 +90,7 @@ Detaillierter Ablauf in `HEARTBEAT.md`. Kurz (14 Steps, v1.4 Reihenfolge —
 Kill-Switch → Identity → Git-Account → Rulebook-Integrity →
 Inbox → Active-Locks → Critic-Aggregation → Consumer-Loops (§3.4) →
 Autonomie-Gate-Resolve → Backlog-Pick → Auto-Refill-Fallback →
-Dispatch → Daily-Digest-Update → Memory
+Dispatch → Error-Pattern-Detection (§8.5) → Daily-Digest-Update → Memory
 ```
 
 **Neu in v1.4 (2026-04-24, Patch 6 „Agenten arbeiten ohne Stop"):**
@@ -769,6 +770,179 @@ def check_dossier_ready(tool_slug, category):
 
     return True
 ```
+
+## 8.5 Error-Pattern-Detection (Step 11.5, v1.5 — 2026-04-24)
+
+**Wann invoken.** Jeden Heartbeat, nach Step 11 (Dispatch) und VOR Step 12
+(Daily-Digest-Update). So landen Error-Findings im selben Digest.
+
+**Daten-Grundlage.** `memory/error-register.md` — strukturierter YAML-Append-Log.
+CEO ist der einzige Schreiber. Schema dokumentiert in der Datei selbst.
+
+### §8.5.1 Scan-Quellen (6 Quellen, feste Reihenfolge)
+
+```bash
+ERROR_SOURCES=(
+  "memory/ceo-log.md"                          # CEO-Heartbeat-Anomalien
+  "memory/*-log.md"                             # Per-Agent-Logs (merged-critic, etc.)
+  "tasks/awaiting-critics/*/"                   # Critic-Report-Fails
+  "tasks/digest/$(date -I).md"                  # Heutiger Digest
+  "inbox/to-ceo/*.md"                           # Eskalationen von Workers
+  "inbox/processed/$(date -I)/*.md"             # Bereits verarbeitete Meldungen
+)
+```
+
+**Server-Log** (`~/.paperclip-worktrees/.../logs/server.log`) wird via
+Paperclip-API abgefragt, nicht direkt gelesen (CEO hat keinen Dateisystem-Zugriff
+auf den Worktree-Root):
+
+```bash
+# Letzte 50 Zeilen Server-Errors seit letztem Heartbeat
+curl -s -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
+  "$PAPERCLIP_API_URL/api/agents/me/inbox-lite" | \
+  jq -r '.recentErrors // []'
+```
+
+Falls der API-Endpunkt nicht verfügbar ist (404/500), skip Server-Log-Scan
+mit Digest-Note — kein Hard-Block.
+
+### §8.5.2 Klassifikation (Error-Type-Enum)
+
+| Type | Trigger-Pattern | Default-Severity |
+|------|----------------|------------------|
+| `race-condition` | "duplicate", "raced past", "3 parallel heartbeats" | high |
+| `timeout` | "lost execution", "stale lock", "age=.*s" | medium |
+| `validation` | "YAML parse error", "enum-check fail", "invariant" | medium |
+| `dossier-fail` | "verdict=fail", "citation_verify.*false" | medium |
+| `adapter-crash` | "error" in agent status, "failed after.*seconds" | high |
+| `token-limit` | "hit your limit", "resets.*am", "quota" | medium |
+| `dedup-fail` | "duplicate Tool-Build", "burst at" | high |
+| `consumer-loop-orphan` | "orphan", "no downstream", "pipeline-gap" | high |
+| `git-account` | "DennisJedlicka", "wrong git user" | critical |
+| `invariant-gate` | "I-1:", "I-2:", "I-3:", "I-4:", "invariant-gate" | high |
+| `critic-drift` | "F1 <", "eval_f1.*0\.[0-7]", "self-disabled" | critical |
+| `umbrella-orphan` | "umbrella", "Overnight-Build.*done.*0 shipped" | high |
+| `lock-stale` | "Stale-Lock released", "lock.*4h" | medium |
+| `unknown` | (kein Pattern matched) | low |
+
+### §8.5.3 Dedup + Append-Procedure
+
+```bash
+# Pseudocode — CEO führt das in-context aus, kein separates Script
+
+for source in "${ERROR_SOURCES[@]}"; do
+  errors=$(scan_for_errors "$source")   # Pattern-Match gegen §8.5.2 Tabelle
+  for err in $errors; do
+    type=$(classify_error "$err")       # Enum aus §8.5.2
+    severity=$(default_severity "$type")
+
+    # Dedup gegen error-register.md: gleicher type + gleiche root_cause
+    # in den letzten 24h?
+    existing=$(grep_register "$type" "$err.root_cause" "24h")
+    if [[ -n "$existing" ]]; then
+      # Increment count + update last_seen (in-place edit der YAML-Zeile)
+      increment_count "$existing"
+      update_last_seen "$existing" "$(date -Iseconds)"
+    else
+      # Neuer Eintrag
+      next_id=$(next_error_id)   # err-YYYY-MM-DD-NNN
+      append_to_register <<YAML
+- id: $next_id
+  type: $type
+  severity: $severity
+  first_seen: $(date -Iseconds)
+  last_seen: $(date -Iseconds)
+  count: 1
+  agents: [$err.agents]
+  evidence: [$err.tickets]
+  source: $source
+  root_cause: "$err.description"
+  fix: null
+  status: open
+  fix_commit: null
+  escalated_ticket: null
+YAML
+    fi
+  done
+done
+```
+
+### §8.5.4 Two-Tier-Escalation (Anti-Flood)
+
+**Regel: Nicht jeder Error bekommt ein Ticket.** Sonst floodest du die Queue.
+
+| Bedingung | Aktion |
+|-----------|--------|
+| `count ≥ 3` in 24h **UND** `severity = critical ∣ high` | Auto-Create Paperclip-Ticket: `Fix: <error-type> (<root_cause>)` → `assigneeAgentId = platform-engineer (08447ccc)`, `priority = high` |
+| `count ≥ 3` in 24h **UND** `severity = medium ∣ low` | Daily-Digest-Notiz only: `- Error-Pattern: <type> ×<count> (<root_cause>)` — kein Ticket |
+| `count < 3` (egal welche severity) | Error-Register-Eintrag only — kein Digest, kein Ticket |
+| `severity = critical` (egal welcher count) | **Sofort** Digest-Notiz + prüfe ob Live-Alarm-Typ passt (§6 Typ 1-8) |
+
+**Ticket-Dedup-Guard:** Vor Auto-Create prüfe ob bereits ein offenes Ticket
+mit `Fix: <error-type>` existiert (Paperclip-Search `q=Fix:+<type>`).
+Wenn ja → kein neues Ticket, nur Kommentar auf bestehendem.
+
+```bash
+# Auto-Create nur wenn kein offenes Fix-Ticket existiert
+PLATFORM_ENGINEER_ID="08447ccc-1d37-4ea1-b720-ba8c99b3a77e"
+COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"
+API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
+
+existing_fix=$(curl -s "$API?q=Fix:+${error_type}&status=todo,in_progress,blocked" | \
+  jq -r '.[0].id // empty')
+
+if [[ -n "$existing_fix" ]]; then
+  # Kommentar auf bestehendem Ticket
+  curl -s -X POST -H "Content-Type: application/json" \
+    -H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID" \
+    "http://127.0.0.1:3101/api/issues/$existing_fix/comments" \
+    -d "{\"body\": \"Error-Pattern update: count=$count, last_seen=$(date -Iseconds)\"}"
+  # Update error-register: escalated_ticket = existing_fix
+else
+  # Neues Fix-Ticket
+  RESP=$(curl -s -X POST -H "Content-Type: application/json" \
+    -H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID" \
+    "$API" -d "$(cat <<EOF
+{
+  "title": "Fix: $error_type ($root_cause_short)",
+  "description": "Auto-created by CEO §8.5 Error-Pattern-Detection.\n\n**Error-ID:** $error_id\n**Type:** $error_type\n**Severity:** $severity\n**Count (24h):** $count\n**First seen:** $first_seen\n**Evidence:** $evidence_list\n**Root-cause:** $root_cause\n\n**Suggested fix:** $fix_suggestion",
+  "priority": "high",
+  "status": "todo",
+  "assigneeAgentId": "$PLATFORM_ENGINEER_ID"
+}
+EOF
+)")
+  FIX_TICKET_ID=$(echo "$RESP" | jq -r '.id')
+  # Update error-register: escalated_ticket = KON-XXX
+fi
+```
+
+### §8.5.5 Digest-Integration
+
+Nach §8.5.4 schreibt CEO eine Summary-Zeile in den Daily-Digest:
+
+```markdown
+## Error-Pattern-Detection
+- Open errors: 2 (race-condition ×14/high, dossier-fail ×3/medium)
+- Auto-fixed: 1 (umbrella-orphan → §3.4.5)
+- New tickets: 1 (KON-XXX → platform-engineer: Fix: race-condition)
+- Pattern watch: token-limit ×7 (resets 06:50, auto-resume scheduled)
+```
+
+Max 5 Zeilen. Keine Einzelauflistung von Errors mit count=1.
+
+### §8.5.6 CEO-Self-Fix-Path
+
+Wenn CEO den Error selbst fixen kann (z.B. Race-Condition durch PATCH-Cancels
+wie in Heartbeat 40), updated er den Error-Register-Eintrag direkt:
+
+```yaml
+  status: fixed
+  fix: "CEO cancelled 14 duplicates via PATCH"
+  fix_commit: null   # oder SHA wenn Code-Fix
+```
+
+Kein Fix-Ticket nötig wenn CEO den Fix im selben Heartbeat abschließt.
 
 ## 9. Daily-Digest-Update (Step 11)
 

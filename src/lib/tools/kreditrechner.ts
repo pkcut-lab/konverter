@@ -142,7 +142,6 @@ export function computeKreditErgebnis(
   // Mit Sondertilgung
   const planMit = buildTilgungsplan(kreditbetrag, sollzinsPa, n, sondertilgungPa);
   const gesamtzinsenMit = round2(planMit.reduce((s, z) => s + z.zinsanteil, 0));
-  const gesamtsondertilgungen = round2(planMit.reduce((s, z) => s + z.sondertilgung, 0));
   const gesamtkosten = round2(kreditbetrag + gesamtzinsenMit);
 
   return {
