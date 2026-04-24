@@ -203,7 +203,7 @@
   }
 </script>
 
-<div class="tilgungsplan-tool" aria-label="Tilgungsplan-Rechner">
+<div class="tilgungsplan-tool" role="region" aria-label="Tilgungsplan-Rechner">
 
   <!-- Modus-Toggle -->
   <div class="modus-bar">
@@ -403,7 +403,7 @@
   </div><!-- /inputs-grid -->
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" aria-label="Berechnungsergebnis">
+  <div class="results" role="region" aria-label="Berechnungsergebnis">
 
     {#if result}
       <!-- Copy Result -->
@@ -481,7 +481,7 @@
         <div class="table-header">
           <h2 class="table-title">Tilgungsplan (Jahresübersicht)</h2>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" role="region" aria-label="Tilgungsplan-Tabelle, horizontal scrollbar" tabindex="0">
           <table class="tilgungsplan-table" aria-label="Jährlicher Tilgungsplan">
             <thead>
               <tr>
@@ -524,7 +524,7 @@
 
       <!-- Anschlussfinanzierung -->
       {#if result.restschuldNachZinsbindung > 0}
-        <div class="anschluss-section" aria-label="Anschlussfinanzierung planen">
+        <div class="anschluss-section" role="region" aria-label="Anschlussfinanzierung planen">
           <h2 class="anschluss-title">Wie hoch wäre meine Rate nach der Zinsbindung?</h2>
           <p class="anschluss-desc">
             Restschuld nach {Math.round(zinsbindung)} Jahren Zinsbindung:
@@ -867,6 +867,11 @@
     border-radius: var(--r-md);
   }
 
+  .table-wrap:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
   .tilgungsplan-table {
     width: 100%;
     border-collapse: collapse;
@@ -1087,6 +1092,7 @@
   @media (prefers-reduced-motion: reduce) {
     .modus-pill,
     .input-field__wrap,
+    .copy-btn,
     .reset-btn {
       transition: none;
     }
