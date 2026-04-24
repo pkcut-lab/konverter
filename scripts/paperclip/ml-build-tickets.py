@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env py
 """One-shot backfill: create 3 Tool-Build tickets for the orphaned ML dossiers.
 
 Tool-builder reads docs/paperclip/ml-tool-defaults.md for D1/D2/D3 sane defaults

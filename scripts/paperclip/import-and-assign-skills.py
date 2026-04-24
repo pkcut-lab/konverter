@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env py
 """Import 23 community skills into the Paperclip company library and assign them per agent.
 
-Usage: python scripts/paperclip/import-and-assign-skills.py
+Usage: py scripts/paperclip/import-and-assign-skills.py
 Requires: PAPERCLIP_* env vars sourced from ~/.paperclip-local-env/ceo-exports.sh
           CEO agent must have permissions.canCreateAgents = true
 """

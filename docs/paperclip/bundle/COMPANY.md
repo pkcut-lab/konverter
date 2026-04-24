@@ -334,6 +334,22 @@ Backlog → CEO → [Dossier-Researcher + optional Differenzierungs-Researcher]
 7. Keine Network-Runtime-Deps (Ausnahme 7a: ML-File-Tools mit Worker-Fallback)
 8. Kein thin Content (<300 Wörter abgelehnt)
 
+## Platform-Conventions (Windows-first)
+
+**Python-Interpreter-Aufruf.** Jeder Agent MUSS `py` (Python-Launcher) statt
+`python` oder `python3` verwenden. Grund: Windows 11 hat `python.exe` + `python3.exe`
+als App-Execution-Aliases unter `C:\Users\<user>\AppData\Local\Microsoft\WindowsApps\`,
+die Symlinks auf `AppInstallerPythonRedirector.exe` sind → **öffnen den Microsoft
+Store** statt Python auszuführen (wenn die Aliases aktiv sind). `py` ist der
+offizielle Python-Launcher und umgeht den Stub.
+
+- ✅ `py scripts/foo.py`, `py -c "print(1)"`, `py -3 -m pip install …`
+- ❌ `python3 scripts/foo.py`, `python -c "…"`, `#!/usr/bin/env python3`-Shebangs
+- ✅ Shebangs: `#!/usr/bin/env py`
+
+Gilt für ALLE Agenten in Bash/MSYS-Commands, Shebangs in `.py`-Dateien unter
+`scripts/`, und inline-`py`-Aufrufe in AGENTS.md-Procedure-Blöcken.
+
 ## Kostenlos-Constraint (§7.16)
 
 Enforced via `tasks/budgets.yaml` + `scripts/budget-guard.mjs` (Pre-Tool-Call-Wrapper, fail-secure). Keine SerpAPI / Ahrefs / SEMrush. Firecrawl max 3 Calls/Ticket. Brave API 2000/month. Perplexity 5/min.

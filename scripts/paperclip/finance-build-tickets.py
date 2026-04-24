@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env py
 """One-shot backfill: create 7 Tool-Build tickets for orphaned Finance dossiers.
 
 Prerequisite: source ~/.paperclip-local-env/ceo-exports.sh
