@@ -62,6 +62,8 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'liter-to-gallon': { de: 'liter-zu-gallonen' },
   'ml-to-floz': { de: 'milliliter-zu-unzen' },
   'vat-calculator': { de: 'mehrwertsteuer-rechner' },
+  'discount-calculator': { de: 'rabatt-rechner' },
+  'interest-calculator': { de: 'zinsrechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

@@ -82,6 +82,9 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/milliliter-zu-unzen').then((m) => m.milliliterZuUnzen),
   'vat-calculator': () =>
     import('./tools/mehrwertsteuer-rechner').then((m) => m.mehrwertsteuerRechner),
+  'discount-calculator': () =>
+    import('./tools/rabatt-rechner').then((m) => m.rabattRechner),
+  'interest-calculator': () => import('./tools/zinsrechner').then((m) => m.zinsrechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before
