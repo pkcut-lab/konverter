@@ -90,6 +90,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/stundenlohn-jahresgehalt').then((m) => m.stundenlohnJahresgehalt),
   'compound-interest-calculator': () =>
     import('./tools/zinseszins-rechner').then((m) => m.zinseszinsRechner),
+  'gross-net-calculator': () =>
+    import('./tools/brutto-netto-rechner').then((m) => m.bruttoNettoRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

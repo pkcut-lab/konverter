@@ -67,6 +67,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'loan-calculator': { de: 'kreditrechner' },
   'hourly-to-annual': { de: 'stundenlohn-jahresgehalt' },
   'compound-interest-calculator': { de: 'zinseszins-rechner' },
+  'gross-net-calculator': { de: 'brutto-netto-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
