@@ -1,0 +1,20 @@
+---
+type: community
+cohesion: 1.00
+members: 1
+---
+
+# Cluster 180 (1 nodes)
+
+**Cohesion:** 1.00 - tightly connected
+**Members:** 1 nodes
+
+## Members
+- [[hreflang.test.ts]] - code - C:\Users\carin\.gemini\Konverter Webseite\tests\lib\hreflang.test.ts
+
+## Live Query (requires Dataview plugin)
+
+```dataview
+TABLE source_file, type FROM #community/Cluster_180_(1_nodes)
+SORT file.name ASC
+```
