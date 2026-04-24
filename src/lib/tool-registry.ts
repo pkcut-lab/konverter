@@ -94,6 +94,12 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/brutto-netto-rechner').then((m) => m.bruttoNettoRechner),
   'amortization-calculator': () =>
     import('./tools/tilgungsplan-rechner').then((m) => m.tilgungsplanRechner),
+  'webcam-blur': () =>
+    import('./tools/webcam-hintergrund-unschaerfe').then((m) => m.webcamHintergrundUnschaerfe),
+  'video-bg-remove': () =>
+    import('./tools/video-hintergrund-entfernen').then((m) => m.videoBgRemove),
+  'speech-enhancer': () =>
+    import('./tools/sprache-verbessern').then((m) => m.spracheVerbessern),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

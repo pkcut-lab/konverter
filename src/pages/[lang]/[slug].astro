@@ -17,6 +17,7 @@ import Comparer from '../../components/tools/Comparer.svelte';
 import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
 import Validator from '../../components/tools/Validator.svelte';
+import WebcamBlurTool from '../../components/tools/WebcamBlurTool.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
@@ -45,6 +46,8 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   AMORTIZATION_TOOL_ID,
 ]);
 
+const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
+
 const componentByType = {
   converter: Converter,
   'file-tool': FileTool,
@@ -53,6 +56,7 @@ const componentByType = {
   analyzer: Analyzer,
   generator: Generator,
   validator: Validator,
+  interactive: WebcamBlurTool,
 } as const;
 
 export async function getStaticPaths() {
@@ -67,6 +71,7 @@ export async function getStaticPaths() {
     'analyzer',
     'generator',
     'validator',
+    'interactive',
   ]);
 
   // Resolve every candidate entry's config in parallel so SSG builds don't
@@ -168,6 +173,7 @@ const jsonLd = buildToolJsonLd(
             'tool-section',
             (config.type === 'file-tool' ||
               config.type === 'comparer' ||
+              config.type === 'interactive' ||
               config.id === 'image-diff') && 'tool-section--wide',
           ]}
           aria-label="Konverter"
@@ -235,6 +241,9 @@ const jsonLd = buildToolJsonLd(
               placeholder={config.placeholder ?? ''}
               client:load
             />
+          )}
+          {config.type === 'interactive' && config.id === WEBCAM_BLUR_TOOL_ID && (
+            <WebcamBlurTool config={config} client:load />
           )}
         </section>
 
