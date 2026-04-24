@@ -252,13 +252,17 @@ while IFS='|' read -r prio slug; do
     continue
   }
 
-  # Dispatch in Prio-Reihenfolge (Paperclip Issue erstellen)
+  # Dispatch in Prio-Reihenfolge: direkt als todo + assignee=tool-dossier-researcher
+  # (v1.3 Fix 2026-04-24: zuvor status=backlog ohne assignee → Worker wurden nie
+  # geweckt, weil event-driven-Agents nur bei Assignment laufen)
+  RESEARCHER_ID="c26481af-938d-43ba-a443-457a04d2c8b7"
   curl -s -X POST -H "Content-Type: application/json" "$API" -d "$(cat <<EOF
 {
-  "title": "Overnight-Build: $slug (Prio $prio, full pipeline + auto-merge)",
-  "description": "Auto-refilled by CEO §2.5 in Masterplan-Prio-Order (v1.2).\n\n**Slug:** $slug\n**Masterplan-Prio:** $prio\n**Category:** $category\n**Label:** $label\n**Parent-Dossier-Hint:** $parent_hint\n\n**Pipeline (downstream-routines pick up):**\n1. Dossier-Research: $slug\n2. Tool-Build: $slug (DE content + config + tests)\n3. Critic-Audit: $slug (19-Check-Rubrik)\n4. Auto-merge if verdict=pass (auto-rollback-policy.yaml §5)",
-  "priority": "medium",
-  "status": "backlog"
+  "title": "Dossier-Research: $slug (Masterplan-Prio $prio)",
+  "description": "Auto-refilled by CEO §2.5 in Masterplan-Prio-Order (v1.3).\n\n**Slug:** $slug\n**Masterplan-Prio:** $prio\n**Category:** $category\n**Label:** $label\n**Parent-Dossier-Hint:** $parent_hint\n\n**Pipeline (CEO triggert downstream nach Dossier-done):**\n1. Dossier-Research (jetzt): tool-dossier-researcher schreibt DOSSIER_REPORT.md in dossiers/$slug/YYYY-MM-DD.md\n2. Tool-Build (nach Dossier-done): CEO dispatcht tool-builder mit dossier_ref\n3. Review-Round 1 (nach Build-done): 8 parallele Critics via §3.5 Fan-Out\n4. Polish-Round (wenn Score 80-94%): polish-agent → builder-rework\n5. Meta-Review (post-Round): meta-reviewer Critics-Konsistenz\n6. Ship-Gates: legal-auditor + cross-tool-consistency-auditor\n7. Post-Ship: seo-auditor + internal-linking-strategist",
+  "priority": "high",
+  "status": "todo",
+  "assigneeAgentId": "$RESEARCHER_ID"
 }
 EOF
 )" > /dev/null
