@@ -570,7 +570,151 @@ Daily-Digest-Zeile reicht: `- Loop-D: N Tickets nach Token-Reset resumiert`.
 CEO muss autonom erkennen und handeln — das ist der Sinn der Loop-D-Regel.
 Incident-Lehre: 1h Idle × Opus-Kosten > Nutzen des Wartens.
 
-#### §3.4.5 Umbrella-Ticket-Legacy-Handling
+#### §3.4.5 Loop E — Meta-Review-Done → End-Review-Pass-1-Dispatch (v1.5)
+
+**Problem.** §7.6 dispatcht End-Review Pass 1 reaktiv (nur wenn CEO aktiv an
+Meta-Review-Ticket arbeitet). Mit leerem Inbox läuft §7.6 nie — Gap entsteht.
+Incident 2026-04-24: kreditrechner Meta-Review done, End-Review Pass 1 nie
+erstellt, User-Intervention nötig.
+
+**Trigger.** `Meta-Review: <slug>`-Ticket mit `status=done`.
+
+**Check.** Existiert bereits ein Ticket `End-Review Pass 1: <slug>`
+(beliebiger Status)? Wenn ja → skip. Wenn nein → Orphan.
+
+**Self-Heal.**
+```python
+def loop_e_meta_done_to_end_review():
+    all_issues = GET /api/companies/{id}/issues?limit=300
+    done_metas = [i for i in all_issues
+                  if i["title"].startswith("Meta-Review: ")
+                  and i["status"] == "done"]
+
+    for meta in done_metas:
+        slug = meta["title"].replace("Meta-Review: ", "").strip()
+        # Idempotenz-Check
+        er_exists = any(
+            f"End-Review Pass 1: {slug}" in i["title"]
+            for i in all_issues
+        )
+        if er_exists:
+            continue  # schon vorhanden
+
+        # Dispatch End-Review Pass 1
+        POST /api/companies/{id}/issues {
+            "title": f"End-Review Pass 1: {slug}",
+            "description": (
+                f"**ticket_type:** end-review\n"
+                f"**pass_number:** 1\n"
+                f"**target_slug:** {slug}\n\n"
+                f"Deep-End-Review gemaess "
+                f"docs/paperclip/bundle/agents/end-reviewer/AGENTS.md §2.\n"
+                f"Output: tasks/end-review-{slug}-pass1.md\n"
+                f"Meta-Review {meta['identifier']} ist abgeschlossen."
+            ),
+            "priority": "high",
+            "status": "todo",
+            "assigneeAgentId": END_REVIEWER_ID,
+        }
+        write_digest(f"- Loop-E: End-Review Pass 1 fuer {slug} erstellt "
+                     f"(Meta {meta['identifier']} war done ohne Downstream)")
+```
+
+**Hard-Cap.** Max 5 End-Review-Dispatches pro Heartbeat.
+
+**Leer-Inbox-Ausnahme.** Loop E laeuft auch bei leerem Inbox — gleiche
+Begruendung wie Loop B/C (v1.5-Regel).
+
+#### §3.4.6 Loop F — End-Review-Chain-Continuity (v1.5)
+
+**Problem.** Nach End-Review-Rework oder End-Review-Pass-N muss CEO den
+naechsten Pass dispatchen. Auch das passiert bisher nur reaktiv (§7.6).
+Bei leerem Inbox bleibt die Chain stecken.
+
+**Trigger.** Zwei Szenarien:
+
+**F1 — Rework done, naechster Pass fehlt.**
+`End-Review-Rework Pass N: <slug>` mit `status=done`, aber kein
+`End-Review Pass N+1: <slug>` existiert.
+
+**F2 — Pass N clean, naechster Pass fehlt.**
+`End-Review Pass N: <slug>` mit `status=done` + Verdict-File zeigt
+`verdict: clean` + kein `End-Review Pass N+1: <slug>` + N < 3.
+
+**Self-Heal.**
+```python
+def loop_f_end_review_chain():
+    all_issues = GET /api/companies/{id}/issues?limit=300
+
+    # F1: Rework done → naechster Pass
+    done_reworks = [i for i in all_issues
+                    if i["title"].startswith("End-Review-Rework Pass ")
+                    and i["status"] == "done"]
+    for rework in done_reworks:
+        # Parse: "End-Review-Rework Pass 1: tilgungsplan-rechner (...)"
+        parts = rework["title"].split(": ", 1)
+        pass_n = int(parts[0].replace("End-Review-Rework Pass ", ""))
+        slug = parts[1].split(" (")[0].strip()
+        next_pass = pass_n + 1
+        if next_pass > 3:
+            continue  # Triple-Pass abgeschlossen (Pass 3 Rework → Deploy)
+        exists = any(f"End-Review Pass {next_pass}: {slug}" in i["title"]
+                     for i in all_issues)
+        if not exists:
+            dispatch_end_review_pass(slug, next_pass)
+            write_digest(f"- Loop-F1: End-Review Pass {next_pass} fuer {slug}")
+
+    # F2: Pass N clean → naechster Pass (nur wenn N < 3)
+    done_passes = [i for i in all_issues
+                   if i["title"].startswith("End-Review Pass ")
+                   and not i["title"].startswith("End-Review Pass 1: ")  # Kein typo-Match
+                   and "Rework" not in i["title"]
+                   and i["status"] == "done"]
+    # Vereinfachung: F2 ist seltener (clean bei Pass 1/2 bedeutet
+    # kein Blocker-Rework → direkt Pass N+1).
+    # CEO liest Verdict-File; wenn nicht parsebar → skip (kein Crash).
+    for ep in done_passes:
+        try:
+            pass_n = int(ep["title"].split("Pass ")[1].split(":")[0])
+            slug   = ep["title"].split(": ", 1)[1].strip()
+        except Exception:
+            continue
+        if pass_n >= 3:
+            continue
+        verdict_file = f"tasks/end-review-{slug}-pass{pass_n}.md"
+        verdict = read_yaml_frontmatter(verdict_file).get("verdict", "unknown")
+        if verdict != "clean":
+            continue  # Blocker → F1 handelt den Rework-Weg
+        next_pass = pass_n + 1
+        exists = any(f"End-Review Pass {next_pass}: {slug}" in i["title"]
+                     for i in all_issues)
+        if not exists:
+            dispatch_end_review_pass(slug, next_pass)
+            write_digest(f"- Loop-F2: End-Review Pass {next_pass} fuer {slug} "
+                         f"(Pass {pass_n} clean, kein Rework noetig)")
+```
+
+**Hard-Cap.** Max 5 Chain-Dispatches pro Heartbeat.
+
+**Leer-Inbox-Ausnahme.** Loop F laeuft auch bei leerem Inbox.
+
+#### §3.4.7 Vollstaendige Loop-Uebersicht (v1.5)
+
+Jede Pipeline-Stufe hat genau einen Self-Heal-Loop:
+
+| Loop | Trigger | Downstream |
+|------|---------|------------|
+| A | Dossier done | Tool-Build dispatch |
+| B | Build done | Round-1 Critic Fan-Out (8×) |
+| C | All Critics done (title-scan) | Aggregation + Gate-Resolve |
+| D | adapter_failed blocked | Auto-resume nach Token-Reset |
+| E | Meta-Review done | End-Review Pass 1 |
+| F | End-Review-Rework done / Pass clean | End-Review Pass N+1 |
+
+**Reihenfolge pro Heartbeat:** A → B → C → D → E → F (dann Gate-Resolve,
+dann Backlog-Pick). Alle Loops laufen unabhaengig vom Inbox-Status.
+
+#### §3.4.8 Umbrella-Ticket-Legacy-Handling
 
 Manuell erstellte Tickets mit Titel `Overnight-Build: *` oder Beschreibungen
 mit `full pipeline` / `auto-merge` sind **Legacy**. CEO behandelt sie wie
