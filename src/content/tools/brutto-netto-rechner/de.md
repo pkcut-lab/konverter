@@ -15,7 +15,7 @@ howToUse:
   - "Das Netto erscheint sofort. Klappe einzelne Posten auf, um die Formel dahinter zu sehen."
 faq:
   - q: "Wie viel Netto bleibt von 3.500&nbsp;€ Brutto?"
-    a: "Bei Steuerklasse I, NRW, ohne Kirchensteuer und GKV bleiben bei 3.500&nbsp;€ Brutto ca. 2.270–2.320&nbsp;€ Netto. Der genaue Betrag hängt von Bundesland, Steuerklasse und Krankenkassenzusatzbeitrag ab — nutze den Rechner für deine individuellen Werte."
+    a: "Bei Steuerklasse I, NRW, ohne Kirchensteuer bleiben bei 3.500&nbsp;€ Brutto ca. 2.141&nbsp;€ Netto. Der genaue Betrag hängt von Bundesland, Steuerklasse und Krankenkassenzusatzbeitrag ab — nutze den Rechner für deine individuellen Werte."
   - q: "Was ändert sich 2026 beim Nettogehalt?"
     a: "Der Grundfreibetrag steigt auf 12.348&nbsp;€ (+252&nbsp;€ ggü. 2025), der Kinderfreibetrag auf 9.756&nbsp;€. Die neue Aktivrente sieht einen Freibetrag von 2.000&nbsp;€/Monat vor. Die Minijob-Grenze beträgt 603&nbsp;€, der Midijob-Übergangsbereich reicht bis 2.000&nbsp;€."
   - q: "Was ist der Unterschied zwischen Steuerklasse III und V?"
