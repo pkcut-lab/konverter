@@ -998,6 +998,7 @@
     background: var(--color-bg);
     padding: 0 var(--space-3);
     width: 8rem;
+    min-height: 2.75rem;
   }
   .anschluss-input-wrap:focus-within {
     border-color: var(--color-text);
