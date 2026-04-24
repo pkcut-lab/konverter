@@ -350,7 +350,7 @@
   .optional-badge {
     font-size: 0.65rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
     padding: 0 var(--space-1);
@@ -552,7 +552,7 @@
   .empty-state {
     margin: 0;
     text-align: center;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     font-size: var(--font-size-small);
     padding: var(--space-4) 0;
   }
