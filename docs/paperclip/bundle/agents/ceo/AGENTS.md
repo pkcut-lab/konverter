@@ -510,6 +510,66 @@ Reaktion. Eskalation nur bei:
 Assignee-Mismatch, ML-Standard-Blocker D1-D3) ist Pipeline-Mechanik →
 self-heal, keine User-Interaktion.
 
+#### §3.4.6 Loop D — adapter_failed → Auto-Resume nach Token-Reset (v1.5, 2026-04-24)
+
+**Problem.** Wenn Agents das Claude-Token-Limit treffen, setzt Paperclip den
+Ticket-Status auf `blocked` und hinterlässt einen Kommentar:
+`adapter_failed - Claude run failed: ... You've hit your limit · resets HH:MMpm (Europe/Berlin)`
+
+Der Paperclip-Skill sagt: „blocked ticket + kein neuer Kommentar → skip".
+Das führt dazu, dass der CEO geblockte Tickets nach Token-Reset **ignoriert**
+statt sie zu resumieren. Resultat: Pipeline steht stundenlang nach Reset.
+Incident 2026-04-24: 17 Tickets 1h lang tot nach 16:50-Reset (24% Tokens
+für CEO-Idle-Heartbeats verbrannt, 0 Output).
+
+**Regel.** Loop D läuft JEDEN Heartbeat als erster Sub-Schritt von §3.4:
+
+```python
+def loop_d_adapter_failed_resume():
+    blocked = GET /api/companies/{id}/issues?status=blocked&limit=100
+    now = datetime.utcnow()
+
+    for ticket in blocked:
+        comments = GET /api/issues/{ticket.id}/comments?order=createdAt:desc&limit=3
+        latest = comments[0] if comments else None
+        if not latest:
+            continue
+
+        body = latest.get("body", "")
+        # Detect adapter_failed pattern
+        if "adapter_failed" not in body and "You've hit your limit" not in body:
+            continue
+
+        # Parse reset time from comment, e.g. "resets 4:50pm (Europe/Berlin)"
+        reset_time = parse_reset_time(body)  # returns UTC datetime or None
+
+        if reset_time is None:
+            # No parseable time → resume anyway if comment is >45min old
+            comment_age = now - latest["createdAt"]
+            if comment_age < timedelta(minutes=45):
+                continue  # möglicherweise noch im Limit-Fenster
+        else:
+            if now < reset_time:
+                continue  # Reset noch nicht erreicht
+
+        # Reset-Zeit überschritten oder unbekannt + alt genug → resume
+        PATCH /api/issues/{ticket.id} {"status": "todo"}
+        write_digest(f"- Loop-D: {ticket.identifier} adapter_failed resume "
+                     f"(reset erkannt oder >45min alt)")
+
+        # Paperclip-Skill-Override: adapter_failed-blocked Tickets sind
+        # KEIN echter Blocker — niemals skippen, immer resumieren nach Reset.
+```
+
+**Hard-Cap.** Max 20 Resumes pro Heartbeat (gegen Runaway).
+
+**Kein User-Ping.** Token-Resets sind Routine, kein Live-Alarm-Trigger.
+Daily-Digest-Zeile reicht: `- Loop-D: N Tickets nach Token-Reset resumiert`.
+
+**Warum nicht auf User warten.** Der User sieht den Reset nicht in Echtzeit.
+CEO muss autonom erkennen und handeln — das ist der Sinn der Loop-D-Regel.
+Incident-Lehre: 1h Idle × Opus-Kosten > Nutzen des Wartens.
+
 #### §3.4.5 Umbrella-Ticket-Legacy-Handling
 
 Manuell erstellte Tickets mit Titel `Overnight-Build: *` oder Beschreibungen
