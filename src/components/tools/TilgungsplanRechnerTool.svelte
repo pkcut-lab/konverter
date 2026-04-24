@@ -168,6 +168,28 @@
   // ---- Tabellen-Toggle ----
   let showMonths = $state(false);
 
+  // ---- Copy Result ----
+  type CopyState = 'idle' | 'copied';
+  let copyResult = $state<CopyState>('idle');
+
+  async function handleCopyResult() {
+    if (!result) return;
+    const lines = [
+      `Tilgungsplan-Ergebnis`,
+      `Monatsrate: ${formatEuro(result.monatsrate)} €`,
+      `Gesamtzinsen: ${formatEuro(result.gesamtZinsen)} €`,
+      `Restschuld nach Zinsbindung: ${formatEuro(result.restschuldNachZinsbindung)} €`,
+      `Gesamtlaufzeit: ${result.laufzeitJahre} Jahre (${result.laufzeitMonate} Monate)`,
+    ];
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      copyResult = 'copied';
+      setTimeout(() => (copyResult = 'idle'), 1500);
+    } catch {
+      // clipboard permission denied — fail silent
+    }
+  }
+
   // ---- Zurücksetzen ----
   function handleReset() {
     betragStr = '300.000';
@@ -381,26 +403,43 @@
   </div><!-- /inputs-grid -->
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-label="Berechnungsergebnis">
 
     {#if result}
+      <!-- Copy Result -->
+      <div class="result-actions">
+        <button
+          type="button"
+          class="copy-btn"
+          class:copy-btn--copied={copyResult === 'copied'}
+          aria-label={copyResult === 'copied' ? 'Kopiert!' : 'Ergebnis kopieren'}
+          onclick={handleCopyResult}
+        >
+          {#if copyResult === 'copied'}
+            Kopiert
+          {:else}
+            Ergebnis kopieren
+          {/if}
+        </button>
+      </div>
+
       <!-- Summary-Cards -->
       <div class="summary-grid">
         <div class="summary-card summary-card--primary">
           <span class="summary-card__label">Monatsrate</span>
-          <span class="summary-card__value">{formatEuro(result.monatsrate)} <span class="summary-card__unit">€</span></span>
+          <span class="summary-card__value" aria-live="polite">{formatEuro(result.monatsrate)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
           <span class="summary-card__label">Gesamtzinsen</span>
-          <span class="summary-card__value">{formatEuro(result.gesamtZinsen)} <span class="summary-card__unit">€</span></span>
+          <span class="summary-card__value" aria-live="polite">{formatEuro(result.gesamtZinsen)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
           <span class="summary-card__label">Restschuld nach Zinsbindung</span>
-          <span class="summary-card__value">{formatEuro(result.restschuldNachZinsbindung)} <span class="summary-card__unit">€</span></span>
+          <span class="summary-card__value" aria-live="polite">{formatEuro(result.restschuldNachZinsbindung)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
           <span class="summary-card__label">Gesamtlaufzeit</span>
-          <span class="summary-card__value">
+          <span class="summary-card__value" aria-live="polite">
             {result.laufzeitJahre} <span class="summary-card__unit">Jahre</span>
             {#if result.laufzeitMonate % 12 !== 0}
               <span class="summary-card__sub">({result.laufzeitMonate} Monate)</span>
@@ -429,7 +468,6 @@
       <!-- Sondertilgung-Effekt -->
       {#if result.sondertilgungEinsparungZinsen > 0}
         <div class="sondertilgung-box" role="note" aria-label="Sondertilgung-Effekt">
-          <span class="sondertilgung-box__icon" aria-hidden="true">✓</span>
           <div>
             Durch die jährliche Sondertilgung von {formatEuro(sondertilgung)}&nbsp;€ sparst du
             <strong>{formatEuro(result.sondertilgungEinsparungZinsen)}&nbsp;€ Zinsen</strong> und bist
@@ -570,7 +608,8 @@
     gap: var(--space-2);
   }
   .modus-pill {
-    padding: var(--space-1) var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
     color: var(--color-text);
@@ -660,7 +699,7 @@
   .input-field__unit {
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     flex-shrink: 0;
     white-space: nowrap;
   }
@@ -670,6 +709,40 @@
     font-size: var(--font-size-small);
     color: var(--color-error);
     line-height: 1.4;
+  }
+
+  /* Result actions (copy) */
+  .result-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    min-height: 2.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-small);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    white-space: nowrap;
+  }
+  .copy-btn:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+  }
+  .copy-btn--copied {
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+  .copy-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
 
   /* Summary Grid */
@@ -696,7 +769,7 @@
   .summary-card__label {
     font-size: 0.6875rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     font-weight: 500;
   }
@@ -719,7 +792,7 @@
     display: block;
     font-size: 0.75rem;
     font-weight: 400;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     margin-top: var(--space-1);
   }
 
@@ -762,15 +835,6 @@
     font-size: var(--font-size-small);
     color: var(--color-text);
     line-height: 1.5;
-  }
-
-  .sondertilgung-box__icon {
-    flex-shrink: 0;
-    color: var(--color-success);
-    font-weight: 700;
-    font-size: 1rem;
-    font-style: normal;
-    line-height: 1.4;
   }
 
   /* Table */
@@ -847,7 +911,7 @@
 
   .row--zinsbindungsende td,
   .row--zinsbindungsende th {
-    background: color-mix(in oklch, var(--color-accent) 6%, transparent);
+    background: var(--color-surface);
   }
 
   .cell--year {
@@ -873,8 +937,8 @@
     font-size: 0.6rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--color-accent);
-    border: 1px solid var(--color-accent);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
     padding: 1px var(--space-1);
     font-family: var(--font-family-sans, var(--font-family-mono));
@@ -951,7 +1015,7 @@
   .anschluss-unit {
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
   }
 
   .anschluss-result {
@@ -969,7 +1033,7 @@
   .empty-state {
     margin: 0;
     text-align: center;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     font-size: var(--font-size-small);
     padding: var(--space-4) 0;
   }
@@ -982,6 +1046,7 @@
 
   .reset-btn {
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-muted);
