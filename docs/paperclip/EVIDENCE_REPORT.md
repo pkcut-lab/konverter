@@ -132,6 +132,164 @@ Der CEO liest NUR den Frontmatter maschinell. Ein Ticket passiert den Critic-Gat
 
 Bei Fail wird das Ticket gemäß §7.15 Autonomie-Gates **automatisch** zu Rework/Park/Ship-as-is routed — nicht User-Eskalation (außer §7.15-Live-Alarm-Trigger greift).
 
+## Ship-Gate-Rules (v1.1, 2026-04-24 — Quelle [KON-242](/KON/issues/KON-242), Root-Cause [KON-235](/KON/issues/KON-235))
+
+**Problem.** Runde 3 auf `tilgungsplan-rechner`: merged-critic meldete `verdict=pass` (19-Check-Rubrik, 0 fails), während a11y-auditor `partial` mit 3 WCAG-Fails (inkl. A13 = WCAG 2.1.1 Level A), design-critic `fail`, conversion-critic `partial (rework_required=true)` ablieferten. Ohne Meta-Review wäre das Tool als ship-ready durchgerutscht.
+
+**Root-Cause.** Der merged-critic fährt eine **eigenständige, orthogonale 19-Check-Composite-Rubrik** (Brand-Guide + Basics). Er aggregiert die individual-critics NICHT und darf deren Verdicts NICHT überstimmen. Divergenz ist daher kein Bug, sondern erwartet — die Rule muss das explizit behandeln.
+
+### Scope-Definitionen (verbindlich)
+
+| Critic-Typ | Rubrik | Autorität |
+|---|---|---|
+| **merged-critic** | Cross-cutting 19-Check-Composite (Tests, astro-check, Hex-Guard, Frontmatter, H2-Pattern, Prose-Closer, Schema.org, NBSP, Commit-Trailer, Dossier-Compliance, Perf-Budget, hreflang, Prod-Build, Meta-Desc, Tool-Type-Security, relatedTools) | **Zusätzliche** Rubrik. Kein Aggregat der individual-critics. |
+| **individual-critics** (content, design, a11y, performance, security, conversion, platform) | Je eigene Domain-spezifische Rubrik | **Eigenständiges Veto-Recht.** Kein individual-critic-`fail` wird durch merged-critic-`pass` neutralisiert. |
+| **meta-reviewer** | 6-Dimensionen-Audit (§3 meta-reviewer AGENTS.md) + **Divergence-Check zwischen merged- und individual-verdicts (Kernauftrag)** | Entscheidet bei Divergenz. Flagt Rework oder lässt Ship zu. |
+
+### Ship-Gate-Algorithmus (pseudocode, autoritativ)
+
+CEO führt diesen Algorithmus in §7 Autonomie-Gate-Resolve aus, NACH Fan-Out-Completion aller 8 Critics und BEFORE `route_to_meta_review`/`route_to_deploy_queue`:
+
+```python
+def ship_gate(ticket, critic_reports):
+    """
+    Input: critic_reports = {merged-critic, content-critic, design-critic,
+                             a11y-auditor, performance-auditor, security-auditor,
+                             conversion-critic, platform-engineer}
+
+    Output: 'rework' | 'meta-review-required' | 'ship-ready'
+
+    Regel (2026-04-24 festgeschrieben via KON-242):
+    Individual-Critics haben Veto. merged-critic-pass überstimmt KEINEN
+    individual-critic-fail. Bei merged=pass + ≥1 individual=partial läuft
+    Meta-Reviewer ZWINGEND — das ist der Divergenz-Check-Gate.
+    """
+
+    # --- Stufe 1: Individual-Critic-Veto (hart) ---
+    for critic, report in critic_reports.items():
+        if critic == 'merged-critic':
+            continue  # merged wird in Stufe 2 geprüft
+        if report.verdict == 'fail':
+            return 'rework'
+        if (report.verdict == 'partial'
+            and report.rework_required is True
+            and report.rework_severity in ('blocker', 'major')):
+            return 'rework'
+
+    # --- Stufe 2: merged-critic-Gate ---
+    merged = critic_reports['merged-critic']
+    merged_acceptable = (
+        merged.verdict == 'pass'
+        or (merged.verdict == 'partial'
+            and merged.rework_severity == 'minor')
+    )
+    if not merged_acceptable:
+        return 'rework'
+
+    # --- Stufe 3: Divergenz-Trigger ---
+    # Wenn merged=pass UND ≥1 individual=partial → meta-reviewer PFLICHT
+    any_individual_partial = any(
+        r.verdict == 'partial'
+        for c, r in critic_reports.items()
+        if c != 'merged-critic'
+    )
+    if any_individual_partial:
+        return 'meta-review-required'
+
+    # --- Stufe 4: Meta-Review (auch ohne Divergenz, pre-ship) ---
+    # User-Decision 2026-04-24: JEDES Tool läuft durch Meta-Review + End-Review
+    # Triple-Pass VOR ship (§7 + §7.6 CEO-AGENTS.md). Keine Kompromisse.
+    return 'meta-review-required'
+
+
+def on_meta_review_done(ticket, meta_report):
+    """Nach meta-reviewer-done — Divergence-Check-Verdict lesen."""
+    if meta_report.divergence_flagged is True:
+        return 'rework'            # merged/individual-widerspruch bestätigt
+    if meta_report.findings_blocker_count > 0:
+        return 'rework'
+    # End-Reviewer Triple-Pass (§7.6) übernimmt ab hier
+    return 'route-to-end-review-pass-1'
+```
+
+### Rationale (Option C, Status quo festgeschrieben)
+
+Drei Optionen wurden in [KON-242](/KON/issues/KON-242) diskutiert:
+
+- **A — strict-conjunction:** verlangt `all(individual.verdict ∈ {pass, partial+minor})`. Nachteil: verliert merged-critic als Second-Opinion-Signal; bei jedem Minor-Flake-Partial wird blockiert.
+- **B — merged-override:** merged synthetisiert individual-critics. Nachteil: merged-Rubrik müsste komplett umgebaut werden (derzeit orthogonal), und ein Critic, der alle anderen aggregiert, ist ein Single-Point-of-Failure (Rubber-Stamping-Risiko).
+- **C — meta-review-required:** merged bleibt cross-cutting composite, individual-critics behalten Veto, Divergenz triggert Meta-Reviewer. **Gewählt**, weil (a) es die faktische Praxis seit User-Decision 2026-04-24 („alles durch Meta-Review") ist und (b) es den Rubber-Stamping-Guard ergänzt statt ersetzt.
+
+### Integration mit §7 Autonomie-Gate-Resolve (CEO)
+
+Der bestehende `resolve_gate(ticket, critic_reports)` in `docs/paperclip/bundle/agents/ceo/AGENTS.md` §7.15 ruft `ship_gate` als ersten Schritt auf:
+
+```python
+verdict = ship_gate(ticket, critic_reports)
+if verdict == 'rework':
+    route_to_rework(ticket, failed_checks=collect_fails(critic_reports))
+elif verdict == 'meta-review-required':
+    route_to_meta_review(ticket)   # §7 existing
+# 'ship-ready' wird von ship_gate derzeit nie zurückgegeben — User-Policy
+# 2026-04-24 zwingt Meta-Review + End-Review-Triple-Pass für alle Tools.
+```
+
+Die bestehenden `route_to_polish`- und `route_to_park`-Pfade in §7.15 bleiben unverändert. Polish-Gate (Score 80–94%) greift NACH `ship_gate` und VOR `route_to_meta_review`, weil Polish-Suggestions sonst von Meta-Reviewer als „partial-findings" wiedergekaut werden.
+
+### Checkliste für CEO (Heartbeat Step 8)
+
+- [ ] `ship_gate` als ersten Aufruf in `resolve_gate`
+- [ ] Bei `rework`: failed_checks aus **allen** Critic-Reports sammeln, nicht nur merged
+- [ ] Bei `meta-review-required`: meta-reviewer bekommt `critic_reports_ref` + expliziten `divergence_check_mandate: true`-Flag im Ticket-Body
+- [ ] Bei Meta-Review-Done: `on_meta_review_done` konsumiert `divergence_flagged`-Feld; fehlt das Feld im Report → Critic-Drift-Alarm, weil Meta-Reviewer den Divergence-Check ausgelassen hat
+
+## A11y-Auditor Rubrik-Klärung: --color-text-subtle + Placeholder-Kontrast
+
+> **Gelockt 2026-04-24 (KON-253).** Löst Divergenz zwischen a11y-auditor (BLOCKER) und merged-critic (MINOR) bei `.optional-badge`/`.empty-state` auf kreditrechner (KON-236).
+
+### SC 1.4.6 Text Contrast (AAA ≥7:1) — `--color-text-subtle` als `color`
+
+| Kontext | WCAG-Requirement | Severity wenn fail |
+|---|---|---|
+| Jeder sichtbare Text (`color: var(--color-text-subtle)`) | **AAA ≥7:1** gegen rendered Hintergrund | **BLOCKER** |
+| Empty-State-Messages (`.empty-state`, `.generator__empty` etc.) | **AAA ≥7:1** — instructional text | **BLOCKER** |
+| Optional-Badge (`.optional-badge`, "optional"-Label) | **AAA ≥7:1** — instructional text | **BLOCKER** |
+| Unit-Labels (`.panel__label-unit`, "km", "€") | **AAA ≥7:1** — informational text | **BLOCKER** |
+| Separator-Zeichen (`.converter__separator` "=", `.regex__delim` "/") | **AAA ≥7:1** — formal text, nicht purely decorative | **BLOCKER** |
+
+### SC 1.4.11 Non-Text Contrast (≥3:1) — `--color-text-subtle` als `border-color`/`background`
+
+| Kontext | WCAG-Requirement | Severity wenn fail |
+|---|---|---|
+| `border-color: var(--color-text-subtle)` (hover-borders, divider-lines) | **≥3:1** gegen angrenzende Fläche | MINOR wenn <3:1, sonst PASS |
+| `background: var(--color-text-subtle)` (divider, pulse-dot) | **≥3:1** gegen Nachbar | MINOR wenn <3:1, sonst PASS |
+
+### SC 1.4.3 Note — Placeholder-Text
+
+WCAG SC 1.4.3 Note: *"Inactive user interface components … have no contrast requirement."*
+Placeholder-Text (`::placeholder`) gilt als **inactive UI component** — er verschwindet bei Interaktion und ist kein primäres Inhaltselement.
+
+| Kontext | Requirement | Severity |
+|---|---|---|
+| `::placeholder` mit `color: var(--color-text-subtle)` | **AA ≥4.5:1** (WCAG Note, nicht AAA) | MINOR wenn <4.5:1, PASS wenn ≥4.5:1 |
+
+> Aktueller Stand nach Token-Fix: light subtle (#575450) auf bg/surface ≥7.21:1 ✅ — Placeholder ist damit automatisch auch AAA-konform.
+
+### Token-Kontrast-Referenz (nach KON-253 Fix, 2026-04-24)
+
+| Token | Light mode | Dark mode (nach Fix) |
+|---|---|---|
+| `--color-text-subtle` Wert | `#575450` | `#B3B0A9` |
+| auf `--color-bg` | 7.21:1 ✅ | 8.11:1 ✅ |
+| auf `--color-surface` | 7.53:1 ✅ | 7.24:1 ✅ |
+| auf `--color-surface-sunk` | 6.62:1 ⚠ (kein Text drauf*) | 8.91:1 ✅ |
+
+*\* `--color-surface-sunk` wird nur für Icon-Boxen, Toggle-Tracks und Video-Elemente als Hintergrund verwendet — kein `--color-text-subtle`-Text sitzt direkt darauf.*
+
+**Konsequenz für a11y-Auditor:** Wenn ein Callsite `color: var(--color-text-subtle)` auf einem `--color-surface-sunk`-Hintergrund hat, ist das ein **BLOCKER** (6.62:1 light < 7:1). Aktuell existiert kein solcher Callsite. Neue Tools müssen das vermeiden.
+
+---
+
 ## Writer-Constraints (nicht verhandelbar)
 
 - **Evidenzbasiert:** Jeder `fail` enthält `rulebook_ref` + `evidence_file` + `evidence_quote` + `reason`. Reports ohne Zitat werden vom CEO als `invalid_report` markiert und der Critic wird zur Neuauditur geschickt.
