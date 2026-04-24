@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
+  import { parseDE } from '../../lib/tools/parse-de';
   import {
-    parseDE,
     formatEuro,
     formatPct,
     computeMonatsrate,

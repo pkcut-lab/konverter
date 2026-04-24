@@ -1,5 +1,4 @@
 import type { FormatterConfig } from './schemas';
-import { parseDE } from './parse-de';
 
 /**
  * Tilgungsplan-Rechner — Annuitätendarlehen-Berechnung.
