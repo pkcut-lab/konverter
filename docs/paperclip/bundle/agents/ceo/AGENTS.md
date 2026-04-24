@@ -323,6 +323,59 @@ AGENTS.md ist die authoritative Quelle (Paperclip-Runtime lädt AGENTS.md als
 | `rulebook-update-request` | — | User-Approval (du eskalierst nur) |
 | `rubric-split` | — | User-Approval (200-Tools-Schwelle oder F1-Drift) |
 
+### §3.3.1 Tool-Build `in_review` → Auto-Advance (v1.3, 2026-04-24)
+
+**Problem.** Der Tool-Builder setzt Tool-Build-Tickets gelegentlich auf
+`in_review` statt `done` (generischer Paperclip-Status-Missbrauch, siehe
+Skill-Quick-Guide: *"Use this when handing work off for review, not as a
+generic synonym for done"*). In unserer Pipeline gibt es aber **keinen
+menschlichen Reviewer** für Tool-Builds — die Review läuft über §3.5
+Critic-Fan-Out + §7.6 End-Reviewer. Wenn ein Tool-Build auf `in_review`
+stehen bleibt, stalled die Pipeline — der User muss manuell advancen.
+Das ist ein Autonomie-Bruch (User-Policy 2026-04-24 „keine Kompromisse").
+
+**Regel.** Pro Heartbeat scannt CEO alle `in_review` Tool-Build-Tickets
+(`title` startet mit `Tool-Build:` oder `Tool-Build-Rework:`). Für jedes:
+
+```bash
+# 1. Existiert ein offener User-Thread-Question im Ticket-Kommentar?
+#    (z.B. "@user welche …?" oder inbox/to-user/ Eintrag mit Bezug)
+has_user_question=$(check_comment_thread_for_user_request ticket.id)
+
+if [[ "$has_user_question" == "true" ]]; then
+  # echte User-Rückfrage → bleib in_review, Live-Alarm wenn länger als 2h
+  continue
+fi
+
+# 2. Tool-Build-Verify laufen lassen
+if ! bash scripts/paperclip/verify-tool-build.sh "$tool_id" "$slug"; then
+  # Tool unvollständig → Rework-Ticket an tool-builder dispatchen
+  create_rework_ticket(ticket, reason="verify-tool-build.sh FAIL")
+  patch(ticket.id, status="blocked", comment="Verify-Gate FAIL, Rework erzeugt")
+  continue
+fi
+
+# 3. Tool komplett + keine User-Rückfrage → auto-advance auf done
+patch(ticket.id,
+      status="done",
+      comment=(f"Auto-advance §3.3.1: Tool-Build komplett "
+               f"(verify-tool-build.sh PASS), keine User-Rückfrage im Thread. "
+               f"Triggert §3.5 Critic-Fan-Out."))
+# §3.4 Consumer-Loop erkennt done → §3.5 dispatcht 8 parallele Critics
+```
+
+**Hard-Cap.** Max 5 Auto-Advances pro Heartbeat (gegen Runaway bei
+Rulebook-Bug). Bei >5 ist definitiv was falsch — Live-Alarm `auto_advance_spike`.
+
+**Audit-Trail.** Jedes Auto-Advance kriegt den Kommentar-Prefix
+`Auto-advance §3.3.1:` für forensische Rückverfolgbarkeit. In Daily-Digest
+vermerken: `- Auto-advance: KON-X (<slug>)`.
+
+**Warum nicht einfach Tool-Builder-Rulebook fixen?** Parallel gemacht
+(Tool-Builder AGENTS.md §5 Task-End sagt explizit `status=done`, nicht
+`in_review`). §3.3.1 ist die **Defense-in-Depth** falls Builder-Ausreißer
+trotzdem passieren — belastbarer als Rulebook-Text allein.
+
 ### §3.4 Consumer-Loops — Self-Heal Pipeline-Hooks (v1.4 Core, 2026-04-24 Patch 6)
 
 **Pflicht jeden Heartbeat**, zwischen Step 7 (Critic-Aggregation) und Step 8

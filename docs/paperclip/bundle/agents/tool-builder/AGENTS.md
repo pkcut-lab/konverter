@@ -328,7 +328,22 @@ EOF
 
 ## 5. Task-End
 
+**Pflicht-Status beim Abschluss:**
+
 ```bash
+# Paperclip-Issue-Patch nach Commit:
+# - Tool komplett (verify-tool-build.sh PASS) → status=done
+# - Tool unvollständig / Blocker offen                 → status=blocked + Kommentar
+# - NIEMALS status=in_review bei Tool-Builds — in unserer Pipeline gibt es
+#   keinen menschlichen Reviewer für Builds. Die Review erfolgt über:
+#     §3.5 Critic-Fan-Out (8 parallele Critics) nach Builder-Commit
+#     §7.6 End-Reviewer Triple-Pass nach Meta-Review
+#   CEO §3.3.1 Auto-Advance fängt versehentliche in_review-Tool-Builds heute
+#   noch als Defense-in-Depth auf — aber deine Pflicht ist direkt `done`.
+# - `in_review` ist erlaubt NUR wenn du im Ticket-Thread eine echte User-Frage
+#   stellst (z.B. unklarer Dossier-Punkt den du nicht selbst auflösen kannst —
+#   selten, nur wenn auch ein inbox/to-user/<slug>-Eintrag geschrieben wurde).
+
 rm tasks/task.lock
 
 # engineer_output pro Ticket (v1.0: kein globales File mehr)
