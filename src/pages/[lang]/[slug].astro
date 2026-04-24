@@ -12,6 +12,7 @@ import ContrastCheckerTool from '../../components/tools/ContrastCheckerTool.svel
 import RegexTesterTool from '../../components/tools/RegexTesterTool.svelte';
 import MehrwertsteuerRechnerTool from '../../components/tools/MehrwertsteuerRechnerTool.svelte';
 import StundenlohnJahresgehaltTool from '../../components/tools/StundenlohnJahresgehaltTool.svelte';
+import TilgungsplanRechnerTool from '../../components/tools/TilgungsplanRechnerTool.svelte';
 import Comparer from '../../components/tools/Comparer.svelte';
 import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
@@ -33,6 +34,7 @@ const CONTRAST_CHECKER_TOOL_ID = 'contrast-checker';
 const REGEX_TESTER_TOOL_ID = 'regex-tester';
 const VAT_CALCULATOR_TOOL_ID = 'vat-calculator';
 const HOURLY_ANNUAL_TOOL_ID = 'hourly-to-annual';
+const AMORTIZATION_TOOL_ID = 'amortization-calculator';
 const CUSTOM_FORMATTER_IDS = new Set<string>([
   HEX_COLOR_TOOL_ID,
   IMAGE_DIFF_TOOL_ID,
@@ -40,6 +42,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   CONTRAST_CHECKER_TOOL_ID,
   VAT_CALCULATOR_TOOL_ID,
   HOURLY_ANNUAL_TOOL_ID,
+  AMORTIZATION_TOOL_ID,
 ]);
 
 const componentByType = {
@@ -194,6 +197,9 @@ const jsonLd = buildToolJsonLd(
           )}
           {config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID && (
             <StundenlohnJahresgehaltTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID && (
+            <TilgungsplanRechnerTool config={config} client:load />
           )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
