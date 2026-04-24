@@ -15,6 +15,7 @@ import StundenlohnJahresgehaltTool from '../../components/tools/StundenlohnJahre
 import TilgungsplanRechnerTool from '../../components/tools/TilgungsplanRechnerTool.svelte';
 import BruttoNettoRechnerTool from '../../components/tools/BruttoNettoRechnerTool.svelte';
 import KreditrechnerTool from '../../components/tools/KreditrechnerTool.svelte';
+import RabattRechnerTool from '../../components/tools/RabattRechnerTool.svelte';
 import Comparer from '../../components/tools/Comparer.svelte';
 import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
@@ -40,6 +41,7 @@ const HOURLY_ANNUAL_TOOL_ID = 'hourly-to-annual';
 const AMORTIZATION_TOOL_ID = 'amortization-calculator';
 const GROSS_NET_TOOL_ID = 'gross-net-calculator';
 const LOAN_CALCULATOR_TOOL_ID = 'loan-calculator';
+const DISCOUNT_CALCULATOR_TOOL_ID = 'discount-calculator';
 const CUSTOM_FORMATTER_IDS = new Set<string>([
   HEX_COLOR_TOOL_ID,
   IMAGE_DIFF_TOOL_ID,
@@ -50,6 +52,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   AMORTIZATION_TOOL_ID,
   GROSS_NET_TOOL_ID,
   LOAN_CALCULATOR_TOOL_ID,
+  DISCOUNT_CALCULATOR_TOOL_ID,
 ]);
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
@@ -219,6 +222,9 @@ const jsonLd = buildToolJsonLd(
           )}
           {config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID && (
             <KreditrechnerTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID && (
+            <RabattRechnerTool config={config} client:load />
           )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
