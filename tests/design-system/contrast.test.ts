@@ -66,6 +66,14 @@ describe('WCAG AAA contrast — Light theme', () => {
     const ratio = contrastRatio(parseVar(light, '--color-text-muted')!, parseVar(light, '--color-surface')!);
     expect(ratio).toBeGreaterThanOrEqual(AAA);
   });
+  it('text-subtle on bg ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(light, '--color-text-subtle')!, parseVar(light, '--color-bg')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
+  it('text-subtle on surface ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(light, '--color-text-subtle')!, parseVar(light, '--color-surface')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
 });
 
 describe('WCAG AAA contrast — Dark theme', () => {
@@ -83,6 +91,10 @@ describe('WCAG AAA contrast — Dark theme', () => {
   });
   it('text-muted on bg ≥ 7:1', () => {
     const ratio = contrastRatio(parseVar(dark, '--color-text-muted')!, parseVar(dark, '--color-bg')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
+  it('text-subtle on bg ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(dark, '--color-text-subtle')!, parseVar(dark, '--color-bg')!);
     expect(ratio).toBeGreaterThanOrEqual(AAA);
   });
 });
