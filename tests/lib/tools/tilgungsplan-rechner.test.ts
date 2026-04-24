@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
   tilgungsplanRechner,
-  parseDE,
   formatEuro,
   computeMonatsrate,
   computeMonatsrateFromAnfangstilgung,
@@ -9,6 +8,7 @@ import {
   computeAnfangstilgungPct,
   computeTilgungsplan,
 } from '../../../src/lib/tools/tilgungsplan-rechner';
+import { parseDE } from '../../../src/lib/tools/parse-de';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
 
 describe('tilgungsplanRechner config', () => {

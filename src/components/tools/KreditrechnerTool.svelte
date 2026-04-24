@@ -5,6 +5,7 @@
     buildTilgungsplan,
   } from '../../lib/tools/kreditrechner';
   import type { TilgungsplanZeile } from '../../lib/tools/kreditrechner';
+  import { parseDE } from '../../lib/tools/parse-de';
 
   interface Props {
     config: FormatterConfig;
@@ -13,11 +14,6 @@
   void config;
 
   // ---- Hilfsfunktionen ----
-  function parseDE(s: string): number {
-    const cleaned = s.trim().replace(/\./g, '').replace(',', '.');
-    return cleaned === '' ? NaN : Number(cleaned);
-  }
-
   function formatEuro(n: number): string {
     if (!Number.isFinite(n)) return '—';
     return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
