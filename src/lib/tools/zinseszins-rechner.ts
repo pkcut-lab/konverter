@@ -1,4 +1,4 @@
-import type { CalculatorConfig } from './schemas';
+import type { FormatterConfig } from './schemas';
 
 /**
  * Zinseszins-Rechner — monatlicher Sparplan mit Steuer, Inflation und TER.
@@ -102,44 +102,16 @@ function round2(n: number): number {
   return Math.round(n * 100) / 100;
 }
 
-function compute(inputs: Record<string, number>): Record<string, number> {
-  const r = computeZinseszinsCalc(
-    Math.max(0, inputs['anfangskapital'] ?? 0),
-    Math.max(0, inputs['sparrate'] ?? 0),
-    inputs['zinssatz'] ?? 5,
-    inputs['laufzeit'] ?? 10,
-    Math.max(0, inputs['inflationsrate'] ?? 2),
-    Math.max(0, inputs['ter'] ?? 0),
-  );
-  return {
-    endkapital_nominal: r.endkapital_nominal,
-    endkapital_netto: r.endkapital_netto,
-    endkapital_real: r.endkapital_real,
-    gesamteinzahlungen: r.gesamteinzahlungen,
-    zinsen_brutto: r.zinsen_brutto,
-    steuern_gesamt: r.steuern_gesamt,
-  };
+function format(_input: string): string {
+  // Custom UI in ZinseszinsRechnerTool.svelte — format() not used at runtime.
+  return '';
 }
 
-export const zinseszinsRechner: CalculatorConfig = {
+export const zinseszinsRechner: FormatterConfig = {
   id: 'compound-interest-calculator',
-  type: 'calculator',
+  type: 'formatter',
   categoryId: 'finance',
-  inputs: [
-    { id: 'anfangskapital', label: 'Anfangskapital (€)' },
-    { id: 'sparrate', label: 'Monatliche Sparrate (€)' },
-    { id: 'zinssatz', label: 'Zinssatz (% p.\u00A0a.)' },
-    { id: 'laufzeit', label: 'Laufzeit (Jahre)' },
-    { id: 'inflationsrate', label: 'Inflationsrate (%)' },
-    { id: 'ter', label: 'Kosten\u00A0/\u00A0TER (% p.\u00A0a.)' },
-  ],
-  outputs: [
-    { id: 'endkapital_nominal', label: 'Endkapital nominal (€)' },
-    { id: 'endkapital_netto', label: 'Endkapital nach Steuer (€)' },
-    { id: 'endkapital_real', label: 'Endkapital real\u00A0/\u00A0Kaufkraft (€)' },
-    { id: 'gesamteinzahlungen', label: 'Gesamte Einzahlungen (€)' },
-    { id: 'zinsen_brutto', label: 'Zinsertr\u00E4ge brutto (€)' },
-    { id: 'steuern_gesamt', label: 'Steuern gesamt (€)' },
-  ],
-  compute,
+  mode: 'custom',
+  format,
+  placeholder: '',
 };

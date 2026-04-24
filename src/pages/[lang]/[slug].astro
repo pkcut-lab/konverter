@@ -17,6 +17,7 @@ import BruttoNettoRechnerTool from '../../components/tools/BruttoNettoRechnerToo
 import KreditrechnerTool from '../../components/tools/KreditrechnerTool.svelte';
 import RabattRechnerTool from '../../components/tools/RabattRechnerTool.svelte';
 import ZinsrechnerTool from '../../components/tools/ZinsrechnerTool.svelte';
+import ZinseszinsRechnerTool from '../../components/tools/ZinseszinsRechnerTool.svelte';
 import Comparer from '../../components/tools/Comparer.svelte';
 import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
@@ -44,6 +45,7 @@ const GROSS_NET_TOOL_ID = 'gross-net-calculator';
 const LOAN_CALCULATOR_TOOL_ID = 'loan-calculator';
 const DISCOUNT_CALCULATOR_TOOL_ID = 'discount-calculator';
 const INTEREST_CALCULATOR_TOOL_ID = 'interest-calculator';
+const COMPOUND_INTEREST_TOOL_ID = 'compound-interest-calculator';
 const CUSTOM_FORMATTER_IDS = new Set<string>([
   HEX_COLOR_TOOL_ID,
   IMAGE_DIFF_TOOL_ID,
@@ -56,6 +58,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   LOAN_CALCULATOR_TOOL_ID,
   DISCOUNT_CALCULATOR_TOOL_ID,
   INTEREST_CALCULATOR_TOOL_ID,
+  COMPOUND_INTEREST_TOOL_ID,
 ]);
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
@@ -231,6 +234,9 @@ const jsonLd = buildToolJsonLd(
           )}
           {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && (
             <ZinsrechnerTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && (
+            <ZinseszinsRechnerTool config={config} client:load />
           )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter

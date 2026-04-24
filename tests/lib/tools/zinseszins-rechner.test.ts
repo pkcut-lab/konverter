@@ -10,39 +10,15 @@ import { parseToolConfig } from '../../../src/lib/tools/schemas';
 // ---------------------------------------------------------------------------
 
 describe('zinseszinsRechner config', () => {
-  it('parses as valid CalculatorConfig', () => {
+  it('parses as valid FormatterConfig', () => {
     const r = parseToolConfig(zinseszinsRechner);
     expect(r.ok).toBe(true);
   });
 
   it('has correct identity fields', () => {
     expect(zinseszinsRechner.id).toBe('compound-interest-calculator');
-    expect(zinseszinsRechner.type).toBe('calculator');
+    expect(zinseszinsRechner.type).toBe('formatter');
     expect(zinseszinsRechner.categoryId).toBe('finance');
-  });
-
-  it('has required inputs (anfangskapital, sparrate, zinssatz, laufzeit)', () => {
-    const inputIds = zinseszinsRechner.inputs.map((i) => i.id);
-    expect(inputIds).toContain('anfangskapital');
-    expect(inputIds).toContain('sparrate');
-    expect(inputIds).toContain('zinssatz');
-    expect(inputIds).toContain('laufzeit');
-  });
-
-  it('has inflation and TER inputs', () => {
-    const inputIds = zinseszinsRechner.inputs.map((i) => i.id);
-    expect(inputIds).toContain('inflationsrate');
-    expect(inputIds).toContain('ter');
-  });
-
-  it('has required outputs (nominal, netto, real)', () => {
-    const outputIds = zinseszinsRechner.outputs.map((o) => o.id);
-    expect(outputIds).toContain('endkapital_nominal');
-    expect(outputIds).toContain('endkapital_netto');
-    expect(outputIds).toContain('endkapital_real');
-    expect(outputIds).toContain('gesamteinzahlungen');
-    expect(outputIds).toContain('zinsen_brutto');
-    expect(outputIds).toContain('steuern_gesamt');
   });
 
   it('rejects invalid modification (empty categoryId)', () => {
@@ -51,15 +27,8 @@ describe('zinseszinsRechner config', () => {
     expect(r.ok).toBe(false);
   });
 
-  it('compute returns all expected keys', () => {
-    const result = zinseszinsRechner.compute({
-      anfangskapital: 1000,
-      sparrate: 100,
-      zinssatz: 5,
-      laufzeit: 10,
-      inflationsrate: 2,
-      ter: 0,
-    });
+  it('computeZinseszinsCalc returns all expected keys', () => {
+    const result = computeZinseszinsCalc(1000, 100, 5, 10, 2, 0);
     expect(result).toHaveProperty('endkapital_nominal');
     expect(result).toHaveProperty('endkapital_netto');
     expect(result).toHaveProperty('endkapital_real');
@@ -68,15 +37,8 @@ describe('zinseszinsRechner config', () => {
     expect(result).toHaveProperty('steuern_gesamt');
   });
 
-  it('compute returns finite numbers', () => {
-    const result = zinseszinsRechner.compute({
-      anfangskapital: 10000,
-      sparrate: 200,
-      zinssatz: 7,
-      laufzeit: 20,
-      inflationsrate: 2,
-      ter: 0.3,
-    });
+  it('computeZinseszinsCalc returns finite numbers', () => {
+    const result = computeZinseszinsCalc(10000, 200, 7, 20, 2, 0.3);
     for (const v of Object.values(result)) {
       expect(Number.isFinite(v)).toBe(true);
     }
