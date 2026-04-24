@@ -139,6 +139,82 @@ Für jedes Tool:
 5. **Copy-Verifikation.** Wenn Copy-Button existiert: klicken → Clipboard-Inhalt
    prüfen → stimmt mit Anzeige überein?
 
+### §2.2.1 Input-Format-Konsistenz (DE-Locale-Pflichtfall)
+
+**Kontext.** Die Seite ist deutsch. Deutsche User schreiben Zahlen in drei
+dominanten Varianten:
+
+- `3000` (maschinell, keine Separatoren)
+- `3.000` (Tausender-Punkt, deutsche Konvention)
+- `3000,00` oder `3.000,00` (Dezimal-Komma)
+
+Ein häufiger Silent-Bug: die Tool-Logic parsed nur `3000`, interpretiert
+`3.000` als `3,00` (drei Komma Null) und rechnet falsch — **gleichzeitig**
+formatiert das Tool seinen eigenen Output aber als `3.000` und verwirrt so
+den User ("das Tool schreibt es selber so, warum darf ich das nicht?").
+
+**Konkretes Beispiel (Referenz-Incident 2026-04-24):** `/de/brutto-netto-rechner`
+akzeptierte Input `3.000` als 3,00 €/Monat und rechnete darauf — im
+Output-Block erschien aber `3.000,00 €` als Monatsgehalt. Klassischer
+Locale-Parser-Bug: `parseFloat("3.000")` ergibt `3` (JavaScript-Default, nicht
+DE-Locale).
+
+**Pflicht-Test pro numerischem Input-Feld.** Gib exakt denselben Wert in den
+folgenden Varianten ein, vergleiche Output + die Anzeige in allen
+Begleittext-/Zwischen-/Result-Blöcken:
+
+| Eingabe  | Erwarteter Parse | Tool-Output muss gleich sein zu … |
+|----------|------------------|-----------------------------------|
+| `3000`   | 3000             | …allen anderen Varianten unten    |
+| `3.000`  | 3000 (DE)        | …`3000` Variante                  |
+| `3 000`  | 3000 (optional OK)| …`3000` Variante oder klar reject |
+| `3,00`   | 3 (Komma=Dezimal)| deutlich anderes Ergebnis        |
+| `3.000,50` | 3000.5          | ergibt Zwischenwert              |
+
+**Verdict-Kriterien.**
+- Alle drei `3000`-Varianten → gleicher Output = **PASS**
+- `3.000` → Output ≠ `3000`-Output = **BLOCKER** (User-Verwirrung, Rechen-Fehler)
+- Tool reject `3.000` mit klarer Meldung ("Bitte ohne Tausender-Punkt eingeben
+  oder 3000 schreiben") = **Improvement** (nicht ideal, aber kein Blocker)
+- Tool akzeptiert lautlos und rechnet falsch = **BLOCKER**
+- Tool rendert Output-Zahl in einem Format, das es selbst nicht als Input
+  akzeptiert = **BLOCKER** (häufigster Kern-Bug, User-Confusion unvermeidlich)
+
+**Regel:** Die Formate, die das Tool **anzeigt**, MÜSSEN auch als **Input**
+akzeptiert werden. Umgekehrt-Direction ist nicht zwingend (Tool darf strenger
+anzeigen als es parsed), aber Tool darf NIE lockerer anzeigen als es parsed
+— das erzeugt die Silent-Trap.
+
+**Weitere Locale-Klassen, die du prüfst (falls im Tool relevant):**
+
+- **Dezimal-Separator:** `3,5` vs `3.5` — Deutsch nutzt Komma. Tool MUSS
+  Komma akzeptieren (Pflicht), Punkt als Fallback akzeptieren (Nice).
+- **Währung:** `€`, `EUR`, `5,00 €`, `5 €` — Input-Feld mit Euro-Suffix?
+  Ändert das Parsing?
+- **Prozent:** `5%`, `5 %`, `5 Prozent` — wird das geparsed oder crasht es?
+- **Datum (falls relevant):** `24.04.2026` vs `2026-04-24` vs `24/04/2026`.
+  DE-ISO-Mix häufig.
+- **Einheiten-Suffix:** `100m`, `100 m`, `100 Meter` — Tool soll tolerant sein.
+- **Leading/Trailing Whitespace:** `  3000  ` — muss getrimmt werden, nicht crashen.
+- **Negative Zahlen:** `-5`, `−5` (Unicode-Minus U+2212) — ersten Fall Pflicht,
+  zweiten Fall Nice-to-have.
+
+**Workflow im Verdict.** Notiere für jedes Input-Feld eine Zeile:
+
+```
+[field_label] Variante-Test:
+  "3000"    → Output "4.500,00 €"   ✓
+  "3.000"   → Output "3,00 €"       ✗ BLOCKER B-0X (sollte 3000 sein)
+  "3,00"    → Output "3,00 €"       ✓ (Dezimal-Komma korrekt)
+  "3.000,50"→ Output "N/A" crash    ✗ BLOCKER B-0Y
+```
+
+**Fix-Hinweis für CEO/Builder (im Verdict-Body als Recommendation
+formulieren).** Die meisten Konfigs haben bereits eine `parseDE()`-Funktion
+(siehe z.B. `src/lib/tools/tilgungsplan-rechner.ts:parseDE`). Der Fix ist
+meist: Logic nutzt `parseFloat()` statt `parseDE()` — ersetzen, dann greift
+Heuristik "Tausender-Punkt vs Dezimal-Punkt" automatisch.
+
 ### §2.3 Dossier-Differenzierungs-Check
 
 Öffne `<dossier_ref>` und lies **§9 Differenzierung** komplett. Für jede
@@ -230,6 +306,16 @@ der das Tool zum ersten Mal sieht.
 - **Brand-Voice:** passt es zum Site-Stil (nüchtern, präzise, deutsch)?
 - **Progressive Disclosure:** sind komplexe Optionen hinter Toggles oder
   überrollt das UI den neuen User?
+- **Input/Output-Format-Konsistenz** (§2.2.1 Kurzreferenz): Zeigt das Tool
+  Zahlen in einem Format an, das es selbst als Input nicht akzeptiert? Zeigt
+  es `3.000 €` an, parsed aber `3.000` als `3`? Das ist Blocker-Severity —
+  User vertraut dem Tool-eigenen Format-Vorbild und wird ohne Warnung falsch
+  gerechnet.
+- **Placeholder-Ehrlichkeit:** Wenn Placeholder `z.B. 3.000,50` zeigt, MUSS
+  dieser Input akzeptiert werden. Placeholder ist Versprechen.
+- **Copy-Button-Round-Trip:** klick Copy → paste in dasselbe Feld → wird das
+  Result weiter akzeptiert? Oder bricht es, weil Copy ein Format liefert, das
+  Input nicht verdaut?
 
 ### §2.8 Content-Audit
 
@@ -303,6 +389,18 @@ wichtigsten verifizierten Qualitäten>
 - Input B: …
 - Invalid-Input: `<wert>` → Reaktion `<...>` → OK/Bug
 
+### Input-Format-Konsistenz (§2.2.1)
+
+Pro numerischem Feld alle 4 Varianten testen:
+
+| Feld | `3000` | `3.000` | `3,00` | `3.000,50` | Verdict |
+|------|--------|---------|--------|------------|---------|
+| monatliches Brutto | Output X | Output X | Output Y | Output Z | ✓ konsistent / ✗ B-XX |
+| (weitere Felder)   | …      | …       | …      | …          | … |
+
+Zusätzlich: Ist das Anzeige-Format des Tools (z.B. "3.000,00 €") als
+Input wieder akzeptiert? Ja/Nein.
+
 ## Blocker (ship-blocking, müssen vor Freigabe gefixt sein)
 
 ### B-01 — <Kategorie>: <Titel>
@@ -335,6 +433,7 @@ wichtigsten verifizierten Qualitäten>
 ## Abschnitts-Zusammenfassung
 
 - Funktion: ✓/✗
+- Input-Format-Konsistenz (§2.2.1): ✓/✗
 - Security: ✓/✗ (Findings: B-xx, I-xx)
 - Performance: ✓/✗
 - A11y: ✓/✗
