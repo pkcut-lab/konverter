@@ -3,7 +3,7 @@ toolId: "regex-tester"
 language: "de"
 title: "Regex Tester — Reguläre Ausdrücke online testen"
 headingHtml: "<em>Regex</em> Tester"
-metaDescription: "Reguläre Ausdrücke im Browser testen. Live-Highlighting, Flags, Capture Groups, Fehleranzeige. 100 % clientseitig, kein Server-Upload, kein Tracking."
+metaDescription: "Reguläre Ausdrücke im Browser testen. Live-Highlighting, Flags, Capture Groups, Fehleranzeige. 100&nbsp;% clientseitig, kein Server-Upload, kein Tracking."
 tagline: "Patterns testen, Treffer hervorheben — komplett im Browser, ohne Server-Kontakt."
 intro: "Der Regex Tester prüft reguläre Ausdrücke direkt im Browser gegen beliebige Test-Strings. Treffer werden live hervorgehoben, Capture Groups einzeln aufgeschlüsselt, Syntaxfehler sofort gemeldet. Kein Server sieht dein Pattern oder deine Testdaten — alles läuft lokal."
 category: "dev"
@@ -104,7 +104,7 @@ JavaScript-Regex entwickelt sich weiter. Drei Features sind 2026 besonders relev
 
 **`RegExp.escape()`:** Maskiert Sonderzeichen in einem String, damit er als Regex-Literal sicher einsetzbar ist. Aktuell Stage 3 (TC39), noch kein Browser-Support — aber das Feature löst einen häufigen Fehler (unescapte Punkte, Klammern, Sterne in dynamischen Patterns).
 
-## Datenschutz — 100 % im Browser
+## Datenschutz — 100&nbsp;% im Browser
 
 regex101.com — der bekannteste Regex-Tester — sendet Pattern und Test-String an einen Backend-Server. Das ist problematisch, wenn du mit Produktionsdaten arbeitest:
 

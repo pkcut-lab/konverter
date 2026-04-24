@@ -3,7 +3,7 @@ toolId: tonne-to-pound
 language: de
 title: "Tonne in Pfund umrechnen – Formel, Tabelle & Beispiele"
 headingHtml: "Tonne in <em>Pfund</em> umrechnen"
-metaDescription: "Tonne in Pfund umrechnen: exakte Formel (1 t = 2204,62 lb), Tabelle für Industrie, Logistik und Handel. Client-seitig, ohne Tracking, ohne Anmeldung."
+metaDescription: "Tonne in Pfund umrechnen: exakte Formel (1 t = 2204,62&nbsp;lb), Tabelle für Industrie, Logistik und Handel. Client-seitig, ohne Tracking, ohne Anmeldung."
 tagline: "Metrische Tonnen in Pfund umrechnen — sofort, client-seitig und ohne Tracking."
 intro: "Der Konverter wandelt metrische Tonnen (t) in das anglo-amerikanische Pfund (lb) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Logistik-Gewichte, Rohstoffhandel, Frachtpapiere und jede Situation, in der große Masseangaben zwischen dem metrischen und dem imperialen System wechseln müssen. Die Umrechnung basiert auf der internationalen Definition: eine metrische Tonne entspricht exakt 1000 Kilogramm, ein Pfund exakt 0,45359237 Kilogramm."
 howToUse:
@@ -12,9 +12,9 @@ howToUse:
   - "Kopiere oder tausche die Richtung mit einem Klick"
 faq:
   - q: "Wie viele Pfund sind eine Tonne?"
-    a: "Eine metrische Tonne entspricht 2204,62 Pfund. Für schnelle Kopfrechnungen reicht die Näherung 2200 lb pro Tonne."
+    a: "Eine metrische Tonne entspricht 2204,62 Pfund. Für schnelle Kopfrechnungen reicht die Näherung 2200&nbsp;lb pro Tonne."
   - q: "Was ist der Unterschied zwischen metrischer Tonne, Short Ton und Long Ton?"
-    a: "Die metrische Tonne (t) wiegt exakt 1000 kg. Die US-amerikanische Short Ton wiegt 2000 Pfund (907,185 kg) und die britische Long Ton wiegt 2240 Pfund (1016,047 kg). Dieser Konverter rechnet mit der metrischen Tonne, die im internationalen Handel und in der Wissenschaft Standard ist."
+    a: "Die metrische Tonne (t) wiegt exakt 1000&nbsp;kg. Die US-amerikanische Short Ton wiegt 2000 Pfund (907,185&nbsp;kg) und die britische Long Ton wiegt 2240 Pfund (1016,047&nbsp;kg). Dieser Konverter rechnet mit der metrischen Tonne, die im internationalen Handel und in der Wissenschaft Standard ist."
   - q: "Wann brauche ich die Umrechnung von Tonnen in Pfund?"
     a: "Typische Einsatzgebiete sind Frachtpapiere im US-Handel, Rohstoffpreise (Getreide, Metalle), Containergewichte und Logistik-Software, die Angaben in Pfund erwartet. Auch beim Import von Maschinen oder Fahrzeugen aus den USA tauchen Pfund-Angaben auf."
   - q: "Wie genau ist die Umrechnung?"
@@ -48,12 +48,12 @@ Formeln:
 `Pfund = Tonnen × 2204,62`
 `Tonnen = Pfund × 0,000453592`
 
-Rechen-Beispiel: 3 t × 2204,62 = 6613,86 lb. Für eine schnelle Schätzung
+Rechen-Beispiel: 3 t × 2204,62 = 6613,86&nbsp;lb. Für eine schnelle Schätzung
 reicht die Faustregel: eine Tonne sind ungefähr 2200 Pfund.
 
 Wichtig: Die metrische Tonne (t) ist nicht identisch mit der US-amerikanischen
-Short Ton (2000 lb = 907,185 kg) oder der britischen Long Ton (2240 lb =
-1016,047 kg). Im internationalen Handel und in der Wissenschaft ist die
+Short Ton (2000&nbsp;lb = 907,185&nbsp;kg) oder der britischen Long Ton (2240&nbsp;lb =
+1016,047&nbsp;kg). Im internationalen Handel und in der Wissenschaft ist die
 metrische Tonne der Standard.
 
 ## Anwendungsbeispiele
@@ -70,8 +70,8 @@ gerundet auf zwei Nachkommastellen.
 | 10     | 22046,20    | 10000   | 4,54    |
 | 20     | 44092,40    | 50000   | 22,68   |
 
-Ein Standardcontainer mit 18 Tonnen Ladung wiegt 39683,16 lb. Ein US-
-Sattelzug-Limit von 80000 lb entspricht rund 36,29 Tonnen.
+Ein Standardcontainer mit 18 Tonnen Ladung wiegt 39683,16&nbsp;lb. Ein US-
+Sattelzug-Limit von 80000&nbsp;lb entspricht rund 36,29 Tonnen.
 
 ## Häufige Einsatzgebiete
 
@@ -98,13 +98,13 @@ Export-Geschäft unverzichtbar.
 ### Wie viele Pfund sind eine Tonne?
 
 Eine metrische Tonne entspricht 2204,62 Pfund. Für schnelle Kopfrechnungen
-reicht die Näherung 2200 lb pro Tonne.
+reicht die Näherung 2200&nbsp;lb pro Tonne.
 
 ### Was ist der Unterschied zwischen metrischer Tonne, Short Ton und Long Ton?
 
-Die metrische Tonne (t) wiegt exakt 1000 kg. Die US-amerikanische Short Ton
-wiegt 2000 Pfund (907,185 kg) und die britische Long Ton wiegt 2240 Pfund
-(1016,047 kg). Dieser Konverter rechnet mit der metrischen Tonne, die im
+Die metrische Tonne (t) wiegt exakt 1000&nbsp;kg. Die US-amerikanische Short Ton
+wiegt 2000 Pfund (907,185&nbsp;kg) und die britische Long Ton wiegt 2240 Pfund
+(1016,047&nbsp;kg). Dieser Konverter rechnet mit der metrischen Tonne, die im
 internationalen Handel und in der Wissenschaft Standard ist.
 
 ### Wann brauche ich die Umrechnung von Tonnen in Pfund?

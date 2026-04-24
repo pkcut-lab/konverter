@@ -3,7 +3,7 @@ toolId: "base64-encoder"
 language: "de"
 title: "Base64 Encoder — Text online kodieren"
 headingHtml: "<em>Base64</em> Encoder"
-metaDescription: "Text in Base64 kodieren — direkt im Browser, ohne Server. Standard-Base64 und URL-safe Base64url, UTF-8-Support, Copy-Button. 100 % client-side."
+metaDescription: "Text in Base64 kodieren — direkt im Browser, ohne Server. Standard-Base64 und URL-safe Base64url, UTF-8-Support, Copy-Button. 100&nbsp;% client-side."
 tagline: "Text in Base64 kodieren — komplett im Browser, ohne Server-Kontakt."
 intro: "Der Base64 Encoder wandelt beliebigen Text in Base64-Zeichenketten um. Die Kodierung läuft vollständig im Browser über die Web-API — kein Server sieht deine Daten, kein Logging speichert sie. Du fügst Text ein, klickst auf Kodieren und kopierst das Ergebnis."
 category: "dev"
@@ -14,7 +14,7 @@ howToUse:
   - "Kopiere das kodierte Ergebnis über den Copy-Button in die Zwischenablage."
 faq:
   - q: "Was ist Base64?"
-    a: "Ein Kodierungsverfahren nach RFC 4648, das beliebige Binärdaten in einen ASCII-String aus 64 druckbaren Zeichen (A–Z, a–z, 0–9, +, /) umwandelt. Das Ergebnis ist etwa 33 % größer als das Original."
+    a: "Ein Kodierungsverfahren nach RFC 4648, das beliebige Binärdaten in einen ASCII-String aus 64 druckbaren Zeichen (A–Z, a–z, 0–9, +, /) umwandelt. Das Ergebnis ist etwa 33&nbsp;% größer als das Original."
   - q: "Wofür braucht man Base64-Kodierung?"
     a: "Überall dort, wo Binärdaten über textbasierte Kanäle transportiert werden: E-Mail-Anhänge (MIME), Data-URIs in HTML/CSS, JWT-Tokens, API-Payloads und Konfigurationsdateien wie .env oder YAML."
   - q: "Was ist der Unterschied zwischen Base64 und Base64url?"
@@ -44,7 +44,7 @@ Base64 arbeitet auf Byte-Ebene, nicht auf Zeichen-Ebene. Der Algorithmus:
 3. Jede 6-Bit-Gruppe wird auf ein Zeichen aus dem Base64-Alphabet abgebildet.
 4. Bei unvollständigen 3-Byte-Blöcken am Ende wird mit `=` aufgefüllt.
 
-Beispiel: `Hallo` (5 Bytes UTF-8) ergibt `SGFsbG8=` (8 Zeichen Base64). Die Ausgabe ist immer ca. 33 % größer als der Input: `ceil(n / 3) * 4` Zeichen für `n` Eingabe-Bytes.
+Beispiel: `Hallo` (5 Bytes UTF-8) ergibt `SGFsbG8=` (8 Zeichen Base64). Die Ausgabe ist immer ca. 33&nbsp;% größer als der Input: `ceil(n / 3) * 4` Zeichen für `n` Eingabe-Bytes.
 
 ## Anwendungsbeispiele
 
@@ -64,7 +64,7 @@ Base64-Kodierung ist keine Verschlüsselung. Jeder kann eine Base64-Zeichenkette
 
 **JWT und API-Authentifizierung** — JSON Web Tokens bestehen aus drei Base64url-kodierten Segmenten: Header, Payload und Signatur. Base64url (ohne + und /) ist URL-sicher und wird in Authorization-Headern transportiert. Entwickler, die JWTs debuggen, dekodieren die Segmente einzeln.
 
-**Data-URIs in HTML und CSS** — Kleine Bilder oder SVGs lassen sich als `data:image/png;base64,...` direkt ins Markup einbetten. Das spart HTTP-Requests, erhöht aber die Dateigröße um ein Drittel. Sinnvoll für Icons unter 2 KB.
+**Data-URIs in HTML und CSS** — Kleine Bilder oder SVGs lassen sich als `data:image/png;base64,...` direkt ins Markup einbetten. Das spart HTTP-Requests, erhöht aber die Dateigröße um ein Drittel. Sinnvoll für Icons unter 2&nbsp;KB.
 
 **Konfigurationsdateien** — Kubernetes-Secrets, Docker-Compose-Umgebungsvariablen und CI/CD-Pipelines speichern sensible Werte häufig Base64-kodiert. Das ist kein Sicherheitsgewinn, sondern verhindert Parsing-Probleme bei Sonderzeichen in YAML und JSON.
 

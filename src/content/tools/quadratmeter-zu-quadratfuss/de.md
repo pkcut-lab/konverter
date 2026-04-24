@@ -20,7 +20,7 @@ faq:
   - q: "Zählt die Wandstärke zur Fläche?"
     a: "Das hängt vom Standard ab. Die deutsche Wohnflächenverordnung (WoFlV) rechnet nur innerhalb der Wände — US-Standards wie ANSI Z765 erlauben Außenmaß-Messung. Deshalb kann dieselbe Wohnung in zwei Listings unterschiedliche m²/ft²-Werte haben."
   - q: "Welche Präzision brauche ich für Mietverträge?"
-    a: "Bei Mietverträgen ist die Präzision juristisch relevant. Deutsche Gerichte akzeptieren Abweichungen bis 10 % — größere Differenzen können Mietminderung rechtfertigen. Für offizielle Angaben rechne mit vier Nachkommastellen und runde erst im letzten Schritt."
+    a: "Bei Mietverträgen ist die Präzision juristisch relevant. Deutsche Gerichte akzeptieren Abweichungen bis 10&nbsp;% — größere Differenzen können Mietminderung rechtfertigen. Für offizielle Angaben rechne mit vier Nachkommastellen und runde erst im letzten Schritt."
 relatedTools:
   - meter-zu-fuss
   - zentimeter-zu-zoll
@@ -127,7 +127,7 @@ unterschiedliche m²/ft²-Werte haben.
 ### Welche Präzision brauche ich für Mietverträge?
 
 Bei Mietverträgen ist die Präzision juristisch relevant. Deutsche Gerichte
-akzeptieren Abweichungen bis 10 % — größere Differenzen können Mietminderung
+akzeptieren Abweichungen bis 10&nbsp;% — größere Differenzen können Mietminderung
 rechtfertigen. Für offizielle Angaben rechne mit vier Nachkommastellen und
 runde erst im letzten Schritt.
 

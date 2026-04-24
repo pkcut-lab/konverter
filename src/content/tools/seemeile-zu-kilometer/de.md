@@ -3,7 +3,7 @@ toolId: nautical-mile-to-km
 language: de
 title: "Seemeilen in Kilometer umrechnen – Formel & Tabelle"
 headingHtml: "Seemeilen in <em>Kilometer</em> umrechnen"
-metaDescription: "Seemeilen in Kilometer umrechnen: exakte Formel (1 nmi = 1,852 km), Tabelle gängiger Werte und FAQ zu nautischen Meilen. Ohne Anmeldung, im Browser."
+metaDescription: "Seemeilen in Kilometer umrechnen: exakte Formel (1 nmi = 1,852&nbsp;km), Tabelle gängiger Werte und FAQ zu nautischen Meilen. Ohne Anmeldung, im Browser."
 tagline: "Präzise Distanz-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Seemeilen (nmi) in die entsprechende Angabe in Kilometern (km) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen nautischen Meilen und metrischen Distanzen pendelt — von der Schifffahrtsroute bis zum Flugplan. Seemeilen in Kilometer umrechnen ist dank internationaler Definition seit 1929 eindeutig."
 howToUse:
@@ -16,9 +16,9 @@ faq:
   - q: "Warum nutzen Schifffahrt und Luftfahrt Seemeilen statt Kilometer?"
     a: "Eine Seemeile entspricht einer Bogenminute auf einem Großkreis der Erde. Das macht die Navigation mit Seekarten und Breitengraden besonders einfach: Eine Minute Breitengrad gleicht einer Seemeile. Kilometer haben diesen geometrischen Bezug nicht."
   - q: "Was ist der Unterschied zwischen Seemeile und Landmeile?"
-    a: "Eine Seemeile misst 1,852 km, eine Landmeile (statute mile) 1,609344 km. Die Seemeile ist also rund 15 Prozent länger. Beide Einheiten werden im Englischen als mile bezeichnet, was Verwechslungen begünstigt."
+    a: "Eine Seemeile misst 1,852&nbsp;km, eine Landmeile (statute mile) 1,609344&nbsp;km. Die Seemeile ist also rund 15 Prozent länger. Beide Einheiten werden im Englischen als mile bezeichnet, was Verwechslungen begünstigt."
   - q: "Was bedeutet Knoten in der Seefahrt?"
-    a: "Ein Knoten ist eine Geschwindigkeitseinheit und entspricht einer Seemeile pro Stunde (1 kn = 1,852 km/h). Der Name stammt von der historischen Logge, bei der geknotete Leinen zur Geschwindigkeitsmessung dienten."
+    a: "Ein Knoten ist eine Geschwindigkeitseinheit und entspricht einer Seemeile pro Stunde (1 kn = 1,852&nbsp;km/h). Der Name stammt von der historischen Logge, bei der geknotete Leinen zur Geschwindigkeitsmessung dienten."
   - q: "Wie rechne ich Seemeilen grob im Kopf um?"
     a: "Multipliziere die Seemeilen mit zwei und ziehe rund acht Prozent ab. Alternativ: Seemeilen mal 1,85 liefert ein Ergebnis mit unter einem Prozent Abweichung."
 relatedTools:
@@ -42,16 +42,16 @@ Eine Seemeile (nautical mile, nmi) entspricht exakt 1,852 Kilometern. Diese Defi
 wurde 1929 auf der Ersten Internationalen Außerordentlichen Hydrographischen Konferenz
 in Monaco beschlossen und ist seither weltweit verbindlich. Die Herleitung ist
 geographisch: Eine Seemeile soll einer Bogenminute auf einem Großkreis der Erde
-entsprechen — bei einem mittleren Erdumfang von 40.003,93 km ergibt sich 40.003,93 / 21.600
-= 1,852 km, gerundet auf die offizielle Definition.
+entsprechen — bei einem mittleren Erdumfang von 40.003,93&nbsp;km ergibt sich 40.003,93 / 21.600
+= 1,852&nbsp;km, gerundet auf die offizielle Definition.
 
 Formeln:
 
 `Kilometer = Seemeilen × 1,852`
 `Seemeilen = Kilometer × 0,539957`
 
-Rechen-Beispiel: 5 nmi × 1,852 = 9,26 km. Auf vier Nachkommastellen gerechnet
-ergibt das 9,2600 km — präzise genug für Navigation und Routenplanung.
+Rechen-Beispiel: 5 nmi × 1,852 = 9,26&nbsp;km. Auf vier Nachkommastellen gerechnet
+ergibt das 9,2600&nbsp;km — präzise genug für Navigation und Routenplanung.
 
 ## Anwendungsbeispiele
 
@@ -67,8 +67,8 @@ bis vier Nachkommastellen.
 | 100       | 185,2000  | 100       | 53,9957   |
 | 1.000     | 1.852,00  | 1.000     | 539,9568  |
 
-Eine typische Überfahrt von 200 Seemeilen entspricht 370,4 km. Die Distanz zwischen
-Hamburg und Helgoland beträgt rund 35 Seemeilen, also gut 64,8 km.
+Eine typische Überfahrt von 200 Seemeilen entspricht 370,4&nbsp;km. Die Distanz zwischen
+Hamburg und Helgoland beträgt rund 35 Seemeilen, also gut 64,8&nbsp;km.
 
 ## Häufige Einsatzgebiete
 
@@ -82,7 +82,7 @@ Flugpläne, NOTAM-Radien und Funknavigationsangaben (VOR/DME) nutzen nmi als Sta
 Die Fluggeschwindigkeit wird in Knoten (Seemeilen pro Stunde) angegeben.
 
 **Wetterberichte:** Sichtweiten auf See und in der Luftfahrt werden in nautischen
-Meilen angegeben. Ein Sichtwert von 10 nmi entspricht 18,52 km — relevant für
+Meilen angegeben. Ein Sichtwert von 10 nmi entspricht 18,52&nbsp;km — relevant für
 Flughafenbetrieb und Schiffsverkehr.
 
 ## Häufige Fragen
@@ -101,14 +101,14 @@ Breitengrad gleicht einer Seemeile. Kilometer haben diesen geometrischen Bezug n
 
 ### Was ist der Unterschied zwischen Seemeile und Landmeile?
 
-Eine Seemeile misst 1,852 km, eine Landmeile (statute mile) 1,609344 km. Die Seemeile
+Eine Seemeile misst 1,852&nbsp;km, eine Landmeile (statute mile) 1,609344&nbsp;km. Die Seemeile
 ist also rund 15 Prozent länger. Beide Einheiten werden im Englischen als mile
 bezeichnet, was Verwechslungen begünstigt.
 
 ### Was bedeutet Knoten in der Seefahrt?
 
 Ein Knoten ist eine Geschwindigkeitseinheit und entspricht einer Seemeile pro Stunde
-(1 kn = 1,852 km/h). Der Name stammt von der historischen Logge, bei der geknotete
+(1 kn = 1,852&nbsp;km/h). Der Name stammt von der historischen Logge, bei der geknotete
 Leinen zur Geschwindigkeitsmessung dienten.
 
 ### Wie rechne ich Seemeilen grob im Kopf um?

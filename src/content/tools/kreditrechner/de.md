@@ -21,11 +21,11 @@ faq:
   - q: "Was passiert, wenn ich eine Sondertilgung leiste?"
     a: "Eine Sondertilgung reduziert die Restschuld sofort. Da der Zinsanteil jeder folgenden Rate auf der neuen (niedrigeren) Restschuld berechnet wird, sinkt er proportional — du zahlst in den Folgemonaten weniger Zinsen und tilgst schneller. Der Rechner zeigt dir die Einsparung in Euro und Monaten als direktes Delta: 'Du sparst X € und bist Y Monate früher schuldenfrei.'"
   - q: "Was passiert nach Ende der Zinsbindungsperiode?"
-    a: "Nach dem Ablauf der Zinsbindung (z.B. 10 Jahre) läuft der Kredit weiter, aber du musst die Konditionen neu verhandeln — die sogenannte Anschlussfinanzierung. Der neue Zinssatz hängt vom Marktumfeld zum Zeitpunkt des Auslaufens ab. Wer 2016–2021 bei 1–2 % abgeschlossen hat, steht jetzt vor einer Anschlussfinanzierung bei 3,5–4,5 %. Der Rechner zeigt die verbleibende Restschuld zum Ende deiner Zinsbindungsperiode."
+    a: "Nach dem Ablauf der Zinsbindung (z.B. 10&nbsp;Jahre) läuft der Kredit weiter, aber du musst die Konditionen neu verhandeln — die sogenannte Anschlussfinanzierung. Der neue Zinssatz hängt vom Marktumfeld zum Zeitpunkt des Auslaufens ab. Wer 2016–2021 bei 1–2&nbsp;% abgeschlossen hat, steht jetzt vor einer Anschlussfinanzierung bei 3,5–4,5&nbsp;%. Der Rechner zeigt die verbleibende Restschuld zum Ende deiner Zinsbindungsperiode."
   - q: "Wie viel Kredit kann ich mir leisten?"
-    a: "Die Faustregel der Kreditwirtschaft lautet: maximale monatliche Rate = 35 % des monatlichen Nettoeinkommens. Bei 3.000 € Netto sind das 1.050 € Rate. Ziehe davon fixe Ausgaben (Miete, Versicherungen) ab. Unser Rechner zeigt dir die Monatsrate für jeden Kreditbetrag — gib iterativ verschiedene Beträge ein, bis die Rate in dein Budget passt."
+    a: "Die Faustregel der Kreditwirtschaft lautet: maximale monatliche Rate = 35&nbsp;% des monatlichen Nettoeinkommens. Bei 3.000&nbsp;€ Netto sind das 1.050&nbsp;€ Rate. Ziehe davon fixe Ausgaben (Miete, Versicherungen) ab. Unser Rechner zeigt dir die Monatsrate für jeden Kreditbetrag — gib iterativ verschiedene Beträge ein, bis die Rate in dein Budget passt."
   - q: "Lohnt sich eine Sondertilgung?"
-    a: "Fast immer, wenn du die Möglichkeit hast. Eine Sondertilgung von 5.000 € bei einem 100.000-€-Kredit mit 4 % auf 10 Jahre spart rund 600–800 € Zinsen und verkürzt die Laufzeit um mehrere Monate. Der genaue Wert hängt vom Zeitpunkt der Sondertilgung ab: Je früher, desto mehr sparst du, weil die Zinsersparnis über die restliche Laufzeit kumuliert."
+    a: "Fast immer, wenn du die Möglichkeit hast. Eine Sondertilgung von 5.000&nbsp;€ bei einem 100.000-€-Kredit mit 4&nbsp;% auf 10&nbsp;Jahre spart rund 600–800&nbsp;€ Zinsen und verkürzt die Laufzeit um mehrere Monate. Der genaue Wert hängt vom Zeitpunkt der Sondertilgung ab: Je früher, desto mehr sparst du, weil die Zinsersparnis über die restliche Laufzeit kumuliert."
 relatedTools: ['mehrwertsteuer-rechner']
 ---
 

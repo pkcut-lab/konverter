@@ -52,7 +52,7 @@ Aus der Base64-Länge lässt sich die ungefähre Dateigröße ableiten: `Bytes �
 |----------|-------------|
 | Design-Iterationen prüfen | Zwei Versionen eines UI-Mockups vergleichen, um Änderungen zwischen Iterationen zu quantifizieren. |
 | Screenshot-Regression | Automatisierte Screenshots vor und nach einem Deployment vergleichen, um visuelle Regressionen zu erkennen. |
-| Bildkompression bewerten | Dasselbe Bild in verschiedenen Qualitätsstufen (z. B. JPEG 80 % vs. 95 %) vergleichen und die Byte-Differenz messen. |
+| Bildkompression bewerten | Dasselbe Bild in verschiedenen Qualitätsstufen (z. B. JPEG 80&nbsp;% vs. 95&nbsp;%) vergleichen und die Byte-Differenz messen. |
 | Asset-Duplikate finden | Zwei scheinbar gleiche Bilder vergleichen, um zu prüfen, ob sie tatsächlich bytegenau identisch sind. |
 | Wasserzeichen-Check | Original und potenziell markierte Version vergleichen, um versteckte Änderungen zu erkennen. |
 | Format-Konvertierung prüfen | Ein PNG und dessen WebP-Konvertierung vergleichen, um den Einfluss der Formatänderung zu messen. |

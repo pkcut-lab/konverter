@@ -7,7 +7,7 @@ metaDescription: "PNG oder JPG in WebP umwandeln: deutlich kleinere Dateien bei 
 tagline: "Bilder direkt im Browser komprimieren — kein Server, kein Tracking."
 intro: "Der Konverter wandelt eine PNG- oder JPG-Datei in das moderne WebP-Format um und reduziert die Dateigröße in den meisten Fällen um 25 bis 35 Prozent — bei vergleichbarer visueller Qualität. Die Verarbeitung passiert ausschließlich in deinem Browser über die Canvas-API, kein Byte verlässt dein Gerät. Ideal für Web-Entwicklerinnen, Blogger und alle, die ihre Seitenladezeit verbessern wollen."
 howToUse:
-  - "Wähle eine PNG- oder JPG-Datei (max. 10 MB)"
+  - "Wähle eine PNG- oder JPG-Datei (max. 10&nbsp;MB)"
   - "Stelle die Qualität ein (Standard 85 — guter Kompromiss zwischen Größe und Schärfe)"
   - "Lade die konvertierte WebP-Datei herunter"
 faq:
@@ -64,7 +64,7 @@ typische Einsparung 30 bis 40 Prozent pro Seite.
 **E-Commerce:** Produktfotos in WebP ausliefern, mit JPG-Fallback im
 Picture-Element. Schnellere Ladezeit erhöht die Conversion-Rate messbar.
 
-**Portfolios:** Hochauflösende Fotografien von 4 MB auf 1 MB reduzieren, ohne
+**Portfolios:** Hochauflösende Fotografien von 4&nbsp;MB auf 1&nbsp;MB reduzieren, ohne
 sichtbaren Qualitätsverlust für den Betrachter.
 
 **Social-Media-Vorbereitung:** Vor dem Upload zu Plattformen, die WebP

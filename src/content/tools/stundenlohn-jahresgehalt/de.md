@@ -20,7 +20,7 @@ faq:
   - q: "Was ist der Mindestlohn 2026 in Deutschland?"
     a: "Der gesetzliche Mindestlohn beträgt ab 1.&nbsp;Januar&nbsp;2026 <strong>13,90&nbsp;€ pro Stunde</strong> (brutto). Bei 40&nbsp;h/Woche entspricht das einem Jahresgehalt von 28.912&nbsp;€ (Schnell-Methode). Ab 1.&nbsp;Januar&nbsp;2027 ist eine weitere Erhöhung auf 14,60&nbsp;€/h geplant."
   - q: "Warum unterscheiden sich Stundenlohnrechner um 5–10&nbsp;%?"
-    a: "Drei verbreitete Methoden liefern unterschiedliche Ergebnisse: Methode A (×52 Wochen) ignoriert Feiertage und Urlaub. Methode B (RV-Formel: ×13÷3×12) nutzt einen Korrekturfaktor für Monatsstunden. Methode C (Arbeitstage × Tagesstunden) zieht Urlaub und Feiertage ab. Unser Rechner zeigt dir beide gängigen Varianten transparent — du siehst sofort, welche Formel verwendet wird."
+    a: "Drei verbreitete Methoden liefern unterschiedliche Ergebnisse: Methode A (×52&nbsp;Wochen) ignoriert Feiertage und Urlaub. Methode B (RV-Formel: ×13÷3×12) nutzt einen Korrekturfaktor für Monatsstunden. Methode C (Arbeitstage × Tagesstunden) zieht Urlaub und Feiertage ab. Unser Rechner zeigt dir beide gängigen Varianten transparent — du siehst sofort, welche Formel verwendet wird."
   - q: "Wie viele Feiertage hat Bayern im Vergleich zu anderen Bundesländern?"
     a: "Bayern hat mit 13 gesetzlichen Feiertagen die meisten in Deutschland (2026), darunter Heilige Drei Könige, Fronleichnam, Mariä Himmelfahrt und Allerheiligen. Niedersachsen kommt auf 10. Dieser Unterschied entspricht bei 40&nbsp;h/Woche rund 24&nbsp;h — das macht beim Stundenlohnvergleich bis zu 2&nbsp;% Abweichung."
   - q: "Ist dieser Rechner auch für Teilzeit und die 4-Tage-Woche geeignet?"
@@ -42,7 +42,7 @@ Alle Berechnungen laufen lokal in deinem Browser. Kein Server-Upload, kein Track
 
 Zwei Methoden — beide richtig, für unterschiedliche Anwendungsfälle:
 
-**Schnell-Methode (×&nbsp;52 Wochen):**
+**Schnell-Methode (×&nbsp;52&nbsp;Wochen):**
 
 ```
 Jahresgehalt = Stundenlohn × Wochenstunden × 52

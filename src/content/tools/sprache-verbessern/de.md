@@ -2,26 +2,26 @@
 toolId: "speech-enhancer"
 language: "de"
 title: "Sprache verbessern: KI-Tool ohne Upload"
-metaDescription: "Entferne lästiges Audio-Rauschen und verbessere deine Sprachaufnahmen sofort. Das Tool läuft zu 100 % lokal in deinem Browser — ohne Dateiupload."
+metaDescription: "Entferne lästiges Audio-Rauschen und verbessere deine Sprachaufnahmen sofort. Das Tool läuft zu 100&nbsp;% lokal in deinem Browser — ohne Dateiupload."
 tagline: "Saubere Stimme in Sekunden — dein Audio verlässt den Browser nicht"
 intro: "Entferne Hintergrundgeräusche, Lüfterrauschen und Raumhall aus Sprachaufnahmen — vollständig in deinem Browser, ohne Upload auf einen Server. Das Tool nutzt das KI-Modell DeepFilterNet3 (MIT-Lizenz, 48&nbsp;kHz Full-Band) und verarbeitet WAV, MP3, OGG, M4A und FLAC direkt lokal. Keine Anmeldung, kein Cap, kein Tracking — auch für vertrauliche Podcasts, Interview-Mitschnitte und Firmen-Audio geeignet."
 category: "audio"
 contentVersion: 1
 howToUse:
-  - "Audiodatei per Drag-and-Drop ablegen oder über die Auswahl öffnen (WAV, MP3, OGG, M4A, FLAC — bis 500 MB)."
+  - "Audiodatei per Drag-and-Drop ablegen oder über die Auswahl öffnen (WAV, MP3, OGG, M4A, FLAC — bis 500&nbsp;MB)."
   - "Stärke wählen: Dezent (empfohlen, 20 dB) verhindert Roboter-Artefakte; Maximal (100 dB) für stark verrauchte Aufnahmen."
   - "Nach der KI-Verarbeitung erscheint der Download-Button — enhanced WAV-Datei herunterladen."
 faq:
   - q: "Wie funktioniert die Rauschunterdrückung ohne Server?"
-    a: "Das KI-Modell DeepFilterNet3 läuft als ONNX-Datei direkt im Browser — deinem eigenen Rechner. Deine Audiodatei wird ausschließlich lokal verarbeitet und verlässt deinen Browser zu keinem Zeitpunkt. Beim ersten Aufruf lädt das Tool das Modell (~10 MB) einmalig herunter und speichert es im Browser-Cache. Danach funktioniert es auch offline."
+    a: "Das KI-Modell DeepFilterNet3 läuft als ONNX-Datei direkt im Browser — deinem eigenen Rechner. Deine Audiodatei wird ausschließlich lokal verarbeitet und verlässt deinen Browser zu keinem Zeitpunkt. Beim ersten Aufruf lädt das Tool das Modell (~10&nbsp;MB) einmalig herunter und speichert es im Browser-Cache. Danach funktioniert es auch offline."
   - q: "Klingt das Ergebnis roboterhaft?"
-    a: "Nur wenn du die Stärke auf Maximal (100 dB) setzt. Der Default Dezent (20 dB) dämpft Rauschen hörbar, ohne die natürliche Klangfarbe der Stimme zu verändern. Dieser Wert wurde basierend auf dem verbreiteten Nutzer-Feedback zu Adobe Podcast V2 gewählt: maximale Stärke erzeugt Artefakte, 30 % ist die natürliche Position."
+    a: "Nur wenn du die Stärke auf Maximal (100 dB) setzt. Der Default Dezent (20 dB) dämpft Rauschen hörbar, ohne die natürliche Klangfarbe der Stimme zu verändern. Dieser Wert wurde basierend auf dem verbreiteten Nutzer-Feedback zu Adobe Podcast V2 gewählt: maximale Stärke erzeugt Artefakte, 30&nbsp;% ist die natürliche Position."
   - q: "Welche Dateiformate werden unterstützt?"
     a: "Als Eingabe akzeptiert das Tool WAV, MP3 (audio/mpeg), M4A und AAC (audio/mp4), OGG Vorbis sowie FLAC und WebM Opus. Die Ausgabe ist immer eine WAV-Datei mit 48&nbsp;kHz, 16&nbsp;Bit, Mono — das verlustfreie Standardformat für Sprachverarbeitung."
   - q: "Warum ist die Ausgabe Mono statt Stereo?"
     a: "DeepFilterNet3 ist für Sprache optimiert und verarbeitet Mono-Audio. Stereo-Quellen werden vor der KI-Verarbeitung auf Mono gemischt. Für Musik oder Stereo-Produktionen empfehlen sich spezialisierte Tools. Für Podcasts, Interviews und Voice-Over ist Mono das übliche Zielformat."
   - q: "Wie lange dauert die Verarbeitung?"
-    a: "Das hängt von der Länge der Aufnahme und deiner Hardware ab. Als Richtwert: 10 Minuten Audio dauern in WASM-Modus (kein GPU) etwa 20–30 Minuten. Auf Geräten mit WebGPU-Unterstützung (Chrome/Edge) ist die Verarbeitung deutlich schneller. Das Tool zeigt den Fortschritt in Echtzeit an."
+    a: "Das hängt von der Länge der Aufnahme und deiner Hardware ab. Als Richtwert: 10&nbsp;Minuten Audio dauern in WASM-Modus (kein GPU) etwa 20–30&nbsp;Minuten. Auf Geräten mit WebGPU-Unterstützung (Chrome/Edge) ist die Verarbeitung deutlich schneller. Das Tool zeigt den Fortschritt in Echtzeit an."
   - q: "Ist das Tool DSGVO-konform für Stimm-Aufnahmen?"
     a: "Ja. Stimm-Aufnahmen können als biometrische Daten im Sinne von DSGVO Art. 9 eingestuft werden. Weil die Verarbeitung vollständig lokal stattfindet und keinerlei Daten an einen Server übertragen werden, entsteht kein Datenschutz-Risiko. Die Ausgabedatei enthält einen Metadaten-Tag (Software: kittokit.de AI-processed) gemäß EU-KI-Verordnung Art. 50."
 relatedTools: []
@@ -141,7 +141,7 @@ WAV, MP3, M4A/AAC, OGG, FLAC und WebM Opus als Eingabe. Die Ausgabe ist immer WA
 
 ### Wie lange dauert die Verarbeitung?
 
-Als Richtwert: 10 Minuten Audio dauern im WASM-Modus ca. 20–30 Minuten. Mit WebGPU
+Als Richtwert: 10&nbsp;Minuten Audio dauern im WASM-Modus ca. 20–30&nbsp;Minuten. Mit WebGPU
 (Chrome/Edge auf Desktop) deutlich schneller. Das Tool zeigt den Fortschritt in Echtzeit.
 
 ### Ist das Tool DSGVO-konform für vertrauliche Aufnahmen?

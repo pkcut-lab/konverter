@@ -3,7 +3,7 @@ toolId: "text-diff"
 language: "de"
 title: "Text vergleichen — Unterschiede sofort erkennen"
 headingHtml: "Texte vergleichen und <em>Unterschiede</em> finden"
-metaDescription: "Zwei Texte online vergleichen und Unterschiede auf Wort- und Zeilenebene finden. 100 % im Browser, ohne Upload, ohne Tracking — DSGVO-konform."
+metaDescription: "Zwei Texte online vergleichen und Unterschiede auf Wort- und Zeilenebene finden. 100&nbsp;% im Browser, ohne Upload, ohne Tracking — DSGVO-konform."
 tagline: "Zwei Texte nebeneinander vergleichen — jede Änderung wird farblich markiert."
 intro: "Der Text-Diff zeigt dir sofort, was sich zwischen zwei Textversionen geändert hat. Gelöschte Zeilen, neue Zeilen und geänderte Wörter werden farblich hervorgehoben. Kein Server empfängt deinen Text — die gesamte Verarbeitung läuft lokal im Browser."
 category: "text"
@@ -24,7 +24,7 @@ faq:
   - q: "Was passiert bei Leerzeichen-Änderungen?"
     a: "Standardmäßig werden Leerzeichen-Änderungen angezeigt. Der Toggle 'Leerzeichen ignorieren' blendet reine Einrückungs- und Whitespace-Differenzen aus."
   - q: "Wie groß darf der Text sein?"
-    a: "Es gibt kein festes Limit. Da die Berechnung im Browser läuft, hängt die Performance von deinem Gerät ab. Texte bis 200 KB verarbeitet das Tool in der Regel flüssig."
+    a: "Es gibt kein festes Limit. Da die Berechnung im Browser läuft, hängt die Performance von deinem Gerät ab. Texte bis 200&nbsp;KB verarbeitet das Tool in der Regel flüssig."
 relatedTools:
   - json-formatter
   - regex-tester

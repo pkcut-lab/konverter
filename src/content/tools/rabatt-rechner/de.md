@@ -15,17 +15,17 @@ howToUse:
   - "Im Kettenrabatt-Modus siehst du den korrekten Gesamtrabatt und den häufigen Additionsfehler im Vergleich."
 faq:
   - q: "Wie berechne ich einen Rabatt?"
-    a: "Formel: Endpreis = Ursprungspreis × (1 − Rabatt ÷ 100). Beispiel: 100 € mit 20 % Rabatt → 100 × 0,80 = 80 €. Der Rabattbetrag beträgt 20 €."
+    a: "Formel: Endpreis = Ursprungspreis × (1 − Rabatt ÷ 100). Beispiel: 100&nbsp;€ mit 20&nbsp;% Rabatt → 100 × 0,80 = 80&nbsp;€. Der Rabattbetrag beträgt 20&nbsp;€."
   - q: "Wie rechne ich zwei Rabatte hintereinander?"
-    a: "Nicht addieren — multiplizieren: Endpreis = Ursprungspreis × (1 − R1÷100) × (1 − R2÷100). Beispiel: 200 € mit 20 % dann 10 % → 200 × 0,80 × 0,90 = 144 € (Gesamtrabatt 28 %, nicht 30 %)."
+    a: "Nicht addieren — multiplizieren: Endpreis = Ursprungspreis × (1 − R1÷100) × (1 − R2÷100). Beispiel: 200&nbsp;€ mit 20&nbsp;% dann 10&nbsp;% → 200 × 0,80 × 0,90 = 144&nbsp;€ (Gesamtrabatt 28&nbsp;%, nicht 30&nbsp;%)."
   - q: "Wie berechne ich den Ursprungspreis aus dem Angebotspreis?"
-    a: "Formel: Ursprungspreis = Endpreis ÷ (1 − Rabatt÷100). Beispiel: Du zahlst 80 € bei 20 % Rabatt → 80 ÷ 0,80 = 100 € Originalpreis."
+    a: "Formel: Ursprungspreis = Endpreis ÷ (1 − Rabatt÷100). Beispiel: Du zahlst 80&nbsp;€ bei 20&nbsp;% Rabatt → 80 ÷ 0,80 = 100&nbsp;€ Originalpreis."
   - q: "Wie erkenne ich einen Fake-Rabatt?"
     a: "Prüfe, ob der Ursprungspreis kurz vor dem Sale künstlich angehoben wurde. Vergleiche den angegebenen Originalpreis mit dem Preis der Wochen davor. Nutze Preisverlaufs-Dienste und rechne nach: Endpreis ÷ (1 − Rabatt÷100) muss den genannten Listenpreis ergeben."
   - q: "Was ist der Unterschied zwischen Rabatt und Skonto?"
-    a: "Rabatt ist ein allgemeiner Preisnachlass — zum Beispiel Saisonschlussverkauf oder Mengenrabatt. Skonto ist ein Nachlass bei vorzeitiger Zahlung (z.&nbsp;B. 2 % bei Zahlung innerhalb von 10 Tagen) und ist ein separater Rechenfall."
+    a: "Rabatt ist ein allgemeiner Preisnachlass — zum Beispiel Saisonschlussverkauf oder Mengenrabatt. Skonto ist ein Nachlass bei vorzeitiger Zahlung (z.&nbsp;B. 2&nbsp;% bei Zahlung innerhalb von 10&nbsp;Tagen) und ist ein separater Rechenfall."
   - q: "Warum addieren sich Kettenrabatte nicht?"
-    a: "Weil jeder folgende Rabatt auf den bereits reduzierten Preis angewendet wird, nicht auf den Originalpreis. 20 %&nbsp;+ 10 % scheinen 30 % zu sein, ergeben aber nur 28 % Gesamtrabatt, weil der zweite Rabatt von 90 € (nicht 100 €) berechnet wird."
+    a: "Weil jeder folgende Rabatt auf den bereits reduzierten Preis angewendet wird, nicht auf den Originalpreis. 20&nbsp;%&nbsp;+ 10&nbsp;% scheinen 30&nbsp;% zu sein, ergeben aber nur 28&nbsp;% Gesamtrabatt, weil der zweite Rabatt von 90&nbsp;€ (nicht 100&nbsp;€) berechnet wird."
 relatedTools: []
 ---
 

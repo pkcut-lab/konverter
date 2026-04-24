@@ -7,10 +7,10 @@ metaDescription: "Wandle iPhone-HEVC-Videos in H.264-MP4 um — direkt im Browse
 tagline: "Direkt im Browser — ohne Upload, ohne Wasserzeichen."
 intro: "iPhones nehmen Videos seit iOS 11 standardmäßig als HEVC (H.265) im MOV-Container auf. Das spart Speicherplatz, sorgt aber bei älteren Windows-Rechnern, Samsung-Fernsehern, Photoshop-Versionen vor 2023 oder WhatsApp-Web für schwarze Bildschirme und Fehlermeldungen. Dieser Konverter wandelt HEVC-MOV-Dateien in ein universell abspielbares H.264-MP4 um — vollständig in deinem Browser, ohne Server-Upload, ohne Anmeldung und ohne Wasserzeichen. Die eigentliche Konvertierung läuft über die native WebCodecs-API deines Browsers und nutzt die Hardware-Beschleunigung deiner GPU. Das macht die Umwandlung schnell genug, dass ein 1080p-Video in etwa Echtzeit-Geschwindigkeit durchläuft."
 howToUse:
-  - "HEVC- oder MOV-Datei per Drag-and-Drop ablegen oder über die Auswahl öffnen (bis 500 MB)"
+  - "HEVC- oder MOV-Datei per Drag-and-Drop ablegen oder über die Auswahl öffnen (bis 500&nbsp;MB)"
   - "Qualitäts-Preset wählen: Original-Qualität · Balanced · Klein"
   - "Bei 4K-Quellen optional auf 1080p verkleinern aktivieren"
-  - "Konvertiertes H.264-MP4 herunterladen, sobald der Fortschritt 100 % erreicht"
+  - "Konvertiertes H.264-MP4 herunterladen, sobald der Fortschritt 100&nbsp;% erreicht"
 faq:
   - q: "Wie wandle ich ein iPhone-Video in MP4 um ohne es hochzuladen?"
     a: "Du öffnest diese Seite, ziehst die HEVC- oder MOV-Datei in die Drop-Zone und lädst die fertige MP4-Datei herunter. Die Konvertierung läuft vollständig in deinem Browser über die WebCodecs-API. Das Video verlässt dein Gerät zu keinem Zeitpunkt."
@@ -19,7 +19,7 @@ faq:
   - q: "Bleibt die Original-Auflösung erhalten?"
     a: "Ja. 4K-Quellen werden standardmäßig als 4K-MP4 ausgegeben, 1080p bleibt 1080p, 720p bleibt 720p. Nur wenn du das Opt-in-Häkchen „Auf 1080p verkleinern\" setzt, reduzieren wir 4K auf Full-HD. Andere Konverter skalieren still auf 1080p herunter — wir behalten die Quell-Auflösung bewusst bei."
   - q: "Welche maximale Dateigröße wird unterstützt?"
-    a: "500 MB. Darüber steigt das Risiko, dass der Browser den verfügbaren Arbeitsspeicher überschreitet und abstürzt — besonders auf iPhones. Für Safari auf iOS empfehlen wir Dateien bis 250 MB. Auf einem Desktop-Browser gehen die vollen 500 MB meist problemlos."
+    a: "500&nbsp;MB. Darüber steigt das Risiko, dass der Browser den verfügbaren Arbeitsspeicher überschreitet und abstürzt — besonders auf iPhones. Für Safari auf iOS empfehlen wir Dateien bis 250&nbsp;MB. Auf einem Desktop-Browser gehen die vollen 500&nbsp;MB meist problemlos."
   - q: "Welche Browser werden unterstützt?"
     a: "Chrome 99+, Edge 99+, Safari 16.4+ und Firefox 130+ auf dem Desktop. Firefox für Android unterstützt WebCodecs noch nicht vollständig — dort erscheint ein klarer Hinweis. iPhone-Safari ab iOS 16.4 funktioniert."
   - q: "Bleiben Aufnahmedatum und Ortsdaten erhalten?"
@@ -45,7 +45,7 @@ den Upload. Selbst manche Cloud-Dienste rechnen HEVC-Videos beim Upload
 stumm in eine grobe H.264-Version um und liefern Oma ein verpixeltes Ergebnis.
 
 Das H.264-Format (auch AVC genannt) ist seit 2004 der Universal-Baseline-Codec.
-Jeder Browser, jeder Fernseher der letzten 15 Jahre, jedes
+Jeder Browser, jeder Fernseher der letzten 15&nbsp;Jahre, jedes
 Video-Schnitt-Programm versteht es. Wer ein iPhone-Video zuverlässig mit
 fremder Hardware teilen will, muss es umcodieren. Genau das macht dieses Tool —
 ohne dass du die Datei auf einen fremden Server laden musst und ohne dass du
@@ -79,7 +79,7 @@ Dateigröße".
   <div class="plus">
     <h3>H.264 — pro universelle Wiedergabe</h3>
     <ul>
-      <li>Läuft auf jedem Gerät der letzten 15 Jahre nativ</li>
+      <li>Läuft auf jedem Gerät der letzten 15&nbsp;Jahre nativ</li>
       <li>Hardware-Dekodierung in jedem modernen Browser</li>
       <li>Patentfrei zugänglich seit 2013 — keine Lizenz-Hürden</li>
       <li>Universell akzeptiert von WhatsApp, Video-Schnitt, Smart-TVs</li>
@@ -128,7 +128,7 @@ Es gibt kein Cookie-Banner für externe Video-CDNs, keine Anmeldung und keine
 anonymen Nutzungsstatistiken, die Dateinamen oder Auflösungen mittracken. Die
 einzige Netzwerkverbindung, die der Browser beim Laden dieser Seite herstellt,
 ist der initiale Seitenaufruf selbst — die Encoder-Bibliothek (Mediabunny,
-etwa 70 KB) wird als Teil der Seite ausgeliefert, nicht von einem fremden
+etwa 70&nbsp;KB) wird als Teil der Seite ausgeliefert, nicht von einem fremden
 CDN nachgezogen.
 
 Für vertrauliche Aufnahmen — Hochzeitsvideos, medizinische Aufnahmen,
@@ -144,7 +144,7 @@ Ehrliche Erwartungsführung ist uns wichtiger als Marketing-Versprechen:
   <div class="limits__row">
     <span class="limits__num">01</span>
     <dt>Max. Dateigröße</dt>
-    <dd class="mono">500 MB (Desktop) · 250 MB (iOS)</dd>
+    <dd class="mono">500&nbsp;MB (Desktop) · 250&nbsp;MB (iOS)</dd>
   </div>
   <div class="limits__row">
     <span class="limits__num">02</span>
@@ -163,11 +163,11 @@ Ehrliche Erwartungsführung ist uns wichtiger als Marketing-Versprechen:
   </div>
 </dl>
 
-**Dateigrößen-Obergrenze 500 MB.** Darüber steigt das Risiko, dass der
-Browser-Speicher überläuft. Auf iPhones empfehlen wir sogar schon ab 250 MB
+**Dateigrößen-Obergrenze 500&nbsp;MB.** Darüber steigt das Risiko, dass der
+Browser-Speicher überläuft. Auf iPhones empfehlen wir sogar schon ab 250&nbsp;MB
 Vorsicht — iOS-Safari räumt Tabs bei Speicher-Knappheit aggressiv ab, was
-mitten im Encode zu einem Absturz führen kann. Desktop-Browser mit 16 GB RAM
-kommen mit den vollen 500 MB in der Regel problemlos klar.
+mitten im Encode zu einem Absturz führen kann. Desktop-Browser mit 16&nbsp;GB RAM
+kommen mit den vollen 500&nbsp;MB in der Regel problemlos klar.
 
 **4K bleibt 4K, 1080p bleibt 1080p.** Wir rechnen die Auflösung nicht
 stillschweigend herunter — das ist ein bewusster Unterschied zu vielen
@@ -210,10 +210,10 @@ still auf 1080p herunter — wir behalten die Quell-Auflösung bewusst bei.
 
 ### Welche maximale Dateigröße wird unterstützt?
 
-500 MB. Darüber steigt das Risiko, dass der Browser den verfügbaren
+500&nbsp;MB. Darüber steigt das Risiko, dass der Browser den verfügbaren
 Arbeitsspeicher überschreitet und abstürzt — besonders auf iPhones. Für
-Safari auf iOS empfehlen wir Dateien bis 250 MB. Auf einem Desktop-Browser
-gehen die vollen 500 MB meist problemlos.
+Safari auf iOS empfehlen wir Dateien bis 250&nbsp;MB. Auf einem Desktop-Browser
+gehen die vollen 500&nbsp;MB meist problemlos.
 
 ### Welche Browser werden unterstützt?
 

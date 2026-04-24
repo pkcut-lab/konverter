@@ -3,9 +3,9 @@ toolId: lb-to-kg
 language: de
 title: "Pfund in Kilogramm umrechnen – Formel & Tabelle"
 headingHtml: "Pfund in <em>Kilogramm</em> umrechnen"
-metaDescription: "Pfund in Kilogramm umrechnen: exakte Formel (1 lb = 0,45359237 kg), Tabelle und Beispiele für Gewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads."
+metaDescription: "Pfund in Kilogramm umrechnen: exakte Formel (1&nbsp;lb = 0,45359237&nbsp;kg), Tabelle und Beispiele für Gewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Pfund-zu-Kilogramm-Umrechnung in Sekunden — client-seitig, ohne Tracking."
-intro: "Der Konverter wandelt einen Wert in Pfund (lb) in die entsprechende Angabe in Kilogramm (kg) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Körpergewicht aus US-Quellen, Import-Angaben in Pound, Kochrezepte mit angelsächsischen Maßen und Gepäck-Limits internationaler Fluggesellschaften. Die Definition ist seit 1959 weltweit einheitlich: 1 avoirdupois-Pfund entspricht exakt 0,45359237 kg."
+intro: "Der Konverter wandelt einen Wert in Pfund (lb) in die entsprechende Angabe in Kilogramm (kg) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Körpergewicht aus US-Quellen, Import-Angaben in Pound, Kochrezepte mit angelsächsischen Maßen und Gepäck-Limits internationaler Fluggesellschaften. Die Definition ist seit 1959 weltweit einheitlich: 1 avoirdupois-Pfund entspricht exakt 0,45359237&nbsp;kg."
 howToUse:
   - "Gib den Wert in Pfund ein"
   - "Das Ergebnis erscheint automatisch in Kilogramm"
@@ -15,8 +15,8 @@ faq:
     a: "Ein Pfund entspricht 0,4536 Kilogramm. Für Kopfrechnungen reicht die Näherung: Pfund halbieren und zehn Prozent abziehen."
   - q: "Was ist der Unterschied zwischen dem deutschen und dem englischen Pfund?"
     a: "Das deutsche Pfund (in Küche und Alltag) meint umgangssprachlich 500 g — ein halbes Kilogramm. Das englische avoirdupois-Pfund (lb) misst 453,59237 g und wird in den USA, Großbritannien und Kanada als Gewichtsstandard genutzt. Der Konverter rechnet mit der internationalen Pfund-Definition, nicht mit dem deutschen Alltags-Pfund."
-  - q: "Wie rechne ich 150 lb in Kilogramm um?"
-    a: "150 lb multipliziert mit 0,4536 ergibt 68,04 kg. Das entspricht einem typischen Körpergewicht für US-Arztformulare, Fitness-Apps oder Flugzeug-Gewichtslimits."
+  - q: "Wie rechne ich 150&nbsp;lb in Kilogramm um?"
+    a: "150&nbsp;lb multipliziert mit 0,4536 ergibt 68,04&nbsp;kg. Das entspricht einem typischen Körpergewicht für US-Arztformulare, Fitness-Apps oder Flugzeug-Gewichtslimits."
   - q: "Welche Präzision brauche ich beim Kochen?"
     a: "Bei Grundzutaten wie Mehl oder Zucker reicht eine Stelle hinter dem Komma. Bei Backrezepten mit Hefe oder Salz lohnt sich die exaktere Rechnung auf zwei Stellen, damit Verhältnisse stimmen."
   - q: "Warum verwenden die USA noch Pfund statt Kilogramm?"
@@ -38,7 +38,7 @@ angelsächsischen Maßen und Gepäck-Limits internationaler Fluggesellschaften.
 ## Umrechnungsformel
 
 Das internationale avoirdupois-Pfund entspricht seit dem Yard-und-Pfund-Abkommen
-von 1959 exakt 0,45359237 kg. Die Gegenrichtung ist damit ebenfalls gelockt:
+von 1959 exakt 0,45359237&nbsp;kg. Die Gegenrichtung ist damit ebenfalls gelockt:
 `1 kg = 2,2046 lb`. Vor 1959 existierten leicht abweichende nationale Pfund-Maße
 — seit dem Abkommen gilt derselbe Wert in den USA, Großbritannien, Kanada,
 Australien und im internationalen Handel.
@@ -48,11 +48,11 @@ Formeln:
 `Kilogramm = Pfund × 0,45359237`
 `Pfund = Kilogramm × 2,2046`
 
-Rechen-Beispiel: 180 lb × 0,4536 = 81,6466 kg. Auf eine Nachkommastelle
-gerundet ergibt das 81,6 kg — präzise genug für jedes metrische Formular.
+Rechen-Beispiel: 180&nbsp;lb × 0,4536 = 81,6466&nbsp;kg. Auf eine Nachkommastelle
+gerundet ergibt das 81,6&nbsp;kg — präzise genug für jedes metrische Formular.
 
 Faustregel ohne Taschenrechner: Pfund halbieren und zehn Prozent vom Ergebnis
-abziehen. 200 lb ÷ 2 = 100, minus 10 % = 90 — tatsächlicher Wert 90,72 kg.
+abziehen. 200&nbsp;lb ÷ 2 = 100, minus 10&nbsp;% = 90 — tatsächlicher Wert 90,72&nbsp;kg.
 
 ## Anwendungsbeispiele
 
@@ -68,8 +68,8 @@ bis zwei Nachkommastellen.
 | 150   | 68,04     | 75        | 165,35  |
 | 200   | 90,72     | 100       | 220,46  |
 
-Ein US-Körpergewicht von 180 lb entspricht 81,65 kg. Eine US-Rezept-Angabe mit
-„2 lb ground beef" bedeutet 907 g Hackfleisch.
+Ein US-Körpergewicht von 180&nbsp;lb entspricht 81,65&nbsp;kg. Eine US-Rezept-Angabe mit
+„2&nbsp;lb ground beef" bedeutet 907 g Hackfleisch.
 
 ## Häufige Einsatzgebiete
 
@@ -78,11 +78,11 @@ Gewichtslimits und Sport-Statistiken stehen durchgängig in Pfund. Wer seine
 Werte in das metrische System übertragen will, rechnet regelmäßig um.
 
 **Küche und Rezepte:** Amerikanische Kochbücher geben Zutaten in Pfund und
-Unzen an — 1 lb Butter, 2 lb Mehl. Wer mit deutschen Küchenwaagen kocht,
+Unzen an — 1&nbsp;lb Butter, 2&nbsp;lb Mehl. Wer mit deutschen Küchenwaagen kocht,
 übersetzt in Gramm und Kilogramm.
 
 **Gepäck und Versand:** Fluggesellschaften aus den USA listen Freigepäck in
-Pfund (z. B. 50 lb entsprechen 22,68 kg). Paketdienste mit US-Route rechnen
+Pfund (z. B. 50&nbsp;lb entsprechen 22,68&nbsp;kg). Paketdienste mit US-Route rechnen
 Gewichtsklassen in Pfund — relevant für internationalen Versand und Bestellungen.
 
 **Import und Handel:** Viele Rohstoffpreise (Gold, Kaffee, Fleisch) werden im
@@ -104,9 +104,9 @@ wird in den USA, Großbritannien und Kanada als Gewichtsstandard genutzt. Der
 Konverter rechnet mit der internationalen Pfund-Definition, nicht mit dem
 deutschen Alltags-Pfund.
 
-### Wie rechne ich 150 lb in Kilogramm um?
+### Wie rechne ich 150&nbsp;lb in Kilogramm um?
 
-150 lb multipliziert mit 0,4536 ergibt 68,04 kg. Das entspricht einem typischen
+150&nbsp;lb multipliziert mit 0,4536 ergibt 68,04&nbsp;kg. Das entspricht einem typischen
 Körpergewicht für US-Arztformulare, Fitness-Apps oder Flugzeug-Gewichtslimits.
 
 ### Welche Präzision brauche ich beim Kochen?

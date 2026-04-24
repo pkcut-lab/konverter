@@ -3,9 +3,9 @@ toolId: hectare-to-acre
 language: de
 title: "Hektar in Acre umrechnen – Formel & Tabelle"
 headingHtml: "Hektar in <em>Acre</em> umrechnen"
-metaDescription: "Hektar in Acre umrechnen: exakte Formel (1 ha = 2,47105 ac), Tabelle für Landwirtschaft, Grundstücke und Immobilien. Ohne Anmeldung, ohne Ads."
+metaDescription: "Hektar in Acre umrechnen: exakte Formel (1&nbsp;ha = 2,47105&nbsp;ac), Tabelle für Landwirtschaft, Grundstücke und Immobilien. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Hektar-zu-Acre-Umrechnung mit exaktem Faktor — client-seitig, ohne Tracking."
-intro: "Der Konverter wandelt einen Wert in Hektar (ha) in die entsprechende Angabe in Acre (ac) um und zeigt gleichzeitig den Rückweg. Er eignet sich für landwirtschaftliche Flächen, Grundstücksbewertungen, Immobilien-Angebote aus dem angloamerikanischen Raum und für jeden Kontext, in dem Flächenangaben zwischen metrischem und imperialem System übersetzt werden. Der Umrechnungsfaktor beruht auf der Definition: 1 Acre = 43.560 Quadratfuß = 4.046,8564224 m², daraus folgt 1 ha = 2,47105 ac."
+intro: "Der Konverter wandelt einen Wert in Hektar (ha) in die entsprechende Angabe in Acre (ac) um und zeigt gleichzeitig den Rückweg. Er eignet sich für landwirtschaftliche Flächen, Grundstücksbewertungen, Immobilien-Angebote aus dem angloamerikanischen Raum und für jeden Kontext, in dem Flächenangaben zwischen metrischem und imperialem System übersetzt werden. Der Umrechnungsfaktor beruht auf der Definition: 1 Acre = 43.560 Quadratfuß = 4.046,8564224 m², daraus folgt 1&nbsp;ha = 2,47105&nbsp;ac."
 howToUse:
   - "Gib den Wert in Hektar ein"
   - "Das Ergebnis erscheint automatisch in Acre"
@@ -20,7 +20,7 @@ faq:
   - q: "Wann brauche ich diese Umrechnung?"
     a: "Immer dann, wenn Sie US-amerikanische oder britische Immobilien-Angebote, Agrar-Reports oder Grundstücksgrößen mit europäischen Hektar-Angaben vergleichen. Auch bei internationalen Pachtverträgen und Forstflächen-Statistiken ist die Umrechnung unverzichtbar."
   - q: "Welche Präzision ist bei Grundstücken üblich?"
-    a: "Für Immobilien-Angebote reichen zwei Nachkommastellen (z. B. 2,47 ac). Bei Kataster-Vermessungen und amtlichen Flächenberechnungen werden vier Nachkommastellen oder mehr gefordert."
+    a: "Für Immobilien-Angebote reichen zwei Nachkommastellen (z. B. 2,47&nbsp;ac). Bei Kataster-Vermessungen und amtlichen Flächenberechnungen werden vier Nachkommastellen oder mehr gefordert."
 relatedTools:
   - quadratmeter-zu-quadratfuss
   - quadratkilometer-zu-quadratmeile
@@ -48,11 +48,11 @@ Formeln:
 `Acre = Hektar × 2,47105`
 `Hektar = Acre × 0,404686`
 
-Rechen-Beispiel: 5 ha × 2,47105 = 12,3553 ac. Für Immobilien-Angebote
-reicht eine Rundung auf zwei Stellen (12,36 ac) — bei Kataster-Vermessungen
+Rechen-Beispiel: 5&nbsp;ha × 2,47105 = 12,3553&nbsp;ac. Für Immobilien-Angebote
+reicht eine Rundung auf zwei Stellen (12,36&nbsp;ac) — bei Kataster-Vermessungen
 behält man alle Nachkommastellen und rundet erst am Ende.
 
-Umkehrung: 50 ac × 0,404686 = 20,2343 ha. Ein mittlerer US-Farmbetrieb
+Umkehrung: 50&nbsp;ac × 0,404686 = 20,2343&nbsp;ha. Ein mittlerer US-Farmbetrieb
 mit 50 Acre bewirtschaftet damit gut 20 Hektar.
 
 ## Anwendungsbeispiele
@@ -69,7 +69,7 @@ zwei bis vier Nachkommastellen.
 | 100    | 247,1054  | 100   | 40,4686   |
 | 500    | 1.235,527 | 1.000 | 404,6856  |
 
-Ein Weinberg mit 10 ha entspricht knapp 25 Acre. Eine Ranch mit 1.000 Acre
+Ein Weinberg mit 10&nbsp;ha entspricht knapp 25 Acre. Eine Ranch mit 1.000 Acre
 misst rund 405 Hektar.
 
 ## Häufige Einsatzgebiete
@@ -125,7 +125,7 @@ Forstflächen-Statistiken ist die Umrechnung unverzichtbar.
 
 ### Welche Präzision ist bei Grundstücken üblich?
 
-Für Immobilien-Angebote reichen zwei Nachkommastellen (z. B. 2,47 ac). Bei
+Für Immobilien-Angebote reichen zwei Nachkommastellen (z. B. 2,47&nbsp;ac). Bei
 Kataster-Vermessungen und amtlichen Flächenberechnungen werden vier
 Nachkommastellen oder mehr gefordert.
 

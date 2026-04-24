@@ -3,9 +3,9 @@ toolId: kg-to-lb
 language: de
 title: "Kilogramm in Pfund umrechnen – Formel & Tabelle"
 headingHtml: "Kilogramm in <em>Pfund</em> umrechnen"
-metaDescription: "Kilogramm in Pfund umrechnen: exakte Formel (1 lb = 0,45359237 kg), Tabelle für Körpergewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads."
+metaDescription: "Kilogramm in Pfund umrechnen: exakte Formel (1&nbsp;lb = 0,45359237&nbsp;kg), Tabelle für Körpergewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise kg-zu-Pfund-Umrechnung in Sekunden — client-seitig, ohne Tracking."
-intro: "Der Konverter wandelt einen Wert in Kilogramm (kg) in die entsprechende Angabe in Pfund (lb) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Körpergewicht im US-Format, Kochrezepte mit Pound-Angaben, Fitness-Statistiken und für jeden Handel mit angelsächsisch normierten Waren. Die Definition ist seit 1959 weltweit einheitlich: 1 avoirdupois-Pfund entspricht exakt 0,45359237 kg."
+intro: "Der Konverter wandelt einen Wert in Kilogramm (kg) in die entsprechende Angabe in Pfund (lb) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Körpergewicht im US-Format, Kochrezepte mit Pound-Angaben, Fitness-Statistiken und für jeden Handel mit angelsächsisch normierten Waren. Die Definition ist seit 1959 weltweit einheitlich: 1 avoirdupois-Pfund entspricht exakt 0,45359237&nbsp;kg."
 howToUse:
   - "Gib den Wert in Kilogramm ein"
   - "Das Ergebnis erscheint automatisch in Pfund"
@@ -16,7 +16,7 @@ faq:
   - q: "Was ist der Unterschied zwischen dem deutschen und dem englischen Pfund?"
     a: "Das deutsche Pfund (in Küche und Alltag) meint umgangssprachlich 500 g — ein halbes Kilogramm. Das englische avoirdupois-Pfund (lb) misst 453,59237 g und wird in den USA, Großbritannien und Kanada als Gewichtsstandard genutzt. Der Konverter rechnet mit der internationalen Pfund-Definition, nicht mit dem deutschen Alltags-Pfund."
   - q: "Wie rechne ich Körpergewicht für US-Kontext um?"
-    a: "80 kg entsprechen 176,37 Pfund. US-Arztpraxen, Fitness-Apps und Flugzeug-Gewichtslimits verwenden durchgängig Pfund. Für die umgekehrte Richtung: ein Stone sind 14 Pfund (6,35 kg) — diese Einheit wird in Großbritannien noch häufig für Körpergewicht genutzt."
+    a: "80&nbsp;kg entsprechen 176,37 Pfund. US-Arztpraxen, Fitness-Apps und Flugzeug-Gewichtslimits verwenden durchgängig Pfund. Für die umgekehrte Richtung: ein Stone sind 14 Pfund (6,35&nbsp;kg) — diese Einheit wird in Großbritannien noch häufig für Körpergewicht genutzt."
   - q: "Welche Präzision brauche ich für Kochrezepte?"
     a: "Bei Grundzutaten wie Mehl oder Zucker reicht eine Stelle hinter dem Komma — eine Pfund-Küchenwaage hat selten mehr Auflösung. Bei Backrezepten mit Hefe oder Salz lohnt sich die exaktere Rechnung, damit Verhältnisse stimmen."
   - q: "Warum verwenden die USA noch Pfund?"
@@ -39,7 +39,7 @@ und für jeden Handel mit angelsächsisch normierten Waren.
 ## Umrechnungsformel
 
 Das internationale avoirdupois-Pfund entspricht seit dem Yard-und-Pfund-Abkommen
-von 1959 exakt 0,45359237 kg. Die Gegenrichtung ist damit ebenfalls gelockt:
+von 1959 exakt 0,45359237&nbsp;kg. Die Gegenrichtung ist damit ebenfalls gelockt:
 `1 kg = 2,2046 lb`. Vor 1959 existierten leicht abweichende nationale Pfund-Maße
 — seit dem Abkommen gilt derselbe Wert in den USA, Großbritannien, Kanada,
 Australien und im internationalen Handel.
@@ -49,11 +49,11 @@ Formeln:
 `Pfund = Kilogramm × 2,2046`
 `Kilogramm = Pfund × 0,45359237`
 
-Rechen-Beispiel: 75 kg × 2,2046 = 165,3466 Pfund. Auf eine Nachkommastelle
-gerundet ergibt das 165,3 lb — präzise genug für jedes Körpergewichts-Formular.
+Rechen-Beispiel: 75&nbsp;kg × 2,2046 = 165,3466 Pfund. Auf eine Nachkommastelle
+gerundet ergibt das 165,3&nbsp;lb — präzise genug für jedes Körpergewichts-Formular.
 
-Faustregel ohne Taschenrechner: mal zwei und zehn Prozent draufschlagen. 80 kg
-× 2 = 160, plus 10 % = 176 — tatsächlicher Wert 176,37 Pfund.
+Faustregel ohne Taschenrechner: mal zwei und zehn Prozent draufschlagen. 80&nbsp;kg
+× 2 = 160, plus 10&nbsp;% = 176 — tatsächlicher Wert 176,37 Pfund.
 
 ## Anwendungsbeispiele
 
@@ -69,8 +69,8 @@ bis zwei Nachkommastellen.
 | 75        | 165,35  | 180   | 81,65     |
 | 100       | 220,46  | 200   | 90,72     |
 
-Ein Körpergewicht von 80 kg entspricht 176,37 lb. Eine US-Rezept-Angabe mit
-„2 lb ground beef" bedeutet 907 g Hackfleisch.
+Ein Körpergewicht von 80&nbsp;kg entspricht 176,37&nbsp;lb. Eine US-Rezept-Angabe mit
+„2&nbsp;lb ground beef" bedeutet 907 g Hackfleisch.
 
 ## Häufige Einsatzgebiete
 
@@ -79,11 +79,11 @@ Gewichtslimits und Sport-Statistiken stehen durchgängig in Pfund. Wer seine
 Ziele aus einem US-Programm übernimmt, rechnet täglich um.
 
 **Küche und Rezepte:** Amerikanische Kochbücher geben Zutaten in Pfund und
-Unzen an — 1 lb Butter, 2 lb Mehl. Wer mit deutschen Küchenwaagen kocht,
+Unzen an — 1&nbsp;lb Butter, 2&nbsp;lb Mehl. Wer mit deutschen Küchenwaagen kocht,
 übersetzt in Gramm und Kilogramm.
 
 **Gepäck und Versand:** Fluggesellschaften aus den USA listen Freigepäck in
-Pfund (z. B. 50 lb). Paketdienste mit US-Route rechnen Gewichtsklassen in
+Pfund (z. B. 50&nbsp;lb). Paketdienste mit US-Route rechnen Gewichtsklassen in
 Pfund — relevant für Ebay-Versand und internationale Bestellungen.
 
 ## Häufige Fragen
@@ -103,9 +103,9 @@ deutschen Alltags-Pfund.
 
 ### Wie rechne ich Körpergewicht für US-Kontext um?
 
-80 kg entsprechen 176,37 Pfund. US-Arztpraxen, Fitness-Apps und Flugzeug-
+80&nbsp;kg entsprechen 176,37 Pfund. US-Arztpraxen, Fitness-Apps und Flugzeug-
 Gewichtslimits verwenden durchgängig Pfund. Für die umgekehrte Richtung: ein
-Stone sind 14 Pfund (6,35 kg) — diese Einheit wird in Großbritannien noch
+Stone sind 14 Pfund (6,35&nbsp;kg) — diese Einheit wird in Großbritannien noch
 häufig für Körpergewicht genutzt.
 
 ### Welche Präzision brauche ich für Kochrezepte?

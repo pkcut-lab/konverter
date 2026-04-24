@@ -3,7 +3,7 @@ toolId: "webcam-blur"
 language: "de"
 title: "Webcam-Hintergrund unscharf machen — direkt im Browser"
 headingHtml: "Webcam-Hintergrund <em>unscharf machen</em>"
-metaDescription: "Webcam-Hintergrund online unscharf machen — ohne Installation, ohne Upload, ohne Konto. Einstellbare Blur-Intensität, 100 % lokal im Browser."
+metaDescription: "Webcam-Hintergrund online unscharf machen — ohne Installation, ohne Upload, ohne Konto. Einstellbare Blur-Intensität, 100&nbsp;% lokal im Browser."
 tagline: "Einstellbare Unschärfe für deinen Videocall-Hintergrund — kein Download nötig."
 intro: "Mach deinen Webcam-Hintergrund unscharf, direkt im Browser-Tab. Keine Extension, keine App, kein Konto. Das Tool greift über die Browser-Kamera-API auf deinen Stream zu, verarbeitet jeden Frame lokal und zeigt das Ergebnis sofort — deine Kameradaten verlassen den Browser zu keinem Zeitpunkt."
 category: "video"
@@ -76,7 +76,7 @@ Aktiviere den **Hintergrundunschärfe-Toggle**. Ziehe anschließend den
 Den Effekt kannst du live im Canvas beobachten. Über **Schnappschuss speichern** wird der
 aktuelle Frame als PNG heruntergeladen.
 
-## Datenschutz — 100 % im Browser
+## Datenschutz — 100&nbsp;% im Browser
 
 Kameradaten sind besonders sensibel. Das Tool ist deshalb so gebaut, dass nichts
 den Browser verlässt:

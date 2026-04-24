@@ -3,7 +3,7 @@ toolId: "password-generator"
 language: "de"
 title: "Passwort-Generator — Sichere Passwörter erstellen"
 headingHtml: "Sichere <em>Passwörter</em> erstellen"
-metaDescription: "Passwort-Generator mit Web Crypto API: Zufallspasswort und Passphrase sofort erstellen. Entropie-Anzeige, DSGVO-konform, 100 % client-seitig."
+metaDescription: "Passwort-Generator mit Web Crypto API: Zufallspasswort und Passphrase sofort erstellen. Entropie-Anzeige, DSGVO-konform, 100&nbsp;% client-seitig."
 tagline: "Kryptographisch sichere Passwörter — direkt im Browser, ohne Server-Kontakt."
 intro: "Der Passwort-Generator erzeugt kryptographisch sichere Zufallspasswörter über die Web Crypto API deines Browsers. Kein Server sieht dein Passwort, kein Logging speichert es. Du wählst Länge, Zeichentypen und Modus — das Ergebnis erscheint sofort mit Live-Entropie-Anzeige in Bits."
 category: "dev"
@@ -58,7 +58,7 @@ NIST SP 800-63B Rev. 4 (2024) empfiehlt mindestens 15 Zeichen. Die frühere Pfli
 - **PIN-Codes** — nur Ziffern, 6–8 Stellen für Geräte-Sperren oder Zwei-Faktor-Backup.
 - **Master-Passwort** — 20+ Zeichen oder 6-Wort-Passphrase als Zugang zum Passwort-Manager.
 
-## Datenschutz — 100 % im Browser
+## Datenschutz — 100&nbsp;% im Browser
 
 Kein Byte verlässt dein Gerät. Der Generator arbeitet vollständig client-seitig:
 

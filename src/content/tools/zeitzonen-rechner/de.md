@@ -3,7 +3,7 @@ toolId: "timezone-converter"
 language: "de"
 title: "Zeitzonen umrechnen — Uhrzeit weltweit konvertieren"
 headingHtml: "Zeitzonen <em>umrechnen</em>"
-metaDescription: "Uhrzeit zwischen Zeitzonen umrechnen: Berlin, New York, Tokio und 7 weitere Zonen. Automatische Sommerzeit-Erkennung, kein Tracking, 100 % im Browser."
+metaDescription: "Uhrzeit zwischen Zeitzonen umrechnen: Berlin, New York, Tokio und 7 weitere Zonen. Automatische Sommerzeit-Erkennung, kein Tracking, 100&nbsp;% im Browser."
 tagline: "Uhrzeit zwischen 10 gängigen Zeitzonen konvertieren — mit automatischer Sommerzeit-Erkennung."
 intro: "Rechne Uhrzeiten zwischen Zeitzonen um. Gib eine Uhrzeit und eine IANA-Zeitzone ein — der Rechner zeigt dir sofort die entsprechende Uhrzeit in 10 wichtigen Zeitzonen weltweit. Sommerzeit (DST) wird automatisch berücksichtigt. Kein Server, kein Upload, alles läuft im Browser."
 category: "time"
@@ -41,7 +41,7 @@ Die Umrechnung basiert auf UTC als Referenzpunkt:
 
 `Zielzeit = Quellzeit − Offset(Quellzone) + Offset(Zielzone)`
 
-Beispiel: 14:30 in Berlin (UTC+2 im Sommer) entspricht 08:30 in New York (UTC−4 im Sommer). Die Differenz beträgt 6 Stunden. Im Winter verschiebt sich die Differenz, weil beide Zonen unterschiedliche Umstellungstermine haben.
+Beispiel: 14:30 in Berlin (UTC+2 im Sommer) entspricht 08:30 in New York (UTC−4 im Sommer). Die Differenz beträgt 6&nbsp;Stunden. Im Winter verschiebt sich die Differenz, weil beide Zonen unterschiedliche Umstellungstermine haben.
 
 Entscheidend ist, dass die Offsets nicht statisch sind. Berlin wechselt zwischen UTC+1 (MEZ) und UTC+2 (MESZ). New York wechselt zwischen UTC−5 (EST) und UTC−4 (EDT). Der Rechner bezieht die aktuellen Offsets über `Intl.DateTimeFormat` — das stellt sicher, dass Sommerzeit-Wechsel korrekt abgebildet werden.
 
@@ -65,7 +65,7 @@ Die Werte gelten für die Sommerzeit-Periode (MESZ/EDT). Im Winter verschieben s
 
 **Reiseplanung und Flugzeiten:** Flugpläne zeigen Abflug- und Ankunftszeiten in lokaler Zeit. Wer einen Flug von Frankfurt nach New York bucht, muss die Zeitverschiebung kennen, um Anschlussflüge, Hotelcheck-ins und Transfers korrekt zu planen. Der Rechner liefert die Antwort ohne Kopfrechnung.
 
-**Internationale Geschäftskommunikation:** Anrufe, Webinare und Vertragsfristen über Ländergrenzen hinweg erfordern präzise Zeitumrechnung. Besonders kritisch: die zweiwöchige Phase im März, wenn die USA bereits auf Sommerzeit umgestellt haben, Europa aber noch nicht — die Differenz Berlin-New York beträgt dann 5 statt 6 Stunden.
+**Internationale Geschäftskommunikation:** Anrufe, Webinare und Vertragsfristen über Ländergrenzen hinweg erfordern präzise Zeitumrechnung. Besonders kritisch: die zweiwöchige Phase im März, wenn die USA bereits auf Sommerzeit umgestellt haben, Europa aber noch nicht — die Differenz Berlin-New York beträgt dann 5 statt 6&nbsp;Stunden.
 
 **Entwickler und DevOps:** Server-Logs, Cron-Jobs und Monitoring-Alerts arbeiten oft in UTC. Entwickler müssen UTC-Zeitstempel in ihre lokale Zeit übersetzen, um Incidents zeitlich einzuordnen. Der Rechner ergänzt das [Unix-Timestamp-Tool](/de/unix-timestamp) um die Zeitzonen-Dimension.
 

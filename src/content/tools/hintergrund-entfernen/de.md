@@ -7,8 +7,8 @@ metaDescription: "Hintergrund aus Fotos entfernen — komplett im Browser, ohne 
 tagline: "Freisteller in Sekunden — das Bild bleibt auf deinem Gerät."
 intro: "Das Tool trennt ein Motiv vom Hintergrund und speichert das Ergebnis als transparente PNG-Datei. Die Analyse läuft vollständig auf deinem Gerät über ein KI-Modell, das einmalig ins Browser-Cache geladen wird. Danach funktioniert alles offline — kein Server, keine Anmeldung, kein Tracking. Ideal für Produktfotos, Porträts, Tiere und alles, was einen sauberen Freisteller braucht."
 howToUse:
-  - "Datei wählen (PNG, JPG, WebP, AVIF oder HEIC, bis 15 MB)"
-  - "Einmalig wartet das Tool auf den Modell-Download (ca. 110 MB, danach gecacht)"
+  - "Datei wählen (PNG, JPG, WebP, AVIF oder HEIC, bis 15&nbsp;MB)"
+  - "Einmalig wartet das Tool auf den Modell-Download (ca. 110&nbsp;MB, danach gecacht)"
   - "Freigestelltes Bild als PNG, WebP oder JPG herunterladen"
 faq:
   - q: "Muss ich meine Datei hochladen?"
@@ -18,7 +18,7 @@ faq:
   - q: "Welche Bilder eignen sich am besten?"
     a: "Gute Ergebnisse gibt es bei Motiven mit klarer Trennung vom Hintergrund: Produktfotos, Porträts, Tiere, Alltagsgegenstände. Schwieriger wird es bei transparenten Objekten wie Glas oder bei sehr feinen Strukturen wie einzelnen Haaren vor unruhigem Hintergrund."
   - q: "Welches Modell wird verwendet?"
-    a: "Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist rund 110 MB groß und wird nach dem ersten Laden vom Browser gecacht."
+    a: "Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist rund 110&nbsp;MB groß und wird nach dem ersten Laden vom Browser gecacht."
   - q: "Kann ich das Ergebnis als JPG speichern?"
     a: "Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP (kleinere Dateigröße bei vergleichbarer Qualität)."
 relatedTools:
@@ -29,7 +29,7 @@ category: image
 aside:
   steps:
     - title: "Bild auswählen"
-      description: "Ziehe eine Datei per Drag & Drop in den Bereich oder wähle sie aus deinem Gerät aus. PNG, JPG, WebP, AVIF oder HEIC bis 15 MB."
+      description: "Ziehe eine Datei per Drag & Drop in den Bereich oder wähle sie aus deinem Gerät aus. PNG, JPG, WebP, AVIF oder HEIC bis 15&nbsp;MB."
     - title: "KI-Verarbeitung"
       description: "Das lokale BEN2-Modell trennt Motiv und Hintergrund direkt im Browser — ohne Upload, ohne Serverkontakt."
     - title: "Ergebnis speichern"
@@ -54,7 +54,7 @@ ONNX-Format konvertiert, ein offener Standard, der direkt im Browser ausgeführt
 werden kann. Dafür wird die Bibliothek Transformers.js von Hugging Face
 eingesetzt, die WebGPU und WebAssembly als Ausführungsziele unterstützt.
 
-Beim ersten Aufruf lädt der Browser die Modell-Datei (rund 110 MB) einmalig
+Beim ersten Aufruf lädt der Browser die Modell-Datei (rund 110&nbsp;MB) einmalig
 vom Hugging-Face-CDN und legt sie im internen Cache ab. Alle weiteren
 Freistellungen laufen vollständig offline. Unterstützt dein Gerät WebGPU —
 das gilt für die meisten aktuellen Chrome-, Edge- und Safari-Versionen —,
@@ -88,7 +88,7 @@ analysiert. Es gibt kein Cookie-Banner für Drittanbieter, keine Anmeldung und
 kein Tracking — auch keine anonymen Nutzungsstatistiken.
 
 Eine Ausnahme ist der einmalige Modell-Download beim ersten Aufruf: Die
-BEN2-Datei (rund 110 MB) wird vom Content-Delivery-Network von Hugging Face
+BEN2-Datei (rund 110&nbsp;MB) wird vom Content-Delivery-Network von Hugging Face
 geladen, einem US-Unternehmen mit Sitz in New York. Dieser Request enthält
 ausschließlich die URL der Modell-Datei. Es werden keine Bilddaten, keine
 Nutzer-IDs und keine personenbezogenen Informationen übertragen. Technisch
@@ -177,7 +177,7 @@ Haaren vor unruhigem Hintergrund.
 Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes
 neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist
 MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist
-rund 110 MB groß und wird nach dem ersten Laden vom Browser gecacht.
+rund 110&nbsp;MB groß und wird nach dem ersten Laden vom Browser gecacht.
 
 ### Kann ich das Ergebnis als JPG speichern?
 
@@ -189,6 +189,6 @@ Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
-- **[WebP-Konverter](/de/webp-konverter)** — PNG und JPG in WebP umwandeln, rund 30 % kleinere Dateien, vollständig im Browser.
+- **[WebP-Konverter](/de/webp-konverter)** — PNG und JPG in WebP umwandeln, rund 30&nbsp;% kleinere Dateien, vollständig im Browser.
 - **[HEVC zu H.264](/de/hevc-zu-h264)** — iPhone-Videos in universell abspielbares MP4 umwandeln, direkt im Browser.
 - **[Meter zu Fuß](/de/meter-zu-fuss)** — schnelle Längen-Umrechnung mit Schritt-für-Schritt-Rechenweg.

@@ -17,11 +17,11 @@ faq:
   - q: "Wie berechnet man die enthaltene Mehrwertsteuer aus dem Bruttopreis?"
     a: "Korrekte Formel: Netto = Brutto ÷ 1,19 (bei 19 %). MwSt-Betrag = Brutto − Netto. Der häufige Fehler ist Brutto × 0,19 — das ergibt 22,61 € statt der tatsächlich enthaltenen 19,00 € bei einem Brutto von 119 €."
   - q: "Was gilt ab Januar 2026 für die Gastronomie?"
-    a: "Ab dem 1. Januar 2026 gilt dauerhaft 7 % Mehrwertsteuer für Restaurantspeisen in jeder Form — Verzehr vor Ort, Takeaway und Lieferung. Ausnahme: Getränke bleiben bei 19 %. Dies ist eine gesetzliche Regelung (§ 12 Abs. 2 UStG), keine zeitlich begrenzte Maßnahme."
+    a: "Ab dem 1.&nbsp;Januar 2026 gilt dauerhaft 7 % Mehrwertsteuer für Restaurantspeisen in jeder Form — Verzehr vor Ort, Takeaway und Lieferung. Ausnahme: Getränke bleiben bei 19 %. Dies ist eine gesetzliche Regelung (§&nbsp;12 Abs. 2 UStG), keine zeitlich begrenzte Maßnahme."
   - q: "Welche Produkte und Leistungen haben 7 % MwSt?"
     a: "Lebensmittel (außer Alkohol und Getränke), Bücher und Zeitschriften (Print und digital), ÖPNV-Tickets, Hotelübernachtungen, Kulturveranstaltungen, Zahnwerkstätten sowie ab Januar 2026 auch Restaurantspeisen. Photovoltaik-Anlagen bis 30 kW fallen seit Januar 2023 unter den 0 %-Nullsteuersatz."
   - q: "Was ist die Kleinunternehmerregelung bei der Mehrwertsteuer?"
-    a: "Selbstständige und Freiberufler mit einem Vorjahresumsatz unter 25.000 € und einem laufenden Jahresumsatz unter 100.000 € können nach § 19 UStG die Kleinunternehmerregelung nutzen. Sie weisen dann keine Mehrwertsteuer auf Rechnungen aus und haben keinen Vorsteuerabzug. Die Grenzen wurden 2025 erhöht (zuvor: 17.500 € / 50.000 €)."
+    a: "Selbstständige und Freiberufler mit einem Vorjahresumsatz unter 25.000 € und einem laufenden Jahresumsatz unter 100.000 € können nach §&nbsp;19 UStG die Kleinunternehmerregelung nutzen. Sie weisen dann keine Mehrwertsteuer auf Rechnungen aus und haben keinen Vorsteuerabzug. Die Grenzen wurden 2025 erhöht (zuvor: 17.500 € / 50.000 €)."
   - q: "Was bedeutet Netto und Brutto?"
     a: "Netto ist der Betrag ohne Mehrwertsteuer — der Preis, den der Unternehmer verlangt, bevor die Steuer aufgeschlagen wird. Brutto ist der Endpreis inklusive Mehrwertsteuer, den du als Verbraucher an der Kasse zahlst. Kassenpreise in Deutschland sind grundsätzlich Bruttopreise."
   - q: "Gilt dieser Rechner auch für Österreich oder die Schweiz?"
@@ -40,7 +40,7 @@ Alle Berechnungen laufen ausschließlich im Browser — kein Server-Upload, kein
 Die deutschen Mehrwertsteuer-Formeln sind seit 2007 unverändert:
 
 **Netto zu Brutto:**
-`Brutto = Netto × 1,19` (bei 19 %)
+`Brutto = Netto × 1,19` (bei 19&nbsp;%)
 
 **Brutto zu Netto (MwSt herausrechnen):**
 `Netto = Brutto ÷ 1,19`
@@ -55,10 +55,10 @@ Die deutschen Mehrwertsteuer-Formeln sind seit 2007 unverändert:
 
 Drei typische Rechnungen mit deutschen Standardsätzen:
 
-**Beispiel 1 — Regelsteuersatz 19 %:**
+**Beispiel 1 — Regelsteuersatz 19&nbsp;%:**
 Netto 100,00&nbsp;€ → MwSt 19,00&nbsp;€ → Brutto 119,00&nbsp;€
 
-**Beispiel 2 — Ermäßigter Satz 7 %:**
+**Beispiel 2 — Ermäßigter Satz 7&nbsp;%:**
 Netto 50,00&nbsp;€ → MwSt 3,50&nbsp;€ → Brutto 53,50&nbsp;€
 
 **Beispiel 3 — Rückrechnung aus Brutto:**

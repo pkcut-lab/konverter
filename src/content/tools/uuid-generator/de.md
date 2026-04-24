@@ -46,7 +46,7 @@ Nicht jede UUID-Version eignet sich für jeden Einsatzzweck. Die Wahl hängt von
 | v1 | MAC-Adresse + Timestamp | Ja | Niedrig — MAC-Leak | Legacy-Systeme (nicht empfohlen für Neuprojekte) |
 | v5 | Deterministisch (SHA-1) | Nein | Hoch | Reproduzierbare IDs aus Namespace + Name |
 
-**Empfehlung 2026:** UUID v7 für alles mit Datenbank-Bezug. Bei 100 Millionen Rows kann der Wechsel von v4 zu zeitgeordneten IDs die Insert-Performance um das Fünffache steigern und die Index-Größe um 30 % senken.
+**Empfehlung 2026:** UUID v7 für alles mit Datenbank-Bezug. Bei 100 Millionen Rows kann der Wechsel von v4 zu zeitgeordneten IDs die Insert-Performance um das Fünffache steigern und die Index-Größe um 30&nbsp;% senken.
 
 ## Aufbau einer UUID
 

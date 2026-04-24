@@ -3,7 +3,7 @@ toolId: "qr-code-generator"
 language: "de"
 title: "QR-Code Generator — QR-Code aus Text erstellen"
 headingHtml: "<em>QR-Code</em> Generator"
-metaDescription: "QR-Code Generator: Text oder URL in einen QR-Code umwandeln und als SVG herunterladen. 100 % im Browser, kein Upload, DSGVO-konform und kostenlos."
+metaDescription: "QR-Code Generator: Text oder URL in einen QR-Code umwandeln und als SVG herunterladen. 100&nbsp;% im Browser, kein Upload, DSGVO-konform und kostenlos."
 tagline: "Beliebigen Text oder eine URL als QR-Code im SVG-Format erzeugen — direkt im Browser, ohne Server."
 intro: "Der QR-Code Generator wandelt Text, URLs oder beliebige Zeichenketten in einen scannbaren QR-Code um. Die Ausgabe erfolgt als SVG-Grafik, die sich verlustfrei skalieren laesst. Die gesamte Kodierung laeuft lokal im Browser — kein Upload, kein Tracking, kein Server-Kontakt."
 category: "image"
@@ -21,7 +21,7 @@ faq:
   - q: "Warum SVG statt PNG?"
     a: "SVG ist ein Vektorformat. Der QR-Code laesst sich auf jede Groesse skalieren, ohne dass Pixel sichtbar werden. Ideal fuer Druck, Poster und responsives Webdesign."
   - q: "Welches Fehlerkorrektur-Level wird verwendet?"
-    a: "Der Generator nutzt Error Correction Level M (ca. 15 % Wiederherstellung). Damit bleibt der Code auch bei leichten Beschaedigungen oder Verschmutzungen lesbar."
+    a: "Der Generator nutzt Error Correction Level M (ca. 15&nbsp;% Wiederherstellung). Damit bleibt der Code auch bei leichten Beschaedigungen oder Verschmutzungen lesbar."
   - q: "Kann ich den QR-Code fuer kommerzielle Zwecke verwenden?"
     a: "Ja. QR-Codes unterliegen keiner Lizenzpflicht. Du darfst den generierten Code frei auf Visitenkarten, Flyern, Verpackungen oder Webseiten einsetzen."
 relatedTools:
@@ -39,7 +39,7 @@ QR-Codes basieren auf dem ISO/IEC-18004-Standard. Die Kodierung folgt einem mehr
 
 1. **Modus-Wahl:** Der Byte-Modus (Indikator `0100`) kodiert beliebige UTF-8-Zeichen.
 2. **Versions-Wahl:** Die QR-Version bestimmt die Matrixgroesse — Version 1 hat 21 x 21 Module, jede weitere Version addiert 4 Module pro Seite.
-3. **Fehlerkorrektur:** Reed-Solomon-Codes ergaenzen redundante Codewoerter. Level M stellt ca. 15 % der Daten wieder her.
+3. **Fehlerkorrektur:** Reed-Solomon-Codes ergaenzen redundante Codewoerter. Level M stellt ca. 15&nbsp;% der Daten wieder her.
 4. **Maskierung:** Acht Masken werden getestet, die mit dem niedrigsten Penalty-Score wird angewandt — das verhindert grosse einfarbige Flaechen, die Scanner irritieren.
 
 Beispiel: Der Text `https://example.com` (20 Bytes) passt in Version 1 (Kapazitaet 14 Bytes wird ueberschritten) — der Generator waehlt automatisch Version 2 mit 25 x 25 Modulen.

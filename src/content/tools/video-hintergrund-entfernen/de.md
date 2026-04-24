@@ -7,10 +7,10 @@ metaDescription: "Hintergrund aus Videos entfernen — KI-basiert, direkt im Bro
 tagline: "Dein Video verlässt nie deinen Browser — kein Upload, kein Login."
 intro: "Alle bekannten Alternativen — Kapwing, VEED, Runway, CapCut — laden dein Video auf einen fremden Server. Das Tool hier macht es anders: der Hintergrund wird vollständig in deinem Browser entfernt, frame für frame, ohne dass eine einzige Sekunde deines Videos das Gerät verlässt. Basis ist das BiRefNet_lite-Modell (MIT-Lizenz, ACCV 2024 Best-in-Class für hochauflösende Segmentierung) — für feine Haar- und Fellkanten der aktuelle Stand der Technik. Als Unscreen seit Dezember 2025 offline ist, bleibt kaum eine kostenlose, loginfreie Option. Diese ist eine davon."
 howToUse:
-  - "Video per Drag-and-Drop ablegen oder über den Datei-Dialog öffnen (MP4, MOV, WebM, bis FullHD 1920×1080, bis 500 MB)"
+  - "Video per Drag-and-Drop ablegen oder über den Datei-Dialog öffnen (MP4, MOV, WebM, bis FullHD 1920×1080, bis 500&nbsp;MB)"
   - "Modell wählen: Qualität (BiRefNet_lite — SOTA Haar) oder Schnell (MODNet — für lange Videos)"
   - "Hintergrund-Modus auswählen: Transparent, Einfarbig, Bild oder Video"
-  - "Modell-Download abwarten (ca. 4 s bei 100 Mbit — danach gecacht, kein zweiter Download)"
+  - "Modell-Download abwarten (ca. 4 s bei 100&nbsp;Mbit — danach gecacht, kein zweiter Download)"
   - "Fertiges Video herunterladen oder zusätzlich als PNG-Sequenz für Post-Production exportieren"
 faq:
   - q: "Wie entferne ich den Hintergrund aus einem Video ohne Upload?"
@@ -24,7 +24,7 @@ faq:
   - q: "Was bedeutet Flimmern an Haarkanten?"
     a: "BiRefNet_lite ist ein Bild-Modell, kein Video-Modell. Es verarbeitet jeden Frame unabhängig und hat kein Gedächtnis für vorherige Frames. An feinen Haarkanten kann die Alpha-Maske von Frame zu Frame um 1–2 Pixel schwanken, was als Flimmern sichtbar wird. Der Modus Qualität minimiert das — für maximale Stabilität empfiehlt sich nachträgliches Edge-Smoothing in der Schnitt-Software."
   - q: "Welche Auflösungen werden unterstützt?"
-    a: "Das Tool verarbeitet Videos bis FullHD (1920×1080). Dateien mit höherer Auflösung werden abgewiesen — Browser-ML-Modelle arbeiten intern mit maximal 1024×1024 Pixel; 4K würde unkontrolliertes Resampling erzeugen und die Kantenschärfe verschlechtern. Für Dateien über 500 MB zeigt das Tool eine Warnung mit geschätzter Verarbeitungszeit."
+    a: "Das Tool verarbeitet Videos bis FullHD (1920×1080). Dateien mit höherer Auflösung werden abgewiesen — Browser-ML-Modelle arbeiten intern mit maximal 1024×1024 Pixel; 4K würde unkontrolliertes Resampling erzeugen und die Kantenschärfe verschlechtern. Für Dateien über 500&nbsp;MB zeigt das Tool eine Warnung mit geschätzter Verarbeitungszeit."
 relatedTools:
   - hevc-zu-h264
   - hintergrund-entfernen
@@ -50,7 +50,7 @@ Videos wurden mit dem Dienst gelöscht, ohne Vorwarnung.
 
 WebGPU ändert diese Gleichung. Moderne Browser können das KI-Modell lokal
 ausführen, indem sie direkt auf die Grafikkarte deines Geräts zugreifen.
-Das Modell lädt einmalig (ca. 50 MB für BiRefNet_lite), wird im Browser-Cache
+Das Modell lädt einmalig (ca. 50&nbsp;MB für BiRefNet_lite), wird im Browser-Cache
 gespeichert und steht danach sofort zur Verfügung — auch offline.
 
 ## Wie die Hintergrundentfernung funktioniert
@@ -80,13 +80,13 @@ als Chroma-Key entfernen kannst.
 
 ## Modell-Wahl: Qualität oder Schnell
 
-Der Modus **Qualität** verwendet BiRefNet_lite (MIT-Lizenz, ca. 50 MB).
+Der Modus **Qualität** verwendet BiRefNet_lite (MIT-Lizenz, ca. 50&nbsp;MB).
 BiRefNet wurde auf dem ACCV 2024 als bestes Verfahren für dichotomische
 Bildsegmentierung ausgezeichnet und zeigt besondere Stärke bei feinen
 Haarkanten, Fell und Glasobjekten. Trainiert auf öffentlichen Datensätzen
 (DIS5K, DUTS, HRSOD) ohne kommerzielle Einschränkungen.
 
-Der Modus **Schnell** verwendet MODNet (Apache-2.0, ca. 25 MB). MODNet ist
+Der Modus **Schnell** verwendet MODNet (Apache-2.0, ca. 25&nbsp;MB). MODNet ist
 für Portrait-Aufnahmen optimiert und liefert auf modernen Laptops mit WebGPU
 nahe Echtzeit-Performance. Die Haarkanten-Qualität liegt unter BiRefNet,
 dafür ist es für lange Videos auf schwächeren Geräten die bessere Wahl.
@@ -128,13 +128,13 @@ die Verarbeitung dauert 3–5× länger.
 
 **Auflösung:** Maximale Eingabe FullHD (1920×1080). Höhere Auflösungen werden
 abgewiesen (D3 — Browser-ML-Modelle samplen 4K intern auf 1024px, was sichtbare
-Weichzeichner-Artefakte auf Haarkanten erzeugt). **Dateigröße:** Soft-Limit 500 MB.
+Weichzeichner-Artefakte auf Haarkanten erzeugt). **Dateigröße:** Soft-Limit 500&nbsp;MB.
 
 ## Häufige Fragen
 
 ### Wie entferne ich den Hintergrund aus einem Video ohne Upload?
 
-Du ziehst das Video (bis FullHD 1920×1080, bis 500 MB) in die Drop-Zone auf
+Du ziehst das Video (bis FullHD 1920×1080, bis 500&nbsp;MB) in die Drop-Zone auf
 dieser Seite. Das KI-Modell läuft direkt in deinem Browser — kein Server erhält
 deine Datei. Das fertige Video lädst du als WebM (transparent) oder MP4 herunter.
 

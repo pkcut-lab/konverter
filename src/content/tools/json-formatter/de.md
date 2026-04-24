@@ -3,7 +3,7 @@ toolId: "json-formatter"
 language: "de"
 title: "JSON Formatter — Online formatieren und validieren"
 headingHtml: "<em>JSON</em> Formatter"
-metaDescription: "JSON online formatieren, validieren und minifizieren. Syntaxfehler mit Zeilennummer, 2-Space-Einrückung, Copy-Button. 100 % im Browser, ohne Tracking."
+metaDescription: "JSON online formatieren, validieren und minifizieren. Syntaxfehler mit Zeilennummer, 2-Space-Einrückung, Copy-Button. 100&nbsp;% im Browser, ohne Tracking."
 tagline: "JSON lesbar machen — komplett im Browser, ohne Server-Kontakt."
 intro: "Der JSON Formatter nimmt rohen JSON-Code und gibt ihn mit sauberer Einrückung und Zeilenumbrüchen zurück. Syntaxfehler werden mit Position gemeldet, Copy-Button liefert das Ergebnis in die Zwischenablage. Kein Server sieht deine Daten — alles läuft lokal im Browser."
 category: "dev"
@@ -87,7 +87,7 @@ JavaScript nutzt IEEE 754 Double-Precision für alle Zahlen. Ab `9.007.199.254.7
 
 Standard-JSON kennt keine Kommentare. Der Formatter lehnt diesen Input ab und erklärt warum — kein kryptischer Fehler, sondern ein klarer Hinweis auf die JSON5-Alternative.
 
-## Datenschutz — 100 % im Browser
+## Datenschutz — 100&nbsp;% im Browser
 
 Der JSON Formatter verarbeitet alles lokal über `JSON.parse()` und `JSON.stringify()`. Kein Server empfängt deine Daten, kein Logging speichert sie, kein Tracking analysiert dein Verhalten. Das ist besonders relevant für:
 

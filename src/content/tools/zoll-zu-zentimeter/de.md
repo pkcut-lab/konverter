@@ -3,22 +3,22 @@ toolId: inch-to-cm
 language: de
 title: "Zoll in Zentimeter umrechnen – Formel & Tabelle"
 headingHtml: "Zoll in <em>Zentimeter</em> umrechnen"
-metaDescription: "Zoll in Zentimeter umrechnen: exakte Formel (1 in = 2,54 cm), Tabelle gängiger Werte und FAQ zu Bildschirmen, Rohren und Reifengrößen. Ohne Ads."
+metaDescription: "Zoll in Zentimeter umrechnen: exakte Formel (1 in = 2,54&nbsp;cm), Tabelle gängiger Werte und FAQ zu Bildschirmen, Rohren und Reifengrößen. Ohne Ads."
 tagline: "Präzise Zoll-zu-cm-Umrechnung in Sekunden — client-seitig, ohne Tracking."
-intro: "Der Konverter wandelt einen Wert in Zoll (in) in die entsprechende Angabe in Zentimetern (cm) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Bildschirmdiagonalen, Rohrdurchmesser, Reifengrößen und jede Rechnung, die zwischen imperialem und metrischem Längenmaß pendelt. Zoll in Zentimeter umrechnen ist dank exakter Definition seit 1959 eindeutig: 1 Zoll entspricht exakt 2,54 cm."
+intro: "Der Konverter wandelt einen Wert in Zoll (in) in die entsprechende Angabe in Zentimetern (cm) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Bildschirmdiagonalen, Rohrdurchmesser, Reifengrößen und jede Rechnung, die zwischen imperialem und metrischem Längenmaß pendelt. Zoll in Zentimeter umrechnen ist dank exakter Definition seit 1959 eindeutig: 1 Zoll entspricht exakt 2,54&nbsp;cm."
 howToUse:
   - "Gib den Wert in Zoll in das Eingabefeld ein."
   - "Das Ergebnis in Zentimetern erscheint sofort — kein Klick nötig."
   - "Kopiere das Ergebnis über den Copy-Button oder tausche die Richtung."
 faq:
   - q: "Wie viele Zentimeter sind ein Zoll?"
-    a: "Ein Zoll entspricht exakt 2,54 cm. Diese Definition gilt seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 weltweit einheitlich."
+    a: "Ein Zoll entspricht exakt 2,54&nbsp;cm. Diese Definition gilt seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 weltweit einheitlich."
   - q: "Sind Zoll und Inch dasselbe?"
-    a: "Ja — Zoll ist die deutsche Bezeichnung für die angloamerikanische Einheit Inch. Beide bezeichnen exakt 2,54 cm. Im technischen DACH-Kontext wird häufig der englische Begriff verwendet."
+    a: "Ja — Zoll ist die deutsche Bezeichnung für die angloamerikanische Einheit Inch. Beide bezeichnen exakt 2,54&nbsp;cm. Im technischen DACH-Kontext wird häufig der englische Begriff verwendet."
   - q: "Wie groß ist ein 55-Zoll-Fernseher in Zentimetern?"
-    a: "55 Zoll entsprechen 139,7 cm Bildschirmdiagonale. Bei einem 16:9-Format ergibt das rund 121,7 cm Breite und 68,5 cm Höhe."
+    a: "55 Zoll entsprechen 139,7&nbsp;cm Bildschirmdiagonale. Bei einem 16:9-Format ergibt das rund 121,7&nbsp;cm Breite und 68,5&nbsp;cm Höhe."
   - q: "Was bedeuten Bruchzoll wie 3/8 Zoll?"
-    a: "3/8 Zoll sind 0,9525 cm (gerundet 9,5 mm). Bruchzoll-Angaben kommen in der Sanitär- und Werkzeugtechnik vor, etwa bei Rohrgewinden und Bohrerdurchmessern."
+    a: "3/8 Zoll sind 0,9525&nbsp;cm (gerundet 9,5&nbsp;mm). Bruchzoll-Angaben kommen in der Sanitär- und Werkzeugtechnik vor, etwa bei Rohrgewinden und Bohrerdurchmessern."
   - q: "Warum werden Bildschirme in Zoll gemessen?"
     a: "Technische Geräte-Standards stammen aus dem angloamerikanischen Raum. RCA und andere US-Hersteller führten die Zoll-Angabe für TV-Diagonalen in den 1940er-Jahren ein — der Markt hat sie beibehalten."
 relatedTools:
@@ -35,14 +35,14 @@ Der Konverter wandelt einen Wert in Zoll (in) in die entsprechende Angabe in Zen
 
 ## Umrechnungsformel
 
-Ein Zoll entspricht seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 exakt 2,54 cm. Die Gegenrichtung ist damit gelockt: `1 cm = 0,3937 in` auf vier Nachkommastellen, exakt `1/2,54` in. Vor 1959 existierten leicht abweichende nationale Inch-Definitionen in den USA, Großbritannien, Kanada und weiteren angelsächsischen Staaten — seit dem Abkommen gilt derselbe Wert in Wissenschaft, Technik und im allgemeinen Sprachgebrauch.
+Ein Zoll entspricht seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 exakt 2,54&nbsp;cm. Die Gegenrichtung ist damit gelockt: `1 cm = 0,3937 in` auf vier Nachkommastellen, exakt `1/2,54` in. Vor 1959 existierten leicht abweichende nationale Inch-Definitionen in den USA, Großbritannien, Kanada und weiteren angelsächsischen Staaten — seit dem Abkommen gilt derselbe Wert in Wissenschaft, Technik und im allgemeinen Sprachgebrauch.
 
 Formeln:
 
 `Zentimeter = Zoll × 2,54`
 `Zoll = Zentimeter × 0,3937`
 
-Rechen-Beispiel: 10 in × 2,54 = 25,40 cm. Auf zwei Nachkommastellen gerundet ergibt das 25,40 cm — präzise genug für Alltag und Handwerk. Wer exakt rechnet (z.&nbsp;B. Maschinenbau), behält alle Stellen und rundet erst am Ende der Rechenkette.
+Rechen-Beispiel: 10 in × 2,54 = 25,40&nbsp;cm. Auf zwei Nachkommastellen gerundet ergibt das 25,40&nbsp;cm — präzise genug für Alltag und Handwerk. Wer exakt rechnet (z.&nbsp;B. Maschinenbau), behält alle Stellen und rundet erst am Ende der Rechenkette.
 
 ## Anwendungsbeispiele
 
@@ -75,7 +75,7 @@ Ein 55-Zoll-Fernseher misst 139,70&nbsp;cm Diagonale. Ein Zollstock zeigt 12&nbs
 
 ### Wie viele Zentimeter sind ein Zoll?
 
-Ein Zoll entspricht exakt 2,54 cm. Diese Definition gilt seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 weltweit einheitlich.
+Ein Zoll entspricht exakt 2,54&nbsp;cm. Diese Definition gilt seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 weltweit einheitlich.
 
 ### Sind Zoll und Inch dasselbe?
 

@@ -3,7 +3,7 @@ toolId: meter-to-feet
 language: de
 title: "Meter in Fuß umrechnen – Formel & Tabelle"
 headingHtml: "Meter in <em>Fuß</em> umrechnen"
-metaDescription: "Meter in Fuß umrechnen: exakte Formel (1 m = 3,28084 ft), Tabelle gängiger Werte und FAQ zu internationalem vs. US-Survey-Fuß. Ohne Anmeldung, ohne Ads."
+metaDescription: "Meter in Fuß umrechnen: exakte Formel (1 m = 3,28084&nbsp;ft), Tabelle gängiger Werte und FAQ zu internationalem vs. US-Survey-Fuß. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Längen-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Metern (m) in die entsprechende Angabe in Fuß (ft) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen metrischem und imperialem Längenmaß pendelt — von der Körpergröße bis zur Flughöhe. Meter in Fuß umrechnen ist dank exakter Definition seit 1959 eindeutig."
 howToUse:
@@ -20,7 +20,7 @@ faq:
   - q: "Wie rechne ich grob ohne Taschenrechner?"
     a: "Multipliziere Meter mit drei und addiere rund neun Prozent — Du erhältst Fuß mit unter einem Prozent Abweichung. Umgekehrt: Fuß mal 0,3 und ein Sechzigstel draufschlagen."
   - q: "Wie viele Zoll sind ein Fuß?"
-    a: "Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder 25,4 mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: 5'11\" bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m."
+    a: "Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder 25,4&nbsp;mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: 5'11\" bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m."
 relatedTools:
   - zentimeter-zu-zoll
   - kilometer-zu-meilen
@@ -50,8 +50,8 @@ Formeln:
 `Fuß = Meter × 3,28084`
 `Meter = Fuß × 0,3048`
 
-Rechen-Beispiel: 2 m × 3,28084 = 6,56168 ft. Auf zwei Nachkommastellen gerundet
-ergibt das 6,56 ft — präzise genug für Alltag und Handwerk, zu grob für Luftfahrt
+Rechen-Beispiel: 2 m × 3,28084 = 6,56168&nbsp;ft. Auf zwei Nachkommastellen gerundet
+ergibt das 6,56&nbsp;ft — präzise genug für Alltag und Handwerk, zu grob für Luftfahrt
 und Vermessung. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende
 der Rechenkette.
 
@@ -69,8 +69,8 @@ bis vier Nachkommastellen.
 | 30    | 98,4252   | 100   | 30,4800   |
 | 100   | 328,0840  | 1.000 | 304,8000  |
 
-Eine Körpergröße von 1,80 m ergibt knapp 5 ft 11 in. Wolkenkratzer werden in den
-USA meist in Fuß angegeben — 100 m sind rund 328 ft.
+Eine Körpergröße von 1,80 m ergibt knapp 5&nbsp;ft 11 in. Wolkenkratzer werden in den
+USA meist in Fuß angegeben — 100 m sind rund 328&nbsp;ft.
 
 ## Häufige Einsatzgebiete
 
@@ -84,7 +84,7 @@ entspricht 10.668 m. Nur wenige Staaten (darunter China und Russland) nutzen
 Meter im oberen Luftraum.
 
 **US-Immobilien:** Wohnflächen geben Makler in Quadratfuß (ft²) an. Bei der
-Deckenhöhe bleibt aber der lineare Fuß relevant — eine Standardhöhe von 8 ft
+Deckenhöhe bleibt aber der lineare Fuß relevant — eine Standardhöhe von 8&nbsp;ft
 entspricht 2,44 m.
 
 ## Häufige Fragen
@@ -117,7 +117,7 @@ draufschlagen.
 ### Wie viele Zoll sind ein Fuß?
 
 Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder
-25,4 mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
+25,4&nbsp;mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
 bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m.
 
 ## Verwandte Längen-Tools

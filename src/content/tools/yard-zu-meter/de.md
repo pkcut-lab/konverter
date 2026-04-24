@@ -3,7 +3,7 @@ toolId: yard-to-meter
 language: de
 title: "Yard in Meter umrechnen – Formel & Tabelle"
 headingHtml: "Yard in <em>Meter</em> umrechnen"
-metaDescription: "Yard in Meter umrechnen: exakte Formel (1 yd = 0,9144 m), Tabelle gängiger Werte, kurze Geschichte des Yard und FAQ. Ohne Anmeldung, ohne Ads."
+metaDescription: "Yard in Meter umrechnen: exakte Formel (1&nbsp;yd = 0,9144 m), Tabelle gängiger Werte, kurze Geschichte des Yard und FAQ. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Längen-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Yard (yd) in die entsprechende Angabe in Metern (m) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen imperialem und metrischem Längenmaß wechselt — von Stoffbahnen über Sportplätze bis zu Grundstücksmaßen. Yard in Meter umrechnen ist dank internationaler Definition seit 1959 eindeutig."
 howToUse:
@@ -18,7 +18,7 @@ faq:
   - q: "Warum wird in der Textilindustrie oft in Yard gemessen?"
     a: "In den USA und Großbritannien werden Stoffbahnen traditionell in Yard verkauft. Schnittmuster aus dem angloamerikanischen Raum geben Stoffbedarf in Yard an. Ein Yard Stoff entspricht 0,9144 m — wer metrisch einkauft, rundet auf 0,92 m auf und hat genügend Zugabe."
   - q: "Wie rechne ich Yard in Meter ohne Taschenrechner?"
-    a: "Nimm den Yard-Wert und ziehe rund neun Prozent ab — das ergibt Meter mit unter einem Prozent Abweichung. Beispiel: 100 yd minus 9 ergibt 91 m, der exakte Wert liegt bei 91,44 m."
+    a: "Nimm den Yard-Wert und ziehe rund neun Prozent ab — das ergibt Meter mit unter einem Prozent Abweichung. Beispiel: 100&nbsp;yd minus 9 ergibt 91 m, der exakte Wert liegt bei 91,44 m."
   - q: "Wie lang ist ein Football-Feld in Metern?"
     a: "Ein American-Football-Feld misst 100 Yard zwischen den Endzonen, also exakt 91,44 Meter. Mit beiden Endzonen (je 10 Yard) kommt das Spielfeld auf 120 Yard oder 109,73 Meter Gesamtlänge."
 relatedTools:
@@ -42,7 +42,7 @@ Formeln:
 `Meter = Yard × 0,9144`
 `Yard = Meter × 1,09361`
 
-Rechen-Beispiel: 50 yd × 0,9144 = 45,72 m. Auf zwei Nachkommastellen gerundet ergibt das 45,72 m — präzise genug für Alltag und Handwerk. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende der Rechenkette.
+Rechen-Beispiel: 50&nbsp;yd × 0,9144 = 45,72 m. Auf zwei Nachkommastellen gerundet ergibt das 45,72 m — präzise genug für Alltag und Handwerk. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende der Rechenkette.
 
 ## Anwendungsbeispiele
 
@@ -85,7 +85,7 @@ In den USA und Großbritannien werden Stoffbahnen traditionell in Yard verkauft.
 
 ### Wie rechne ich Yard in Meter ohne Taschenrechner?
 
-Nimm den Yard-Wert und ziehe rund neun Prozent ab — das ergibt Meter mit unter einem Prozent Abweichung. Beispiel: 100 yd minus 9 ergibt 91 m, der exakte Wert liegt bei 91,44 m.
+Nimm den Yard-Wert und ziehe rund neun Prozent ab — das ergibt Meter mit unter einem Prozent Abweichung. Beispiel: 100&nbsp;yd minus 9 ergibt 91 m, der exakte Wert liegt bei 91,44 m.
 
 ### Wie lang ist ein Football-Feld in Metern?
 

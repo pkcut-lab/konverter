@@ -3,7 +3,7 @@ toolId: foot-to-meter
 language: de
 title: "Fuß in Meter umrechnen – Formel & Tabelle"
 headingHtml: "Fuß in <em>Meter</em> umrechnen"
-metaDescription: "Fuß in Meter umrechnen: exakte Formel (1 ft = 0,3048 m), Tabelle gängiger Werte und FAQ zu internationalem Fuß und Kopfrechnung. Ohne Anmeldung, ohne Ads."
+metaDescription: "Fuß in Meter umrechnen: exakte Formel (1&nbsp;ft = 0,3048 m), Tabelle gängiger Werte und FAQ zu internationalem Fuß und Kopfrechnung. Ohne Anmeldung, ohne Ads."
 tagline: "Präzise Längen-Umrechnung in Sekunden — klient-seitig, ohne Tracking."
 intro: "Der Konverter wandelt einen Wert in Fuß (ft) in die entsprechende Angabe in Metern (m) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen imperialem und metrischem Längenmaß pendelt — von der Körpergröße bis zur Raumhöhe. Fuß in Meter umrechnen ist dank exakter Definition seit 1959 eindeutig."
 howToUse:
@@ -20,7 +20,7 @@ faq:
   - q: "Warum wird in den USA noch Fuß verwendet?"
     a: "Die USA haben das metrische System nie flächendeckend eingeführt. Im Bauwesen, bei Immobilien und in der Luftfahrt sind Fuß und Zoll tief verankert. Ein vollständiger Wechsel wäre mit enormen Kosten in Infrastruktur, Normung und Ausbildung verbunden."
   - q: "Wie viele Zoll sind ein Fuß?"
-    a: "Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder 25,4 mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: 5'11\" bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m."
+    a: "Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder 25,4&nbsp;mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: 5'11\" bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m."
 relatedTools:
   - meter-zu-fuss
   - yard-zu-meter
@@ -49,7 +49,7 @@ Formeln:
 `Meter = Fuß × 0,3048`
 `Fuß = Meter × 3,28084`
 
-Rechen-Beispiel: 6 ft × 0,3048 = 1,8288 m. Auf zwei Nachkommastellen gerundet
+Rechen-Beispiel: 6&nbsp;ft × 0,3048 = 1,8288 m. Auf zwei Nachkommastellen gerundet
 ergibt das 1,83 m — präzise genug für Alltag und Handwerk, zu grob für Vermessung
 und Geodäsie. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende
 der Rechenkette.
@@ -68,8 +68,8 @@ bis vier Nachkommastellen.
 | 100   | 30,4800   | 30    | 98,4252   |
 | 1.000 | 304,8000  | 100   | 328,0840  |
 
-Eine Körpergröße von 6 ft entspricht 1,8288 m. Die Standardhöhe US-amerikanischer
-Wohnräume beträgt 8 ft, also 2,4384 m — in Europa üblich als rund 2,44 m angegeben.
+Eine Körpergröße von 6&nbsp;ft entspricht 1,8288 m. Die Standardhöhe US-amerikanischer
+Wohnräume beträgt 8&nbsp;ft, also 2,4384 m — in Europa üblich als rund 2,44 m angegeben.
 
 ## Häufige Einsatzgebiete
 
@@ -120,7 +120,7 @@ Ausbildung verbunden.
 ### Wie viele Zoll sind ein Fuß?
 
 Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder
-25,4 mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
+25,4&nbsp;mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
 bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m.
 
 ## Verwandte Längen-Tools

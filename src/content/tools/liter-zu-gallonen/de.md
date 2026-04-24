@@ -75,7 +75,7 @@ US-Rezept mit 2 Gallonen Wasser entspricht rund 7,57 Litern.
 
 **Tanken und Fahrzeuge:** US-Tankstellen zeigen Preise pro Gallone an. Wer ein
 US-Fahrzeug fährt oder Verbrauchswerte vergleicht (Meilen pro Gallone vs.
-Liter pro 100 km), braucht die Umrechnung regelmäßig. Mietwagen-Rückgabe in
+Liter pro 100&nbsp;km), braucht die Umrechnung regelmäßig. Mietwagen-Rückgabe in
 den USA erfordert oft die Kenntnis beider Einheiten.
 
 **Kochen und Getränke:** Amerikanische Rezepte verwenden Gallonen für große
