@@ -340,7 +340,7 @@
   .input-field__label {
     font-size: var(--font-size-small);
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     letter-spacing: 0.02em;
     display: flex;
     align-items: center;
@@ -391,7 +391,7 @@
   .input-field__unit {
     font-family: var(--font-family-mono);
     font-size: var(--font-size-small);
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     flex-shrink: 0;
     white-space: nowrap;
   }
@@ -443,7 +443,7 @@
   .summary-card__unit {
     font-size: 0.875rem;
     font-weight: 400;
-    color: var(--color-text-muted);
+    color: var(--color-text);
   }
 
   /* Sondertilgung Box */
@@ -485,7 +485,7 @@
     margin: 0;
     font-size: var(--font-size-small);
     font-weight: 600;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     letter-spacing: 0.02em;
     text-transform: uppercase;
   }
@@ -537,7 +537,7 @@
   .cell--year {
     text-align: left !important;
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text);
   }
 
   .cell--num {
