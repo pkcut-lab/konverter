@@ -572,7 +572,7 @@
   }
   .copy-btn--copied {
     border-color: var(--color-success);
-    color: var(--color-success);
+    color: var(--color-text);
   }
 
   /* Detail-Strip */
