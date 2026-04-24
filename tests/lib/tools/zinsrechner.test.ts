@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
   zinsrechner,
-  parseDE,
   formatEuro,
   formatProzent,
   computeZins,
 } from '../../../src/lib/tools/zinsrechner';
+import { parseDE } from '../../../src/lib/tools/parse-de';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
 
 // ---------------------------------------------------------------------------

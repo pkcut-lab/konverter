@@ -1,4 +1,5 @@
 import type { FormatterConfig } from './schemas';
+import { parseDE } from './parse-de';
 
 /**
  * Brutto-Netto-Rechner 2026 — Lohnsteuer + Sozialversicherung (DE).
@@ -85,27 +86,6 @@ export function isSachsen(bundesland: string): boolean {
 /** Rundet kaufmännisch auf 2 Nachkommastellen. */
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
-}
-
-/**
- * Parse German-locale decimal string to number.
- * Accepts "1.000,99" (DE), "1000.99" (EN), "1000,99".
- */
-export function parseDE(raw: string): number {
-  const s = raw.trim();
-  if (s === '' || s === '-') return NaN;
-  const cleaned = s.replace(/[^\d,.\-]/g, '');
-  const lastComma = cleaned.lastIndexOf(',');
-  const lastDot = cleaned.lastIndexOf('.');
-  let normalized: string;
-  if (lastComma > lastDot) {
-    normalized = cleaned.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > lastComma) {
-    normalized = cleaned.replace(/,/g, '');
-  } else {
-    normalized = cleaned.replace(',', '.');
-  }
-  return parseFloat(normalized);
 }
 
 /** Formatiert einen Eurobetrag im deutschen Locale (z. B. 1.234,56). */

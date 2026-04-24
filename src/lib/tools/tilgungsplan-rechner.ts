@@ -1,4 +1,5 @@
 import type { FormatterConfig } from './schemas';
+import { parseDE } from './parse-de';
 
 /**
  * Tilgungsplan-Rechner — Annuitätendarlehen-Berechnung.
@@ -7,46 +8,6 @@ import type { FormatterConfig } from './schemas';
  * Pure client-side, kein Server-Submit.
  */
 
-/** Parse German-locale decimal string to number.
- * Accepts "300.000,00" (DE) and "300000.00" (EN) and "300000,00". */
-export function parseDE(raw: string): number {
-  const s = raw.trim();
-  if (s === '') return NaN;
-  const cleaned = s.replace(/[^\d,.\-]/g, '');
-  // Count occurrences
-  const commas = (cleaned.match(/,/g) || []).length;
-  const dots = (cleaned.match(/\./g) || []).length;
-
-  let normalized: string;
-
-  if (commas === 0 && dots === 1) {
-    // Ambiguous: '300.000' or '3.5'
-    const parts = cleaned.split('.');
-    if ((parts[1]?.length ?? 0) === 3) {
-      // e.g. 300.000 -> DE thousand separator
-      normalized = cleaned.replace(/\./g, '');
-    } else {
-      // e.g. 3.5 -> Decimal
-      normalized = cleaned;
-    }
-  } else if (commas === 0 && dots > 1) {
-    // e.g. 3.000.000 -> DE thousand separators
-    normalized = cleaned.replace(/\./g, '');
-  } else if (dots === 0 && commas === 1) {
-    // e.g. 3,50 -> DE decimal
-    normalized = cleaned.replace(',', '.');
-  } else if (dots === 0 && commas > 1) {
-    // e.g. 300,000,000 -> EN thousand separators
-    normalized = cleaned.replace(/,/g, '');
-  } else if (cleaned.lastIndexOf(',') > cleaned.lastIndexOf('.')) {
-    // e.g. 300.000,50 -> DE format
-    normalized = cleaned.replace(/\./g, '').replace(',', '.');
-  } else {
-    // e.g. 300,000.50 -> EN format
-    normalized = cleaned.replace(/,/g, '');
-  }
-  return parseFloat(normalized);
-}
 
 /** Format monetary value to 2 decimal places, German locale (e.g. 1.234,56). */
 export function formatEuro(n: number): string {

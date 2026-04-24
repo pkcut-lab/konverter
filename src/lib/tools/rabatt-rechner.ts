@@ -1,4 +1,5 @@
 import type { FormatterConfig } from './schemas';
+import { parseDE } from './parse-de';
 
 /**
  * Rabatt-Rechner — bidirektionale Rabattberechnung (3 Modi + Kettenrabatt).
@@ -21,27 +22,6 @@ export interface RabattResult {
   gesamtRabattProzent?: number;
 }
 
-/**
- * Parse German-locale decimal string to number.
- * Accepts "1.000,99" (DE thousands+decimal) and "1000.99" (EN) and "1000,99".
- * Returns NaN for invalid input.
- */
-export function parseDE(raw: string): number {
-  const s = raw.trim();
-  if (s === '' || s === '-') return NaN;
-  const cleaned = s.replace(/[^\d,.\-]/g, '');
-  const lastComma = cleaned.lastIndexOf(',');
-  const lastDot = cleaned.lastIndexOf('.');
-  let normalized: string;
-  if (lastComma > lastDot) {
-    normalized = cleaned.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > lastComma) {
-    normalized = cleaned.replace(/,/g, '');
-  } else {
-    normalized = cleaned.replace(',', '.');
-  }
-  return parseFloat(normalized);
-}
 
 /**
  * Format a monetary value to 2 decimal places, German locale (e.g. 1.234,56).

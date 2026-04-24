@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
   rabattRechner,
-  parseDE,
   formatEuro,
   formatProzent,
   round2,
@@ -10,6 +9,7 @@ import {
   computeRabattProzent,
   computeKettenrabatt,
 } from '../../../src/lib/tools/rabatt-rechner';
+import { parseDE } from '../../../src/lib/tools/parse-de';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
 
 describe('rabattRechner config', () => {

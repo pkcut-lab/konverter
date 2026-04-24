@@ -1,4 +1,5 @@
 import type { FormatterConfig } from './schemas';
+import { parseDE } from './parse-de';
 
 /**
  * Zinsrechner — Zinseszins, Abgeltungssteuer, Realrendite (Fisher-Gleichung).
@@ -32,28 +33,6 @@ export interface ZinsResult {
   realrendite: number;
   /** Real-Endkapital nach Inflationsbereinigung */
   knReal: number;
-}
-
-/**
- * Parse German-locale decimal string to number.
- * "1.000,99" → 1000.99  |  "1000.99" → 1000.99  |  "1,99" → 1.99
- * Returns NaN for empty or non-numeric input.
- */
-export function parseDE(raw: string): number {
-  const s = raw.trim();
-  if (s === '' || s === '-') return NaN;
-  const cleaned = s.replace(/[^\d,.\-]/g, '');
-  const lastComma = cleaned.lastIndexOf(',');
-  const lastDot = cleaned.lastIndexOf('.');
-  let normalized: string;
-  if (lastComma > lastDot) {
-    normalized = cleaned.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > lastComma) {
-    normalized = cleaned.replace(/,/g, '');
-  } else {
-    normalized = cleaned.replace(',', '.');
-  }
-  return parseFloat(normalized);
 }
 
 /** Round to 2 decimal places (kaufmännisch). */
