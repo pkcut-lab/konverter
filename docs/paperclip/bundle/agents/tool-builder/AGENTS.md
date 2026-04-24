@@ -32,7 +32,79 @@ references:
   - docs/paperclip/research/2026-04-20-multi-agent-role-matrix.md
 ---
 
-# AGENTS — Tool-Builder-Prozeduren (v1.0)
+# AGENTS — Tool-Builder-Prozeduren (v1.1)
+
+## 0. Definition of Done (HART — ohne diese Checkliste ist kein Commit zulässig)
+
+**Ein Tool-Build ist NUR dann `done`, wenn auf `/<lang>/<slug>` die interaktive
+UI tatsächlich rendert.** Logic-only-Commits (`.ts` + `de.md` + `test.ts` ohne
+Svelte-UI) sind **invalid** — sie lassen die Tool-Seite leer und den A11y-Auditor
+später zurecht FAIL posten (bekannter Fall: KON-86 brutto-netto-rechner commit
+`b8a29be`, KON-94 kreditrechner commit `58ceb8f`, u. a. — alle um 2026-04-24
+halbfertig ausgeliefert).
+
+### 0.1 Pflicht-Dateien pro Tool-Typ
+
+| config.type | config.id-Check | Custom-Component nötig? | Dateien, die existieren MÜSSEN |
+|---|---|---|---|
+| `converter` | alle | Nein — generische `Converter.svelte` | Basis-5 |
+| `formatter` | in `CUSTOM_FORMATTER_IDS` ([slug].astro) | **JA** | Basis-5 + Component + [slug].astro-Eintrag |
+| `formatter` | sonst | Nein — generische `Formatter.svelte` | Basis-5 |
+| `file-tool` | alle | **JA** — `FileTool.svelte` generisch + Runtime-Entry | Basis-5 + `tool-runtime-registry.ts`-Entry |
+| `comparer` / `analyzer` / `generator` / `validator` | spezifische IDs (z.B. `regex-tester`) | **JA** | Basis-5 + Component + [slug].astro-Eintrag |
+| `comparer` / `analyzer` / `generator` / `validator` | sonst | Nein — generisch | Basis-5 |
+| `interactive` | alle | **JA** | Basis-5 + Component + [slug].astro-Eintrag |
+
+**Basis-5** (immer Pflicht, egal welcher Tool-Typ):
+1. `src/lib/tools/<tool-id>.ts` — Pure-Logic-Config
+2. `src/content/tools/<slug>/<lang>.md` — SEO-Content (≥300 Wörter)
+3. `tests/lib/tools/<tool-id>.test.ts` — Config + Logic-Tests
+4. `src/lib/slug-map.ts` — Slug-Eintrag (+1 Zeile)
+5. `src/lib/tool-registry.ts` — Lazy-Import-Eintrag (`() => import()`)
+
+**Custom-UI-zusätzlich** (wenn Matrix oben "JA" sagt):
+6. `src/components/tools/<PascalCaseName>Tool.svelte` — UI-Component
+7. `src/pages/[lang]/[slug].astro` — Import-Zeile **und** Mapping-Zeile im
+   `componentByType` oder im `config.id === XYZ_TOOL_ID`-Block. Bei
+   Custom-Formatters: `CUSTOM_FORMATTER_IDS`-Set erweitern UND neuen
+   `config.id`-Match-Block ergänzen. Siehe Beispiel `MehrwertsteuerRechnerTool`
+   (commit `149aa7b`) oder `TilgungsplanRechnerTool` (commit `2a19388`).
+
+**FileTool-zusätzlich** (nur bei `config.type === 'file-tool'`):
+8. `src/lib/tools/tool-runtime-registry.ts` — Eintrag mit `process`
+   (+ optional `prepare`, `preflightCheck`, `isPrepared`, `clearLastResult`).
+   Heavy-Deps (>100 KB, z. B. `@huggingface/transformers`, `onnxruntime-web`,
+   `mediabunny`) als Lazy-Singleton (Pattern in §9.2).
+
+### 0.2 Faustregel — "brauche ich eine Custom-Component?"
+
+- **Input → Output, ein Wert** (Meter→Fuß, kWh→kJ, Celsius→Fahrenheit): **Nein.**
+  `Converter.svelte` macht das bereits.
+- **Multi-Field-Form** mit Abhängigkeiten (Brutto/Netto + Steuerklasse + Kinder,
+  Kredit + Laufzeit + Sondertilgung, Zins + Intervall + Zeitreihe): **JA** —
+  Custom-Component.
+- **Output ist Tabelle / Liste / Chart** (Tilgungsplan, Zinseszins-Reihe,
+  Pro-Contra-Vergleich, Rabatt-Kette): **JA** — Custom-Component.
+- **Tool macht File-Verarbeitung** (Binary In → Binary Out): **JA** — `FileTool.svelte`
+  generisch, aber Runtime-Registry-Entry Pflicht.
+
+Im Zweifel: **Lies das Dossier §9 Differenzierung.** Wenn dort eine spezifische
+UX-Hypothese steht ("Transparenz-Layer", "Live-Einsparungs-Anzeige",
+"Beschäftigungsart-Navigation"), brauchst du eine eigene Component — eine
+generische `Formatter.svelte`-Textarea kann keine Pro-Contra-Matrix rendern.
+
+### 0.3 Pre-Commit-Gate (Pflicht vor `git commit`)
+
+```bash
+bash scripts/paperclip/verify-tool-build.sh <tool-id> <slug>
+```
+
+Das Script prüft die Basis-5, den Route-Eintrag in `[slug].astro` (falls
+`CUSTOM_FORMATTER_IDS` oder anderer Custom-Component-Type) und den
+Runtime-Registry-Entry (falls `file-tool`). Exit-Code ≠ 0 = **nicht committen**,
+fehlende Files nachbauen und Test-Gate erneut laufen lassen.
+
+---
 
 ## 1. Task-Start
 
@@ -195,18 +267,51 @@ Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
 ```bash
 # Vor engineer_output.md:
-npm test -- <tool-id>           # muss exit 0
-npm run astro -- check          # muss 0/0/0
-wc -w src/content/tools/<slug>/<lang>.md   # muss ≥ 300
+bash scripts/paperclip/verify-tool-build.sh <tool-id> <slug>  # §0.3 Pre-Commit-Gate, muss exit 0
+npm test -- <tool-id>                                          # muss exit 0
+npm run astro -- check                                         # muss 0/0/0
+wc -w src/content/tools/<slug>/<lang>.md                       # muss ≥ 300
 ```
 
+Das Verify-Script prüft, dass **alle in §0.1 gelisteten Dateien existieren** und
+dass bei Custom-Components der Eintrag in `src/pages/[lang]/[slug].astro`
+vorhanden ist. Wenn es FAIL liefert, baust du die fehlenden Files **jetzt** nach,
+nicht im Rework.
+
 ## 4. Commit
+
+Das `git add`-Set hängt vom Tool-Typ ab (§0.1). Listen müssen **vollständig** sein
+— wenn Custom-Component oder FileTool, gehören die entsprechenden Files in
+denselben Commit. Kein "nachreichen im nächsten Commit".
+
+### 4.1 Basis-Commit (jeder Tool-Typ)
 
 ```bash
 git add src/lib/tools/<id>.ts \
         src/content/tools/<slug>/<lang>.md \
-        tests/lib/tools/<id>.test.ts
+        tests/lib/tools/<id>.test.ts \
+        src/lib/slug-map.ts \
+        src/lib/tool-registry.ts
+```
 
+### 4.2 Zusätzlich bei Custom-Component (Matrix §0.1)
+
+```bash
+git add src/components/tools/<PascalCaseName>Tool.svelte \
+        src/pages/[lang]/[slug].astro
+```
+
+### 4.3 Zusätzlich bei FileTool
+
+```bash
+git add src/lib/tools/tool-runtime-registry.ts
+# Wenn Heavy-Dep-Singleton im eigenen Modul liegt (empfohlen bei >100 KB), auch:
+# git add src/lib/tools/<id>-runtime.ts
+```
+
+### 4.4 Commit-Message
+
+```bash
 git commit -m "$(cat <<'EOF'
 feat(tools): add <tool-name> <tool-type>
 
