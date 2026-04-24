@@ -29,3 +29,4 @@ unabhängiger Deep-Review-Sicht. Der Schritt danach ist `route_to_deploy_queue`
 
 | # | Slug | Pass-3-Date | Pass-3-Report | Build-Commit | Status |
 |---|------|-------------|---------------|--------------|--------|
+| 1 | tilgungsplan-rechner | 2026-04-24 | tasks/end-review-tilgungsplan-rechner-pass3.md | f2d7a37 | ready-for-ship |
