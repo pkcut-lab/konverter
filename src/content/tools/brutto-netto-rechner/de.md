@@ -78,7 +78,7 @@ Drei typische Berechnungen für 2026:
 
 ### Beispiel 1 — Vollzeit SK I, NRW, 3.500&nbsp;€ Brutto
 
-Rentenversicherung: 325,50&nbsp;€ · Krankenversicherung: 280,88&nbsp;€ · Pflegeversicherung (mit Kind): 63,00&nbsp;€ · Arbeitslosenversicherung: 45,50&nbsp;€ · Lohnsteuer SK I: ca. 420–460&nbsp;€ · Soli: 0&nbsp;€ · **Netto: ca. 2.290–2.330&nbsp;€**
+Rentenversicherung: 325,50&nbsp;€ · Krankenversicherung: 280,88&nbsp;€ · Pflegeversicherung (mit Kind): 63,00&nbsp;€ · Arbeitslosenversicherung: 45,50&nbsp;€ · Lohnsteuer SK I: 644,42&nbsp;€ · Soli: 0&nbsp;€ · **Netto: 2.140,70&nbsp;€**
 
 ### Beispiel 2 — Vollzeit SK III, NRW, 3.500&nbsp;€ Brutto (Splitting)
 
@@ -98,8 +98,6 @@ F-Faktor greift; SV-Basis ≈ 899&nbsp;€. Rentenversicherung: 83,60&nbsp;€ s
 - **Freelancer und Selbstständige:** Gehaltsvergleich Anstellung vs. Selbstständigkeit — Netto als Referenzpunkt für Tagessatz-Kalkulation.
 
 ## Häufige Fragen
-
-(FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
 ## Verwandte Finanz-Tools
 

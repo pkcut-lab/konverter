@@ -659,7 +659,7 @@
     font-size: 0.6rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-accent);
+    color: var(--color-text);
     font-family: var(--font-family-mono);
   }
 
