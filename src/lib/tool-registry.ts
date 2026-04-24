@@ -85,6 +85,9 @@ const loaders: Record<string, ToolLoader> = {
   'discount-calculator': () =>
     import('./tools/rabatt-rechner').then((m) => m.rabattRechner),
   'interest-calculator': () => import('./tools/zinsrechner').then((m) => m.zinsrechner),
+  'loan-calculator': () => import('./tools/kreditrechner').then((m) => m.kreditrechner),
+  'compound-interest-calculator': () =>
+    import('./tools/zinseszins-rechner').then((m) => m.zinseszinsRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before
