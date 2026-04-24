@@ -24,6 +24,22 @@ import { processWebp } from './process-webp';
  *   3. Runtime entry below
  */
 
+// Lazy singleton for speech-enhancer. `onnxruntime-web` (transitive dep of
+// @huggingface/transformers) is ~1 MB of WASM + JS — keep it out of the shared
+// bundle and off every page that doesn't use audio enhancement.
+type SpeechEnhancerModule = typeof import('./speech-enhancer');
+let speechEnhancerModulePromise: Promise<SpeechEnhancerModule> | null = null;
+let speechEnhancerModule: SpeechEnhancerModule | null = null;
+function loadSpeechEnhancer(): Promise<SpeechEnhancerModule> {
+  if (!speechEnhancerModulePromise) {
+    speechEnhancerModulePromise = import('./speech-enhancer').then((m) => {
+      speechEnhancerModule = m;
+      return m;
+    });
+  }
+  return speechEnhancerModulePromise;
+}
+
 // Lazy singleton for remove-background. `@huggingface/transformers` is ~1 MB
 // of ONNX runtime scaffolding — we must keep it out of the shared bundle and
 // off /de/png-jpg-zu-webp (which doesn't use ML at all). Load the first time
@@ -65,6 +81,20 @@ export interface ToolRuntime {
 }
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
+  'speech-enhancer': {
+    process: async (input, config) => {
+      const m = await loadSpeechEnhancer();
+      const attenLimDb =
+        typeof config?.strength === 'string' ? parseInt(config.strength, 10) : 20;
+      return m.enhanceSpeech(input, { attenLimDb });
+    },
+    prepare: async (onProgress) => {
+      const m = await loadSpeechEnhancer();
+      return m.prepareSpeechEnhancementModel(onProgress);
+    },
+    isPrepared: () => speechEnhancerModule?.isPrepared() ?? false,
+    clearLastResult: () => speechEnhancerModule?.clearLastResult(),
+  },
   'png-jpg-to-webp': {
     process: (input, config) =>
       processWebp(input, {
@@ -109,6 +139,29 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       const downscaleTo1080p = config?.downscaleTo1080p === true;
       return processHevcToH264(input, { preset, downscaleTo1080p }, onProgress);
     },
+    preflightCheck: () => {
+      if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
+        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';
+      }
+      return null;
+    },
+  },
+  // video-bg-remove: ML pipeline stub. Full implementation requires spike tasks
+  // documented in docs/superpowers/specs/2026-04-22-video-hintergrund-entfernen-design.md §9
+  // (Mediabunny VP9+Alpha mux + onnxruntime-web BiRefNet_lite ONNX worker).
+  'video-bg-remove': {
+    process: async () => {
+      throw new Error(
+        'video-bg-remove: ML pipeline not yet implemented — spike tasks required (see design spec §9).',
+      );
+    },
+    prepare: async () => {
+      throw new Error(
+        'video-bg-remove: model loading not yet implemented — spike tasks required.',
+      );
+    },
+    isPrepared: () => false,
+    clearLastResult: () => { /* no-op until pipeline is implemented */ },
     preflightCheck: () => {
       if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
         return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';

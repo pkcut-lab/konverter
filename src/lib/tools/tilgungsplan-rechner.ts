@@ -13,17 +13,37 @@ export function parseDE(raw: string): number {
   const s = raw.trim();
   if (s === '') return NaN;
   const cleaned = s.replace(/[^\d,.\-]/g, '');
-  const lastComma = cleaned.lastIndexOf(',');
-  const lastDot = cleaned.lastIndexOf('.');
+  // Count occurrences
+  const commas = (cleaned.match(/,/g) || []).length;
+  const dots = (cleaned.match(/\./g) || []).length;
+
   let normalized: string;
-  if (lastComma > lastDot) {
-    // DE format: 300.000,50 → strip dots, replace comma with dot
-    normalized = cleaned.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > lastComma) {
-    // EN format: 300,000.50 → strip commas
-    normalized = cleaned.replace(/,/g, '');
-  } else {
+
+  if (commas === 0 && dots === 1) {
+    // Ambiguous: '300.000' or '3.5'
+    const parts = cleaned.split('.');
+    if ((parts[1]?.length ?? 0) === 3) {
+      // e.g. 300.000 -> DE thousand separator
+      normalized = cleaned.replace(/\./g, '');
+    } else {
+      // e.g. 3.5 -> Decimal
+      normalized = cleaned;
+    }
+  } else if (commas === 0 && dots > 1) {
+    // e.g. 3.000.000 -> DE thousand separators
+    normalized = cleaned.replace(/\./g, '');
+  } else if (dots === 0 && commas === 1) {
+    // e.g. 3,50 -> DE decimal
     normalized = cleaned.replace(',', '.');
+  } else if (dots === 0 && commas > 1) {
+    // e.g. 300,000,000 -> EN thousand separators
+    normalized = cleaned.replace(/,/g, '');
+  } else if (cleaned.lastIndexOf(',') > cleaned.lastIndexOf('.')) {
+    // e.g. 300.000,50 -> DE format
+    normalized = cleaned.replace(/\./g, '').replace(',', '.');
+  } else {
+    // e.g. 300,000.50 -> EN format
+    normalized = cleaned.replace(/,/g, '');
   }
   return parseFloat(normalized);
 }
