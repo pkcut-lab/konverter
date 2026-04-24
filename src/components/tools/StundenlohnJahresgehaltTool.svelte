@@ -763,7 +763,7 @@
   }
   .copy-btn--copied {
     border-color: var(--color-success);
-    color: var(--color-success);
+    color: var(--color-text); /* A12-R2-01: AAA contrast fix — success green fails 7:1; border retains non-text indicator */
   }
   .dir-pill:focus-visible,
   .mode-pill:focus-visible,
