@@ -82,11 +82,11 @@ Rentenversicherung: 325,50&nbsp;€ · Krankenversicherung: 280,88&nbsp;€ · P
 
 ### Beispiel 2 — Vollzeit SK III, NRW, 3.500&nbsp;€ Brutto (Splitting)
 
-Lohnsteuer SK III: ca. 160–200&nbsp;€ (Splitting-Vorteil). **Netto: ca. 2.540–2.580&nbsp;€** — rund 250&nbsp;€ mehr als SK I durch Ehegattensplitting.
+Lohnsteuer SK III: ca. 308&nbsp;€ (Splitting-Vorteil). **Netto: ca. 2.477&nbsp;€** — rund 336&nbsp;€ mehr als SK I durch Ehegattensplitting.
 
 ### Beispiel 3 — Midijob, 1.200&nbsp;€ Brutto
 
-F-Faktor greift; SV-Basis ≈ 899&nbsp;€. Rentenversicherung: 83,60&nbsp;€ statt 111,60&nbsp;€ bei Vollzeit. **Netto: ca. 1.025–1.050&nbsp;€** — ca. 8&nbsp;% weniger Abzüge als bei regulärer Vollzeitstelle.
+F-Faktor greift; SV-Basis ≈ 968&nbsp;€. Rentenversicherung: 90&nbsp;€ (Gleitzone reduziert von 112&nbsp;€ ohne F-Faktor). **Netto: ca. 993&nbsp;€** — ca. 8&nbsp;% weniger Abzüge als bei regulärer Vollzeitstelle.
 
 ## Häufige Einsatzgebiete
 
