@@ -72,9 +72,9 @@ Die naive Subtraktion (z.&nbsp;B. 7&nbsp;% − 2,5&nbsp;% = 4,5&nbsp;%) ist math
 
 **Beispiel 1 — Festgeld 10.000&nbsp;€, 3&nbsp;%, 10&nbsp;Jahre:**
 - Brutto-Endkapital: 13.439,16&nbsp;€ (Zinsertrag: 3.439,16&nbsp;€)
-- Steuer: ca. 643,64&nbsp;€ (auf 2.439,16&nbsp;€ über Freibetrag)
-- Netto-Endkapital: ca. 12.795,52&nbsp;€
-- Real-Endkapital (bei 2,5&nbsp;% Inflation): ca. 11.282&nbsp;€
+- Steuer: ca. 643,33&nbsp;€ (auf 2.439,16&nbsp;€ über Freibetrag)
+- Netto-Endkapital: ca. 12.795,83&nbsp;€
+- Real-Endkapital (bei 2,5&nbsp;% Inflation): ca. 10.498,65&nbsp;€
 
 **Beispiel 2 — Tagesgeld 5.000&nbsp;€, 4&nbsp;%, 1&nbsp;Jahr:**
 - Zinsertrag: 200,00&nbsp;€ — unter dem Sparerpauschbetrag von 1.000&nbsp;€
@@ -82,7 +82,7 @@ Die naive Subtraktion (z.&nbsp;B. 7&nbsp;% − 2,5&nbsp;% = 4,5&nbsp;%) ist math
 - Netto = Brutto: 5.200,00&nbsp;€
 
 **Beispiel 3 — Negativzins −0,5&nbsp;%, 20.000&nbsp;€, 2&nbsp;Jahre:**
-- Endkapital: 19.800,75&nbsp;€ (Kapitalverlust: 199,25&nbsp;€)
+- Endkapital: 19.800,50&nbsp;€ (Kapitalverlust: 199,50&nbsp;€)
 - Realrendite bei 2,5&nbsp;% Inflation: noch stärker negativ
 
 ## Häufige Einsatzgebiete
