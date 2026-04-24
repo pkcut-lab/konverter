@@ -34,6 +34,8 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [stundenlohn-jahresgehalt](https://konverter-7qc.pages.dev/de/stundenlohn-jahresgehalt) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/stundenlohn-jahresgehalt) |
+| [zinseszins-rechner](https://konverter-7qc.pages.dev/de/zinseszins-rechner) | finance | ship-as-is | 2026-04-25 | [dev](http://localhost:4322/de/zinseszins-rechner) |
 | [brutto-netto-rechner](https://konverter-7qc.pages.dev/de/brutto-netto-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/brutto-netto-rechner) |
 | [kreditrechner](https://konverter-7qc.pages.dev/de/kreditrechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/kreditrechner) |
 | [rabatt-rechner](https://konverter-7qc.pages.dev/de/rabatt-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/rabatt-rechner) |
