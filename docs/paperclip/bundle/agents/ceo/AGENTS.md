@@ -685,7 +685,7 @@ analog §3.4).
 **Dispatch-Logik (pro Tool).**
 
 ```python
-END_REVIEWER_ID = "<uuid>"       # aus /api/agents nach Registrierung
+END_REVIEWER_ID = "b3a6677b-fd78-4a33-b39b-032664d2d329"   # registriert 2026-04-24 via local_trusted-POST
 TOOL_BUILDER_ID = "deea8a61-3c70-4d41-b43a-bc104b9b45ac"
 
 def dispatch_end_review(ticket, pass_number, previous_pass_ref=None):
