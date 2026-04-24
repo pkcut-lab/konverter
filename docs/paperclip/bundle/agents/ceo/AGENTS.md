@@ -284,17 +284,100 @@ wird NICHT durchlaufen.
 AGENTS.md ist die authoritative Quelle (Paperclip-Runtime lädt AGENTS.md als
 `instructionsFilePath`). HEARTBEAT.md ist Human-Reference.
 
-## 3. Assignment-Regeln (v1.0 — 4-Rollen-Core)
+## 3. Assignment-Regeln (v1.2 — 2026-04-24, Parallel-Fan-Out)
 
 | Ticket-Type | Default Assignee | Review-Gate |
 |-------------|-----------------|-------------|
 | `dossier-request` | tool-dossier-researcher | — (CEO liest Frontmatter + citation-verify) |
-| `tool-build` | tool-builder | merged-critic (1 File in `tasks/awaiting-critics/<id>/`) |
+| `diff-research` | differenzierungs-researcher | — (nur bei Unique-Strategy-Tools, parallel zu dossier) |
+| `pre-publish-strategy` | seo-geo-strategist | — (vor Build, Keyword-Plan) |
+| `faq-gap-mining` | faq-gap-finder | — (vor Build, PAA-Suggestions) |
+| `tool-build` | tool-builder | **8 parallele Critic-Tickets (Review-Round 1, siehe §3.5)** |
+| `schema-enrich` | schema-markup-enricher | — (pre-build, JSON-LD-Generation) |
+| `image-optimize` | image-optimizer | — (wenn Bilder im Tool) |
+| `polish-rework` | tool-builder | merged-critic (Review-Round 2) |
+| `meta-review` | meta-reviewer | — (post-Round-1, per-tool Check) |
+| `legal-release-audit` | legal-auditor | — (pre-ship Gate) |
+| `consistency-audit` | cross-tool-consistency-auditor | — (post-ship, per-category) |
+| `post-ship-seo-audit` | seo-auditor | — (post-deploy, live-URL) |
+| `internal-linking-refresh` | internal-linking-strategist | — (post-ship, graph-update) |
 | `dossier-refresh` | tool-dossier-researcher | — (TTL-Trigger oder Override-Trigger) |
 | `rulebook-update-request` | — | User-Approval (du eskalierst nur) |
 | `rubric-split` | — | User-Approval (200-Tools-Schwelle oder F1-Drift) |
 
-Phase-3-Rollen (translator, seo-audit) + Phase-5-Rollen (cto, visual-qa-Split) sind in `research/2026-04-20-multi-agent-role-matrix.md` §4 dokumentiert — nicht aktiv vor Phase-Gate.
+### §3.5 Review-Round 1 Parallel-Fan-Out (v1.2 Core, 2026-04-24)
+
+Nach Tool-Build-`done` erstellt CEO **8 parallele Critic-Tickets** — alle mit
+`target_slug: <slug>` + `upstream_build_ticket_id: <build-ticket>` + unterschied-
+lichen Assignees. Paperclip-Runtime triggert alle 8 Agents parallel (jeder hat
+eigenen `maxConcurrentRuns=1`, aber über Agents hinweg keine Lock — Source:
+`heartbeat.js:withAgentStartLock(agentId, ...)` = per-Agent-Lock).
+
+```bash
+# Trigger: upstream build-ticket reaches status=done
+BUILD_TICKET_ID="$1"
+TOOL_SLUG="$2"
+COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"
+API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
+
+# Agent-IDs (aus current DB — mit curl /agents abrufbar)
+declare -A CRITICS=(
+  [merged-critic]="6e9e54cc-77b7-439c-b535-2cc6eccdc0ca"
+  [content-critic]="5e3d37d3-ebd5-41eb-98c7-1b356f5a99f3"
+  [design-critic]="4d37a3ac-dcbe-4ee9-8a50-ccbd9afbd2d2"
+  [a11y-auditor]="2bb73bc2-93cf-4524-8494-e40fa3824942"
+  [performance-auditor]="0eadd722-298e-4d11-93f4-e7bdff458106"
+  [security-auditor]="58a46453-6b82-4bd2-b78f-8339d131e0f3"
+  [conversion-critic]="7de6eaad-9ebf-4a05-b80c-88d753d9b08c"
+  [platform-engineer]="08447ccc-1d37-4ea1-b720-ba8c99b3a77e"
+)
+
+# 8 parallele Tickets erstellen (nicht sequentiell warten — Paperclip-Scheduler
+# picked alle 8 gleichzeitig via per-Agent-Lock)
+REVIEW_TICKET_IDS=()
+for CRITIC in "${!CRITICS[@]}"; do
+  RESP=$(curl -s -X POST -H "Content-Type: application/json" "$API" -d "$(cat <<EOF
+{
+  "title": "Critic-Review-Round-1: $TOOL_SLUG ($CRITIC)",
+  "description": "Review-Round 1 parallel fan-out nach Build-done.\n\n**target_slug:** $TOOL_SLUG\n**upstream_build_ticket_id:** $BUILD_TICKET_ID\n**critic:** $CRITIC\n**expected_output:** tasks/awaiting-critics/$BUILD_TICKET_ID/$CRITIC.md",
+  "priority": "high",
+  "status": "todo",
+  "assigneeAgentId": "${CRITICS[$CRITIC]}",
+  "parentId": "$BUILD_TICKET_ID"
+}
+EOF
+)")
+  TID=$(echo "$RESP" | jq -r '.id')
+  REVIEW_TICKET_IDS+=("$TID")
+  echo "  Dispatched: $CRITIC → $TID"
+done
+
+# CEO merkt sich die 8 IDs im build-ticket-metadata für Aggregation
+```
+
+### §3.6 Aggregation-Wait (pro Build-Ticket)
+
+CEO-Heartbeat prüft bei jedem Tick: wenn `in_progress` Build-Ticket vorhanden,
+prüfe ob alle 8 Review-Round-1-Kinder `status=done`:
+
+```bash
+# Query alle Kinder des Build-Tickets
+CHILDREN=$(curl -s "$API?parentId=$BUILD_TICKET_ID" | jq -c '.[]')
+DONE_COUNT=$(echo "$CHILDREN" | jq -c 'select(.status=="done")' | wc -l)
+TOTAL_COUNT=$(echo "$CHILDREN" | wc -l)
+
+if [[ "$DONE_COUNT" -eq 8 && "$TOTAL_COUNT" -eq 8 ]]; then
+  # Alle 8 Critics fertig — aggregate + §7 Autonomie-Gate-Resolve
+  resolve_gate "$BUILD_TICKET_ID" "$(collect_critic_reports "$BUILD_TICKET_ID")"
+elif [[ "$DONE_COUNT" -lt 8 ]]; then
+  # Noch nicht alle fertig — skip this heartbeat, warten
+  echo "  Review-Round-1 pending: $DONE_COUNT/8 done"
+fi
+```
+
+Phase-3-Rollen (translator, i18n-specialist, brand-voice-auditor, cto) sind in
+`.paperclip.yaml activation.phase_3_active` dokumentiert — nicht aktiv vor
+User-Trigger.
 
 ## 4. Rulebook-Integrity-Check (Step 4, v1.0 Auto-Snapshot)
 
