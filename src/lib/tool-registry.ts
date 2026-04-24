@@ -80,6 +80,8 @@ const loaders: Record<string, ToolLoader> = {
   'liter-to-gallon': () => import('./tools/liter-zu-gallonen').then((m) => m.literZuGallonen),
   'ml-to-floz': () =>
     import('./tools/milliliter-zu-unzen').then((m) => m.milliliterZuUnzen),
+  'vat-calculator': () =>
+    import('./tools/mehrwertsteuer-rechner').then((m) => m.mehrwertsteuerRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

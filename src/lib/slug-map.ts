@@ -61,6 +61,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'km2-to-mi2': { de: 'quadratkilometer-zu-quadratmeile' },
   'liter-to-gallon': { de: 'liter-zu-gallonen' },
   'ml-to-floz': { de: 'milliliter-zu-unzen' },
+  'vat-calculator': { de: 'mehrwertsteuer-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
