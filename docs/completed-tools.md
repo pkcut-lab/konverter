@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local |
 |---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [brutto-netto-rechner](https://konverter-7qc.pages.dev/de/brutto-netto-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/brutto-netto-rechner) |
 | [kreditrechner](https://konverter-7qc.pages.dev/de/kreditrechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/kreditrechner) |
 | [rabatt-rechner](https://konverter-7qc.pages.dev/de/rabatt-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/rabatt-rechner) |
 | [tilgungsplan-rechner](https://konverter-7qc.pages.dev/de/tilgungsplan-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/tilgungsplan-rechner) |
