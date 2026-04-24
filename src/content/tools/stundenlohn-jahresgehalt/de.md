@@ -11,7 +11,7 @@ headingHtml: "Stundenlohn in <em>Jahresgehalt</em> umrechnen"
 howToUse:
   - "Wähle die Richtung: Stundenlohn → Gehalt oder Jahresgehalt → Stundenlohn."
   - "Gib deinen Stunden- oder Jahreswert ein — Ergebnis erscheint sofort."
-  - "Stelle deine Wochenstunden ein oder klicke einen Schnellwahl-Button (20 / 32 / 35 / 40 / 42 h)."
+  - "Stelle deine Wochenstunden ein oder klicke einen Schnellwahl-Button (20 / 32 / 35 / 40 / 42&nbsp;h)."
   - "Wechsle auf 'Exakt' für eine präzisere Rechnung mit Urlaubstagen und Bundesland-Feiertagen."
   - "Kopiere einzelne Werte mit dem Kopieren-Button direkt aus der Ergebnistabelle."
 faq:
@@ -61,7 +61,7 @@ Jahresgehalt = Stundenlohn × Arbeitstage × Tagesstunden
 
 Präziser für Gehaltsverhandlungen und Angebotsbewertungen. Berücksichtigt, dass Arbeitnehmer an Urlaubs- und Feiertagen keinen Stundenlohn erhalten — sondern Urlaubs- und Feiertagsentgelt, das im Jahresgehalt bereits enthalten ist.
 
-**Beispiel — 15&nbsp;€/h, 40&nbsp;h/Woche, 30 Urlaubstage, 10 Feiertage (Hamburg):**
+**Beispiel — 15&nbsp;€/h, 40&nbsp;h/Woche, 30&nbsp;Urlaubstage, 10&nbsp;Feiertage (Hamburg):**
 
 - Schnell: 15 × 40 × 52 = **31.200&nbsp;€/Jahr**
 - Exakt: Arbeitstage = 260 − 30 − 10 = 220; Tagesstunden = 8; 15 × 220 × 8 = **26.400&nbsp;€/Jahr**
@@ -89,7 +89,7 @@ Typische Rechnungen mit deutschen Arbeitszeitmodellen:
 - **Gehaltsverhandlungen:** Stundenbasierte Freelancer-Angebote mit Festgehalts-Positionen vergleichen — beide auf Jahresbasis normieren.
 - **Jobwechsel:** Angebote mit unterschiedlichen Wochenstunden (35&nbsp;h Tarif vs. 40&nbsp;h Vollzeit) auf einen gemeinsamen Stundensatz herunterbrechen.
 - **Mindestlohn-Check:** Prüfen, ob ein angebotener Stundensatz über dem gesetzlichen Mindestlohn 2026 (13,90&nbsp;€/h) liegt.
-- **Bundesland-Vergleich:** Bayern-Arbeitnehmer haben 3–4 Feiertage mehr als Hamburger — das entspricht bei 40&nbsp;h ca. 24–32&nbsp;h weniger Sollarbeitszeit im Jahr.
+- **Bundesland-Vergleich:** Bayern-Arbeitnehmer haben 3–4&nbsp;Feiertage mehr als Hamburger — das entspricht bei 40&nbsp;h ca. 24–32&nbsp;h weniger Sollarbeitszeit im Jahr.
 - **4-Tage-Woche kalkulieren:** Wochenstunden auf 32&nbsp;h setzen und prüfen, welches Jahresgehalt der gleiche Stundenlohn bei reduzierter Arbeitszeit ergibt.
 - **Freelancer-Kalkulation (Hinweis):** Als Selbstständiger musst du deinen Stundensatz höher ansetzen als Angestellte — Krankenversicherung (~15&nbsp;%), Rentenversicherung (~18,6&nbsp;%) und Ausfallzeiten kommen on top. Dieser Rechner zeigt nur die Brutto-Gleichung ohne Eigenkosten.
 

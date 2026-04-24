@@ -412,6 +412,7 @@
   }
   .dir-pill {
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
     color: var(--color-text);
@@ -539,6 +540,7 @@
   }
   .qs-btn {
     padding: var(--space-1) var(--space-2);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
     color: var(--color-text-muted);
@@ -619,6 +621,7 @@
   }
   .bundesland-select {
     padding: var(--space-2) var(--space-3);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-bg);
@@ -735,14 +738,14 @@
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background: var(--color-warn, #d97706);
+    background: var(--color-accent);
     flex-shrink: 0;
   }
 
   /* Copy button */
   .copy-btn {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -762,6 +765,14 @@
     border-color: var(--color-success);
     color: var(--color-success);
   }
+  .dir-pill:focus-visible,
+  .mode-pill:focus-visible,
+  .qs-btn:focus-visible,
+  .copy-btn:focus-visible,
+  .clear-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 
   /* Alerts */
   .alert {
@@ -772,8 +783,8 @@
     border: 1px solid transparent;
   }
   .alert--warn {
-    background: color-mix(in oklch, var(--color-warn, #d97706) 10%, transparent);
-    border-color: color-mix(in oklch, var(--color-warn, #d97706) 30%, transparent);
+    background: color-mix(in oklch, var(--color-error) 10%, transparent);
+    border-color: color-mix(in oklch, var(--color-error) 30%, transparent);
     color: var(--color-text);
   }
   .alert--info {
@@ -808,7 +819,7 @@
     line-height: 1.4;
   }
   .hint--warn {
-    color: var(--color-warn, #d97706);
+    color: var(--color-error);
   }
 
   /* Actions */
@@ -818,6 +829,7 @@
   }
   .clear-btn {
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-muted);
