@@ -12,10 +12,15 @@
   // ---- Formatierung ----
   function fmt(n: number, decimals = 2): string {
     if (!Number.isFinite(n)) return '—';
-    return n.toLocaleString('de-DE', {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    });
+    // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+    try {
+      return n.toLocaleString('de-DE', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+    } catch {
+      return n.toFixed(decimals);
+    }
   }
 
   // ---- Eingabe-States (mit sinnvollen ETF-Sparplan-Defaults) ----

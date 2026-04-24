@@ -93,7 +93,12 @@ export function parseWage(raw: string): number | null {
  */
 export function formatEuroFull(n: number): string {
   if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+  try {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } catch {
+    return n.toFixed(2);
+  }
 }
 
 /** Round to 2 decimal places. */
@@ -173,16 +178,21 @@ export function computeExakt(input: ExaktInput): ExaktResult {
  * this satisfies the FormatterConfig interface).
  */
 function formatStundenlohn(input: string): string {
-  const n = parseWage(input);
-  if (n === null) return '';
-  const r = computeSchnell({ stundenlohn: n, wochenstunden: 40 });
-  return [
-    `Stundenlohn: ${formatEuroFull(r.stundenlohn)} €/h`,
-    `Jahresgehalt: ${formatEuroFull(r.jahresgehalt)} €/Jahr`,
-    `Monatsgehalt: ${formatEuroFull(r.monatsgehalt)} €/Monat`,
-    `Wochengehalt: ${formatEuroFull(r.wochengehalt)} €/Woche`,
-    `Tagesgehalt: ${formatEuroFull(r.tagesgehalt)} €/Tag`,
-  ].join('\n');
+  // Defense-in-depth: try/catch fängt unerwartete Fehler in computeSchnell() oder formatEuroFull() ab.
+  try {
+    const n = parseWage(input);
+    if (n === null) return '';
+    const r = computeSchnell({ stundenlohn: n, wochenstunden: 40 });
+    return [
+      `Stundenlohn: ${formatEuroFull(r.stundenlohn)} €/h`,
+      `Jahresgehalt: ${formatEuroFull(r.jahresgehalt)} €/Jahr`,
+      `Monatsgehalt: ${formatEuroFull(r.monatsgehalt)} €/Monat`,
+      `Wochengehalt: ${formatEuroFull(r.wochengehalt)} €/Woche`,
+      `Tagesgehalt: ${formatEuroFull(r.tagesgehalt)} €/Tag`,
+    ].join('\n');
+  } catch {
+    return input;
+  }
 }
 
 export const stundenlohnJahresgehalt: FormatterConfig = {

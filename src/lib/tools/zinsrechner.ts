@@ -93,7 +93,12 @@ export function computeZins(
  */
 export function formatEuro(n: number): string {
   if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+  try {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } catch {
+    return n.toFixed(2);
+  }
 }
 
 /**
@@ -101,10 +106,15 @@ export function formatEuro(n: number): string {
  */
 export function formatProzent(n: number, decimals = 2): string {
   if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('de-DE', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+  // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+  try {
+    return n.toLocaleString('de-DE', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  } catch {
+    return n.toFixed(decimals);
+  }
 }
 
 /**
@@ -114,30 +124,35 @@ export function formatProzent(n: number, decimals = 2): string {
  * Beispiel: "10000;3;10" → Zinseszins 10.000 € × 3 % × 10 Jahre
  */
 function formatZins(input: string): string {
-  const parts = input.split(';').map((s) => s.trim());
-  const k0 = parseDE(parts[0] ?? '');
-  const p = parseDE(parts[1] ?? '');
-  const n = parseDE(parts[2] ?? '');
+  // Defense-in-depth: try/catch fängt unerwartete Fehler in computeZins() oder formatEuro() ab.
+  try {
+    const parts = input.split(';').map((s) => s.trim());
+    const k0 = parseDE(parts[0] ?? '');
+    const p = parseDE(parts[1] ?? '');
+    const n = parseDE(parts[2] ?? '');
 
-  if (!Number.isFinite(k0) || k0 < 0) {
-    return 'Fehler: Bitte einen gültigen Kapitalbetrag eingeben.';
-  }
-  if (!Number.isFinite(p) || p < -10 || p > 100) {
-    return 'Fehler: Zinssatz muss zwischen −10 und 100 liegen.';
-  }
-  if (!Number.isFinite(n) || n <= 0 || n > 100) {
-    return 'Fehler: Laufzeit muss zwischen 0 und 100 Jahren liegen.';
-  }
+    if (!Number.isFinite(k0) || k0 < 0) {
+      return 'Fehler: Bitte einen gültigen Kapitalbetrag eingeben.';
+    }
+    if (!Number.isFinite(p) || p < -10 || p > 100) {
+      return 'Fehler: Zinssatz muss zwischen −10 und 100 liegen.';
+    }
+    if (!Number.isFinite(n) || n <= 0 || n > 100) {
+      return 'Fehler: Laufzeit muss zwischen 0 und 100 Jahren liegen.';
+    }
 
-  const r = computeZins(k0, p, n);
-  return [
-    `Brutto-Endkapital: ${formatEuro(r.kn)} €`,
-    `Zinsertrag (brutto): ${formatEuro(r.zinsen)} €`,
-    `Abgeltungssteuer: ${formatEuro(r.steuer)} €`,
-    `Netto-Endkapital: ${formatEuro(r.knNetto)} €`,
-    `Real-Endkapital (nach 2,50 % Inflation): ${formatEuro(r.knReal)} €`,
-    `Realrendite p.a.: ${formatProzent(r.realrendite, 2)} %`,
-  ].join('\n');
+    const r = computeZins(k0, p, n);
+    return [
+      `Brutto-Endkapital: ${formatEuro(r.kn)} €`,
+      `Zinsertrag (brutto): ${formatEuro(r.zinsen)} €`,
+      `Abgeltungssteuer: ${formatEuro(r.steuer)} €`,
+      `Netto-Endkapital: ${formatEuro(r.knNetto)} €`,
+      `Real-Endkapital (nach 2,50 % Inflation): ${formatEuro(r.knReal)} €`,
+      `Realrendite p.a.: ${formatProzent(r.realrendite, 2)} %`,
+    ].join('\n');
+  } catch {
+    return input;
+  }
 }
 
 export const zinsrechner: FormatterConfig = {

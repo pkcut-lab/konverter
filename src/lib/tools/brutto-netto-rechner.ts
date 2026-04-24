@@ -91,7 +91,12 @@ function round2(n: number): number {
 /** Formatiert einen Eurobetrag im deutschen Locale (z. B. 1.234,56). */
 export function formatEuro(n: number): string {
   if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+  try {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } catch {
+    return n.toFixed(2);
+  }
 }
 
 // ───────────────────────────────────────────────
@@ -335,27 +340,32 @@ export function berechne(params: BruttoNettoParams): BruttoNettoResult {
  * wenn das Tool ohne Komponente gerendert wird.
  */
 function fallbackFormat(input: string): string {
-  const brutto = parseDE(input);
-  if (!Number.isFinite(brutto) || brutto < 0) return '';
-  const r = berechne({
-    brutto,
-    steuerklasse: 1,
-    bundesland: 'NW',
-    kirchensteuer: false,
-    beschaeftigungsart: 'vollzeit',
-    pkv: false,
-    pkvBeitragMonatlich: 0,
-    kinderlos: false,
-  });
-  return (
-    `Netto: ${formatEuro(r.netto)} €\n` +
-    `Jahres-Netto: ${formatEuro(r.jahresNetto)} €\n` +
-    `Lohnsteuer: ${formatEuro(r.lohnsteuer)} €\n` +
-    `Rentenversicherung: ${formatEuro(r.rentenversicherung)} €\n` +
-    `Krankenversicherung: ${formatEuro(r.krankenversicherung)} €\n` +
-    `Pflegeversicherung: ${formatEuro(r.pflegeversicherung)} €\n` +
-    `Arbeitslosenversicherung: ${formatEuro(r.arbeitslosenversicherung)} €`
-  );
+  // Defense-in-depth: try/catch fängt unerwartete Fehler in berechne() oder formatEuro() ab.
+  try {
+    const brutto = parseDE(input);
+    if (!Number.isFinite(brutto) || brutto < 0) return '';
+    const r = berechne({
+      brutto,
+      steuerklasse: 1,
+      bundesland: 'NW',
+      kirchensteuer: false,
+      beschaeftigungsart: 'vollzeit',
+      pkv: false,
+      pkvBeitragMonatlich: 0,
+      kinderlos: false,
+    });
+    return (
+      `Netto: ${formatEuro(r.netto)} €\n` +
+      `Jahres-Netto: ${formatEuro(r.jahresNetto)} €\n` +
+      `Lohnsteuer: ${formatEuro(r.lohnsteuer)} €\n` +
+      `Rentenversicherung: ${formatEuro(r.rentenversicherung)} €\n` +
+      `Krankenversicherung: ${formatEuro(r.krankenversicherung)} €\n` +
+      `Pflegeversicherung: ${formatEuro(r.pflegeversicherung)} €\n` +
+      `Arbeitslosenversicherung: ${formatEuro(r.arbeitslosenversicherung)} €`
+    );
+  } catch {
+    return input;
+  }
 }
 
 export const bruttoNettoRechner: FormatterConfig = {

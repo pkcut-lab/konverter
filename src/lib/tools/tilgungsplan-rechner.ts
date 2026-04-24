@@ -11,13 +11,23 @@ import type { FormatterConfig } from './schemas';
 /** Format monetary value to 2 decimal places, German locale (e.g. 1.234,56). */
 export function formatEuro(n: number): string {
   if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+  try {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } catch {
+    return n.toFixed(2);
+  }
 }
 
 /** Format percentage to 2 decimal places, German locale. */
 export function formatPct(n: number): string {
   if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // try/catch: toLocaleString kann in seltenen Umgebungen werfen (z. B. fehlende ICU-Daten)
+  try {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } catch {
+    return n.toFixed(2);
+  }
 }
 
 function round2(n: number): number {
