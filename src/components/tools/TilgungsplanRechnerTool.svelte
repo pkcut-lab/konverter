@@ -227,12 +227,13 @@
           bind:value={betragStr}
           aria-label="Darlehensbetrag in Euro"
           aria-invalid={betragError !== null}
+          aria-describedby={betragError ? 'inp-betrag-error' : undefined}
           autocomplete="off"
         />
         <span class="input-field__unit" aria-hidden="true">€</span>
       </div>
       {#if betragError}
-        <p class="field-error" role="alert">{betragError}</p>
+        <p id="inp-betrag-error" class="field-error" role="alert">{betragError}</p>
       {/if}
     </div>
 
@@ -249,12 +250,13 @@
           bind:value={zinssatzStr}
           aria-label="Sollzinssatz pro Jahr in Prozent"
           aria-invalid={zinssatzError !== null}
+          aria-describedby={zinssatzError ? 'inp-zinssatz-error' : undefined}
           autocomplete="off"
         />
         <span class="input-field__unit" aria-hidden="true">%</span>
       </div>
       {#if zinssatzError}
-        <p class="field-error" role="alert">{zinssatzError}</p>
+        <p id="inp-zinssatz-error" class="field-error" role="alert">{zinssatzError}</p>
       {/if}
     </div>
 
@@ -272,12 +274,13 @@
             bind:value={anfangstilgungStr}
             aria-label="Anfangstilgung pro Jahr in Prozent"
             aria-invalid={anfangstilgungError !== null}
+            aria-describedby={anfangstilgungError ? 'inp-anfangstilgung-error' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">%</span>
         </div>
         {#if anfangstilgungError}
-          <p class="field-error" role="alert">{anfangstilgungError}</p>
+          <p id="inp-anfangstilgung-error" class="field-error" role="alert">{anfangstilgungError}</p>
         {/if}
       </div>
     {:else if modus === 'monatsrate'}
@@ -293,12 +296,13 @@
             bind:value={monatsrateStr}
             aria-label="Monatliche Rate in Euro"
             aria-invalid={monatsrateError !== null}
+            aria-describedby={monatsrateError ? 'inp-monatsrate-error' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">€</span>
         </div>
         {#if monatsrateError}
-          <p class="field-error" role="alert">{monatsrateError}</p>
+          <p id="inp-monatsrate-error" class="field-error" role="alert">{monatsrateError}</p>
         {/if}
       </div>
     {:else}
@@ -314,12 +318,13 @@
             bind:value={laufzeitStr}
             aria-label="Laufzeit in Jahren"
             aria-invalid={laufzeitError !== null}
+            aria-describedby={laufzeitError ? 'inp-laufzeit-error' : undefined}
             autocomplete="off"
           />
           <span class="input-field__unit" aria-hidden="true">Jahre</span>
         </div>
         {#if laufzeitError}
-          <p class="field-error" role="alert">{laufzeitError}</p>
+          <p id="inp-laufzeit-error" class="field-error" role="alert">{laufzeitError}</p>
         {/if}
       </div>
     {/if}
@@ -337,12 +342,13 @@
           bind:value={zinsbindungStr}
           aria-label="Zinsbindungsdauer in Jahren"
           aria-invalid={zinsbindungError !== null}
+          aria-describedby={zinsbindungError ? 'inp-zinsbindung-error' : undefined}
           autocomplete="off"
         />
         <span class="input-field__unit" aria-hidden="true">Jahre</span>
       </div>
       {#if zinsbindungError}
-        <p class="field-error" role="alert">{zinsbindungError}</p>
+        <p id="inp-zinsbindung-error" class="field-error" role="alert">{zinsbindungError}</p>
       {/if}
     </div>
 
@@ -362,12 +368,13 @@
           bind:value={sondertilgungStr}
           aria-label="Jährliche Sondertilgung in Euro"
           aria-invalid={sondertilgungError !== null}
+          aria-describedby={sondertilgungError ? 'inp-sondertilgung-error' : undefined}
           autocomplete="off"
         />
         <span class="input-field__unit" aria-hidden="true">€/Jahr</span>
       </div>
       {#if sondertilgungError}
-        <p class="field-error" role="alert">{sondertilgungError}</p>
+        <p id="inp-sondertilgung-error" class="field-error" role="alert">{sondertilgungError}</p>
       {/if}
     </div>
 
@@ -453,7 +460,7 @@
             <tbody>
               {#each result.rows as row (row.jahr)}
                 <tr class:row--zinsbindungsende={row.isZinsbindungsende}>
-                  <td scope="row" class="cell--year">
+                  <th scope="row" class="cell--year">
                     {row.jahr}
                     {#if row.isZinsbindungsende}
                       <span
@@ -462,7 +469,7 @@
                         title="Ende der Zinsbindungsperiode"
                       >ZB-Ende</span>
                     {/if}
-                  </td>
+                  </th>
                   <td class="cell--num">{formatEuro(row.rateJahr)}</td>
                   <td class="cell--num">{formatEuro(row.zinsenJahr)}</td>
                   <td class="cell--num">{formatEuro(row.tilgungJahr)}</td>
@@ -552,7 +559,7 @@
   }
   .modus-bar__label {
     font-size: var(--font-size-small);
-    color: var(--color-text-muted);
+    color: var(--color-text);
     font-weight: 500;
     letter-spacing: 0.02em;
     white-space: nowrap;
@@ -580,6 +587,11 @@
     color: var(--color-bg);
     border-color: var(--color-text);
   }
+  .modus-pill:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-md);
+  }
 
   /* Inputs Grid */
   .inputs-grid {
@@ -597,7 +609,7 @@
   .input-field__label {
     font-size: var(--font-size-small);
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     letter-spacing: 0.02em;
     display: flex;
     align-items: center;
@@ -607,7 +619,7 @@
   .optional-badge {
     font-size: 0.65rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
     padding: 0 var(--space-1);
@@ -780,7 +792,7 @@
     margin: 0;
     font-size: var(--font-size-small);
     font-weight: 600;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     letter-spacing: 0.02em;
     text-transform: uppercase;
   }
@@ -813,23 +825,28 @@
     text-align: left;
   }
 
-  .tilgungsplan-table tbody td {
+  .tilgungsplan-table tbody td,
+  .tilgungsplan-table tbody th {
     padding: var(--space-2) var(--space-3);
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text);
     text-align: right;
     white-space: nowrap;
+    font-weight: normal;
   }
 
-  .tilgungsplan-table tbody tr:last-child td {
+  .tilgungsplan-table tbody tr:last-child td,
+  .tilgungsplan-table tbody tr:last-child th {
     border-bottom: none;
   }
 
-  .tilgungsplan-table tbody tr:hover td {
+  .tilgungsplan-table tbody tr:hover td,
+  .tilgungsplan-table tbody tr:hover th {
     background: var(--color-surface);
   }
 
-  .row--zinsbindungsende td {
+  .row--zinsbindungsende td,
+  .row--zinsbindungsende th {
     background: color-mix(in oklch, var(--color-accent) 6%, transparent);
   }
 
@@ -945,7 +962,7 @@
   .anschluss-hint {
     margin: 0;
     font-size: 0.6875rem;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
   }
 
   /* Empty state */
@@ -977,12 +994,17 @@
     border-color: var(--color-text);
     color: var(--color-text);
   }
+  .reset-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-md);
+  }
 
   /* Disclaimer */
   .disclaimer {
     margin: 0;
     font-size: 0.6875rem;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
     padding-top: var(--space-3);
@@ -992,7 +1014,7 @@
   .privacy-badge {
     font-size: 0.6875rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
     text-align: center;
     padding-top: var(--space-1);
   }

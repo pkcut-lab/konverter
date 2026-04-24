@@ -7,7 +7,7 @@ tagline: "Tilgungsplan, Sondertilgung-Effekt und Anschlussfinanzierung — alles
 intro: "Berechne deinen individuellen Tilgungsplan für Annuitätendarlehen: Gib Darlehensbetrag, Zinssatz und Anfangstilgung ein — der Rechner zeigt Monatsrate, Gesamtzinsen, Restschuld nach Zinsbindungsende und den vollständigen Jahrestilgungsplan. Optional: Sondertilgungseffekt und Anschlussfinanzierungs-Vorschau direkt im Tool. Alle Berechnungen laufen lokal in deinem Browser — kein Server kennt deine Finanzdaten."
 category: "finance"
 contentVersion: 1
-headingHtml: "Tilgungsplan <em>berechnen</em>"
+headingHtml: "<em>Tilgungsplan</em> berechnen"
 howToUse:
   - "Wähle deinen Berechnungsmodus: Monatsrate aus Tilgungssatz, Laufzeit aus Monatsrate oder Monatsrate aus Laufzeit."
   - "Gib Darlehensbetrag, Sollzinssatz und den modusabhängigen Wert (Anfangstilgung %, Monatsrate oder Laufzeit) ein."
@@ -83,5 +83,5 @@ Einsparung: ca. 18.000&nbsp;€ Zinsen | Laufzeitverkürzung: ca. 30&nbsp;Monate
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
 - **[Mehrwertsteuer Rechner](/de/mehrwertsteuer-rechner)** — Netto, MwSt und Brutto bidirektional berechnen, wenn Bau- oder Handwerkerrechnungen geprüft werden sollen.
-- **[Zeitzonern-Rechner](/de/zeitzonen-rechner)** — Internationale Banktermine und Fristen bei grenzüberschreitenden Finanzierungen schnell koordinieren.
+- **[Zeitzonen-Rechner](/de/zeitzonen-rechner)** — Internationale Banktermine und Fristen bei grenzüberschreitenden Finanzierungen schnell koordinieren.
 - **[Zeichenzähler](/de/zeichenzaehler)** — Kreditantrags-Texte auf Zeichenlimits prüfen, etwa für Online-Formulare mit festen Feldbegrenzungen.
