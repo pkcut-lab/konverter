@@ -381,4 +381,12 @@
     outline: 2px solid var(--color-accent);
     outline-offset: var(--space-1);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .formatter__field,
+    .formatter__ghost-btn,
+    .formatter__toggle-btn {
+      transition: none;
+    }
+  }
 </style>

@@ -22,8 +22,8 @@ faq:
     a: "Steuerklasse III gilt für den besserverdienenden Ehepartner und nutzt das Splitting-Verfahren — monatlich deutlich weniger Lohnsteuer, dafür Pflicht zur Einkommensteuererklärung. Steuerklasse V gilt für den Partner mit dem niedrigeren Einkommen und führt zu den höchsten monatlichen Abzügen. Zusammen ergeben III+V dieselbe Jahressteuer wie zweimal IV."
   - q: "Warum zahle ich Pflegeversicherungs-Zuschlag?"
     a: "Kinderlose Arbeitnehmer ab 23 Jahren zahlen seit 2023 einen Zuschlag: 2,40&nbsp;% statt 1,80&nbsp;%. Eltern mit mindestens einem Kind zahlen 1,80&nbsp;%, bei weiteren Kindern gibt es Abstufungen. In Sachsen gilt eine Sonderregel: Arbeitnehmer zahlen 2,30&nbsp;%, Arbeitgeber nur 1,30&nbsp;%."
-  - q: "Was ist ein Midijob und wie wird er berechnet?"
-    a: "Midijobs liegen im Übergangsbereich 603,01–2.000&nbsp;€/Monat. Arbeitnehmer zahlen reduzierte Sozialversicherungsbeiträge — die Bemessungsgrundlage wird über die Gleitzonenformel mit F-Faktor 0,6619 berechnet. Der volle Sozialversicherungsschutz bleibt erhalten. Am unteren Ende (603,01&nbsp;€) beträgt der Arbeitnehmer-SV-Anteil nur ca. 66&nbsp;% der normalen Last."
+  - q: "Zahle ich als Expat automatisch Kirchensteuer?"
+    a: "Ja — wer bei der Anmeldung Konfessionszugehörigkeit angibt, wird automatisch kirchensteuerpflichtig (8&nbsp;% in Bayern und Baden-Württemberg, 9&nbsp;% in allen anderen Bundesländern). Der Kirchenaustritt beendet die Pflicht ab dem Folgemonat. Der Rechner bietet einen An/Aus-Schalter, um den Unterschied sofort zu sehen."
   - q: "Sind die Ergebnisse exakt wie der Gehaltszettel?"
     a: "Annähernd — systembedingte Abweichungen von ±10–20&nbsp;€ sind üblich und beruhen auf unterschiedlichen Rundungsmethoden nach Steuerrecht (§32a EStG). Gehaltszettel-Software nutzt den exakten PAP-Algorithmus des BMF; dieser Rechner verwendet den vereinfachten §32a-Tarif. Für verbindliche Zahlen empfehlen wir deinen Arbeitgeber oder einen Steuerberater."
 relatedTools: []
@@ -70,17 +70,22 @@ Freigrenze: Jahres-LSt ≤ 18.130&nbsp;€ → kein Soli. Gleitzone: 11,9&nbsp;%
 `SV-Basis = Brutto × [F + (1 − F) × (Brutto − 603) / (2.000 − 603)]`
 Mit F&nbsp;= 0,6619. Am unteren Ende (603,01&nbsp;€) beträgt der Faktor ca. 0,6619; am oberen Ende (2.000&nbsp;€) erreicht er 1,0 (volle SV-Last).
 
+**Quellen 2026:** Beitragssätze und BBG: lohn-info.de; Steuerliche Größen (Grundfreibetrag, Soli-Freigrenze): Bundesfinanzministerium (BMF); Midijob-F-Faktor: §&nbsp;20 SGB IV / Deutsche Rentenversicherung.
+
 ## Anwendungsbeispiele
 
 Drei typische Berechnungen für 2026:
 
-**Beispiel 1 — Vollzeit SK I, NRW, 3.500&nbsp;€ Brutto:**
+### Beispiel 1 — Vollzeit SK I, NRW, 3.500&nbsp;€ Brutto
+
 Rentenversicherung: 325,50&nbsp;€ · Krankenversicherung: 280,88&nbsp;€ · Pflegeversicherung (mit Kind): 63,00&nbsp;€ · Arbeitslosenversicherung: 45,50&nbsp;€ · Lohnsteuer SK I: ca. 420–460&nbsp;€ · Soli: 0&nbsp;€ · **Netto: ca. 2.290–2.330&nbsp;€**
 
-**Beispiel 2 — Vollzeit SK III, NRW, 3.500&nbsp;€ Brutto (Splitting):**
+### Beispiel 2 — Vollzeit SK III, NRW, 3.500&nbsp;€ Brutto (Splitting)
+
 Lohnsteuer SK III: ca. 160–200&nbsp;€ (Splitting-Vorteil). **Netto: ca. 2.540–2.580&nbsp;€** — rund 250&nbsp;€ mehr als SK I durch Ehegattensplitting.
 
-**Beispiel 3 — Midijob, 1.200&nbsp;€ Brutto:**
+### Beispiel 3 — Midijob, 1.200&nbsp;€ Brutto
+
 F-Faktor greift; SV-Basis ≈ 899&nbsp;€. Rentenversicherung: 83,60&nbsp;€ statt 111,60&nbsp;€ bei Vollzeit. **Netto: ca. 1.025–1.050&nbsp;€** — ca. 8&nbsp;% weniger Abzüge als bei regulärer Vollzeitstelle.
 
 ## Häufige Einsatzgebiete
