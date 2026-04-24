@@ -7,7 +7,7 @@ metaDescription: "Hintergrund aus Videos entfernen — KI-basiert, direkt im Bro
 tagline: "Dein Video verlässt nie deinen Browser — kein Upload, kein Login."
 intro: "Alle bekannten Alternativen — Kapwing, VEED, Runway, CapCut — laden dein Video auf einen fremden Server. Das Tool hier macht es anders: der Hintergrund wird vollständig in deinem Browser entfernt, frame für frame, ohne dass eine einzige Sekunde deines Videos das Gerät verlässt. Basis ist das BiRefNet_lite-Modell (MIT-Lizenz, ACCV 2024 Best-in-Class für hochauflösende Segmentierung) — für feine Haar- und Fellkanten der aktuelle Stand der Technik. Als Unscreen seit Dezember 2025 offline ist, bleibt kaum eine kostenlose, loginfreie Option. Diese ist eine davon."
 howToUse:
-  - "Video per Drag-and-Drop ablegen oder über den Datei-Dialog öffnen (MP4, MOV, WebM, bis 500 MB)"
+  - "Video per Drag-and-Drop ablegen oder über den Datei-Dialog öffnen (MP4, MOV, WebM, bis FullHD 1920×1080, bis 500 MB)"
   - "Modell wählen: Qualität (BiRefNet_lite — SOTA Haar) oder Schnell (MODNet — für lange Videos)"
   - "Hintergrund-Modus auswählen: Transparent, Einfarbig, Bild oder Video"
   - "Modell-Download abwarten (ca. 4 s bei 100 Mbit — danach gecacht, kein zweiter Download)"
@@ -23,8 +23,8 @@ faq:
     a: "Transparent: WebM mit VP9+Alpha (Chrome, Firefox, Edge) oder MP4 mit Greenscreen #00FF00 für Safari, da Safari VP9-Alpha nicht unterstützt. Einfarbig und Bild-Hintergrund: MP4 mit H.264. Als Zweit-Export steht eine PNG-Sequenz als ZIP zur Verfügung — für DaVinci Resolve, Premiere Pro und After Effects."
   - q: "Was bedeutet Flimmern an Haarkanten?"
     a: "BiRefNet_lite ist ein Bild-Modell, kein Video-Modell. Es verarbeitet jeden Frame unabhängig und hat kein Gedächtnis für vorherige Frames. An feinen Haarkanten kann die Alpha-Maske von Frame zu Frame um 1–2 Pixel schwanken, was als Flimmern sichtbar wird. Der Modus Qualität minimiert das — für maximale Stabilität empfiehlt sich nachträgliches Edge-Smoothing in der Schnitt-Software."
-  - q: "Wie groß darf die Video-Datei sein?"
-    a: "Das Soft-Limit liegt bei 500 MB. Für Dateien über 1 GB zeigt das Tool eine Warnung mit geschätzter Verarbeitungszeit. Es gibt kein hartes Limit — du entscheidest, ob du fortfahren möchtest. 4K mit 90 Sekunden Laufzeit dauert auf einem modernen Desktop-Rechner typischerweise 8–12 Minuten."
+  - q: "Welche Auflösungen werden unterstützt?"
+    a: "Das Tool verarbeitet Videos bis FullHD (1920×1080). Dateien mit höherer Auflösung werden abgewiesen — Browser-ML-Modelle arbeiten intern mit maximal 1024×1024 Pixel; 4K würde unkontrolliertes Resampling erzeugen und die Kantenschärfe verschlechtern. Für Dateien über 500 MB zeigt das Tool eine Warnung mit geschätzter Verarbeitungszeit."
 relatedTools:
   - hevc-zu-h264
   - hintergrund-entfernen
@@ -126,16 +126,17 @@ automatisch MP4 mit Greenscreen-Farbe `#00FF00` als Fallback.
 manueller Flag-Aktivierung frei. Dort läuft das Modell im CPU-Modus —
 die Verarbeitung dauert 3–5× länger.
 
-**Dateigröße:** Soft-Limit 500 MB. Für 4K-Videos über fünf Minuten Länge
-zeigt das Tool eine ETA-Schätzung, bevor die Verarbeitung beginnt.
+**Auflösung:** Maximale Eingabe FullHD (1920×1080). Höhere Auflösungen werden
+abgewiesen (D3 — Browser-ML-Modelle samplen 4K intern auf 1024px, was sichtbare
+Weichzeichner-Artefakte auf Haarkanten erzeugt). **Dateigröße:** Soft-Limit 500 MB.
 
 ## Häufige Fragen
 
 ### Wie entferne ich den Hintergrund aus einem Video ohne Upload?
 
-Du ziehst das Video in die Drop-Zone auf dieser Seite. Das KI-Modell läuft
-direkt in deinem Browser — kein Server erhält deine Datei. Das fertige Video
-lädst du als WebM (transparent) oder MP4 herunter.
+Du ziehst das Video (bis FullHD 1920×1080, bis 500 MB) in die Drop-Zone auf
+dieser Seite. Das KI-Modell läuft direkt in deinem Browser — kein Server erhält
+deine Datei. Das fertige Video lädst du als WebM (transparent) oder MP4 herunter.
 
 ### Was ist eine Alternative zu Unscreen?
 
