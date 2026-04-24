@@ -94,6 +94,14 @@ Autonomie-Gate-Resolve → Backlog-Pick → Auto-Refill-Fallback →
 Dispatch → Error-Pattern-Detection (§8.5) → Daily-Digest-Update → Memory
 ```
 
+**Neu in v1.5 (2026-04-24, Patch 7 „Leer-Inbox ≠ Exit"):**
+- **Consumer-Loops laufen IMMER, auch wenn Inbox leer.** Der Paperclip-Skill sagt
+  "no assignments → exit heartbeat". Das gilt NICHT für CEO. CEO überschreibt
+  diese Regel: §3.4 Loop B + C laufen jeden Heartbeat unabhängig vom Inbox-Status.
+  Cost: 2-3 API-Calls/tick. Benefit: kein Orphan-Build der Tage brach liegt.
+  Incident 2026-04-24: 3 Builds + 4 Round-3-Completions blieben 3h ohne
+  Downstream weil leerer Inbox + Paperclip-Skill-Exit kollidierten.
+
 **Neu in v1.4 (2026-04-24, Patch 6 „Agenten arbeiten ohne Stop"):**
 - Step 7.5 **Consumer-Loops (§3.4)** — MUSS JEDEN Heartbeat laufen, bevor
   Gate-Resolve oder Backlog-Pick. Verhindert Orphan-Pattern (Dossier done
@@ -430,21 +438,56 @@ Live-Alarm — der User sieht es im Digest.
 
 **Trigger.** `Tool-Build: <slug>`-Ticket mit `status=done`.
 
-**Check.** Hat der Build-Ticket bereits 8 Children mit Titeln
-`Critic-Review-Round-1: <slug> (<critic>)`? Wenn ja → skip. Wenn nein →
-trigger §3.5 Fan-Out (siehe unten).
+**Check (v1.5 — title-scan statt nur parentId).** Statt nur Children des
+Build-Tickets zu prüfen: suche global nach Tickets mit Titel
+`Critic-Review-Round-1: <slug> (<critic>)` (beliebiger Status). Hat bereits
+≥ 8 solcher Tickets → skip. Hat < 8 → trigger §3.5 Fan-Out.
+
+**Warum title-scan.** Round-1-Critics werden als Children (parentId=build)
+erstellt. Aber der `parentId`-Filter der Paperclip-API kann ungenaue Ergebnisse
+liefern. title-scan ist robuster und findet auch nachträglich korrigierte Tickets.
 
 **Self-Heal.** Exakt die Prozedur aus §3.5, jeden Heartbeat gecheckt.
 
-#### §3.4.3 Loop C — All-Critics-Done → Aggregation
+**Leer-Inbox-Ausnahme (v1.5).** Loop B läuft auch dann, wenn die CEO-Inbox leer
+ist und der Paperclip-Skill sagen würde „exit cleanly". Der Scan kostet 1 API-
+Call und verhindert Orphan-Builds die sonst Tage brachen.
 
-**Trigger.** Alle 8 Children eines Build-Tickets haben `status=done`.
+#### §3.4.3 Loop C — All-Critics-Done → Aggregation (v1.5 — multi-round)
+
+**Trigger (erweitert).** Entweder:
+  a) Alle 8 Children eines Build-Tickets (Round-1, parentId-basiert), ODER
+  b) Alle 8 Tickets mit Titel `Critic-Review-Round-N: <slug> (<critic>)` für
+     dasselbe N und denselben slug haben `status=done` (Round-2+, **title-scan**,
+     weil Round-2+ Tickets kein parentId bekommen — bekannter API-Gap seit
+     2026-04-24 Patch).
+
+**Wie title-scan für Loop C:**
+```
+done_all_issues = GET /api/companies/{id}/issues?status=done&limit=300
+for each round N in [1,2,3]:
+    for each slug in known_slugs:
+        r_critics = [i for i in done_all_issues
+                     if f"Critic-Review-Round-{N}: {slug}" in i["title"]]
+        if len(r_critics) == 8:
+            # Check if downstream already created
+            if not ticket_exists(f"Meta-Review: {slug}") and not any_round_N_plus_1:
+                trigger_aggregation_and_gate_resolve(slug, N, r_critics)
+```
+
+**known_slugs:** Alle Tool-Build:-Ticket-Slugs aus done-Tickets extrahieren.
 
 **Check.** Hat `tasks/awaiting-critics/<build-ticket>/` bereits eine
-`merged-summary.md`? Wenn ja → skip. Wenn nein → trigger §3.6 Aggregation +
-§7 Gate-Resolve.
+`merged-summary.md` für die aktuelle Runde? Wenn ja → skip. Wenn nein →
+trigger §3.6 Aggregation + §7 Gate-Resolve.
+
+**Meta-Review-Sentinel.** Wenn `Meta-Review: <slug>` bereits existiert (egal
+welcher Status) → skip Loop C für diesen slug. Verhindert Duplicate-Dispatch.
 
 **Self-Heal.** Exakt die Prozedur aus §3.6.
+
+**Leer-Inbox-Ausnahme (v1.5).** Loop C läuft auch bei leerem Inbox. Scan
+aller done-Tickets ist Pflicht — 1-2 API-Calls pro Heartbeat, kein Overhead.
 
 #### §3.4.4 Orphan-Pattern-Escalation — VERBOTEN ohne Hard-Blocker
 
