@@ -43,6 +43,7 @@ can_dispatch:
   - cross-tool-consistency-auditor
   - meta-reviewer
   - polish-agent
+  - end-reviewer            # v1.2 — Triple-Pass Final Gate vor Freigabe-Liste
   - skill-scout
   - uptime-sentinel
   # Phase 3+
@@ -313,6 +314,7 @@ AGENTS.md ist die authoritative Quelle (Paperclip-Runtime lädt AGENTS.md als
 | `image-optimize` | image-optimizer | — (wenn Bilder im Tool) |
 | `polish-rework` | tool-builder | merged-critic (Review-Round 2) |
 | `meta-review` | meta-reviewer | — (post-Round-1, per-tool Check) |
+| `end-review` | end-reviewer | — (post-meta-review, Triple-Pass bis Pass-3 clean, §7.6) |
 | `legal-release-audit` | legal-auditor | — (pre-ship Gate) |
 | `consistency-audit` | cross-tool-consistency-auditor | — (post-ship, per-category) |
 | `post-ship-seo-audit` | seo-auditor | — (post-deploy, live-URL) |
@@ -647,7 +649,7 @@ def route_to_polish(ticket, target_slug, score, critic_reports):
     ticket.polish_rounds += 1
 
 def route_to_meta_review(ticket):
-    """v1.2 Meta-Review-Dispatch. Pflicht vor Ship."""
+    """v1.2 Meta-Review-Dispatch. Pflicht vor End-Review-Triple-Pass."""
     META_REVIEWER_ID = "46ba39a7-3d4a-4659-8ba6-0f2b3babae1f"
     issue = paperclip_create_issue(
         title=f"Meta-Review: {ticket.tool_slug}",
@@ -657,6 +659,155 @@ def route_to_meta_review(ticket):
         assigneeAgentId=META_REVIEWER_ID,
         target_slug=ticket.tool_slug,
     )
+    # Nach meta-review-done dispatcht CEO end-review Pass 1 (siehe §7.6).
+```
+
+## 7.6 End-Review Triple-Pass (v1.2 — 2026-04-24, „keine Kompromisse")
+
+**Zweck.** Jedes Tool durchläuft nach Meta-Review eine dreistufige unabhängige
+End-Reviewer-Prüfung (`end-reviewer`-Agent). Erst nach `pass_number=3` und
+`verdict=clean` ist das Tool ship-ready und wird in
+`docs/paperclip/freigabe-liste.md` appendiert. Vorher **kein** Deploy, **kein**
+§7.5-Append. Keine Kompromisse (User-Policy 2026-04-24).
+
+**Warum drei Passes.**
+- Pass 1: findet die offensichtlichen Blocker aus Endnutzer-Sicht (das holistische
+  Bild, das 8 parallele Critics + Meta-Review nicht liefern).
+- Pass 2: verifiziert, ob Pass-1-Blocker gefixt sind, UND fängt Regressionen,
+  die der Fix eingeführt hat.
+- Pass 3: Final-Verdict. Wenn hier noch Blocker = **User-Eskalation**, weil
+  weitere Rework-Loops strukturell sinnlos wären (Dossier-Unklarheit,
+  Architektur-Limit, Library-Constraint).
+
+**Trigger.** `Meta-Review: <slug>`-Ticket erreicht `status=done` (Consumer-Loop
+analog §3.4).
+
+**Dispatch-Logik (pro Tool).**
+
+```python
+END_REVIEWER_ID = "<uuid>"       # aus /api/agents nach Registrierung
+TOOL_BUILDER_ID = "deea8a61-3c70-4d41-b43a-bc104b9b45ac"
+
+def dispatch_end_review(ticket, pass_number, previous_pass_ref=None):
+    """Erzeugt end-review-Ticket für den genannten Pass."""
+    title = f"End-Review Pass {pass_number}: {ticket.tool_slug}"
+    # Frontmatter-ähnliche Meta im Ticket-Description
+    desc = f"""
+**ticket_type:** end-review
+**pass_number:** {pass_number}
+**target_slug:** {ticket.tool_slug}
+**tool_id:** {ticket.tool_id}
+**dossier_ref:** {ticket.dossier_ref}
+**build_commit_sha:** {current_head_sha_for(ticket.tool_slug)}
+**previous_pass_ref:** {previous_pass_ref or 'null'}
+
+**Task:** Deep-End-Review gemäß
+`docs/paperclip/bundle/agents/end-reviewer/AGENTS.md` §2.
+Output: `tasks/end-review-{ticket.tool_slug}-pass{pass_number}.md`
+Bei Pass 3 + verdict=clean: `docs/paperclip/freigabe-liste.md` append.
+"""
+    return paperclip_create_issue(
+        title=title,
+        description=desc,
+        priority="high",
+        assigneeAgentId=END_REVIEWER_ID,
+        target_slug=ticket.tool_slug,
+    )
+
+
+def consume_end_review_done(end_review_ticket):
+    """Self-Heal-Loop nach end-review-done (analog §3.4)."""
+    verdict_file = f"tasks/end-review-{end_review_ticket.tool_slug}-pass{end_review_ticket.pass_number}.md"
+    verdict = yaml_front(verdict_file)['verdict']
+    pass_n = end_review_ticket.pass_number
+
+    if verdict == "clean":
+        if pass_n == 3:
+            # Freigabe-Liste wurde bereits vom end-reviewer appendiert (§5 dort).
+            # CEO routet direkt zu deploy.
+            route_to_deploy_queue(end_review_ticket.parent_ticket)
+        else:
+            # Pass 1 oder Pass 2 clean (rar, aber möglich): überspringe nicht,
+            # dispatch direkt den nächsten Pass. User-Policy: keine Kompromisse.
+            dispatch_end_review(end_review_ticket.parent_ticket,
+                                pass_number=pass_n + 1,
+                                previous_pass_ref=verdict_file)
+
+    elif verdict == "blockers_found":
+        # Dispatch Rework-Ticket an Tool-Builder, dann nächster End-Review-Pass
+        # NACH Rework-commit (Consumer-Loop erkennt commit und chained automatisch).
+        blockers = parse_blockers(verdict_file)
+        rework = paperclip_create_issue(
+            title=f"End-Review-Rework Pass {pass_n}: {end_review_ticket.tool_slug}",
+            description=f"End-Reviewer Pass {pass_n} hat Blocker gemeldet. "
+                        f"Fixe **nur** die in {verdict_file} §Blocker aufgeführten Punkte. "
+                        f"Kein Rescope, keine Feature-Additions. "
+                        f"Nach Commit triggert Consumer-Loop automatisch End-Review Pass {pass_n+1}.",
+            priority="high",
+            assigneeAgentId=TOOL_BUILDER_ID,
+            parentId=end_review_ticket.parent_ticket.id,
+            # Meta für Consumer-Loop: welcher nächster End-Review-Pass
+            next_end_review_pass=pass_n + 1,
+            previous_pass_ref=verdict_file,
+        )
+
+    elif verdict == "blockers_after_3_passes":
+        # Pass 3 nach zwei Reworks immer noch Blocker → USER-ESKALATION.
+        # Kein Pass 4, kein Auto-Park. User muss entscheiden.
+        write_live_alarm(
+            type="end_review_exhausted",
+            slug=end_review_ticket.tool_slug,
+            verdict_file=verdict_file,
+            blockers_summary=parse_blockers_short(verdict_file),
+        )
+        # Tool-Build-Ticket bleibt offen, Status `blocked`, User antwortet im
+        # Ticket-Thread → CEO nimmt User-Direktive auf.
+
+
+def consume_end_review_rework_done(rework_ticket):
+    """Nach Tool-Builder-Rework-Commit → dispatche den angekündigten nächsten Pass."""
+    dispatch_end_review(
+        ticket=rework_ticket.parent_ticket,
+        pass_number=rework_ticket.next_end_review_pass,
+        previous_pass_ref=rework_ticket.previous_pass_ref,
+    )
+```
+
+**Integration in den 7er-Gate-Flow.** Die bestehende Funktion
+`route_to_meta_review(ticket)` triggert NICHT direkt `route_to_deploy_queue` —
+sie endet bei `meta-review-done`. Neuer Pfad:
+
+1. `meta-review: <slug>` → `status=done` → Consumer-Loop erkennt Done
+2. `dispatch_end_review(ticket, pass_number=1)`
+3. `end-review pass 1` → `status=done` → `consume_end_review_done`:
+   - wenn blockers → Rework → Tool-Builder-Commit → `consume_end_review_rework_done` → Pass 2
+   - wenn clean → Pass 2 direkt
+4. Wiederhole bis Pass 3 clean oder Pass 3 mit Blocker (User-Eskalation)
+5. Erst bei Pass 3 clean: `route_to_deploy_queue` + `§7.5 append completed-tools.md`
+
+**Rework-Counter-Regel.** Der `rework_counter` aus §7.15 Autonomie-Gate bleibt
+unabhängig. End-Review hat einen eigenen Pass-Counter (1/2/3). Eine
+End-Review-Rework zählt NICHT als merged-critic-Rework — der Score-basierte
+Autonomie-Gate wurde vorher schon passiert.
+
+**Hard-Caps End-Review-Phase.**
+- Max 3 Passes. Kein Pass 4.
+- Max 2 Rework-Loops (zwischen Pass 1→2 und Pass 2→3).
+- Wenn Pass 3 noch Blocker: **zwingend** User-Eskalation (Live-Alarm Typ
+  `end_review_exhausted`), nicht stillschweigend auf "ship-as-is".
+- `rework_counter` pro End-Review-Rework += 1 im **separaten** Feld
+  `end_review_rework_counter`, damit §7.15 nicht interferiert.
+
+**Freigabe-Liste-Append.** Der `end-reviewer`-Agent appendiert selbst bei
+Pass-3 clean (`docs/paperclip/bundle/agents/end-reviewer/AGENTS.md` §5). CEO
+prüft lediglich, dass die Zeile tatsächlich erschienen ist, bevor
+`route_to_deploy_queue` feuert:
+
+```bash
+if ! grep -qE "\\|\\s*${slug}\\s*\\|" docs/paperclip/freigabe-liste.md; then
+  echo "ERROR: End-Reviewer meldete Pass 3 clean, aber Slug $slug fehlt in freigabe-liste.md"
+  # Self-Heal: appendiere Zeile selbst mit end-review-pass3-Referenz, Digest-Warnung
+fi
 ```
 
 ## 7.5 Completed-Tools-List-Append (Post-Deploy-Hook, v1.1)
