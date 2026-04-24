@@ -12,20 +12,19 @@ import { parseToolConfig } from '../../../src/lib/tools/schemas';
 // ──────────────────────────────────────────────
 
 describe('kreditrechner config', () => {
-  it('parses as valid CalculatorConfig', () => {
+  it('parses as valid FormatterConfig', () => {
     const r = parseToolConfig(kreditrechner);
     expect(r.ok).toBe(true);
   });
 
   it('has correct identity fields', () => {
     expect(kreditrechner.id).toBe('loan-calculator');
-    expect(kreditrechner.type).toBe('calculator');
+    expect(kreditrechner.type).toBe('formatter');
     expect(kreditrechner.categoryId).toBe('finance');
   });
 
-  it('has at least one input and one output', () => {
-    expect(kreditrechner.inputs.length).toBeGreaterThanOrEqual(1);
-    expect(kreditrechner.outputs.length).toBeGreaterThanOrEqual(1);
+  it('has mode custom', () => {
+    expect(kreditrechner.mode).toBe('custom');
   });
 
   it('rejects invalid modification', () => {
@@ -182,24 +181,3 @@ describe('computeKreditErgebnis — ungültige Eingaben', () => {
   });
 });
 
-// ──────────────────────────────────────────────
-// compute wrapper (CalculatorConfig interface)
-// ──────────────────────────────────────────────
-
-describe('kreditrechner.compute — wrapper', () => {
-  it('gibt monatsrate für gültige Eingaben zurück', () => {
-    const r = kreditrechner.compute({ kreditbetrag: 100_000, sollzins: 4, laufzeit: 120, sondertilgung: 0 });
-    expect(r.monatsrate).toBeCloseTo(1012.45, 0);
-  });
-
-  it('gibt NaN-Felder für ungültige Eingaben zurück', () => {
-    const r = kreditrechner.compute({ kreditbetrag: 0, sollzins: 4, laufzeit: 120, sondertilgung: 0 });
-    expect(r.monatsrate).toBeNaN();
-  });
-
-  it('berechnet Einsparung durch Sondertilgung', () => {
-    const r = kreditrechner.compute({ kreditbetrag: 100_000, sollzins: 4, laufzeit: 120, sondertilgung: 5_000 });
-    expect(r.ersparnis_zinsen).toBeGreaterThan(0);
-    expect(r.ersparnis_monate).toBeGreaterThan(0);
-  });
-});

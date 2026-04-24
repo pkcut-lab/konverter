@@ -1,4 +1,4 @@
-import type { CalculatorConfig } from './schemas';
+import type { FormatterConfig } from './schemas';
 
 /**
  * Kreditrechner — Annuitätendarlehen + Sondertilgungs-Sparrechner.
@@ -153,34 +153,12 @@ export function computeKreditErgebnis(
   };
 }
 
-function computeWrapper(inputs: Record<string, number>): Record<string, number> {
-  const { kreditbetrag = NaN, sollzins = NaN, laufzeit = NaN, sondertilgung = 0 } = inputs;
-  const r = computeKreditErgebnis(kreditbetrag, sollzins, laufzeit, sondertilgung);
-  return {
-    monatsrate: r.monatsrate,
-    gesamtzinsen: r.gesamtzinsen,
-    gesamtkosten: r.gesamtkosten,
-    ersparnis_zinsen: r.ersparnis_zinsen,
-    ersparnis_monate: r.ersparnis_monate,
-  };
-}
-
-export const kreditrechner: CalculatorConfig = {
+export const kreditrechner: FormatterConfig = {
   id: 'loan-calculator',
-  type: 'calculator',
+  type: 'formatter',
   categoryId: 'finance',
-  inputs: [
-    { id: 'kreditbetrag', label: 'Kreditbetrag (€)' },
-    { id: 'sollzins', label: 'Sollzins p.a. (%)' },
-    { id: 'laufzeit', label: 'Laufzeit (Monate)' },
-    { id: 'sondertilgung', label: 'Sondertilgung p.a. (€)' },
-  ],
-  compute: computeWrapper,
-  outputs: [
-    { id: 'monatsrate', label: 'Monatsrate (€)' },
-    { id: 'gesamtzinsen', label: 'Gesamtzinsen (€)' },
-    { id: 'gesamtkosten', label: 'Gesamtkosten (€)' },
-    { id: 'ersparnis_zinsen', label: 'Ersparnis Zinsen (€)' },
-    { id: 'ersparnis_monate', label: 'Ersparnis (Monate)' },
-  ],
+  mode: 'custom',
+  // format() is a required FormatterConfig field; the custom KreditrechnerTool
+  // UI handles all logic directly via computeKreditErgebnis / buildTilgungsplan.
+  format: (input: string) => input,
 };
