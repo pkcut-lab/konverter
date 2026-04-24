@@ -7,7 +7,7 @@ tagline: "Monatsrate, Tilgungsplan und Sondertilgung-Ersparnis — SCHUFA-neutra
 intro: "Berechne deine Kreditrate, Gesamtzinsen und den vollständigen Tilgungsplan — anonym und direkt im Browser. Gibt eine jährliche Sondertilgung ein und sieh sofort, wie viel Zinsen du sparst und um wie viele Monate du früher schuldenfrei bist. Kein Server-Upload, keine SCHUFA-Abfrage, kein Tracking."
 category: "finance"
 contentVersion: 1
-headingHtml: "Kredit <em>berechnen</em>"
+headingHtml: "<em>Kreditrate</em> berechnen"
 howToUse:
   - "Gib Kreditbetrag, Sollzins p.a. und Laufzeit in Monaten ein — die Monatsrate erscheint sofort."
   - "Öffne den Tilgungsplan für eine Jahresübersicht: wie viel Zins- und Tilgungsanteil du monatlich zahlst."
