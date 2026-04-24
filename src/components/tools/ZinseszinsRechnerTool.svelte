@@ -95,22 +95,11 @@
     terError !== null,
   );
 
-  // ---- B3 Perf: Defer initial computation to avoid TBT on page load ----
-  let isReady = $state(false);
-
-  $effect(() => {
-    if (typeof requestIdleCallback !== 'undefined') {
-      const id = requestIdleCallback(() => { isReady = true; });
-      return () => cancelIdleCallback(id);
-    } else {
-      const id = setTimeout(() => { isReady = true; }, 0);
-      return () => clearTimeout(id);
-    }
-  });
-
   // ---- Berechnung ----
+  // Synchronous — requestIdleCallback gate removed (R3 fix): it caused LCP
+  // regression (+171%) under CPU-throttled Lighthouse (P1/P6, KON-300).
   const result = $derived.by(() => {
-    if (!isReady || hasErrors) return null;
+    if (hasErrors) return null;
     const k0 = Number.isFinite(anfangskapital) ? anfangskapital : 0;
     const r = Number.isFinite(sparrate) ? sparrate : 0;
     const i = Number.isFinite(inflationsrate) ? inflationsrate : 2;
@@ -130,6 +119,8 @@
     const text = fmt(raw);
     try {
       await navigator.clipboard.writeText(text);
+      // C8 [Phase-2-deferred]: dispatch tool-usage analytics event here once
+      // shared useToolTracking() infrastructure is live (conversion-critic C8).
       if (which === 'nominal') { copyNominal = 'copied'; setTimeout(() => (copyNominal = 'idle'), 1500); }
       if (which === 'netto')   { copyNetto   = 'copied'; setTimeout(() => (copyNetto   = 'idle'), 1500); }
       if (which === 'real')    { copyReal    = 'copied'; setTimeout(() => (copyReal    = 'idle'), 1500); }
@@ -306,7 +297,7 @@
               onclick={() => copyValue(result.endkapital_nominal, 'nominal')}
             >
               {#if copyNominal === 'copied'}
-                <span aria-hidden="true">✓</span> Kopiert
+                Kopiert
               {:else}
                 <span aria-hidden="true">⧉</span> Kopieren
               {/if}
@@ -330,7 +321,7 @@
               onclick={() => copyValue(result.endkapital_netto, 'netto')}
             >
               {#if copyNetto === 'copied'}
-                <span aria-hidden="true">✓</span> Kopiert
+                Kopiert
               {:else}
                 <span aria-hidden="true">⧉</span> Kopieren
               {/if}
@@ -354,7 +345,7 @@
               onclick={() => copyValue(result.endkapital_real, 'real')}
             >
               {#if copyReal === 'copied'}
-                <span aria-hidden="true">✓</span> Kopiert
+                Kopiert
               {:else}
                 <span aria-hidden="true">⧉</span> Kopieren
               {/if}
