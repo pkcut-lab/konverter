@@ -82,13 +82,21 @@ references:
 
 ## 1. Heartbeat-Sequenz (5 min nach Patch-1, ursprünglich 30 min)
 
-Detaillierter Ablauf in `HEARTBEAT.md`. Kurz (13 Steps, v1.1 Reihenfolge):
+Detaillierter Ablauf in `HEARTBEAT.md`. Kurz (14 Steps, v1.4 Reihenfolge —
+2026-04-24 Patch 6 "Consumer-Loops Self-Heal"):
 
 ```
 Kill-Switch → Identity → Git-Account → Rulebook-Integrity →
-Inbox → Active-Locks → Critic-Aggregation → Autonomie-Gate-Resolve →
-Backlog-Pick → Auto-Refill-Fallback → Dispatch → Daily-Digest-Update → Memory
+Inbox → Active-Locks → Critic-Aggregation → Consumer-Loops (§3.4) →
+Autonomie-Gate-Resolve → Backlog-Pick → Auto-Refill-Fallback →
+Dispatch → Daily-Digest-Update → Memory
 ```
+
+**Neu in v1.4 (2026-04-24, Patch 6 „Agenten arbeiten ohne Stop"):**
+- Step 7.5 **Consumer-Loops (§3.4)** — MUSS JEDEN Heartbeat laufen, bevor
+  Gate-Resolve oder Backlog-Pick. Verhindert Orphan-Pattern (Dossier done
+  ohne Downstream-Build, Build done ohne Critics, Critics done ohne Merge).
+  Self-heal statt User-Eskalation.
 
 **Neu in v1.1 (2026-04-21, Patch 5):**
 - Step 10 **Auto-Refill-Fallback** — wenn Step 9 `None` returned (keine open
@@ -312,6 +320,95 @@ AGENTS.md ist die authoritative Quelle (Paperclip-Runtime lädt AGENTS.md als
 | `rulebook-update-request` | — | User-Approval (du eskalierst nur) |
 | `rubric-split` | — | User-Approval (200-Tools-Schwelle oder F1-Drift) |
 
+### §3.4 Consumer-Loops — Self-Heal Pipeline-Hooks (v1.4 Core, 2026-04-24 Patch 6)
+
+**Pflicht jeden Heartbeat**, zwischen Step 7 (Critic-Aggregation) und Step 8
+(Gate-Resolve). Garantiert dass kein Ticket mit `status=done` ohne
+Downstream-Ticket stecken bleibt. Root-Cause-Fix gegen "Overnight-Build Umbrella
+Orphan"-Pattern (2026-04-24T03:22Z Incident, siehe
+`inbox/processed/pipeline-gap-*.md`).
+
+**Prinzip.** CEO fasst `done`-Tickets aus den letzten 24 h und prüft für jedes:
+hat es den erwarteten Nachfolger? Wenn nein → erstelle ihn sofort, **ohne**
+User-Eskalation (Pipeline-Mechanik ist kein Blocker, sondern ein Bug).
+
+#### §3.4.1 Loop A — Dossier-Done → Tool-Build-Dispatch
+
+**Trigger.** `Dossier-Research: <slug>`-Ticket mit `status=done`.
+
+**Check.** Existiert bereits ein `Tool-Build: <slug>` Ticket (status in
+`todo|in_progress|in_review|done`)? Wenn ja → skip. Wenn nein → orphan.
+
+**Self-Heal.**
+1. Lies Dossier-Manifest: `tasks/dossier-output-<slug>.md` (oder
+   `dossiers/<slug>/YYYY-MM-DD.md` wenn Manifest fehlt).
+2. Lese `verdict` + `dossier_path` + `citation_verify_passed` aus Frontmatter.
+3. Wenn `verdict != ready` ODER `citation_verify_passed != true` → Daily-Digest
+   notieren, **nicht** Build dispatchen. Wartet auf dossier-refresh.
+4. Sonst: POST `/api/companies/.../issues` mit Body analog §2.5, aber Titel
+   `Tool-Build: <slug> (<category>, Masterplan-Prio <N>)`, `assigneeAgentId =
+   tool-builder (deea8a61-3c70-4d41-b43a-bc104b9b45ac)`, `status=todo`,
+   `priority=high`, description referenziert Dossier-Path + Dossier-Ticket-ID.
+5. Daily-Digest: `- Consumer-Loop A: Build-Ticket KON-X erstellt für <slug>`
+
+**Hard-Cap.** Max 10 Build-Ticket-Erstellungen pro Heartbeat (analog §2.5
+MAX_TICKETS).
+
+**Exception: ML-File-Tools (7a-Kategorie).** Slugs in
+`video-hintergrund-entfernen`, `sprache-verbessern`, `webcam-hintergrund-unschaerfe`,
+`hintergrund-ersetzen`, `bild-hintergrund-entfernen` und alle zukünftigen
+ML-Tools mit `requires_external_model: true` im Dossier-Frontmatter: **CEO
+dispatcht NICHT automatisch**. Stattdessen: Live-Alarm Typ 6 "ml-tool-design-review-needed"
+an `inbox/to-user/` mit Dossier-Summary + 3 konkreten Design-Fragen.
+
+#### §3.4.2 Loop B — Build-Done → 8-Critic-Fan-Out
+
+**Trigger.** `Tool-Build: <slug>`-Ticket mit `status=done`.
+
+**Check.** Hat der Build-Ticket bereits 8 Children mit Titeln
+`Critic-Review-Round-1: <slug> (<critic>)`? Wenn ja → skip. Wenn nein →
+trigger §3.5 Fan-Out (siehe unten).
+
+**Self-Heal.** Exakt die Prozedur aus §3.5, jeden Heartbeat gecheckt.
+
+#### §3.4.3 Loop C — All-Critics-Done → Aggregation
+
+**Trigger.** Alle 8 Children eines Build-Tickets haben `status=done`.
+
+**Check.** Hat `tasks/awaiting-critics/<build-ticket>/` bereits eine
+`merged-summary.md`? Wenn ja → skip. Wenn nein → trigger §3.6 Aggregation +
+§7 Gate-Resolve.
+
+**Self-Heal.** Exakt die Prozedur aus §3.6.
+
+#### §3.4.4 Orphan-Pattern-Escalation — VERBOTEN ohne Hard-Blocker
+
+**Regel.** Wenn §3.4.1-§3.4.3 einen Orphan detektieren, schreibt CEO
+**niemals** ein gap-report an `inbox/to-user/`. Der Self-Heal IST die
+Reaktion. Eskalation nur bei:
+
+1. **ML-Tool-Orphan** (§3.4.1 Exception) — Live-Alarm Typ 6.
+2. **Legal/DSGVO-Blocker** im Dossier (`legal_hold: true` im Frontmatter) —
+   Live-Alarm Typ 7 "legal-review-needed".
+3. **Rulebook-Conflict** (Critic-Reports zitieren widersprüchliche
+   PROJECT/CONVENTIONS/STYLE-Klauseln) — Live-Alarm Typ 8
+   "rulebook-conflict".
+4. **Dossier-verdict=fail** mit 2× Retry fehlgeschlagen — Daily-Digest-Notiz,
+   kein Live-Alarm.
+
+**Alles andere** (Umbrella-Tickets, fehlende Manifests, Queue-Drift,
+Assignee-Mismatch) ist Pipeline-Mechanik → self-heal, keine User-Interaktion.
+
+#### §3.4.5 Umbrella-Ticket-Legacy-Handling
+
+Manuell erstellte Tickets mit Titel `Overnight-Build: *` oder Beschreibungen
+mit `full pipeline` / `auto-merge` sind **Legacy**. CEO behandelt sie wie
+`Dossier-Research:`-Tickets (Loop A triggert, wenn status=done).
+
+**Gehe NICHT davon aus** dass der zugewiesene Agent Downstream-Tickets
+erzeugt. Researcher erzeugen NUR Dossier-Manifests, Builder erzeugen NUR
+Code-Commits. Downstream-Orchestration ist **ausschließlich** CEO-§3.4.
+
 ### §3.5 Review-Round 1 Parallel-Fan-Out (v1.2 Core, 2026-04-24)
 
 Nach Tool-Build-`done` erstellt CEO **8 parallele Critic-Tickets** — alle mit
@@ -413,17 +510,29 @@ done
 - `inbox/to-ceo/*.md` → Dossier-Fails, Rulebook-Conflicts, Critic-Drifts
 - Nach Handling: `inbox/processed/YYYY-MM-DD/<file>.md`
 
-## 6. User-Kommunikation (v1.0 — Live-Alarm + Digest)
+## 6. User-Kommunikation (v1.1 — 2026-04-24 Patch 6 „Narrow Escalation")
 
-**Wann du dem User SOFORT schreibst** (Live-Alarm, die 3 Ausnahmen + 2 weitere):
+**Wann du dem User SOFORT schreibst** (Live-Alarm — 8 erlaubte Typen, abschließend):
 
 1. **Cost-Overflow** — Tages-Budget aus `tasks/budgets.yaml` > 110%
 2. **Build-Fail-Cluster** — > 50% Fails über 10 konsekutive Tools
 3. **Security-HIGH-Finding** (Phase 3+ wenn Security-Auditor aktiv)
 4. **Critic-Drift** — Eval-F1 < 0.85 für aktiven Critic (Pipeline steht)
 5. **EMERGENCY_HALT-Flag** — `.paperclip/EMERGENCY_HALT` existiert
+6. **ML-Tool-Design-Review-Needed** (§3.4.1 Exception) — vor ML-Build
+7. **Legal-Review-Needed** — Dossier mit `legal_hold: true`
+8. **Rulebook-Conflict** — Critic-Reports zitieren widersprüchliche Rulebook-Klauseln
 
 Format: `inbox/to-user/live-alarm-YYYY-MM-DD-<kurz>.md`, max 5 Sätze (What / Why / What-I-Need / Options / Deadline).
+
+**Pipeline-Mechanik-Bugs NIEMALS eskalieren** (§3.4.4 Hard-Rule):
+- Orphan-Dossier ohne Build-Ticket → §3.4.1 self-heal
+- Build-Ticket ohne Critics → §3.4.2 self-heal
+- Critics ohne Aggregation → §3.4.3 self-heal
+- Umbrella-Ticket-Pattern → §3.4.5 legacy-handling
+
+Schreibe NIEMALS einen `pipeline-gap-*.md` Report. Wenn du das Gefühl hast
+"die Pipeline steht" → Loop A/B/C triggern, nicht User fragen.
 
 **Wann du im Daily-Digest schreibst statt Ping:**
 
