@@ -616,7 +616,7 @@
   .privacy-badge {
     font-size: 0.6875rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     text-align: center;
     padding-top: var(--space-2);
   }

@@ -684,7 +684,7 @@
   .summary-card__label {
     font-size: 0.6875rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     text-transform: uppercase;
     font-weight: 500;
   }
@@ -861,7 +861,7 @@
   .disclaimer {
     margin: 0;
     font-size: 0.6875rem;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
     padding-top: var(--space-3);
@@ -871,7 +871,7 @@
   .privacy-badge {
     font-size: 0.6875rem;
     letter-spacing: 0.04em;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
     text-align: center;
     padding-top: var(--space-1);
   }
