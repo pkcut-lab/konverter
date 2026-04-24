@@ -38,6 +38,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | [kreditrechner](https://konverter-7qc.pages.dev/de/kreditrechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/kreditrechner) |
 | [rabatt-rechner](https://konverter-7qc.pages.dev/de/rabatt-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/rabatt-rechner) |
 | [tilgungsplan-rechner](https://konverter-7qc.pages.dev/de/tilgungsplan-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/tilgungsplan-rechner) |
+| [zinsrechner](https://konverter-7qc.pages.dev/de/zinsrechner) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/zinsrechner) |
 | [quadratkilometer-zu-quadratmeile](https://konverter-7qc.pages.dev/de/quadratkilometer-zu-quadratmeile) | area | shipped | 2026-04-24 | [dev](http://localhost:4322/de/quadratkilometer-zu-quadratmeile) |
 | [milliliter-zu-unzen](https://konverter-7qc.pages.dev/de/milliliter-zu-unzen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/milliliter-zu-unzen) |
 | [liter-zu-gallonen](https://konverter-7qc.pages.dev/de/liter-zu-gallonen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/liter-zu-gallonen) |

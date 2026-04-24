@@ -60,6 +60,9 @@ already_built_skip_list:
   - kreditrechner
   - rabatt-rechner
   - brutto-netto-rechner
+  - zinsrechner
+  - ki-text-detektor
+  - ki-bild-detektor
 total_tier_1_to_8: 172
 total_tier_9_psychology: 79
 total_tier_10_to_19: 650 (alle 8 neuen Enums freigegeben 2026-04-23: math, health, science, engineering, sport, automotive, education, agriculture)
@@ -108,6 +111,34 @@ siehe Frontmatter.
 - **Nach Rejection (Critic zweimal rot):** CEO verschiebt Tool in Rejected-Section mit `rejected_reason`, entfernt Queue-Zeile.
 - **Wenn Tier 8 leer wird:** User-Ping im Daily-Digest ("Queue-Refill nötig, bitte Enum-Approval oder neue Themen").
 - **Wöchentlich (Sonntag, via CEO-Heartbeat):** Queue gegen Live-Content-Collection abgleichen — Skew zwischen `already_built_skip_list` und `src/content/tools/` ist ein Tripwire.
+
+---
+
+## Tier ML — WebML-Suite (Transformers.js Demos, Prio-Upgrade 2026-04-24)
+
+**Status:** Prio-Upgrade durch User-Wunsch. Fokus auf 100 % lokale Browser-ML-Tools.
+**Referenz:** `docs/webml-suite.md` für technische Details und Modell-IDs.
+
+```
+audio-transkription          | audio       | Audio Transkription (Whisper, base.en)     | audio-root
+distil-whisper               | audio       | Schnelle Audio Transkription (Distil-Whisper)| audio-root
+depth-anything               | image       | Tiefen-Map-Generator (Depth Anything)       | image-root
+segment-anything             | image       | Objekt-Segmentierung (SAM-vit-b)           | image-root
+tokenizer-playground         | dev         | Tokenizer-Playground (BPE/WordPiece)       | dev-root
+lokaler-ki-chat              | dev         | Lokaler KI-Chat (Phi-3-mini-4k)            | dev-root
+video-objekt-erkennung       | video       | Video-Objekt-Erkennung (YOLOS-tiny)        | video-root
+ki-musik-generator           | audio       | KI-Musik-Generator (MusicGen-small)        | audio-root
+```
+
+**Modell-Details (Xenova/Transformers.js):**
+- `audio-transkription`: `openai/whisper-base.en` (~145MB), robust für EN/DE.
+- `distil-whisper`: `distil-whisper/distil-medium.en` (~390MB), extrem schnell.
+- `depth-anything`: `LiheYoung/depth-anything-small-hf` (~100MB), 3D-Rekonstruktion.
+- `segment-anything`: `facebook/sam-vit-b` (~375MB), präzise Masken per Klick.
+- `tokenizer-playground`: Browser-native Tokenisierung für GPT-4/Llama-3.
+- `lokaler-ki-chat`: `microsoft/Phi-3-mini-4k-instruct` (WebGPU), 3.8B Params, 100% lokal.
+- `video-objekt-erkennung`: `hustvl/yolos-tiny` (~25MB), Echtzeit-Bounding-Boxes.
+- `ki-musik-generator`: `facebook/musicgen-small` (~600MB), 15s Samples via Text-Prompt.
 
 ---
 
