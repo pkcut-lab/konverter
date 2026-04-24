@@ -112,6 +112,7 @@ Pro Tool-Commit vor `engineer_output.md` → `qa_results.md`. Referenz für alle
 | 1 | Tests grün | `npm test` exit 0 | Bash |
 | 2 | Astro-Check grün | `astro check` 0/0/0 | Bash |
 | 3 | Kein Hex in Component-Code | `grep -E '#[0-9a-fA-F]{3,8}' src/components/` leer (außer tokens.css) | Grep |
+| 3a | **Hex-Fallback Contrast-Severity** _(Patch 2026-04-24)_ | Wenn `var(--color-XXX, #YYY)` und das Token `--color-XXX` undefiniert ist → das `#YYY`-Hex rendert tatsächlich. Führt der gerenderete Wert zu WCAG-AA-Fail (< 4.5:1) oder AAA-Fail (< 7:1), wird dieser Check **blocker** — nicht minor. Die style-policy-Verletzung (kein Hex) und die rendering-Konsequenz (Kontrast-Fail) werden gemeinsam als blocker gewertet. Grep-Scan-Ziel: `src/components/**/*.svelte → /var\(--color-[a-z-]+,\s*#[0-9a-fA-F]/` | Grep + axe |
 | 4 | Keine arbitrary-px | `grep -E '[0-9]+px' src/components/` nur in tokens.css | Grep |
 | 5 | Frontmatter-Schema valid | Zod-Parse in Vitest-Content-Test grün; `category` gesetzt + valid | Bash |
 | 6 | H2-Pattern-Konformität | Pattern A/B: Locked-Sequence matcht exakt (Vitest content-test). Pattern C: `## Häufige Fragen` + `## Verwandte <Kat>-Tools` present | Grep |
@@ -119,7 +120,7 @@ Pro Tool-Commit vor `engineer_output.md` → `qa_results.md`. Referenz für alle
 | 8 | `headingHtml` clean | Falls gesetzt: max 1 `<em>…</em>`, kein anderes HTML → Zod-refine grün | Bash |
 | 9 | Schema.org JSON-LD | `WebApplication` + `FAQPage` (wenn FAQ) + `BreadcrumbList` im Build | Playwright |
 | 10 | Contrast AAA + Focus-Ring | axe-core ohne Fails + Focus-Ring-Visual-Diff Tab-Navigation | Playwright |
-| 11 | NBSP zwischen Zahl+Einheit | Regex `[0-9]+\s(MB\|GB\|KB\|m\|km\|cm\|mm\|Fuß\|Meter\|Zoll\|kg\|lb)` = 0 matches im Content | Grep |
+| 11 | ~~NBSP zwischen Zahl+Einheit~~ _(informational, kein Fail — Patch 2026-04-24)_ | CONTENT.md §6 ist Single-Source-of-Truth: normales Space, kein `&nbsp;` im Markdown. Grep-Check bleibt als Observation, blockiert nicht. Konflikt-Ruling in `inbox/processed/rulebook-conflict-nbsp-2026-04-21.md`. | Grep (informational) |
 | 12 | Commit-Trailer vorhanden | `git log -1` enthält `Rulebooks-Read:` | Bash |
 
 **Pass-Schwelle:** 12/12. Jeder Fail = Re-Work Ticket an Tool-Builder.

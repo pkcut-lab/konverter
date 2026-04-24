@@ -400,8 +400,18 @@ User-Eskalation (Pipeline-Mechanik ist kein Blocker, sondern ein Bug).
 
 **Trigger.** `Dossier-Research: <slug>`-Ticket mit `status=done`.
 
-**Check.** Existiert bereits ein `Tool-Build: <slug>` Ticket (status in
-`todo|in_progress|in_review|done`)? Wenn ja → skip. Wenn nein → orphan.
+**Check (v1.5 — race-condition-safe).** Existiert bereits ein `Tool-Build: <slug>`
+Ticket in status `todo|in_progress|in_review|done|cancelled`? Wenn ja → skip.
+`cancelled` einschliessen, weil Burst-Heartbeats (mehrere Dossier-done-Signale
+gleichzeitig) Duplikate erzeugen die der CEO dann selbst cancelt — der naechste
+Heartbeat darf sie nicht nochmal erstellen.
+
+**Anti-Burst-Guard.** Zusaetzlich: wurde ein `Tool-Build: <slug>` Ticket in den
+letzten 90 Sekunden erstellt (Feld `createdAt > now - 90s`)? Wenn ja → skip,
+auch wenn es `cancelled` ist. Verhindert Rapid-Redispatch in Burst-Fenstern.
+
+Incident 2026-04-24: 14 Dup-Build-Tickets in 40s-Fenster (7 Slugs × 2 Dups).
+CEO self-healed via cancel, aber Root-Cause ohne cancelled+guard-check bleibt.
 
 **Self-Heal.**
 1. Lies Dossier-Manifest: `tasks/dossier-output-<slug>.md` (oder
@@ -724,7 +734,29 @@ mit `full pipeline` / `auto-merge` sind **Legacy**. CEO behandelt sie wie
 erzeugt. Researcher erzeugen NUR Dossier-Manifests, Builder erzeugen NUR
 Code-Commits. Downstream-Orchestration ist **ausschließlich** CEO-§3.4.
 
-### §3.5 Review-Round 1 Parallel-Fan-Out (v1.2 Core, 2026-04-24)
+### §3.5 Review-Round 1 Parallel-Fan-Out (v1.3 — 2026-04-24, verify-gate)
+
+**Verify-Gate vor Fan-Out (v1.3).** Bevor 8 Critic-Tickets erstellt werden:
+
+```bash
+# Pflicht: Tool muss vollstaendig committed sein
+if ! bash scripts/paperclip/verify-tool-build.sh "$tool_id" "$slug"; then
+  # Build unvollstaendig — NICHT dispatchen, Rework-Ticket stattdessen
+  POST /api/companies/{id}/issues {
+    "title": "Tool-Build-Rework: $slug (verify-tool-build.sh FAIL vor Fan-Out)",
+    "assigneeAgentId": TOOL_BUILDER_ID, "status": "todo", "priority": "high"
+  }
+  write_digest("- §3.5 verify-FAIL fuer $slug: Fan-Out verschoben, Rework dispatched")
+  return  # Fan-Out NICHT starten
+fi
+# verify PASS -> Fan-Out starten (s.u.)
+```
+
+**Warum.** Ohne Gate werden Critics auf halbfertige Builds losgeschickt und
+liefern Stale-Verdicts ("Component missing"), obwohl der Builder 2 Minuten
+spaeter committet. Das kostet 8 Critic-Runs fuer nichts.
+Incident 2026-04-24: 3 Tools × 8 Critics = 24 Stale-Verdict-Runs wegen
+fehlenden verify-Gate (PROBLEM 2 Audit-Report).
 
 Nach Tool-Build-`done` erstellt CEO **8 parallele Critic-Tickets** — alle mit
 `target_slug: <slug>` + `upstream_build_ticket_id: <build-ticket>` + unterschied-
@@ -960,6 +992,45 @@ def route_to_meta_review(ticket):
         target_slug=ticket.tool_slug,
     )
     # Nach meta-review-done dispatcht CEO end-review Pass 1 (siehe §7.6).
+```
+
+```python
+def route_to_deploy_queue(ticket, tag='shipped'):
+    """Phase 1: CF Pages auto-deploys on push to main. CEO-Aufgabe = Buchführung.
+
+    Aufgerufen nach:
+      - Pass 3 clean (consume_end_review_done)
+      - Auto-Resolve ship-as-is (score >= 0.80 nach >2 Reworks)
+
+    Schritte:
+      1. Freigabe-Liste-Guard (Doppel-Check — end-reviewer hat bereits appendiert)
+      2. §7.5 Completed-Tools-List-Append (Pflicht, nicht überspringbar)
+      3. Build-Ticket status -> "done" (ship-as-is: Kommentar mit Score)
+      4. Digest-Eintrag + Live-Alarm Typ "deployed"
+    """
+    slug = ticket.tool_slug
+
+    # 1. Freigabe-Liste-Guard
+    # (Bash: if ! grep -qE "\\|\\s*${slug}\\s*\\|" docs/paperclip/freigabe-liste.md; then ...)
+    # Self-Heal: wenn Zeile fehlt, appendiere selbst + Digest-Warnung (§7.4 oben).
+
+    # 2. Completed-Tools-List-Append (§7.5)
+    append_completed_tools_entry(ticket, state=tag)
+
+    # 3. Build-Ticket schließen
+    comment = (
+        f"Deploy-Queue: {slug} — {tag}. "
+        f"CF Pages deployt automatisch nach Push auf main-Branch. "
+        f"Eintrag in docs/paperclip/freigabe-liste.md + docs/completed-tools.md."
+    )
+    PATCH_issue(ticket.id, status="done", comment=comment)
+
+    # 4. Digest + Live-Alarm
+    write_digest(f"- Deploy-Queue: {slug} [{tag}]")
+    write_live_alarm("deployed", slug=slug, tag=tag)
+    # Phase 1: kein manueller Deploy-Trigger nötig — push auf main löst
+    # CF Pages Build aus (<5 min). CEO überwacht nicht aktiv — Cloudflare
+    # sendet Email bei Build-Fehler (separater Alert-Kanal, kein CEO-Loop).
 ```
 
 ## 7.6 End-Review Triple-Pass (v1.2 — 2026-04-24, „keine Kompromisse")
