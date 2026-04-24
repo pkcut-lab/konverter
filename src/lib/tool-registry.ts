@@ -92,6 +92,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/zinseszins-rechner').then((m) => m.zinseszinsRechner),
   'gross-net-calculator': () =>
     import('./tools/brutto-netto-rechner').then((m) => m.bruttoNettoRechner),
+  'amortization-calculator': () =>
+    import('./tools/tilgungsplan-rechner').then((m) => m.tilgungsplanRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

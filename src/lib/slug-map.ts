@@ -68,6 +68,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'hourly-to-annual': { de: 'stundenlohn-jahresgehalt' },
   'compound-interest-calculator': { de: 'zinseszins-rechner' },
   'gross-net-calculator': { de: 'brutto-netto-rechner' },
+  'amortization-calculator': { de: 'tilgungsplan-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
