@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { webcamHintergrundUnschaerfe } from '../../../src/lib/tools/webcam-hintergrund-unschaerfe';
+import { webcamHintergrundUnschaerfe } from '../../../src/lib/tools/webcam-blur';
 import { parseToolConfig } from '../../../src/lib/tools/schemas';
 
 // ───────────────────────────────────────────────────────────
