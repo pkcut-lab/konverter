@@ -3,6 +3,7 @@
   import { getRuntime } from '../../lib/tools/tool-runtime-registry';
   import { decodeHeicIfNeeded } from '../../lib/tools/heic-decode';
   import Loader from '../Loader.svelte';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FileToolConfig;
@@ -290,6 +291,14 @@
     if (!file) return;
     await processFile(file);
   }
+
+  let _tracked = false;
+  $effect(() => {
+    if (!_tracked && phase === 'done') {
+      _tracked = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
+  });
 
   $effect(() => {
     function onPaste(e: ClipboardEvent) {
