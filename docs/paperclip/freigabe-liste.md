@@ -32,3 +32,4 @@ unabhängiger Deep-Review-Sicht. Der Schritt danach ist `route_to_deploy_queue`
 | 1 | tilgungsplan-rechner | 2026-04-24 | tasks/end-review-tilgungsplan-rechner-pass3.md | f2d7a37 | shipped |
 | 2 | zinsrechner | 2026-04-25 | tasks/end-review-zinsrechner-pass3.md | c1e6549 | shipped |
 | 3 | skonto-rechner | 2026-04-25 | tasks/end-review-skonto-rechner-pass3.md | 273e12c | ready-for-ship |
+| 4 | webcam-hintergrund-unschaerfe | 2026-04-25 | tasks/end-review-webcam-hintergrund-unschaerfe-pass3.md | 4e69d07b | ready-for-ship |
