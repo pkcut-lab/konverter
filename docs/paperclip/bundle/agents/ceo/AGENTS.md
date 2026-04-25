@@ -208,7 +208,7 @@ Dann exit heartbeat cleanly.
 MAX_TICKETS_PER_HEARTBEAT=10   # vorher 3 — User will dass CEO direkt die Queue fuellt
 MAX_IN_FLIGHT=30               # vorher 10 — Buffer fuer parallele Pipelines
 
-COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"   # Konverter Webseite
+COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"   # kittokit
 API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
 
 # Pre-check in-flight-cap

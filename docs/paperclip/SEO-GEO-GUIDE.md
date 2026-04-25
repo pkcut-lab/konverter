@@ -72,8 +72,8 @@ Enrichment automatisiert durch **Schema-Markup-Enricher** (Agent 23).
 - `robots.txt` erlaubt alle Crawler, blockt `/api/*` (falls je)
 - `llms.txt` (neu 2026, NEU-Konvention) im Root — Struktur:
   ```
-  # Konverter Webseite
-  > Multilinguale Konverter-Tool-Sammlung (200+ Tools), pure-client, DSGVO-konform, MIT.
+  # kittokit
+  > Multilingualer Konverter- und Rechner-Hub (200+ Tools), pure-client, DSGVO-konform, MIT.
 
   ## Core Tools
   - [Meter zu Fuß](/de/meter-zu-fuss/) — Längenumrechnung mit Präzisionsschieber

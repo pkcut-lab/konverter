@@ -30,7 +30,7 @@ sind die, die der End-Reviewer bekommen hat.
 
 Lokale Instanz läuft unter: `http://127.0.0.1:3101`
 
-Log-in als Board-User (nicht Agent). Wechsel in die Company **Konverter Webseite**.
+Log-in als Board-User (nicht Agent). Wechsel in die Company **kittokit**.
 
 ## Schritt 2 — Agent erstellen
 

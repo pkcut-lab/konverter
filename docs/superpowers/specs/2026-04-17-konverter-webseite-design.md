@@ -1,4 +1,4 @@
-# Konverter Webseite — Design-Spezifikation
+# kittokit — Design-Spezifikation
 
 **Version:** 1.1
 **Datum:** 2026-04-17

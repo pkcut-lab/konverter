@@ -1,7 +1,7 @@
 {
-  "name": "Konverter",
-  "short_name": "Konverter",
-  "description": "Konverter, Freisteller und Datei-Tools — alle arbeiten direkt im Browser, ohne Upload, ohne Anmeldung, ohne Tracking.",
+  "name": "kittokit",
+  "short_name": "kittokit",
+  "description": "kittokit — Konverter, Rechner und Datei-Tools, alle direkt im Browser, ohne Upload, ohne Anmeldung, ohne Tracking.",
   "start_url": "/de/",
   "scope": "/",
   "display": "standalone",

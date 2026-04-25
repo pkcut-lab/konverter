@@ -1,4 +1,4 @@
-# DESIGN.md — Konverter Webseite
+# DESIGN.md — kittokit
 
 > **Für Stitch (Google Labs) und jeden AI-Agent, der UI für dieses Projekt generiert.**
 > Single source of truth ist `src/styles/tokens.css` + `STYLE.md` im Repo. Diese Datei destilliert beide in das offizielle Stitch-DESIGN.md-Format (9 Sektionen) plus Agent-Prompt-Guide.

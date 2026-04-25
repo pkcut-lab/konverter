@@ -1,10 +1,10 @@
-# Konverter Webseite — Claude-Context
+# kittokit — Claude-Context
 
 Dieses File wird von Claude Code automatisch bei jedem Session-Start geladen.
 
 ## Projekt-Kontext (1-Liner)
 
-Multilinguale Konverter-Webseite (Astro 5 SSG + Svelte 5 + Tailwind), 1000+ Tools.
+Multilinguale kittokit-Plattform (Astro 5 SSG + Svelte 5 + Tailwind), 1000+ Tools.
 Launch-Set: DE only (Phase 1-2), +EN/ES/FR/PT-BR (Phase 3).
 Expansion-Gates: bis 13 Sprachen (Phase 5), bis 30 (Phase 6).
 Monetarisierung: AdSense ab Phase 2.
@@ -112,3 +112,13 @@ Muss green sein. `DennisJedlicka` ist in diesem Workspace **verboten**.
 6. Design-Approval vor Template-Extraction
 7. Keine externen Network-Dependencies zur Runtime (Ausnahme 7a: ML-File-Tools mit Worker-Fallback, 6 Bedingungen)
 8. Kein thin Content (<300 Wörter abgelehnt)
+
+## graphify
+
+This project has a graphify knowledge graph at graphify-out/.
+
+Rules:
+- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
+- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
+- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
+- After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)

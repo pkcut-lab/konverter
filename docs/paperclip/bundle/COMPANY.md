@@ -1,7 +1,7 @@
 ---
 agentcompanies: v1
-company: konverter
-name: Konverter Webseite
+company: kittokit
+name: kittokit
 description: >-
   Multilinguales Konverter-Webtool-Portal (Astro 5 SSG + Svelte 5 + Tailwind),
   Skalierungsziel 200–1000 Tools. Refined-Minimalism, pure-client, DSGVO-
@@ -221,7 +221,7 @@ halt_flag: ../../../../.paperclip/EMERGENCY_HALT
 git_account_lock: pkcut-lab
 ---
 
-# Company — Konverter Webseite (v2.0)
+# Company — kittokit (v2.0)
 
 33 Agenten in 7 Kategorien. Activation phase-gated via `activation.phase_X_active` oben.
 
