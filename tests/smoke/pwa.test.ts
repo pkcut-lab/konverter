@@ -13,8 +13,8 @@ describe('PWA — Manifest + Icons', () => {
     const raw = readFileSync(join(root, 'public', 'manifest.webmanifest'), 'utf8');
     const manifest = JSON.parse(raw);
 
-    expect(manifest.name).toBe('Konverter');
-    expect(manifest.short_name).toBe('Konverter');
+    expect(manifest.name).toBe('kittokit');
+    expect(manifest.short_name).toBe('kittokit');
     expect(manifest.start_url).toBe('/de/');
     expect(manifest.scope).toBe('/');
     expect(manifest.display).toBe('standalone');
@@ -72,8 +72,8 @@ describe('PWA — Manifest + Icons', () => {
     expect(layout).toMatch(/rel="icon"\s+type="image\/png"\s+sizes="32x32"\s+href="\/favicon-32\.png"/);
     expect(layout).toMatch(/rel="apple-touch-icon"\s+href="\/icon-192\.png"/);
     expect(layout).toMatch(/name="apple-mobile-web-app-capable"\s+content="yes"/);
-    expect(layout).toMatch(/name="apple-mobile-web-app-title"\s+content="Konverter"/);
-    expect(layout).toMatch(/name="application-name"\s+content="Konverter"/);
+    expect(layout).toMatch(/name="apple-mobile-web-app-title"\s+content="kittokit"/);
+    expect(layout).toMatch(/name="application-name"\s+content="kittokit"/);
   });
 
   it('BaseLayout references /registerSW.js so the Workbox SW gets claimed', () => {

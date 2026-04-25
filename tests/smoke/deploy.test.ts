@@ -5,14 +5,14 @@ import { join } from 'node:path';
 describe('Deploy — Cloudflare Pages wiring', () => {
   const root = process.cwd();
 
-  it('astro.config `site` matches the reserved konverter-7qc.pages.dev', () => {
+  it('astro.config `site` matches the canonical kittokit.com domain', () => {
     const config = readFileSync(join(root, 'astro.config.mjs'), 'utf8');
-    expect(config).toMatch(/site:\s*['"]https:\/\/konverter-7qc\.pages\.dev['"]/);
+    expect(config).toMatch(/site:\s*['"]https:\/\/kittokit\.com['"]/);
   });
 
   it('src/lib/site.ts SITE_URL matches astro.config (single source of truth)', () => {
     const site = readFileSync(join(root, 'src', 'lib', 'site.ts'), 'utf8');
-    expect(site).toMatch(/SITE_URL\s*=\s*['"]https:\/\/konverter-7qc\.pages\.dev['"]/);
+    expect(site).toMatch(/SITE_URL\s*=\s*['"]https:\/\/kittokit\.com['"]/);
   });
 
   it('public/_headers exists and pins SW + hashed-asset cache strategy', () => {
