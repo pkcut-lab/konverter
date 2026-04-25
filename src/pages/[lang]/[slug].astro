@@ -21,6 +21,7 @@ import ZinseszinsRechnerTool from '../../components/tools/ZinseszinsRechnerTool.
 import RoiRechnerTool from '../../components/tools/RoiRechnerTool.svelte';
 import SkontoRechnerTool from '../../components/tools/SkontoRechnerTool.svelte';
 import CashflowRechnerTool from '../../components/tools/CashflowRechnerTool.svelte';
+import LeasingFaktorRechnerTool from '../../components/tools/LeasingFaktorRechnerTool.svelte';
 import Comparer from '../../components/tools/Comparer.svelte';
 import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
@@ -56,6 +57,7 @@ const COMPOUND_INTEREST_TOOL_ID = 'compound-interest-calculator';
 const ROI_CALCULATOR_TOOL_ID = 'roi-calculator';
 const CASH_DISCOUNT_TOOL_ID = 'cash-discount-calculator';
 const CASH_FLOW_TOOL_ID = 'cash-flow-calculator';
+const LEASING_FACTOR_TOOL_ID = 'leasing-factor-calculator';
 const CUSTOM_FORMATTER_IDS = new Set<string>([
   HEX_COLOR_TOOL_ID,
   IMAGE_DIFF_TOOL_ID,
@@ -72,6 +74,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   ROI_CALCULATOR_TOOL_ID,
   CASH_DISCOUNT_TOOL_ID,
   CASH_FLOW_TOOL_ID,
+  LEASING_FACTOR_TOOL_ID,
   'ki-text-detektor',
   'ki-bild-detektor',
   'audio-transkription',
@@ -267,6 +270,9 @@ const jsonLd = buildToolJsonLd(
           )}
           {config.type === 'formatter' && config.id === CASH_FLOW_TOOL_ID && (
             <CashflowRechnerTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === LEASING_FACTOR_TOOL_ID && (
+            <LeasingFaktorRechnerTool config={config} client:load />
           )}
           {config.type === 'formatter' && config.id === 'ki-text-detektor' && (
             <KiTextDetektorTool config={config} client:load />

@@ -153,13 +153,16 @@ export function computeLeasingFaktor(
       `${formatEuro(monatlicheRate)} / ${formatEuro(listenpreis)} × 100 = ${formatFaktor(faktor)}`;
   }
 
-  return {
+  const result: LeasingFaktorResult = {
     faktor,
     bereinigt,
     bewertung,
     formelText,
-    ...(bereinigt ? { sonderzahlungProMonat } : {}),
   };
+  if (bereinigt && sonderzahlungProMonat !== undefined) {
+    result.sonderzahlungProMonat = sonderzahlungProMonat;
+  }
+  return result;
 }
 
 // ---------------------------------------------------------------------------
