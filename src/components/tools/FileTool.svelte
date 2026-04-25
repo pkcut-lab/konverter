@@ -874,7 +874,7 @@
     border-radius: 9999px;
     background: color-mix(in oklch, var(--color-accent) 8%, var(--color-bg));
     font-family: var(--font-family-mono);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     letter-spacing: 0.01em;
     white-space: nowrap;
@@ -1223,7 +1223,7 @@
     margin-right: var(--space-1);
     border-right: 1px solid var(--color-border);
     font-family: var(--font-family-mono);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     color: var(--color-text-subtle);
     letter-spacing: 0.12em;
@@ -1283,7 +1283,7 @@
     font-family: var(--font-family-mono);
     /* Sub-Label kompakter — 11px statt 12px, damit die Preset-Reihe
        horizontal in die 48rem-Settings-Card passt ohne umzubrechen. */
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     letter-spacing: 0.01em;
   }

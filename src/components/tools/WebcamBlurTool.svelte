@@ -475,7 +475,7 @@
   .slider-row__hints {
     display: flex;
     justify-content: space-between;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     font-family: var(--font-family-mono);
   }

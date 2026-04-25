@@ -97,4 +97,23 @@ describe('WCAG AAA contrast — Dark theme', () => {
     const ratio = contrastRatio(parseVar(dark, '--color-text-subtle')!, parseVar(dark, '--color-bg')!);
     expect(ratio).toBeGreaterThanOrEqual(AAA);
   });
+  it('warning on bg ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(dark, '--color-warning')!, parseVar(dark, '--color-bg')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
+  it('warning on surface ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(dark, '--color-warning')!, parseVar(dark, '--color-surface')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
+});
+
+describe('WCAG AAA contrast — warning token', () => {
+  it('warning (light) on bg ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(light, '--color-warning')!, parseVar(light, '--color-bg')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
+  it('warning (light) on surface ≥ 7:1', () => {
+    const ratio = contrastRatio(parseVar(light, '--color-warning')!, parseVar(light, '--color-surface')!);
+    expect(ratio).toBeGreaterThanOrEqual(AAA);
+  });
 });

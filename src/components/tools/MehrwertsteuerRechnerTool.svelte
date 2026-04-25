@@ -545,7 +545,7 @@
     border-radius: 50%;
     background: transparent;
     color: var(--color-text-muted);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 600;
     cursor: pointer;
     font-style: normal;
@@ -670,7 +670,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

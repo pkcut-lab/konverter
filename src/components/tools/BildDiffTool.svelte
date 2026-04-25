@@ -615,7 +615,7 @@
   }
   .bd__stat-label {
     font-family: var(--font-family-mono);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;

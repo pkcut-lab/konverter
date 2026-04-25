@@ -615,7 +615,7 @@
   }
 
   .default-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 400;
     color: var(--color-text-subtle);
     font-family: var(--font-family-mono);
@@ -694,7 +694,7 @@
 
   .kachel__label {
     font-family: var(--font-family-mono);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -730,7 +730,7 @@
   .aufschluesselung__title {
     padding: var(--space-3) var(--space-4);
     font-family: var(--font-family-mono);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;

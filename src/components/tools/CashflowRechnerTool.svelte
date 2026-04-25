@@ -742,7 +742,7 @@
   .status-dot--null    { background: var(--color-text-subtle); }
 
   .cf-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -776,7 +776,7 @@
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-subtle);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     border-radius: var(--r-sm);
     cursor: pointer;
     font-family: var(--font-family-mono);
@@ -807,7 +807,7 @@
   }
 
   .lernmoment__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     font-weight: 500;
@@ -838,7 +838,7 @@
   }
 
   .formel-label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -901,7 +901,7 @@
 
   /* ---- Privacy Badge ---- */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

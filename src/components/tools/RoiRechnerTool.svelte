@@ -696,7 +696,7 @@
   }
 
   .result-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-subtle);
     text-transform: uppercase;
@@ -723,7 +723,7 @@
   }
 
   .result-card__sub {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     line-height: 1.4;
     margin-top: var(--space-1);
@@ -772,7 +772,7 @@
   }
 
   .formel-label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -838,7 +838,7 @@
   /* Disclaimer */
   .disclaimer {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
@@ -847,7 +847,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;
