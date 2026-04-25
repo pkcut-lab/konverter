@@ -33,8 +33,7 @@ inputs:
   - memory/ceo-log.md
 outputs:
   - tasks/meta-review-<date>.md
-  - inbox/to-user/rubric-ambiguity-<check-id>.md
-  - inbox/to-user/critic-idle-<name>.md
+  - docs/ceo-decisions-log.md  # v2.3 (2026-04-25 USER-LOCK no-escalation): Findings gehen direkt in CEO-Decisions-Log statt inbox/to-user, CEO-Notes beim Ship aktualisieren
 ---
 
 # AGENTS — Meta-Reviewer (v1.1)
@@ -149,30 +148,48 @@ node scripts/meta/synthesize-findings.mjs \
   --output "tasks/meta-review-$today.md"
 ```
 
-## 5. Critical-Findings-Tickets
+## 5. Critical-Findings → Autonomous-Decision-Log (v2.3, 2026-04-25)
+
+**USER-LOCK 2026-04-25 (siehe CEO §0.7):** Meta-Reviewer schreibt NICHT
+mehr in `inbox/to-user/`. Stattdessen werden Findings direkt in
+`docs/ceo-decisions-log.md` als Decision-Vorschlag dokumentiert. Der CEO
+liest diese im nächsten Heartbeat und entscheidet autonom (oder hat
+schon entschieden, falls Standard-Pattern). Pipeline läuft weiter.
 
 ```bash
-# Rubric-Ambiguität → User-Ticket
+# Rubric-Ambiguität → autonomer CEO-Decision-Log-Eintrag
 jq -c '.[] | select(.severity == "high")' /tmp/m3-ambiguity.jsonl | while read entry; do
   check_id=$(echo "$entry" | jq -r '.check_id')
-  cat > "inbox/to-user/rubric-ambiguity-$check_id.md" <<EOF
-Rubric-Ambiguität detektiert in Check $check_id.
-- Warning-Rate: $(echo "$entry" | jq .warning_rate)
-- Affected Tools: $(echo "$entry" | jq -r '.tools | join(", ")')
-- Patterns: $(echo "$entry" | jq -r '.patterns | join(", ")')
-- Empfehlung: Rulebook-Clarification
-EOF
+  warning_rate=$(echo "$entry" | jq .warning_rate)
+  tools=$(echo "$entry" | jq -r '.tools | join(", ")')
+  patterns=$(echo "$entry" | jq -r '.patterns | join(", ")')
+
+  # Append-on-top in ceo-decisions-log.md, marker `<!-- CEO-DECISION-APPEND -->`
+  py scripts/ceo-decisions-log-append.py \
+    --topic "Rubric-Ambiguität Check $check_id" \
+    --decision "Meta-Reviewer empfiehlt Rulebook-Clarification. CEO entscheidet autonom: bei warning_rate >0.20 → Rulebook-Patch im nächsten Maintenance-Window; sonst dokumentieren und unverändert lassen." \
+    --affected "$tools" \
+    --reversibility "trivial (Rulebook-Edit, kein Code-Impact)" \
+    --confirmed "post-hoc"
 done
 
-# Idle-Critics
+# Idle-Critics → autonomer Decision: Trigger prüfen vs. Archivieren
 jq -c '.[] | select(.days_since_last_review > 30)' /tmp/m6-load.jsonl | while read entry; do
   critic=$(echo "$entry" | jq -r '.critic')
-  cat > "inbox/to-user/critic-idle-$critic.md" <<EOF
-Critic $critic ist seit $(echo "$entry" | jq .days_since_last_review) Tagen idle.
-- Empfehlung: Activation-Trigger prüfen, ggf. Archive
-EOF
+  days=$(echo "$entry" | jq .days_since_last_review)
+
+  py scripts/ceo-decisions-log-append.py \
+    --topic "Critic-Idle: $critic ($days Tage)" \
+    --decision "CEO entscheidet autonom: bei days >60 → Activation-Trigger im AGENTS.md prüfen + ggf. Phase-Gating ändern. Bei 30-60 → unverändert (möglicherweise low-frequency by design)." \
+    --affected "$critic" \
+    --reversibility "trivial" \
+    --confirmed "post-hoc"
 done
 ```
+
+**Niemals** `cat > inbox/to-user/...` im Meta-Reviewer-Body. Der User
+sieht alle Decisions im Logbuch (er liest es wann er will). Pipeline
+läuft autonom weiter, kein Blockieren.
 
 ## 6. Task-End
 

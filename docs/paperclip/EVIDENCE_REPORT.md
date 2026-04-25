@@ -132,7 +132,17 @@ Der CEO liest NUR den Frontmatter maschinell. Ein Ticket passiert den Critic-Gat
 
 Bei Fail wird das Ticket gemäß §7.15 Autonomie-Gates **automatisch** zu Rework/Park/Ship-as-is routed — nicht User-Eskalation (außer §7.15-Live-Alarm-Trigger greift).
 
-## Ship-Gate-Rules (v1.1, 2026-04-24 — Quelle [KON-242](/KON/issues/KON-242), Root-Cause [KON-235](/KON/issues/KON-235))
+## Ship-Gate-Rules (v1.2, 2026-04-25 — Defense-in-Depth via Severity-Trigger)
+
+**v1.2-Patch (2026-04-25, CEO-Decision autonomous):** Stufe 1 erweitert um
+expliziten `severity == blocker` Trigger. Redundant zu `verdict == fail`,
+aber macht die Logik self-documenting und fängt edge-cases ab, in denen
+ein Critic eine `partial`-Verdict mit `severity: blocker` mischt (z.B.
+Merged-Critic Severity-Drift bei not_tested-Domains). Quelle: Meta-
+Reviewer-Finding KON-401 (skonto-rechner R1) — siehe ceo-decisions-log.md
+2026-04-25-Eintrag „Ship-Gate v1.2 — Severity-Trigger".
+
+
 
 **Problem.** Runde 3 auf `tilgungsplan-rechner`: merged-critic meldete `verdict=pass` (19-Check-Rubrik, 0 fails), während a11y-auditor `partial` mit 3 WCAG-Fails (inkl. A13 = WCAG 2.1.1 Level A), design-critic `fail`, conversion-critic `partial (rework_required=true)` ablieferten. Ohne Meta-Review wäre das Tool als ship-ready durchgerutscht.
 
@@ -166,15 +176,33 @@ def ship_gate(ticket, critic_reports):
     """
 
     # --- Stufe 1: Individual-Critic-Veto (hart) ---
+    # v1.2 (2026-04-25): severity-blocker als expliziter Trigger ergaenzt
+    # (defense-in-depth, redundant zu verdict==fail, aber faengt Severity-
+    # Drift in not_tested-Domains ab — Quelle KON-401 skonto-rechner R1).
     for critic, report in critic_reports.items():
         if critic == 'merged-critic':
             continue  # merged wird in Stufe 2 geprüft
         if report.verdict == 'fail':
             return 'rework'
+        if getattr(report, 'severity', None) == 'blocker':
+            return 'rework'  # v1.2 — explicit severity-blocker veto
         if (report.verdict == 'partial'
             and report.rework_required is True
             and report.rework_severity in ('blocker', 'major')):
             return 'rework'
+
+    # --- Stufe 1b: Merged-Severity-Drift-Guard (v1.2, 2026-04-25) ---
+    # merged-critic kann rework_severity: minor melden, waehrend Specialists
+    # Blocker melden, weil merged-Rubrik die Domain nicht abdeckt (not_tested).
+    # Trigger Rework wenn merged.rework_required UND beliebiger Specialist
+    # severity in (blocker, major) hat.
+    merged = critic_reports['merged-critic']
+    if getattr(merged, 'rework_required', False) is True:
+        for critic, report in critic_reports.items():
+            if critic == 'merged-critic':
+                continue
+            if getattr(report, 'severity', None) in ('blocker', 'major'):
+                return 'rework'  # v1.2 — Severity-Drift-Guard
 
     # --- Stufe 2: merged-critic-Gate ---
     merged = critic_reports['merged-critic']

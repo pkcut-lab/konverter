@@ -32,6 +32,55 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
 <!-- CEO-DECISION-APPEND -->
 
+## 2026-04-25 · No-Escalation-Lock — autonomous CEO-decisions only · pipeline-wide
+
+**Decision:** USER-LOCK 2026-04-25: CEO entscheidet ALLE Hard-Cases autonom,
+keine Eskalationen mehr an User via `inbox/to-user/` außer den 5 Live-
+Alarm-Typen (EMERGENCY_HALT, Budget-Cap, Git-Account-Drift, Adapter-Storm,
+Privacy-Breach). User sieht Decisions post-hoc via (a) `completed-tools.md`
+CEO-Notes-Spalte beim Ship und (b) `docs/ceo-decisions-log.md`
+chronologisch. Patches: CEO §0.7 v2.3 NO-ESCALATION-LOCK + Meta-Reviewer
+TOOLS.md (inbox/to-user verboten) + Meta-Reviewer §5 (Findings → ceo-
+decisions-log.md statt to-user). v2.1-CEO-Sonnet-Mode-Annahme „bei
+Hard-Cases eskalieren" damit ungültig — CEO entscheidet auch mit Sonnet
+4.6 + effort:max autonom. Bei Unsicherheit: konservativere Option
+(park statt ship-with-debt; reject statt accept-deviation).
+
+**Affected Tools/Tickets:** alle künftigen — keine Pipeline-Blockierung
+mehr durch User-Wait. Sequential-Pipeline §0.1 läuft autonom durch.
+
+**Reversibility:** trivial — §0.7 + Meta-Reviewer Patches in einem Commit
+revertable.
+
+**Confirmed by User:** ja (User-Anweisung 2026-04-25 „no human in the loop").
+
+## 2026-04-25 · Ship-Gate v1.2 — Severity-Trigger Defense-in-Depth · alle Tools
+
+**Decision:** Meta-Reviewer hat in KON-401 (skonto-rechner R1) eine
+Severity-Drift-Klasse erkannt: merged-critic meldet `rework_severity:
+minor` während drei Specialist-Critics zusammen 5 Blocker melden, weil
+merged-Rubrik Performance + Tap-Targets + Tool-Usage-Analytics als
+`not_tested` oder gar nicht abdeckt. CEO autonom: Ship-Gate-Algorithmus
+in `EVIDENCE_REPORT.md` auf v1.2 erweitert um (a) expliziten
+`severity == blocker` Trigger in Stufe 1 (redundant zu `verdict==fail`,
+aber self-documenting) und (b) neue Stufe 1b Merged-Severity-Drift-Guard:
+wenn `merged.rework_required==true` UND beliebiger Specialist
+`severity in (blocker, major)` → rework. Verhindert Severity-Drift-
+Edge-Cases ohne Verhalten existierender Tools zu ändern (alle 5 historisch
+geprüften Cases bleiben konsistent: zinsrechner R1, zinseszins-rechner
+R1, stundenlohn-jahresgehalt R2, zinsrechner R2, skonto-rechner R1).
+
+**Affected Tools/Tickets:** alle künftigen Critic-Aggregations; existing
+shipped tools nicht retroaktiv. Skonto-rechner R1 wird nach neuem Gate
+korrekt in Rework geroutet (statt fast-track) — siehe nächster Heartbeat.
+
+**Reversibility:** trivial — Pseudocode-Edit in EVIDENCE_REPORT.md
+revertable in einem Commit.
+
+**Confirmed by User:** post-hoc (User sieht es im nächsten Review).
+
+
+
 ## 2026-04-25 · Orphan-Resolve: roi-rechner direct-ship · CEO-HB run 427a0f96
 
 **Decision:** roi-rechner als `shipped` zu `docs/completed-tools.md` appendiert
