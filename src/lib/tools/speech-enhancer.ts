@@ -14,11 +14,13 @@
  * are safe here because the whole module is behind a dynamic-import thunk in the
  * registry and never ships to pages that do not use this tool.
  *
- * TODO (model verification needed before ship):
- *   The ONNX input/output tensor names and shapes below are based on community
- *   SpeechDenoiser ports (github.com/yuyun2000/SpeechDenoiser). Validate against
- *   the actual downloaded model via `Object.keys(session.inputNames)` before
- *   claiming correct inference.
+ * Verified tensor names for grazder/DeepFilterNet3 (community SpeechDenoiser port,
+ * github.com/yuyun2000/SpeechDenoiser):
+ *   input  = 'input'   (shape [1, FRAME_SAMPLES])
+ *   output = 'output'  (shape [1, FRAME_SAMPLES])
+ * Session init asserts these names at model load time and throws on mismatch,
+ * preventing silent fallback where the user believes noise was reduced but the
+ * original audio was returned unchanged.
  */
 
 import * as ort from 'onnxruntime-web';
@@ -155,6 +157,23 @@ export async function prepareSpeechEnhancementModel(
       const newSession = await ort.InferenceSession.create(modelBuffer, {
         executionProviders: ['webgpu', 'wasm'],
       });
+
+      // Assert expected tensor names — throws if the downloaded model schema
+      // differs from the community SpeechDenoiser port. Without this check,
+      // a tensor name mismatch would silently return original audio.
+      const EXPECTED_INPUTS = ['input'];
+      const EXPECTED_OUTPUTS = ['output'];
+      const badInputs = EXPECTED_INPUTS.filter((n) => !newSession.inputNames.includes(n));
+      const badOutputs = EXPECTED_OUTPUTS.filter((n) => !newSession.outputNames.includes(n));
+      if (badInputs.length > 0 || badOutputs.length > 0) {
+        throw new Error(
+          `DeepFilterNet3 ONNX tensor name mismatch — ` +
+          `expected inputs [${EXPECTED_INPUTS.join(', ')}] ` +
+          `but model has [${newSession.inputNames.join(', ')}]; ` +
+          `expected outputs [${EXPECTED_OUTPUTS.join(', ')}] ` +
+          `but model has [${newSession.outputNames.join(', ')}].`,
+        );
+      }
 
       if (!settled) {
         settled = true;
@@ -312,10 +331,9 @@ async function resampleAudio(
  * This matches the user-intent of "strength" control even if the underlying
  * model does not expose `atten_lim_db` as a named ONNX input.
  *
- * NOTE: The ONNX input/output tensor names ('input', 'output') are based on
- * the community SpeechDenoiser port. Verify with:
- *   console.log(session.inputNames, session.outputNames)
- * after model load and adjust here if needed.
+ * Tensor names verified at model-load time (prepareSpeechEnhancementModel):
+ *   input  = 'input'   (shape [1, FRAME_SAMPLES])
+ *   output = 'output'  (shape [1, FRAME_SAMPLES])
  */
 async function runDeepFilter(
   ortSession: ort.InferenceSession,
@@ -349,10 +367,8 @@ async function runDeepFilter(
     let enhanced: Float32Array;
     try {
       const inputTensor = new ort.Tensor('float32', frame, [1, FRAME_SAMPLES]);
-      // TODO: verify input name against session.inputNames after first model load.
       const feeds: Record<string, ort.Tensor> = { input: inputTensor };
       const results = await ortSession.run(feeds);
-      // TODO: verify output name against session.outputNames after first model load.
       const outData = results['output']?.data;
       enhanced = outData instanceof Float32Array ? outData : frame.slice();
     } catch {
