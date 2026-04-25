@@ -31,6 +31,7 @@ import WebcamBlurTool from '../../components/tools/WebcamBlurTool.svelte';
 import KiTextDetektorTool from '../../components/tools/KiTextDetektorTool.svelte';
 import KiBildDetektorTool from '../../components/tools/KiBildDetektorTool.svelte';
 import AudioTranskriptionTool from '../../components/tools/AudioTranskriptionTool.svelte';
+import PdfZusammenfuehrenTool from '../../components/tools/PdfZusammenfuehrenTool.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
@@ -81,6 +82,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   'ki-text-detektor',
   'ki-bild-detektor',
   'audio-transkription',
+  'pdf-merge',
 ]);
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
@@ -288,6 +290,9 @@ const jsonLd = buildToolJsonLd(
           )}
           {config.type === 'formatter' && config.id === 'audio-transkription' && (
             <AudioTranskriptionTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === 'pdf-merge' && (
+            <PdfZusammenfuehrenTool config={config} client:load />
           )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter

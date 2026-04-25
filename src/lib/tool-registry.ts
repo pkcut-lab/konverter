@@ -120,6 +120,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/erbschaftsteuer-rechner').then((m) => m.erbschaftsteuerRechner),
   'jpg-to-pdf': () =>
     import('./tools/jpg-zu-pdf').then((m) => m.jpgZuPdf),
+  'pdf-merge': () =>
+    import('./tools/pdf-zusammenfuehren').then((m) => m.pdfZusammenfuehren),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

@@ -83,6 +83,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'leasing-factor-calculator': { de: 'leasing-faktor-rechner' },
   'inheritance-tax-calculator': { de: 'erbschaftsteuer-rechner' },
   'jpg-to-pdf': { de: 'jpg-zu-pdf' },
+  'pdf-merge': { de: 'pdf-zusammenfuehren' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
