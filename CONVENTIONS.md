@@ -407,6 +407,164 @@ Rotation-Tool in Phase 1 — manueller Kalender-Reminder reicht bei ≤6 Keys.
 ein Secret-Manager (1Password / Doppler / CF-Wrangler-Secrets) evaluiert. Bis dahin
 `.env.local` + `.gitignore`-Disziplin.
 
+## §10 MLFileTool-Template (§7a-Ausnahme-Tools, gelockt 2026-04-26)
+
+Tools, die unter Non-Negotiable §7a fallen (ML-Inferenz im Browser, kein
+Server-Roundtrip), folgen einem strikteren Pattern als der generische
+`FileTool`. Referenz-Implementierung: `video-hintergrund-entfernen`
+(`src/components/tools/VideoHintergrundEntfernenTool.svelte` +
+`src/lib/tools/process-video-bg-remove.ts` +
+`src/workers/video-bg-remove.worker.ts`). Weitere existierende
+ML-File-Tools — `remove-background`, `audio-transkription`,
+`speech-enhancer` — laufen Main-Thread und sind **nicht** unter §10
+zu refactoren; §10 gilt ab sofort nur für **neue** §7a-Tools mit
+Inferenz-Laufzeit > 200 ms pro Sample.
+
+### 10.1 Worker-Pflicht
+
+ML-Inferenz mit Frame-Rate (Video, Audio-Stream, Live-Camera) **muss**
+in einem dedizierten Web-Worker laufen. Main-Thread-Inferenz ist nur
+zulässig wenn das Modell pro User-Action genau einmal feuert (Single-
+Image, Single-Klick) und dabei < 800 ms blockiert.
+
+```ts
+// src/workers/<tool-id>.worker.ts
+self.onmessage = async (event: MessageEvent<WorkerInbound>) => {
+  const msg = event.data;
+  if (msg.type === 'process') {
+    await runPipeline(msg.payload, postProgress, postDone, postError);
+  } else if (msg.type === 'abort') {
+    aborted = true;
+  }
+};
+```
+
+### 10.2 State-Machine (Pflicht, fünf Phasen)
+
+```
+idle → preparing → model-loading → converting → done
+                                                    ↘ idle (reset)
+                                                    ↘ error → idle
+```
+
+- `idle` — Dropzone sichtbar, kein Loader.
+- `preparing` — Datei-Validierung, kurz, kein UI-Indikator nötig.
+- `model-loading` — Modell-Weights via `caches.match()` oder `fetch()`,
+  Progress-Bar mit `loaded/total`-MB, ETA, Stall-Watchdog 120 s.
+  Wird **übersprungen** wenn `isPrepared() === true`.
+- `converting` — Frame-/Sample-Loop. Zweite Progress-Bar mit
+  `frameIdx / totalFrames` + ETA. Abort-Button sichtbar.
+- `done` — Output-Preview + Download + KI-Disclaimer-Zeile.
+- `error` — Reset-Button + Error-Message in `var(--color-error)`.
+
+### 10.3 Zweistufige Progress-API
+
+Worker postet zwei Progress-Phasen:
+
+```ts
+type WorkerOutbound =
+  | { type: 'progress'; phase: 'model'; loaded: number; total: number }
+  | { type: 'progress'; phase: 'frame'; frameIdx: number; totalFrames: number }
+  | { type: 'done'; output: Uint8Array; meta?: Record<string, unknown> }
+  | { type: 'error'; message: string };
+```
+
+Komponenten-Code mappt `phase: 'model'` auf den `model-loading`-State,
+`phase: 'frame'` auf den `converting`-State.
+
+### 10.4 Runtime-Registry-Contracts
+
+Jedes §10-Tool erfüllt diese Schnittstelle in
+`tool-runtime-registry.ts`:
+
+```ts
+'<tool-id>': {
+  process: async (input, config, onProgress) => { /* posts to worker */ },
+  prepare: async (onProgress) => { /* posts model-load to worker */ },
+  isPrepared: () => /* sync flag from main-thread shim */,
+  clearLastResult: () => /* drops cached output, releases worker */,
+  preflightCheck: () => /* string | null — WebCodecs / WebGPU / etc. */,
+}
+```
+
+`isPrepared()` ist **synchron** — Komponenten dürfen nicht in einem
+`$effect` darauf warten. Source-of-truth ist ein Modul-Scope-Flag,
+das beim Worker-Done auf `true` flippt.
+
+### 10.5 Worker-Abort-Pattern
+
+Lange Pipelines brauchen User-Abort. Pattern:
+
+```ts
+// Main-thread shim
+let activeWorker: Worker | null = null;
+export function abortVideoBgRemove(): void {
+  activeWorker?.postMessage({ type: 'abort' });
+}
+
+// Worker
+let aborted = false;
+for await (const frame of frames) {
+  if (aborted) { closeAll(); return; }
+  /* … */
+}
+```
+
+Komponente wirft `AbortError` (Name-Property), Component fängt und
+geht in `idle` zurück (kein `error`-State — der User hat absichtlich
+abgebrochen).
+
+### 10.6 Cache-API für Modell-Weights
+
+`@huggingface/transformers` cached die Weights automatisch in der
+Browser-Cache-API. Kein eigener Cache-Code nötig. Verhalten:
+
+- First-Load: ~50 MB Download mit Progress.
+- Second-Load: instant (Cache-Hit).
+- Cache-Eviction: re-download mit selber UI (kein Crash).
+
+Der Stall-Watchdog (`prepareXxxModel({ stallTimeoutMs: 120_000 })`)
+fängt blockierte Downloads — wenn 120 s lang kein Progress-Event
+kommt, wird `StallError` geworfen. Pattern aus `remove-background.ts`
+übernehmen.
+
+### 10.7 WebGPU-Preflight + WASM-Fallback
+
+```ts
+async function detectDevice(): Promise<'webgpu' | 'wasm'> {
+  try {
+    const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+    if (!gpu) return 'wasm';
+    const adapter = await gpu.requestAdapter();
+    return adapter ? 'webgpu' : 'wasm';
+  } catch {
+    return 'wasm';
+  }
+}
+```
+
+`pipeline()`-Aufruf kriegt `{ device }` mit. Bei `wasm`-Fallback zeigt
+die UI eine Warning-Zeile *„CPU-Modus aktiv — 3-5× langsamer."*
+
+`preflightCheck()` im Runtime-Registry prüft Browser-Voraussetzungen
+**vor** dem ersten Worker-Spawn (z.B. `VideoEncoder`, `VideoDecoder`,
+`navigator.mediaDevices`). Returnt `string` mit User-Message wenn
+fehlend, sonst `null`.
+
+### 10.8 Bestehende §7a-Tools (NICHT refactoren)
+
+Folgende Tools sind §7a-konform aber laufen Main-Thread —
+Refactor auf Worker-Pattern wäre Scope-Creep:
+
+- `remove-background` (BEN2-Single-Image, ~800 ms pro Inferenz)
+- `audio-transkription` (Whisper-Single-Pass, User-Action one-shot)
+- `speech-enhancer` (DeepFilterNet, Audio-Block-One-Shot)
+- `bild-zu-text` (Tesseract.js, Single-Image)
+- `ki-text-detektor`, `ki-bild-detektor` (Single-Klick)
+
+Diese bleiben Main-Thread bis ein konkreter UX-Pain auftritt
+(>5 unabhängige User-Reports zu „UI-Freeze" pro Tool).
+
 ## Build-Gates
 
 - `npm run build` muss grün sein vor Commit
