@@ -932,6 +932,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      min-height: 2.75rem; /* WCAG 2.5.5 — min tap target */
       margin-top: var(--space-3);
       padding: var(--space-2) var(--space-4);
       border: 1px solid var(--color-border);
@@ -1155,6 +1156,7 @@
     /* Feinere Button-Proportionen — schmaleres Padding, kleinerer Radius
        und leichterer Font-Weight zugunsten eines eleganten, premium
        Eindrucks statt "solid block". */
+    min-height: 2.75rem; /* WCAG 2.5.5 — min tap target */
     padding: var(--space-2) var(--space-4);
     border-radius: var(--r-sm);
     font: inherit;
@@ -1266,10 +1268,11 @@
   .preset-pill {
     position: relative;
     display: inline-flex;
-    align-items: baseline;
+    align-items: center; /* was: baseline; WCAG 2.5.5 requires min-height which needs center */
     /* Pill kompakter — kleineres Gap + schmaleres Padding, damit alle
        drei Presets + QUALITÄT-Label einzeilig in die Settings-Card passen. */
     gap: 6px;
+    min-height: 2.75rem; /* WCAG 2.5.5 — min tap target */
     padding: 5px var(--space-3);
     border-radius: 9999px;
     font-size: var(--font-size-small);
@@ -1330,6 +1333,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+    min-height: 2.75rem; /* WCAG 2.5.5 — min tap target */
     margin: 0;
     padding: 0;
     font-size: var(--font-size-small);
@@ -1381,6 +1385,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+    min-height: 2.75rem; /* WCAG 2.5.5 — min tap target */
     font-size: var(--font-size-small);
     color: var(--color-text);
     cursor: pointer;
@@ -1425,11 +1430,22 @@
     appearance: none;
     -webkit-appearance: none;
     width: 100%;
-    height: 2px;
-    background: var(--color-border);
+    height: 2.75rem; /* WCAG 2.5.5 — vertical tap area; visual track via pseudo */
+    background: transparent; /* track styled per-engine via pseudo-elements below */
     border-radius: var(--r-sm);
     outline: none;
     cursor: pointer;
+  }
+  .quality__slider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--color-border);
+    border-radius: var(--r-sm);
+  }
+  .quality__slider::-moz-range-track {
+    height: 2px;
+    background: var(--color-border);
+    border-radius: var(--r-sm);
+    border: 0;
   }
   .quality__slider::-webkit-slider-thumb {
     appearance: none;
