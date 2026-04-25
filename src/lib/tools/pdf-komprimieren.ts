@@ -25,5 +25,6 @@ export const pdfKomprimieren: FileToolConfig = {
   filenameSuffix: '.pdf',
   defaultFormat: 'pdf',
   showQuality: false,
+  resetLabel: 'Neue PDF',
   process: processPdfKomprimieren,
 };

@@ -90,6 +90,7 @@
       case 'jpg': return 'image/jpeg';
       case 'webp': return 'image/webp';
       case 'txt': return 'text/plain';
+      case 'pdf': return 'application/pdf';
       default: return 'image/webp';
     }
   }
@@ -99,6 +100,7 @@
       case 'jpg': return 'jpg';
       case 'webp': return 'webp';
       case 'txt': return 'txt';
+      case 'pdf': return 'pdf';
       default: return 'webp';
     }
   }
@@ -640,6 +642,8 @@
             {#if sourceUrl}
               {#if config.categoryId === 'audio'}
                 <audio controls src={sourceUrl} class="audio-player">Dein Browser unterstützt kein Audio.</audio>
+              {:else if config.categoryId === 'document'}
+                <object data={sourceUrl} type="application/pdf" class="frame__pdf" aria-label="Quelldatei (PDF-Vorschau)"><p class="frame__pdf-fallback">PDF-Vorschau</p></object>
               {:else}
                 <img
                   class="frame__img"
@@ -660,6 +664,8 @@
               <textarea class="preview__text" readonly value={outputText} aria-label="Erkannter Text"></textarea>
             {:else if config.categoryId === 'audio'}
               <audio controls src={outputUrl} class="audio-player" data-testid="filetool-preview">Dein Browser unterstützt kein Audio.</audio>
+            {:else if config.categoryId === 'document'}
+              <object data={outputUrl} type="application/pdf" class="preview__pdf" aria-label="Ergebnis (PDF-Vorschau)" data-testid="filetool-preview"><p class="frame__pdf-fallback">PDF-Vorschau</p></object>
             {:else}
               <img
                 class="preview__img"
