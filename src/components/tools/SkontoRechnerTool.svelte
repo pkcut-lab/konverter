@@ -427,6 +427,7 @@
 
   .basis-pill {
     padding: var(--space-1) var(--space-3);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
     color: var(--color-text);
@@ -569,7 +570,7 @@
     background: var(--color-text-subtle);
   }
   .ampel-dot--gruen { background: var(--color-success); }
-  .ampel-dot--gelb  { background: var(--color-warning, #c08000); }
+  .ampel-dot--gelb  { background: var(--color-warning); }
   .ampel-dot--rot   { background: var(--color-error); }
 
   .jahreszins-card__value {
@@ -646,6 +647,7 @@
   /* ---- Copy-Inline-Button ---- */
   .copy-inline {
     padding: var(--space-1) var(--space-2);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-subtle);
@@ -746,6 +748,7 @@
 
   .reset-btn {
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem;
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-muted);
