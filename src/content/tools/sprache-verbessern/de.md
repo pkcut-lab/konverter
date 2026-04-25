@@ -5,7 +5,7 @@ title: "Sprache verbessern: KI-Tool ohne Upload"
 metaDescription: "Entferne lästiges Audio-Rauschen und verbessere deine Sprachaufnahmen sofort. Das Tool läuft zu 100&nbsp;% lokal in deinem Browser — ohne Dateiupload."
 tagline: "Saubere Stimme in Sekunden — dein Audio verlässt den Browser nicht"
 intro: "KI-Rauschunterdrückung direkt im Browser — kein Upload. DeepFilterNet3 bereinigt WAV, MP3, OGG, M4A, FLAC lokal."
-headingHtml: "Sprache verbessern — <em>KI-Rauschunterdrückung</em>"
+headingHtml: "<em>Sprache</em> verbessern — KI-Rauschunterdrückung"
 category: "audio"
 contentVersion: 1
 howToUse:
@@ -16,7 +16,7 @@ faq:
   - q: "Wie funktioniert die Rauschunterdrückung ohne Server?"
     a: "Das KI-Modell DeepFilterNet3 läuft als ONNX-Datei direkt im Browser — deinem eigenen Rechner. Deine Audiodatei wird ausschließlich lokal verarbeitet und verlässt deinen Browser zu keinem Zeitpunkt. Beim ersten Aufruf lädt das Tool das Modell (~10&nbsp;MB) einmalig herunter und speichert es im Browser-Cache. Danach funktioniert es auch offline."
   - q: "Klingt das Ergebnis roboterhaft?"
-    a: "Nur wenn du die Stärke auf Maximal (100 dB) setzt. Der Default Dezent (20 dB) dämpft Rauschen hörbar, ohne die natürliche Klangfarbe der Stimme zu verändern. Dieser Wert wurde basierend auf dem verbreiteten Nutzer-Feedback zu Adobe Podcast V2 gewählt: maximale Stärke erzeugt Artefakte, 30&nbsp;% ist die natürliche Position."
+    a: "Nur wenn du die Stärke auf Maximal (100&nbsp;dB) setzt. Der Default Dezent (20&nbsp;dB) dämpft Rauschen hörbar, ohne die natürliche Klangfarbe der Stimme zu verändern. Dieser Wert wurde basierend auf dem verbreiteten Nutzer-Feedback zu Adobe Podcast V2 gewählt: maximale Stärke erzeugt Artefakte, 30&nbsp;% ist die natürliche Position."
   - q: "Welche Dateiformate werden unterstützt?"
     a: "Als Eingabe akzeptiert das Tool WAV, MP3 (audio/mpeg), M4A und AAC (audio/mp4), OGG Vorbis sowie FLAC und WebM Opus. Die Ausgabe ist immer eine WAV-Datei mit 48&nbsp;kHz, 16&nbsp;Bit, Mono — das verlustfreie Standardformat für Sprachverarbeitung."
   - q: "Warum ist die Ausgabe Mono statt Stereo?"
@@ -32,10 +32,9 @@ relatedTools:
 
 ## Was macht dieser Sprachverbesserer?
 
-Hintergrundgeräusche in Sprachaufnahmen sind eines der häufigsten Qualitätsprobleme
-in Podcasts, Video-Tutorials, Interviews und Videokonferenz-Mitschnitten. Lüfterrauschen,
-Straßenlärm, Tastaturrauschen und Raumhall lassen Stimmen unprofessionell wirken —
-selbst wenn der Inhalt gut ist.
+Dieses Tool entfernt Hintergrundgeräusche aus Sprachaufnahmen vollständig im Browser — kein Upload, DeepFilterNet3-KI lokal.
+
+Lüfterrauschen, Straßenlärm, Tastaturrauschen und Raumhall lassen Stimmen unprofessionell wirken — selbst wenn der Inhalt gut ist. Betroffen sind vor allem Podcasts, Video-Tutorials, Interviews und Videokonferenz-Mitschnitte.
 
 Dieses Tool nutzt das KI-Modell **DeepFilterNet3** (MIT- und Apache-2.0-Lizenz), das am
 Fraunhofer-Institut entwickelt wurde und auf dem [ICASSP 2023 als State-of-the-Art-Modell](https://github.com/Rikorose/DeepFilterNet)
@@ -154,7 +153,7 @@ ist strukturell lokal.
 
 ## Verwandte Audio-Tools
 
-Weitere Tools aus dem Audio-Ökosystem, die zum Thema passen:
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
 - **[iPhone-Video in MP4 umwandeln](/de/hevc-zu-h264)** — HEVC/MOV-Videos aus dem iPhone in universelles H.264-MP4 konvertieren, ebenfalls vollständig im Browser ohne Upload.
 - **[Hintergrund entfernen](/de/hintergrund-entfernen)** — KI-basiertes Freistellen von Motiven aus Fotos, lokal verarbeitet mit BEN2-Modell.
