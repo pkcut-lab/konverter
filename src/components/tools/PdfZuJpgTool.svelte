@@ -9,6 +9,7 @@
     dpiLabel,
     buildZipStore,
     DPI_OPTIONS,
+    JPEG_BACKGROUND,
     type DpiOption,
   } from '../../lib/tools/pdf-zu-jpg-utils';
 
@@ -59,6 +60,15 @@
   let password = $state<string>('');
   let showPasswordPrompt = $state<boolean>(false);
   let pendingBytes = $state.raw<Uint8Array | null>(null);
+
+  // Focus password input when dialog opens (a11y B5)
+  $effect(() => {
+    if (showPasswordPrompt) {
+      Promise.resolve().then(() => {
+        (document.getElementById('pzj-password-input') as HTMLInputElement | null)?.focus();
+      });
+    }
+  });
 
   const selectedCount = $derived(thumbs.filter((t) => t.selected).length);
   const canRender = $derived(
@@ -286,7 +296,7 @@
       const ctx = canvas.getContext('2d');
       if (ctx) {
         // White background — JPEG has no alpha channel
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = JPEG_BACKGROUND;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         await page.render({ canvasContext: ctx, viewport }).promise;
       }
@@ -383,14 +393,16 @@
   {/if}
 
   {#if showPasswordPrompt}
-    <div class="pzj__password" role="dialog" aria-label="Passwort eingeben" data-testid="pzj-password-prompt">
-      <p class="pzj__password-hint">
-        {loadError || 'Diese PDF ist passwortgeschützt.'}
-      </p>
+    <div class="pzj__password" role="dialog" aria-modal="true" aria-label="Passwort eingeben" data-testid="pzj-password-prompt">
+      <p class="pzj__password-hint">Diese PDF ist passwortgeschützt.</p>
+      {#if loadError}
+        <p class="pzj__password-error" role="alert">{loadError}</p>
+      {/if}
       <label class="pzj__password-label">
         Passwort
         <input
           type="password"
+          id="pzj-password-input"
           class="pzj__password-input"
           bind:value={password}
           onkeydown={(e) => { if (e.key === 'Enter') void submitPassword(); }}
@@ -593,6 +605,11 @@
   .pzj__dropzone:hover {
     border-color: var(--color-text-subtle);
   }
+  .pzj__dropzone:has(.pzj__input:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
   .pzj__dropzone--dragging {
     border-color: var(--color-accent);
     border-style: solid;
@@ -626,6 +643,11 @@
   }
   .pzj__password-hint {
     color: var(--color-text-muted);
+    font-size: var(--font-size-small);
+    margin: 0;
+  }
+  .pzj__password-error {
+    color: var(--color-error);
     font-size: var(--font-size-small);
     margin: 0;
   }
@@ -867,7 +889,7 @@
     transition: transform var(--dur-fast) var(--ease-out);
   }
   .pzj__primary-btn--sm {
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-small);
   }
@@ -885,7 +907,7 @@
   .pzj__ghost-btn {
     display: inline-flex;
     align-items: center;
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     padding: var(--space-1) var(--space-3);
     color: var(--color-text-muted);
     font-family: var(--font-family-mono);
@@ -986,7 +1008,7 @@
   .pzj__dl-link {
     display: inline-flex;
     align-items: center;
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     padding: var(--space-1) var(--space-3);
     color: var(--color-bg);
     background: var(--color-text);

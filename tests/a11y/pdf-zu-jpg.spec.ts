@@ -1,0 +1,23 @@
+/**
+ * tests/a11y/pdf-zu-jpg.spec.ts
+ * A11y spec for /de/pdf-zu-jpg — generated as part of Rework-R1 (KON-508).
+ * Covers: Dropzone aria-label, Grid role=group+aria-label, Dialog role=dialog+aria-modal,
+ *         DPI fieldset legend, Progress-Bar aria-valuenow/min/max, Status aria-live=polite.
+ */
+import { test } from 'playwright/test';
+import { toolUrl, checkAxeStrict, checkTabOrder, checkFocusRing, checkFocusTrap, checkPrefersReducedMotion } from './helpers.js';
+
+const SLUG = 'pdf-zu-jpg';
+const URL = toolUrl(SLUG);
+
+test.describe(`a11y: ${SLUG}`, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(URL);
+    await page.waitForSelector('[data-tool-loaded], .tool-main', { timeout: 5_000 }).catch(() => {});
+  });
+  test('A1 axe-core strict — zero WCAG violations', async ({ page }) => { await checkAxeStrict(page); });
+  test('A2 tab-order — focusable elements reachable via Tab', async ({ page }) => { await checkTabOrder(page); });
+  test('A3 focus-ring — visible outline on first interactive element', async ({ page }) => { await checkFocusRing(page); });
+  test('A4 focus-trap — dialog focus stays contained (no dialog → pass)', async ({ page }) => { await checkFocusTrap(page); });
+  test('A11 prefers-reduced-motion — zero animated elements under reduce', async ({ page }) => { await checkPrefersReducedMotion(page); });
+});

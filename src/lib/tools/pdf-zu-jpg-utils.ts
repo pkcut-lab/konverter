@@ -68,6 +68,9 @@ export function formatFileSize(bytes: number): string {
 // DPI helpers
 // ---------------------------------------------------------------------------
 
+/** JPEG canvas background color (white). JPEG has no alpha channel. */
+export const JPEG_BACKGROUND = '#ffffff' as const;
+
 /** Valid DPI options for PDF-to-JPG conversion. */
 export type DpiOption = 72 | 150 | 300;
 

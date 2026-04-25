@@ -80,9 +80,9 @@ Dieser Konverter macht Server-Upload technisch unmöglich. PDF.js läuft als Jav
 
 Die häufigsten Fragen zur PDF-zu-JPG-Konvertierung sind oben in der FAQ-Sektion beantwortet.
 
-## Verwandte Dokument-Tools
+## Verwandte Dokumenten-Tools
 
-Weitere Tools aus dem Konverter-Ökosystem für die Arbeit mit PDFs und Bildern:
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
 - **[JPG in PDF umwandeln](/de/jpg-zu-pdf)** — Bilder zu einem PDF zusammenführen, ohne Software.
 - **[PDF zusammenführen](/de/pdf-zusammenfuehren)** — Mehrere PDF-Dateien zu einem einzigen Dokument kombinieren.
