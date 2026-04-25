@@ -94,12 +94,23 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/brutto-netto-rechner').then((m) => m.bruttoNettoRechner),
   'amortization-calculator': () =>
     import('./tools/tilgungsplan-rechner').then((m) => m.tilgungsplanRechner),
+  'cash-discount-calculator': () =>
+    import('./tools/skonto-rechner').then((m) => m.skontoRechner),
   'webcam-blur': () =>
     import('./tools/webcam-blur').then((m) => m.webcamHintergrundUnschaerfe),
   'video-bg-remove': () =>
     import('./tools/video-hintergrund-entfernen').then((m) => m.videoBgRemove),
   'speech-enhancer': () =>
     import('./tools/sprache-verbessern').then((m) => m.spracheVerbessern),
+  'image-to-text': () =>
+    import('./tools/bild-zu-text').then((m) => m.bildZuText),
+  'ki-text-detektor': () =>
+    import('./tools/ki-text-detektor-config').then((m) => m.kiTextDetektor),
+  'ki-bild-detektor': () =>
+    import('./tools/ki-bild-detektor-config').then((m) => m.kiBildDetektor),
+  'audio-transkription': () =>
+    import('./tools/audio-transkription-config').then((m) => m.audioTranskriptionConfig),
+  'roi-calculator': () => import('./tools/roi-rechner').then((m) => m.roiRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

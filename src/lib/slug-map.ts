@@ -69,9 +69,15 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'compound-interest-calculator': { de: 'zinseszins-rechner' },
   'gross-net-calculator': { de: 'brutto-netto-rechner' },
   'amortization-calculator': { de: 'tilgungsplan-rechner' },
+  'cash-discount-calculator': { de: 'skonto-rechner' },
   'webcam-blur': { de: 'webcam-hintergrund-unschaerfe' },
   'video-bg-remove': { de: 'video-hintergrund-entfernen' },
   'speech-enhancer': { de: 'sprache-verbessern' },
+  'image-to-text': { de: 'bild-zu-text' },
+  'ki-text-detektor': { de: 'ki-text-detektor' },
+  'ki-bild-detektor': { de: 'ki-bild-detektor' },
+  'audio-transkription': { de: 'audio-transkription' },
+  'roi-calculator': { de: 'roi-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

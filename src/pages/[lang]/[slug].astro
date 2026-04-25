@@ -18,11 +18,16 @@ import KreditrechnerTool from '../../components/tools/KreditrechnerTool.svelte';
 import RabattRechnerTool from '../../components/tools/RabattRechnerTool.svelte';
 import ZinsrechnerTool from '../../components/tools/ZinsrechnerTool.svelte';
 import ZinseszinsRechnerTool from '../../components/tools/ZinseszinsRechnerTool.svelte';
+import RoiRechnerTool from '../../components/tools/RoiRechnerTool.svelte';
+import SkontoRechnerTool from '../../components/tools/SkontoRechnerTool.svelte';
 import Comparer from '../../components/tools/Comparer.svelte';
 import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
 import Validator from '../../components/tools/Validator.svelte';
 import WebcamBlurTool from '../../components/tools/WebcamBlurTool.svelte';
+import KiTextDetektorTool from '../../components/tools/KiTextDetektorTool.svelte';
+import KiBildDetektorTool from '../../components/tools/KiBildDetektorTool.svelte';
+import AudioTranskriptionTool from '../../components/tools/AudioTranskriptionTool.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
@@ -46,6 +51,8 @@ const LOAN_CALCULATOR_TOOL_ID = 'loan-calculator';
 const DISCOUNT_CALCULATOR_TOOL_ID = 'discount-calculator';
 const INTEREST_CALCULATOR_TOOL_ID = 'interest-calculator';
 const COMPOUND_INTEREST_TOOL_ID = 'compound-interest-calculator';
+const ROI_CALCULATOR_TOOL_ID = 'roi-calculator';
+const CASH_DISCOUNT_TOOL_ID = 'cash-discount-calculator';
 const CUSTOM_FORMATTER_IDS = new Set<string>([
   HEX_COLOR_TOOL_ID,
   IMAGE_DIFF_TOOL_ID,
@@ -59,6 +66,11 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   DISCOUNT_CALCULATOR_TOOL_ID,
   INTEREST_CALCULATOR_TOOL_ID,
   COMPOUND_INTEREST_TOOL_ID,
+  ROI_CALCULATOR_TOOL_ID,
+  CASH_DISCOUNT_TOOL_ID,
+  'ki-text-detektor',
+  'ki-bild-detektor',
+  'audio-transkription',
 ]);
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
@@ -181,7 +193,7 @@ const jsonLd = buildToolJsonLd(
       <p class="tagline">{entry.data.tagline}</p>
     </header>
 
-    <div class:list={['tool-main', entry.data.aside && 'tool-main--with-aside']}>
+    <div class="tool-main">
       <div class="tool-main__primary">
         <section
           class:list={[
@@ -238,7 +250,18 @@ const jsonLd = buildToolJsonLd(
           {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && (
             <ZinseszinsRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
+          {config.type === 'formatter' && config.id === ROI_CALCULATOR_TOOL_ID && (
+            <RoiRechnerTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === CASH_DISCOUNT_TOOL_ID && (
+            <SkontoRechnerTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === 'ki-text-detektor' && (
+            <KiTextDetektorTool config={config} client:load />
+          )}
+          {config.id === 'ki-bild-detektor' && <KiBildDetektorTool config={config} client:load />}
+          {config.id === 'audio-transkription' && <AudioTranskriptionTool config={config} client:load />}
+          {!CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
               config={config}
               placeholder={config.placeholder ?? ''}
@@ -291,28 +314,35 @@ const jsonLd = buildToolJsonLd(
       </div>
 
       {entry.data.aside && (
-        <aside class="tool-aside" aria-labelledby="tool-aside-heading">
-          <section class="tool-aside__steps">
+        <details class="tool-aside" aria-labelledby="tool-aside-heading">
+          <summary class="tool-aside__summary">
             <h2 id="tool-aside-heading">So funktioniert es</h2>
-            <ol>
-              {entry.data.aside.steps.map((step: { title: string; description: string }, i: number) => (
-                <li>
-                  <span class="tool-aside__step-number">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div class="tool-aside__step-body">
-                    <h3>{step.title}</h3>
-                    <p>{step.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-          <section class="tool-aside__privacy" aria-labelledby="tool-aside-privacy-heading">
-            <h3 id="tool-aside-privacy-heading">Datenschutz</h3>
-            <p>{entry.data.aside.privacy}</p>
-          </section>
-        </aside>
+            <svg class="tool-aside__chevron" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="tool-aside__content">
+            <section class="tool-aside__steps">
+              <ol>
+                {entry.data.aside.steps.map((step: { title: string; description: string }, i: number) => (
+                  <li>
+                    <span class="tool-aside__step-number">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <div class="tool-aside__step-body">
+                      <h3>{step.title}</h3>
+                      <p>{step.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+            <section class="tool-aside__privacy" aria-labelledby="tool-aside-privacy-heading">
+              <h3 id="tool-aside-privacy-heading">Datenschutz</h3>
+              <p>{entry.data.aside.privacy}</p>
+            </section>
+          </div>
+        </details>
       )}
     </div>
 
@@ -425,35 +455,59 @@ const jsonLd = buildToolJsonLd(
   }
 
   @media (min-width: 60rem) {
-    .tool-main--with-aside {
-      display: grid;
-      grid-template-columns: minmax(0, 34rem) minmax(0, 20rem);
-      gap: var(--space-6);
-      align-items: start;
-    }
-    .tool-main--with-aside .tool-section {
-      margin: 0;
-    }
+    /* Removed the grid layout so the aside stacks below the tool natively */
   }
 
-  /* Aside-Slot (§4 Card Variant: Aside-Slot). Base-Card-Styling + non-interaktiv. */
+  /* Aside-Slot as details accordion */
   .tool-aside {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-    padding: var(--space-6);
+    max-width: 48rem;
+    width: 100%;
+    margin: 0 auto;
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
   }
-  .tool-aside__steps h2 {
-    margin: 0 0 var(--space-5) 0;
+  .tool-aside__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-5) var(--space-6);
+    cursor: pointer;
+    list-style: none; /* Hide default triangle */
+  }
+  .tool-aside__summary::-webkit-details-marker {
+    display: none;
+  }
+  .tool-aside__summary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    border-radius: var(--r-md);
+  }
+  .tool-aside__summary h2 {
+    margin: 0;
     font-size: 1rem;
     font-weight: 600;
     letter-spacing: -0.005em;
     color: var(--color-text);
-    text-wrap: balance;
+  }
+  .tool-aside__chevron {
+    color: var(--color-text-subtle);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .tool-aside[open] .tool-aside__chevron {
+    transform: rotate(180deg);
+  }
+  .tool-aside__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: 0 var(--space-6) var(--space-6);
+    animation: tool-aside-fade-in var(--dur-fast) var(--ease-out);
+  }
+  @keyframes tool-aside-fade-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .tool-aside__steps ol {
     list-style: none;
@@ -535,11 +589,6 @@ const jsonLd = buildToolJsonLd(
   }
   .kbd-hint__label {
     color: var(--color-text-muted);
-  }
-  @media (min-width: 60rem) {
-    .kbd-hints {
-      justify-content: flex-start;
-    }
   }
 
   /* Die In-Content-Ad-Slot-Utility lebt in src/styles/global.css
