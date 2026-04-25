@@ -7,7 +7,7 @@ tagline: "PDF-Größe reduzieren ohne Qualitätsverlust — alles bleibt auf dei
 intro: "Optimiere deine PDF-Datei verlustlos im Browser — ohne Server-Upload, ohne Anmeldung. Das Tool entfernt Metadaten, komprimiert Objekt-Streams und linearisiert die Struktur. Typische Reduktion: 5–25%. Deine Datei verlässt deinen Computer nie."
 category: "document"
 contentVersion: 1
-headingHtml: "PDF <em>komprimieren</em>"
+headingHtml: "<em>PDF</em> komprimieren"
 howToUse:
   - "PDF per Drag & Drop in den Upload-Bereich ziehen oder über den Datei-Browser auswählen."
   - "Das Tool optimiert die Datei automatisch — Metadaten werden entfernt, Objekt-Streams komprimiert."
@@ -82,11 +82,8 @@ Alle bekannten PDF-Komprimierungs-Dienste — iLovePDF, Smallpdf, PDF24, pdfforg
 Sejda und andere — übertragen deine Dateien auf externe Server. Manche löschen
 sie nach zwei Stunden, andere nach einem Tag. Der Upload selbst findet immer statt.
 
-Das FBI warnte im März&nbsp;2025 öffentlich, dass viele kostenlose PDF-Tools
-als Malware-Fronten operieren: Dateidiebstahl, Spyware, Imitation bekannter
-Marken wie Adobe. Auch ohne böswillige Absicht gibst du bei jedem Server-Upload
-vertrauliche Inhalte aus der Hand — Verträge, Gehaltsabrechnungen,
-Unternehmensunterlagen.
+Auch ohne böswillige Absicht gibst du bei jedem Server-Upload vertrauliche
+Inhalte aus der Hand — Verträge, Gehaltsabrechnungen, Unternehmensunterlagen.
 
 Dieses Tool macht das strukturell unmöglich: Es gibt keinen Server, keinen
 Upload-Endpunkt und keine Netzwerkverbindung während der Verarbeitung. Deine

@@ -722,4 +722,12 @@ const jsonLd = buildToolJsonLd(
       padding-bottom: var(--space-4);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tool-aside__chevron { transition: none; }
+    @keyframes tool-aside-fade-in {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
 </style>

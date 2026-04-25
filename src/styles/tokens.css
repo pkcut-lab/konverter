@@ -120,7 +120,7 @@
   --color-surface-sunk: #0F0E0D;
   --color-border: #3A3733;
   --color-text: #FAFAF9;
-  --color-text-muted: #A8A59E;
+  --color-text-muted: #B3B0A9; /* AAA: was #A8A59E (6.37:1 on --color-surface #252320), now 7.24:1 */
   --color-text-subtle: #B3B0A9; /* AAA: #A8A59E was 6.37:1 on --color-surface; #B3B0A9 = 7.24:1 */
   --color-accent: #F0A066;
   --color-accent-hover: #F5B07C;

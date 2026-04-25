@@ -79,6 +79,10 @@
     : clipboardState === 'error' ? 'Nicht unterstützt'
     : 'In Zwischenablage',
   );
+  // navigator.clipboard.write([ClipboardItem]) only supports image/* MIME types,
+  // not application/pdf. Hide the copy button for PDF output.
+  const COPY_SUPPORTED_FORMATS = new Set(['png', 'jpg', 'webp']);
+  const canCopyToClipboard = $derived(COPY_SUPPORTED_FORMATS.has(outputFormat));
 
   function formatToMime(f: string): string {
     switch (f) {
@@ -691,12 +695,14 @@
             onclick={reset}
           >{config.resetLabel ?? 'Neues Bild'}</button>
 
+          {#if canCopyToClipboard}
           <button
             type="button"
             class="btn btn--ghost"
             onclick={copyToClipboard}
             aria-live="polite"
           >{clipboardLabel}</button>
+          {/if}
 
           <a
             class="btn btn--primary"
@@ -1529,6 +1535,10 @@
     }
     .btn:active,
     .quality__slider:active::-webkit-slider-thumb {
+      transform: none;
+    }
+    .frame__img {
+      transition: none;
       transform: none;
     }
   }
