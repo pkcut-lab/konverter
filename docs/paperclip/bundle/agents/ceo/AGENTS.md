@@ -683,14 +683,29 @@ def loop_f_end_review_chain():
             write_digest(f"- Loop-F1: End-Review Pass {next_pass} fuer {slug}")
 
     # F2: Pass N clean → naechster Pass (nur wenn N < 3)
+    # BUG-FIX v1.6 (2026-04-25): shipped-Check war zu breit.
+    # completed-tools.md enthaelt auch ship-as-is-Tools die den Triple-Pass
+    # nie abgeschlossen haben. F2 darf NUR skippen wenn Pass 3 done existiert
+    # ODER slug in freigabe-liste.md steht (= echter Pass-3-clean).
+    # shipped-via-ship-as-is sind KEIN Grund, Pass 3 zu ueberspringen.
+    shipped_with_full_pass3 = set()
+    try:
+        freigabe = open("docs/paperclip/freigabe-liste.md").read()
+        for line in freigabe.splitlines():
+            if line.startswith("|") and "|" in line[1:]:
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) > 2 and parts[1].startswith("["):
+                    # Format: | [slug](url) | ...
+                    slug_cell = parts[1]
+                    s = slug_cell.split("](")[0].lstrip("[")
+                    shipped_with_full_pass3.add(s)
+    except Exception:
+        pass
+
     done_passes = [i for i in all_issues
                    if i["title"].startswith("End-Review Pass ")
-                   and not i["title"].startswith("End-Review Pass 1: ")  # Kein typo-Match
                    and "Rework" not in i["title"]
                    and i["status"] == "done"]
-    # Vereinfachung: F2 ist seltener (clean bei Pass 1/2 bedeutet
-    # kein Blocker-Rework → direkt Pass N+1).
-    # CEO liest Verdict-File; wenn nicht parsebar → skip (kein Crash).
     for ep in done_passes:
         try:
             pass_n = int(ep["title"].split("Pass ")[1].split(":")[0])
@@ -698,6 +713,9 @@ def loop_f_end_review_chain():
         except Exception:
             continue
         if pass_n >= 3:
+            continue
+        # Skip nur wenn Pass 3 bereits via freigabe-liste bestaetigt
+        if slug in shipped_with_full_pass3:
             continue
         verdict_file = f"tasks/end-review-{slug}-pass{pass_n}.md"
         verdict = read_yaml_frontmatter(verdict_file).get("verdict", "unknown")
@@ -1131,16 +1149,31 @@ def consume_end_review_done(end_review_ticket):
         )
 
     elif verdict == "blockers_after_3_passes":
-        # Pass 3 nach zwei Reworks immer noch Blocker → USER-ESKALATION.
-        # Kein Pass 4, kein Auto-Park. User muss entscheiden.
-        write_live_alarm(
-            type="end_review_exhausted",
-            slug=end_review_ticket.tool_slug,
-            verdict_file=verdict_file,
-            blockers_summary=parse_blockers_short(verdict_file),
-        )
-        # Tool-Build-Ticket bleibt offen, Status `blocked`, User antwortet im
-        # Ticket-Thread → CEO nimmt User-Direktive auf.
+        # Pass 3 nach Reworks immer noch Blocker → CEO entscheidet autonom.
+        # v1.6 (2026-04-25): User-Policy "CEO trifft Entscheidungen in unserem
+        # Interesse". Keine User-Eskalation. CEO bewertet score und handelt:
+        score = compute_rubric_score_from_verdict(verdict_file)
+        slug = end_review_ticket.tool_slug
+        blockers_summary = parse_blockers_short(verdict_file)
+
+        if score >= 0.80:
+            # Trotz offener Blocker qualitativ ausreichend → ship-as-is.
+            # Begründung: 3 Passes + 2 Reworks = maximaler QA-Aufwand erreicht;
+            # verbleibende Blocker sind Minor/Edge-Cases; weiteres Rework
+            # bindet Kapazität ohne klaren User-Benefit.
+            route_to_deploy_queue(end_review_ticket.parent_ticket, tag='ship-as-is')
+            write_digest(
+                f"- End-Review-Exhausted AUTO-SHIP: {slug} "
+                f"(score={score:.2f} ≥ 0.80, 3 passes + reworks done, "
+                f"remaining blockers: {blockers_summary})"
+            )
+        else:
+            # Score < 0.80 → zu viele Qualitätsmängel, kein Ship. Park.
+            route_to_park(end_review_ticket.parent_ticket)
+            write_digest(
+                f"- End-Review-Exhausted AUTO-PARK: {slug} "
+                f"(score={score:.2f} < 0.80, blockers: {blockers_summary})"
+            )
 
 
 def consume_end_review_rework_done(rework_ticket):
