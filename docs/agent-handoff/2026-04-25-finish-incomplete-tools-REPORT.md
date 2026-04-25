@@ -455,3 +455,167 @@ Component-Imports prüfen. Build war grün, weil Astro-SSG die Loader-
 Imports nur statisch validiert, nicht zur Runtime aufruft. Erst
 manueller Browser-Smoke-Test oder ein `git status` hätte den Drift
 gefangen.
+
+---
+
+## Third-Pass-Review (Claude Opus 4.7, 2026-04-25 ~15:50 UTC)
+
+Nach dem Claude-Followup hat der User um eine dritte unabhängige
+Verifikation gebeten („Deep Dive ob wirklich alles perfekt ist und ob
+die Tools einsatzbereit sind"). Dieser Block dokumentiert was die
+dritte Pass gefunden + gefixt hat.
+
+### Methode
+
+`verification-before-completion`-Skill als Leitfaden, alle drei
+Build-Pipelines fresh laufen lassen (Vitest, Astro check, Astro build),
+dann jede Behauptung des Followup-Reports einzeln am Code verifizieren —
+nicht nur am Commit-Log, sondern an den tatsächlichen File-Inhalten.
+
+### Verifikations-Ergebnis (fresh, 2026-04-25 15:42 UTC + erneut 15:50 UTC nach Edits)
+
+```
+Vitest:       1505/1505 grün
+Astro build:  70 pages, 0 errors, PWA precache 167 entries / 4.66 MB
+Astro check:  5 errors (unverändert, alle pre-existing in [slug].astro:
+              placeholder/inversePlaceholder/inverseLabel/step/i Generic-
+              Component-Slot-Tippings)
+git status:   clean (nach 8dc082f-Commit; Paperclip-Heartbeat-Mods in
+              docs/paperclip/bundle/agents/ blieben untouched)
+```
+
+### Verifizierung der Followup-Behauptungen
+
+| Behauptung | Verifikations-Methode | Befund |
+|---|---|---|
+| `bbde59a` committed type-runtime-registry.ts loaders | `git show --stat bbde59a` + Read der File | ✓ stimmt — `loadKiTextDetektor`, `loadKiBildDetektor`, `loadAudioTranskription` sind seit bbde59a Bestandteil von HEAD |
+| `bbde59a` committed FileTool txt-output path | Read `FileTool.svelte` Z. 87, 96, 267-268, 340-341, 641-643 | ✓ stimmt — `'txt'` MIME-Mapping, TextDecoder-Branch + textarea-Preview komplett |
+| `fe5ac5b` ergänzte prefers-reduced-motion in 4 Components | Read jedes Block in den 4 Files | ✓ stimmt — alle 4 Blöcke vorhanden, Selektoren konsistent |
+| `fe5ac5b` ergänzte Modell-Größen-Hints in 2 ML-Components | KiTextDetektorTool:128 + KiBildDetektorTool:154 | ✓ stimmt — beide Texte ergänzt, ~80 MB / ~90 MB |
+| `c814401` korrigiert Park-Decision für pdf-aufteilen | `git show c814401` | ✓ stimmt — CEO-Log-Eintrag jetzt akkurat |
+
+### Eigene Funde der dritten Pass
+
+**F1 — `[slug].astro:286-287` Pattern-Inkonsistenz.** Die ki-bild-detektor
++ audio-transkription Conditions hatten nur `config.id === ...` ohne den
+`config.type === 'formatter' &&`-Guard, den die anderen 17 Custom-
+Formatter-Checks alle haben (Z. 232 bis 285). Functional ok (config.id
+ist eindeutig), aber bricht das Pattern. **Gefixt in `8dc082f`.**
+
+**F2 — `KiBildDetektorTool.svelte:485-493` unvollständiger reduced-motion-
+Block.** `.remove-btn:hover { transform: scale(1.1) }` (Z. 296) war
+nicht im prefers-reduced-motion-Block. `global.css:151-156` setzt zwar
+universell `transition-duration: 0ms !important`, aber das tötet nur
+die Tween-Dauer — der `transform: scale(1.1)`-Property auf `:hover`
+applies trotzdem **instant**. Für motion-sensitive User ist auch ein
+instant scale-jump unerwünscht. **Gefixt in `8dc082f`** (`.remove-btn`
++ `.remove-btn:hover` zum Block ergänzt, Pattern: `transition: none;
+transform: none`).
+
+### Validierung weiterer Followup-Punkte
+
+**P1-1 (prefers-reduced-motion fehlte in 4 Components) war
+über-stated.** `src/styles/global.css:151-156` enthält einen
+universellen `*, *::before, *::after`-Block mit `animation-duration:
+0ms !important; transition-duration: 0ms !important;` der ALLE
+transitions/animations site-weit unter `prefers-reduced-motion: reduce`
+zeroed. Die per-Component-Blöcke aus `fe5ac5b` sind **Defense-in-Depth
+für `transform: none`** (das die globale Regel nicht killt) — sie
+fügen echten Wert hinzu (Hover-Scale + Active-Scale entfernen), aber
+das Risiko ohne sie war kleiner als der Followup-Report behauptet hat.
+
+**Sweep-Befund: 10 weitere Components mit `transition:` aber ohne
+per-Component reduced-motion-Block** — BildDiffTool, Converter,
+ColorConverter, Analyzer, Generator, Validator, Comparer,
+ContrastCheckerTool, QrCodeGeneratorTool, RegexTesterTool. Diese sind
+**alle durch global.css:151-156 vollständig gedeckt**, weil sie keine
+hover/active-Transforms haben (nur border-color/color/opacity-Tweens,
+die der globale Block zeroed). **Kein Fix nötig.**
+
+**P0-3 (ML-Tools End-to-End-Coverage) bleibt offen** — das ist ein
+Folge-Sprint-Item. Vorschlag:
+
+```
+evals/ml-tools/run-smoke.sh  # ähnlich evals/a11y-auditor/
+  → Spawn headless-browser
+  → Lade /de/ki-text-detektor/
+  → Click "Text auf KI prüfen" mit kurzem Test-String
+  → Assert: phase transition idle → preparing → analyzing → done
+  → Assert: result-text enthält {Synthetisch|Authentisch|Gemischt}
+```
+
+Nicht in 5 Min machbar; eigener Sprint nötig (Modell-Download dauert
+~80–450 MB pro Tool, Smoke-Test-CI-Caching nötig).
+
+**P1-4 (§2.4-Dossiers für 4 ML-Tools) bleibt offen** — Folge-Sprint
+30–60 min pro Tool.
+
+**Hex-Code-Sweep in Components (Regression-Check):**
+
+| File | Line | Hex | Klassifikation |
+|---|---|---|---|
+| `ContrastCheckerTool.svelte` | 11, 12, 41, 75, 146 | `#1A1A1A`, `#FFFFFF`, `#000000` | **Daten** (User-Input, nicht visuelles Styling) — pre-existing, allowed per CLAUDE.md Data-Layer-Exception |
+| `ColorConverter.svelte` | 28, 110 | `#FF5733` | **Daten** (Default-Hex-Input) — pre-existing, allowed |
+| `SkontoRechnerTool.svelte` | 572 | `#c08000` (Token-Fallback) | Pre-existing, Audit 2026-04-21 belassen |
+| `QrCodeGeneratorTool.svelte` | 190 | `#fff` (QR-Background) | Pre-existing **Hard-Cap-Verstoß** in Component-CSS — sollte auf einen Token migriert werden, aber kein Regression |
+
+Keine **neuen** Hex-Verstöße in den 8 Tools dieser Sonderdelegation.
+
+**Arbitrary-px-Sweep der 8 neuen Tools** (nur substantive Werte, keine
+Border/Outline-Standards):
+
+```
+KiTextDetektorTool:    max-width 400px, width 160px, max-width 500px
+KiBildDetektorTool:    max-height 480px, max-width 400px, width 160px,
+                       max-width 500px
+AudioTranskriptionTool: max-width 500px, height 40px, max-width 400px,
+                       max-height 400px
+```
+
+Alle innerhalb der Followup-P2-Klassifikation („klein, keine visuellen
+Hard-Cap-Verletzungen"). Nicht gefixt — beim nächsten Touch der Files
+mitrefactorn.
+
+### Tools-Einsatzbereit-Bilanz
+
+8 Tools (cashflow-rechner, leasing-faktor-rechner, erbschaftsteuer-
+rechner, jpg-zu-pdf, bild-zu-text, ki-text-detektor, ki-bild-detektor,
+audio-transkription) sind funktional einsatzbereit:
+
+- ✅ Build erzeugt `dist/de/<slug>/index.html` für alle 8
+- ✅ Slug-Routing in `[slug].astro` korrekt verdrahtet
+- ✅ Tool-Configs (`*-config.ts` bzw. `*.ts` für FileTool) laden korrekt
+- ✅ Runtime-Loader (`type-runtime-registry.ts`, `tool-runtime-registry.ts`,
+  `formatter-runtime-registry.ts`) haben Einträge wo nötig
+- ✅ ML-Component-Loader-Imports stimmen mit Module-Exports überein
+  (`prepareModel`, `isPrepared`, `analyzeText/analyzeImage/transcribe`)
+- ✅ FileTool-txt-Path renders die textarea für bild-zu-text korrekt
+- ✅ Modell-Größen-Hints + prefers-reduced-motion-Coverage komplett
+
+**Bekannte offene Punkte (nicht blockierend für Launch):**
+
+- ML-Tools haben keine echte E2E-Coverage — Risk: Modell-API-Drift in
+  `@huggingface/transformers` würde keinen Test triggern. Folge-Sprint.
+- §2.4-Dossiers für 4 ML-Tools fehlen — keine SEO/Content-Lücke,
+  Backfill-Doku-Aufgabe.
+- 5 pre-existing `[slug].astro`-TS-Errors — kosmetisch, kein Build-Bruch.
+- 4 Modell-Downloads à ~80–450 MB beim ersten Tool-Aufruf — UX okay
+  (Hint im Loading-State), aber für mobile Nutzer mit eingeschränktem
+  Datenvolumen problematisch. Server-Side-Modell-Hosting auf eigener
+  Domain wäre ein zukünftiges Optimierungs-Projekt.
+
+### Fix-Commits dieser Pass
+
+```
+8dc082f fix(tools/ml): consistency cleanup — config.type guard + remove-btn motion
+```
+
+### Lesson Learned (zusätzlich zur Followup-Lesson)
+
+`prefers-reduced-motion`-Audits müssen **zwischen Tween-Tweaks und
+property-Jumps unterscheiden**. Ein universelles `transition-duration:
+0ms !important` killt Tweens, aber nicht Hover/Active-Transforms — die
+applies dann instant. Wenn die Design-Intent „keine Bewegung" lautet,
+muss die per-Component-Override `transform: none` setzen, nicht nur
+`transition: none`. Der Followup-Fix `fe5ac5b` hatte das richtig
+verstanden, aber den `.remove-btn`-Selektor in KiBildDetektor übersehen.
