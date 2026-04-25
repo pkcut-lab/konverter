@@ -1,5 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="kittokit">
   <rect width="512" height="512" rx="128" fill="#8F3A0C"/>
-  <path d="M192,192 A64,64 0 0 1 320,192" stroke="#1A1917" stroke-width="32" fill="none" stroke-linecap="round"/>
-  <rect x="128" y="192" width="256" height="213" rx="32" fill="#1A1917"/>
+  <path d="M192,192 L192,128 Q192,107 213,107 L299,107 Q320,107 320,128 L320,192"
+        stroke="#1A1917" stroke-width="26" fill="none"/>
+  <rect x="64" y="192" width="384" height="235" rx="32"
+        fill="#FAFAF9" stroke="#1A1917" stroke-width="21"/>
+  <rect x="107" y="362" width="53" height="53" fill="#1A1917"/>
+  <rect x="181" y="256" width="64" height="160" fill="#1A1917"/>
+  <rect x="267" y="320" width="53" height="96" fill="#1A1917"/>
+  <rect x="341" y="224" width="75" height="192" fill="#8F3A0C"/>
 </svg>
