@@ -32,6 +32,157 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
 <!-- CEO-DECISION-APPEND -->
 
+## 2026-04-26 · pdf-komprimieren §0.7 NBSP Hotfix — End-Review dispatched
+
+**Decision:** Meta-Review-R2 (KON-495) adapter dead-run. Meta-reviewer verdict: divergence_flagged=false, 1 real blocker (NBSP de.md:27), design-critic D9+D10 stale worktree (false-fail), P1/P9 carry-over (out of scope). CEO §0.7: applied NBSP hotfix directly (commit 7658055) instead of full Rework-R3 cycle. End-Review Triple-Pass (KON-504 Pass 1) dispatched. D8 motion-token → KON-506 backlog.
+
+**Affected:** pdf-komprimieren de.md:27 `bis 100 MB.` → `bis 100&nbsp;MB.`
+
+**Reversibility:** trivial (1-char change, 1650/1650 tests pass).
+
+**Confirmed by User:** post-hoc.
+
+---
+
+## 2026-04-25 · pdf-komprimieren R2 Meta-Review (KON-495) — Critic-Error (design-critic stale audit) + Severity-Drift, route-to-builder-R3-minor
+
+**Decision:** Meta-Reviewer-Empfehlung: **Rework-R3 mit Mini-Scope** (1 Atomic-Fix: NBSP an `src/content/tools/pdf-komprimieren/de.md:27`). Kein formaler §0-Hard/Soft-Divergence (merged=partial, nicht pass). **Zwei dokumentationspflichtige Befunde:**
+1. **Critic-Error (NEU, severity critic-drift-high):** design-critic D9 + D10 sind faktisch falsch — sie behaupten, B3 (`--color-text-muted: #B3B0A9`) und B4 (prefers-reduced-motion in `[slug].astro` + `FileTool.svelte:.frame__img`) seien NICHT angewendet. Direkte Source-Verifikation + 4 Cross-Critic-Bestätigungen (merged, a11y, platform, conversion) widerlegen den Claim. Vermutete Ursache: design-critic auditierte den pre-rework Worktree-State (detached HEAD `5132d15`) statt main:`86675e5`. CEO autonom: design-critic AGENTS.md um Worktree-Switching-Protokoll ergänzen (Pattern aus a11y-auditor / platform-engineer übernehmen — explicit `git switch main` oder `git show main:...`-Reads vor jeder Evidenz).
+2. **Severity-Drift (carry-over R1):** performance-auditor flaggt P1 LCP 2589ms (+89ms = 3.6%) und P9 Fonts 124KB (Budget 80KB) erneut als blocker. Beide sind R1-carry-over, beide außerhalb R2-Scope (B1/B2/B3/B4/B7). CEO autonom: NICHT als pdf-komprimieren-Block. **Spinoff-Tickets** für (a) P1 Critical-CSS-Inlining, (b) P9 Font-Budget-Review (PlayfairDisplay-Subsetting oder Budget-Update auf ≥130KB), (c) D8 FileTool.svelte:1096 Tokenisierung (Pre-existing Major).
+
+**Affected Tools/Tickets:**
+- pdf-komprimieren (R2, audited commit `86675e5`, build KON-468, rework_ref KON-482, rework_counter 1/2 → 2/2 nach R3)
+- design-critic (AGENTS.md Worktree-Protokoll-Ergänzung)
+- Spinoffs: P1-LCP-CSS-Inline · P9-Font-Budget-Review · D8-Motion-Token-Cleanup-FileTool
+
+**Reversibility:**
+- R3-NBSP-Fix: trivial (1 Zeichen-Replace)
+- design-critic-Worktree-Patch: trivial (Pattern-Übernahme aus 2 anderen Critics)
+- Spinoff-Tickets: trivial (Tickets können unbearbeitet bleiben, kein Pipeline-Block)
+
+**Confirmed by User:** post-hoc.
+
+**Cross-Refs:**
+- Meta-Review-Report: `tasks/meta-review-pdf-komprimieren-r2-2026-04-25.md`
+- Critic-Reports: KON-486 (merged), KON-487 (perf), KON-488 (sec), KON-489 (platform), KON-490 (a11y), KON-492 (design), KON-493 (conv), `fd4e9be0-…` (content)
+- Vorgänger: 2026-04-25 R1-Meta-Review (KON-479)
+
+---
+
+## 2026-04-25 · pdf-komprimieren R1 Meta-Review (KON-479) — Severity-Drift, route-to-builder-R2
+
+**Decision:** Meta-Reviewer empfiehlt **route-to-builder-R2** (rework_counter 0/2 → 1/2). 8/8 Critics vorhanden, kein formaler §0-Hard/Soft-Divergence (merged=partial, nicht pass), aber **Severity-Drift dokumentiert**: 3 Specialist-Critics (a11y, content, perf) flaggen unabhängig **blocker**, während merged nur **minor** signalisiert. Die merged-Rubrik deckt 6 Specialist-Domänen strukturell nicht (axe-SKIP wenn Playwright fehlt, kein motion-/citation-/LCP-/font-/clipboard-MIME-Check). CEO autonom: route-to-builder-R2 mit 5 Atomic-Edits (2 tool-spezifisch + 3 site-wide). 2 weitere Findings (P1 LCP +81ms, P9 Font 124KB) sind site-wide pre-existing-infra → spinoff statt R2-Block.
+
+**Affected Tools/Tickets:**
+- pdf-komprimieren (R1, audited commit 2bbb741, build KON-468)
+- Site-wide: tokens.css (--color-text-muted dark), FileTool.svelte (reduced-motion + Copy-Button-MIME-Guard), [slug].astro (chevron + fade-in reduced-motion)
+- Spinoff: P9 Font-Budget recurrence #6+ (kontinuierlicher CEO-Track), P1 LCP render-blocking-CSS site-wide
+
+**Reversibility:** trivial — Rework-Edit auf 4 Files, kein Schema-Change.
+
+**Confirmed by User:** post-hoc.
+
+**Recurrences (process-quality, nicht ship-blocker):**
+- a11y-A12 Dark-Mode-AAA-Token (5.+ Occurrence): KON-253-Audit hat --color-text-subtle gefixt, --color-text-muted blieb stehen → 1-Zeilen-Fix `#A8A59E` → `#B3B0A9`.
+- merged-critic Check #10 axe-SKIP (4.+ Occurrence): merged-Rubrik nimmt A11y-Specialist-Verdict nicht ein, wenn lokal kein Playwright läuft. Empfehlung: rubric-patch (severity-aggregation aus inbox/processed/rubric-ambiguity-merged-severity-aggregation.md) endlich anwenden.
+- Check #18 file-tool nicht in Security-Matrix-Enum (4.+ Occurrence): Rulebook-Patch ausstehend, warning_rate für file-tool-Family bleibt hoch.
+- content-C1 em-on-verb (6.+ Occurrence): Builder-Drift-Pattern, Linguistik-Linter wäre der saubere Fix.
+
+**Ship-Gate:** false. Meta-Reviewer-Output: `tasks/meta-review-pdf-komprimieren-r1-2026-04-25.md`.
+
+---
+
+## 2026-04-25 · sprache-verbessern R3 Meta-Review — §0 Hard-Divergence (false-fail) → SHIP-READY mit §0.7 Override
+
+**Decision: SHIP-READY mit CEO §0.7 autonomous-override (post-hoc).**
+
+Meta-Reviewer (KON-467) hat am sprache-verbessern R3 (Builder-Commit
+6588c77) eine §0-Hard-Divergence gefunden: `merged-critic.verdict=pass`
+vs `a11y-auditor.verdict=fail` (Check A12 .meta__part--success Kontrast).
+Per AGENTS.md §0 muss flagging erfolgen (`divergence_flagged: true,
+divergence_type: hard`). Per EVIDENCE_REPORT.md §Ship-Gate-Rules würde
+das normalerweise Re-Route zu Rework auslösen.
+
+**Verifikation am Code zeigt: a11y-auditor R3 zitiert STALE/HALLUZINIERTE
+Hex-Werte.** Der Auditor schreibt `--color-success: #4A6B4E (5.74:1) /
+#7FA582 (6.36:1)`, aber `tokens.css:24` und `:127` enthalten die seit
+R2 AAA-gefixten Werte `#3A5D3E` (light, ≥7:1) und `#9DB8A0` (dark, ≥7:1)
+— mit Inline-AAA-Fix-Kommentar. `grep -rE '#4A6B4E|#7FA582' src/`
+ergibt **null Treffer**. Der a11y-auditor hat seinen R1/pre-R2-Evidence-
+Block recycelt ohne `tokens.css` neu zu lesen.
+
+CEO entscheidet autonom: SHIP, kein 4. Rework-Round (rework_counter
+2/2 exhausted). Die 4 R3-Atomedits (C1 em-Ziel, C7 Inverted-Pyramid,
+#7 Konverter-Ökosystem, #11 NBSP dB) wurden von 5 von 7 Critics
+verifiziert (100% builder-hit-rate). 1590/1590 vitest pass, astro check
+0/0/0, Lighthouse 99/100/100/100. Ship-Block auf Basis einer beweisbar
+falschen Evidenz wäre Verschwendung.
+
+**Affected Tools/Tickets:** sprache-verbessern (KON-92 Build, KON-455
+Rework-R3, KON-467 Meta-Review-R3); a11y-auditor R3 Eval-Hygiene (kein
+Critic-Disziplin, nur Pattern-Note für Eval).
+
+**Reversibility:** trivial. Falls A12 sich später wirklich als gebrochen
+erweist (z.B. tokens.css revert): 1-line-CSS-Token-Swap in FileTool.svelte
+(`var(--color-success)` → `var(--color-text-muted)`) oder Token-Swap.
+
+**Confirmed by User:** post-hoc.
+
+---
+
+## 2026-04-25 · sprache-verbessern R3 — A11y-Auditor Eval-Freshness Gap
+
+**Decision: Note für nächstes a11y-auditor Eval-Run (kein sofortiger Fix).**
+
+A12-Kontrast-Check ist 3-mal hintereinander recurred (R1 real fail → R2
+gefixed → R3 false-fail). R3-False-Fail entstand weil a11y-auditor
+seinen Evidence-Block aus R1 recycled hat statt `tokens.css` für jeden
+Round neu zu greppen. Pattern: **"stale-evidence-recycle"**.
+
+CEO entscheidet autonom: dokumentieren, beim nächsten a11y-auditor
+Eval-Run (Cadence: monatlich oder bei nächstem Critic-Update) als
+Test-Fixture aufnehmen — Eval muss prüfen, dass A12 gegen den
+aktuellen `tokens.css` HEAD geprüft wird, nicht gegen Cache. Kein
+sofortiges Rulebook-Patch (Auditor-Rubrik ist korrekt; Hygiene-Issue,
+nicht Definitions-Issue).
+
+**Affected Tools/Tickets:** a11y-auditor adapter, alle Folge-File-Tool-
+Reviews mit `.meta__part--success`.
+
+**Reversibility:** trivial (dokumentations-only).
+
+**Confirmed by User:** post-hoc.
+
+---
+
+## 2026-04-25 · sprache-verbessern R3 — F1-R3 Untracked PlayfairDisplay Font (+37 KB Budget-Risk)
+
+**Decision: User-Visibility für Font-Subset-Entscheidung beim nächsten Maintenance-Window.**
+
+Performance-Auditor R3 hat `public/fonts/PlayfairDisplay-Italic-Variable.woff2`
+(+37 KB, untracked, `git status: ??`) gemeldet. NICHT von R3 eingeführt
+(Working-Tree-File, kein Commit), aber wenn beim nächsten Commit
+mitgeshipped erhöht es das pre-existing Font-Budget-Defizit von 86 KB
+(>80 KB Budget) auf 124 KB (55% über Budget). Inter+JBMono sind seit
+R1 over-budget — Subsetting steht seit R1 auf der Maintenance-Liste.
+
+CEO entscheidet autonom: nicht jetzt blocken (kein R3-Scope-Issue),
+aber beim nächsten Commit-Touchdown des Working-Tree muss zwischen
+(A) PlayfairDisplay subsetten + committen mit Justification, (B)
+PlayfairDisplay aus public/fonts/ entfernen wenn nicht genutzt,
+(C) komplettes Font-Subsetting-Pass (Inter ≤32 KB, JBMono ≤24 KB,
+Playfair ≤16 KB Latin+DE). Default-Pfad: (B) Remove falls keine
+DESIGN.md-Spec für Playfair existiert.
+
+**Affected Tools/Tickets:** alle Tool-Pages (font-budget global),
+DESIGN.md (Typografie-Spec falls Playfair beibehalten wird).
+
+**Reversibility:** moderat (Font-Subsetting ist Build-Step + Re-Test).
+
+**Confirmed by User:** post-hoc.
+
+---
+
 ## 2026-04-25 · pdf-komprimieren Architektur-Entscheidung — Option A (Lossless-only, pdf-lib MIT)
 
 **Decision: Option A — Lossless-only compression via pdf-lib (MIT license) (§0.7 autonomous)**
