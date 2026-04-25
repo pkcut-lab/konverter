@@ -67,3 +67,12 @@ lh-*.json
 
 # Obsidian vault config (user-local, machine-specific)
 .obsidian/
+
+# Graphify intermediates (chunks + cache regenerable via `graphify update .`)
+graphify-out/.graphify_chunk_*.json
+graphify-out/cache/
+
+# Agent activity logs (per-heartbeat append, rotated separately)
+memory/*-log.md
+memory/halt-history.md
+memory/error-register.md

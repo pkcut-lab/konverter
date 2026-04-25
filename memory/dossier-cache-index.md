@@ -1,0 +1,39 @@
+# Dossier Cache Index
+
+- meter-zu-fuss | 2026-04-21 | parent=null | expires=2027-04-21
+- kilogramm-zu-pfund | 2026-04-21 | parent=null | expires=2027-04-21
+- zentimeter-zu-zoll | 2026-04-21 | parent=null | expires=2027-04-21
+- zoll-zu-zentimeter | 2026-04-21 | parent=null | expires=2027-04-21
+- color/_category-root | 2026-04-21 | parent=null | expires=2026-07-20 | scope=category-root
+- hex-rgb-konverter | 2026-04-21 | parent=_cache/color/_category-root.dossier.md | expires=2026-10-18 | scope=tool
+- dev/_category-root | 2026-04-21 | parent=null | expires=2026-07-20 | scope=category-root
+- uuid-generator | 2026-04-21 | parent=_cache/dev/_category-root.dossier.md | expires=2026-10-18 | scope=tool
+- json-formatter | 2026-04-21 | parent=_cache/dev/_category-root.dossier.md | expires=2026-10-18 | scope=tool
+- regex-tester | 2026-04-21 | parent=tasks/dossiers/_cache/dev/_category-root.dossier.md | expires=2026-10-18
+
+- time/_category-root | 2026-04-21 | parent=null | expires=2026-07-20 | scope=category-root
+- unix-timestamp | 2026-04-21 | parent=tasks/dossiers/_cache/time/_category-root.dossier.md | expires=2026-10-18 | scope=tool
+- base64-encoder | 2026-04-21 | parent=tasks/dossiers/_cache/dev/_category-root.dossier.md | expires=2026-10-18 | scope=tool
+- finance/_category-root | 2026-04-24 | parent=null | expires=2026-06-08 | scope=category-root
+- mehrwertsteuer-rechner | 2026-04-24 | parent=tasks/dossiers/_cache/finance/_category-root.dossier.md | expires=2026-07-23 | scope=tool
+- audio/_category-root | 2026-04-24 | parent=null | expires=2026-07-23 | scope=category-root
+- sprache-verbessern | 2026-04-24 | parent=tasks/dossiers/_cache/audio/_category-root.dossier.md | expires=2026-10-21 | scope=tool
+- stundenlohn-jahresgehalt | 2026-04-24 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-23 | scope=tool
+- zinseszins-rechner | 2026-04-24 | parent=tasks/dossiers/_cache/finance/_category-root.dossier.md | expires=2026-07-23 | scope=tool
+- rabatt-rechner | 2026-04-24 | parent=tasks/dossiers/_cache/finance/_category-root.dossier.md | expires=2026-07-23 | scope=tool
+- video-hintergrund-entfernen | 2026-04-24 | parent=null | unique=true | expires=2026-10-22 | scope=tool
+- brutto-netto-rechner | 2026-04-24 | parent=tasks/dossiers/_cache/finance/_category-root.dossier.md | expires=2026-07-23 | scope=tool
+- tilgungsplan-rechner | 2026-04-24 | parent=tasks/dossiers/_cache/finance/_category-root.dossier.md | expires=2026-07-24 | scope=tool
+- skonto-rechner | 2026-04-24 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-23 | scope=tool
+- roi-rechner | 2026-04-24 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-23 | scope=tool
+- cashflow-rechner | 2026-04-25 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-25
+- document/_category-root | 2026-04-25 | parent=null | expires=2026-07-24 | scope=category-root
+- pdf-zu-jpg | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
+- leasing-faktor-rechner | 2026-04-25 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-24 | scope=tool
+- erbschaftsteuer-rechner | 2026-04-25 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-06-09 | scope=tool | override=bverfg-ruling-watch
+- pdf-komprimieren | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
+- jpg-zu-pdf | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
+- document/_category-root | 2026-04-25 | parent=null | expires=2026-07-24 | scope=category-root | citation_verify=true
+- pdf-aufteilen | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
+- pdf-zusammenfuehren | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
+- kgv-rechner | 2026-04-25 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-24
