@@ -169,6 +169,35 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       return null;
     },
   },
+  'image-to-text': {
+    process: async (input, config, onProgress) => {
+      const m = await import('./bild-zu-text');
+      return m.bildZuText.process(input, config, onProgress);
+    },
+    prepare: async (onProgress) => {
+      const m = await import('./bild-zu-text');
+      if (m.bildZuText.prepare) {
+        return m.bildZuText.prepare(onProgress);
+      }
+    },
+  },
+  // webcam-blur: live camera tool — no file-upload pipeline, no ML model.
+  // getUserMedia + Canvas 2D compositing handled entirely in WebcamBlurTool.svelte.
+  // Runtime entry exists so FileTool/interactive pages can safely call getRuntime()
+  // without crashing; process is not invoked for interactive tools.
+  'webcam-blur': {
+    process: async () => {
+      throw new Error(
+        'webcam-blur: no file-pipeline — live stream handled by WebcamBlurTool.svelte.',
+      );
+    },
+    preflightCheck: () => {
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+        return 'Dein Browser unterstützt keinen Kamerazugriff. Bitte Chrome, Firefox oder Edge verwenden.';
+      }
+      return null;
+    },
+  },
 };
 
 export function getRuntime(toolId: string): ToolRuntime | undefined {
