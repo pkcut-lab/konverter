@@ -217,6 +217,16 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       return processJpgToPdf(input, config);
     },
   },
+  // pdf-compress: Lossless PDF structural optimisation via pdf-lib (MIT).
+  // pdf-lib (~500 KB) is lazily imported inside the runtime module on first call
+  // per Performance-Mandate §9.2. No heavy ML dep — just deflate + metadata strip.
+  'pdf-compress': {
+    process: async (input) => {
+      const { processPdfKomprimieren } = await import('./pdf-komprimieren-runtime');
+      return processPdfKomprimieren(input);
+    },
+    isPrepared: () => true,
+  },
   // webcam-blur: live camera tool — no file-upload pipeline, no ML model.
   // getUserMedia + Canvas 2D compositing handled entirely in WebcamBlurTool.svelte.
   // Runtime entry exists so FileTool/interactive pages can safely call getRuntime()

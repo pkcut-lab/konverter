@@ -124,6 +124,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/pdf-zusammenfuehren').then((m) => m.pdfZusammenfuehren),
   'pdf-split': () =>
     import('./tools/pdf-aufteilen').then((m) => m.pdfAufteilen),
+  'pdf-compress': () =>
+    import('./tools/pdf-komprimieren').then((m) => m.pdfKomprimieren),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before
