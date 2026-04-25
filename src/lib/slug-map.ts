@@ -82,6 +82,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'kgv-calculator': { de: 'kgv-rechner' },
   'leasing-factor-calculator': { de: 'leasing-faktor-rechner' },
   'inheritance-tax-calculator': { de: 'erbschaftsteuer-rechner' },
+  'jpg-to-pdf': { de: 'jpg-zu-pdf' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

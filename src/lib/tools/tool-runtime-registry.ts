@@ -181,6 +181,12 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       }
     },
   },
+  'jpg-to-pdf': {
+    process: async (input, config) => {
+      const { processJpgToPdf } = await import('./jpg-zu-pdf-runtime');
+      return processJpgToPdf(input, config);
+    },
+  },
   // webcam-blur: live camera tool — no file-upload pipeline, no ML model.
   // getUserMedia + Canvas 2D compositing handled entirely in WebcamBlurTool.svelte.
   // Runtime entry exists so FileTool/interactive pages can safely call getRuntime()

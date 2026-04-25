@@ -118,6 +118,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/leasing-faktor-rechner').then((m) => m.leasingFaktorRechner),
   'inheritance-tax-calculator': () =>
     import('./tools/erbschaftsteuer-rechner').then((m) => m.erbschaftsteuerRechner),
+  'jpg-to-pdf': () =>
+    import('./tools/jpg-zu-pdf').then((m) => m.jpgZuPdf),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before
