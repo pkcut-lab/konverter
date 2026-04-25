@@ -76,3 +76,18 @@ graphify-out/cache/
 memory/*-log.md
 memory/halt-history.md
 memory/error-register.md
+
+# Per-ticket review artifacts (volatile, archived to _processed/ post-ship)
+tasks/meta-review-*.md
+inbox/processed/
+tasks/dossier-output-*.md
+tasks/awaiting-critics/
+tasks/digest/
+tasks/dossier-locks/
+tasks/end-review-*.md
+tasks/engineer_output_*.md
+tasks/dossiers/
+inbox/daily-digest/
+
+# Stitch screenshots (renderer output, regenerable)
+docs/paperclip/research/2026-04-21-local-cli-destructive-symlink-removal.md.stitch/

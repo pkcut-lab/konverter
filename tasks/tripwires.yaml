@@ -1,0 +1,121 @@
+---
+# Tripwire-Config — Konverter-Webseite / Paperclip Auto-Pipeline
+#
+# Geltungsbereich: alle Auto-Merge-Runs ab Phase A (2026-04-21).
+# Jeder Tripwire kippt das System auf pause + schreibt live-alarm nach
+# `inbox/to-user/tripwire-<name>-YYYY-MM-DD-HHMM.md`. Resume nur manuell
+# durch User (einer der 5 User-only-Items: EMERGENCY_HALT-Resume).
+#
+# Gelesen vom CEO vor jedem Dispatch + nach jedem Critic-Return.
+# Budget-Guard-Schicht `scripts/budget-guard.mjs` ist separat (§7.16 hard-bound).
+
+version: 1
+owner: ceo
+evaluated_at:
+  - pre_dispatch          # vor jedem neuen Ticket-Dispatch
+  - post_critic_return    # nach jedem merged-critic-Report
+  - nightly               # rulebook_drift_check via Cron
+
+tripwires:
+
+  # 1. Critic-Rejection-Rate (rolling 10 reviews)
+  - id: critic_reject_rate_rolling_10
+    description: >-
+      Wenn die letzten 10 Critic-Reviews eine Reject-Rate > 30% haben,
+      auto-pause. Indikator für systematische Qualitätsprobleme im
+      Tool-Builder, nicht für einzelne Fehltritte.
+    metric_source: memory/merged-critic-log.md
+    threshold: ">0.30"
+    window: rolling_10_reviews
+    action: auto_pause_pipeline
+    alert: inbox/to-user/tripwire-critic-reject-rate.md
+    severity: blocker
+
+  # 2. Build-Fail-Cluster (consecutive npm-test/astro-check failures)
+  - id: build_fail_cluster
+    description: >-
+      Wenn 3 konsekutive Tool-Builds an Check #1 (Vitest) ODER Check #2
+      (astro check) scheitern, Pipeline-Stop. Deutet auf gebrochenen
+      Stack-Zustand hin (z.B. nach Dep-Update, Rulebook-Drift, TS-Change).
+    metric_source: tasks/awaiting-critics/**/merged-critic.md (checks[id=1,2].status)
+    threshold: ">=3 consecutive"
+    action: auto_pause_pipeline
+    alert: inbox/to-user/tripwire-build-fail-cluster.md
+    severity: blocker
+
+  # 3. Design-Score-Minimum (hart, nicht 0.70 Default)
+  - id: design_score_min
+    description: >-
+      Minimum für Check #10 (axe-core+Contrast) + Check #11 (NBSP) +
+      Lighthouse-Design-Score aggregiert. Verhindert, dass wir
+      Refined-Minimalism-Qualität unter 0.80 verwässern.
+    metric_source: tasks/awaiting-critics/**/merged-critic.md (design_aggregate_score)
+    threshold: "<0.80"
+    action: auto_reject_ticket + route_to_rework
+    alert: inbox/to-user/tripwire-design-score-low.md (nur wenn 3× in 24h)
+    severity: major
+
+  # 4. Rate-Limit-Exhaustion (Claude Subscription-Fenster)
+  - id: rate_limit_exhaustion
+    description: >-
+      Wenn das 5h-Claude-Subscription-Fenster zu >=90% verbraucht ist,
+      Pipeline pausieren damit User die Session ohne uns weiternutzen
+      kann. Schutzt das 5h-Reset-Muster der Subscription.
+    metric_source: scripts/budget-guard.mjs --window 5h-session
+    threshold: ">=0.90"
+    action: auto_pause_pipeline
+    alert: inbox/to-user/tripwire-rate-limit-exhaustion.md
+    severity: blocker
+
+  # 5. Rulebook-Drift-Check (nightly)
+  - id: rulebook_drift_check
+    description: >-
+      Jede Nacht (via Daily-Digest-Cron Pre-Step) diff CLAUDE.md, CONTENT.md,
+      CONVENTIONS.md, STYLE.md, DESIGN.md, TRANSLATION.md, BRAND_GUIDE.md
+      gegen git HEAD des Vortags. Änderungen werden im Digest als
+      "Rulebook-Snapshots" vermerkt + als Kontext-Signal an alle Agents
+      in deren nächster Heartbeat-Runde propagiert.
+    frequency: nightly
+    trigger: daily_digest_cron_pre_step
+    comparison: git diff HEAD@{1.day.ago}..HEAD -- <rulebook-files>
+    action: append_to_daily_digest + notify_ceo_context
+    severity: info
+
+actions:
+
+  auto_pause_pipeline:
+    steps:
+      - touch .paperclip/EMERGENCY_HALT
+      - cancel_all_in_flight_tickets: false   # laufende Ticks zu Ende führen
+      - block_new_dispatches: true
+      - write_alert_file: <tripwire.alert>
+      - set_company_status: paused
+
+  auto_reject_ticket:
+    steps:
+      - set_ticket_verdict: fail
+      - route_to_rework_queue: tasks/rework/<ticket-id>.md
+      - increment_rework_counter: true
+
+  route_to_rework:
+    steps:
+      - move_ticket_to: tasks/rework/
+      - set_status: blocked
+      - notify_tool_builder_on_next_heartbeat: true
+
+resume_policy:
+  # User-only — Paperclip-Agents dürfen NIE selbst resume.
+  who: user
+  how: rm .paperclip/EMERGENCY_HALT + remove <tripwire.alert> file
+  references:
+    - docs/paperclip/EMERGENCY_HALT.md
+    - docs/paperclip/bundle/agents/ceo/AGENTS.md §6 (Emergency-Halt Protocol)
+
+notes:
+  - Tripwires sind additiv zum Budget-Guard (§7.16) und zur Eval-Smoke-F1-
+    Self-Disable-Logik (§2.8). Sie feuern INDEPENDENT voneinander.
+  - Ein gefeuerter Tripwire blockt Step 4c Queue-Dispatch + alle zukünftigen
+    Auto-Merges, bis der User resume macht.
+  - Phase-A-Review (2026-04-28): Thresholds kalibrieren basierend auf
+    7-Tage-Datenbasis. `design_score_min=0.80` ist erste Schätzung, nicht
+    final.

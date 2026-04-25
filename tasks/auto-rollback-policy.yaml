@@ -1,0 +1,106 @@
+---
+# Auto-Rollback-Branch-Strategy — Konverter-Webseite Phase A (2026-04-21)
+#
+# Gilt für ALLE Worker-Commits (Tool-Builder). CEO + Critic machen keine
+# Commits (TOOLS.md Forbidden). Merged-Critic ist die einzige Instanz,
+# die das Auto-Merge-Signal setzen darf.
+#
+# Eingelesen vom CEO nach jedem Critic-Return. Durchgeführt via
+# `scripts/auto-rollback.sh <ticket-id>` (siehe §3 unten).
+
+version: 1
+owner: ceo
+effective: 2026-04-21
+
+flow:
+
+  # 1. Branch-Namens-Schema (Hard)
+  branch_naming:
+    pattern: "tool/<slug>-<YYYYMMDD>"
+    examples:
+      - tool/meter-zu-fuss-20260421
+      - tool/celsius-zu-fahrenheit-20260421
+    forbidden:
+      - direct commits to main by workers
+      - branch names outside tool/* namespace
+
+  # 2. Commit-Flow
+  commit_policy:
+    who_commits: tool-builder (nur dieser Agent)
+    who_reviews: merged-critic
+    who_merges: ceo (nach Auto-Merge-Signal vom Critic)
+    who_reverts: ceo (nach Auto-Reject-Signal vom Critic)
+    main_push_by_worker: forbidden
+    direct_merge_to_main_by_worker: forbidden
+
+  # 3. Critic-Verdict → Action-Mapping
+  verdict_mapping:
+    pass:
+      - git checkout main
+      - git merge --no-ff tool/<slug>-<date> -m "auto-merge: <slug> (critic pass) \n\nTicket: T-<id> \nCritic: merged-critic \nVerdict: pass (15/15) \nCo-Authored-By: paperclip-ceo <noreply@konverter.local>"
+      - git push origin main
+      - git branch -d tool/<slug>-<date>
+      - append_to_daily_digest: "shipped"
+    partial:
+      - git checkout main
+      - git merge --no-ff tool/<slug>-<date> -m "auto-merge: <slug> (critic partial, <n>/15 pass) \n\nTicket: T-<id> \nCritic: merged-critic \nVerdict: partial \nFollowup-Ticket: <rework-id>"
+      - git push origin main
+      - create_followup_ticket: tasks/rework/<ticket-id>-partial.md
+      - append_to_daily_digest: "shipped_with_followup"
+    fail:
+      - git checkout main
+      - git branch -D tool/<slug>-<date>     # hard-delete local
+      - git push origin --delete tool/<slug>-<date>   # delete remote
+      - move_ticket_to: tasks/rework/<ticket-id>.md
+      - increment_rework_counter: true
+      - if_rework_counter_gt_2: auto_resolve_ship_as_is_or_park (§7.15 Score-Check)
+      - append_to_daily_digest: "rework"
+    self-disabled:
+      - skip_merge
+      - write: inbox/to-ceo/critic-drift-<critic>.md
+      - retry_ticket_with_other_critic_or_pause
+    timeout:
+      - skip_merge
+      - retry_ticket_once
+      - if_still_timeout: pause_and_alert
+
+  # 4. Safety-Gates vor Auto-Merge
+  preflight_checks:
+    - critic_verdict: pass | partial
+    - tripwires_no_blocker: true (check tasks/tripwires.yaml state)
+    - emergency_halt_flag_absent: true (!.paperclip/EMERGENCY_HALT)
+    - rate_limit_ok: scripts/budget-guard.mjs check 5h-session tokens_in (exit 0)
+    - git_account_lock: bash scripts/check-git-account.sh (exit 0, pkcut-lab only)
+    - no_merge_conflicts: git merge-tree base <branch> main (empty conflict marker)
+
+  # 5. Rollback-Details bei Auto-Revert
+  revert_behavior:
+    scope: branch_only            # Main-Branch wird NIE zurückgesetzt
+    preserve_rework_history: true # fail-tickets bleiben in tasks/rework/ archiviert
+    rework_counter_cap: 2         # nach >2 → §7.15 Auto-Resolve durch CEO
+    notify_builder_via: inbox/to-tool-builder/rework-<ticket-id>.md
+
+  # 6. Emergency-Override
+  emergency_override:
+    who: user_only
+    mechanism: touch .paperclip/EMERGENCY_HALT
+    effect:
+      - block_all_new_merges
+      - finish_in_flight_builds (no new commits)
+      - write_alert_to: inbox/to-user/emergency-halt-triggered.md
+    resume: rm .paperclip/EMERGENCY_HALT (user-only action)
+
+  # 7. Audit-Trail
+  audit:
+    every_merge_logged_in: memory/ceo-log.md (append-only)
+    format: "YYYY-MM-DD HH:MM | <ticket-id> | <slug> | <verdict> | <merge-sha>"
+    retention: infinite (git-tracked file)
+    daily_aggregation: daily-digest Section 1 (Completed Tickets)
+
+notes:
+  - Phase A (2026-04-21 bis 2026-04-28): nur Converter-Familie, max 3
+    Overnight-Tickets parallel. Phase B entscheidet User am 2026-04-28.
+  - Auto-Merge ist an `requireBoardApprovalForNewAgents: false` + Critic-
+    pass gekoppelt. Kein User-Gate dazwischen — der Critic ist das Gate.
+  - Konflikte zwischen paralellen Builds: CEO koordiniert Branch-Ordering.
+    Kein gleichzeitiger Build auf gleichem File (lock via tasks/task.lock).
