@@ -76,17 +76,18 @@ brauchen jeweils ein eigenes Custom-Svelte-Component der Größenordnung
 das die Auslieferung der vier ML-Tools (bild-zu-text, ki-text-detektor,
 ki-bild-detektor, audio-transkription) blockieren, die bereits Component +
 Runtime fertig haben und nur Tests benötigen. Throughput-Optimum:
-4 ML-Tools shippen statt 1 PDF-Tool halbfertig liegen lassen. Die
-geparkten Stubs in `.paperclip/parked-tools/` bleiben unverändert.
+4 ML-Tools shippen statt 1 PDF-Tool halbfertig liegen lassen.
+
+**Material-Status (korrigiert 2026-04-25 nach Code-Review):**
+- pdf-zusammenfuehren: **kompletter parked Stub** in `.paperclip/parked-tools/pdf-zusammenfuehren/` (Runtime + Test) + Dossier in `dossiers/pdf-zusammenfuehren/`. Aufnahme = Custom-Component bauen + Stub unparken.
+- pdf-aufteilen: **nur Dossier** in `dossiers/pdf-aufteilen/2026-04-25.md` mit §2.4. Kein parked Stub — ist Greenfield-Build vom Dossier ausgehend. Ursprüngliche Behauptung "kompletter Stub plus Content" war für pdf-aufteilen falsch.
 
 **Affected Tools/Tickets:** pdf-zusammenfuehren (Tool 5 Sonderdelegation),
-pdf-aufteilen (Tool 6 Sonderdelegation). Material in
-`.paperclip/parked-tools/pdf-zusammenfuehren*` bleibt liegen.
+pdf-aufteilen (Tool 6 Sonderdelegation).
 
-**Reversibility:** trivial — geparktes Material ist kompletter Stub plus
-Content. Künftiger Build-Sprint nimmt es auf, baut die Custom-Components,
-unparkt nach `src/lib/tools/` + `src/components/tools/`. Geschätzter
-Aufwand pro Tool: 4–6 Stunden.
+**Reversibility:** trivial für pdf-zusammenfuehren (Stub vorhanden,
+Component-Bau ~4–6 h); moderat für pdf-aufteilen (Greenfield ab Dossier,
+Component + Runtime + Tests + Content ~6–10 h).
 
 **Confirmed by User:** ausstehend (Report dokumentiert die Entscheidung).
 
