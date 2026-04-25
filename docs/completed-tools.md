@@ -34,6 +34,7 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 | Slug | Category | Status | Shipped | Local | CEO-Notes |
 |---|---|---|---|---|---|
 <!-- CEO-APPEND -->
+| [cashflow-rechner](https://konverter-7qc.pages.dev/de/cashflow-rechner) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/cashflow-rechner) | Sonderdelegation Heartbeat-44 Tool 1; 27/27 Tests; Phase A–F clean (Phase A–B aus früherer Session, Phase D–F durch Tool-Builder); 3 Berechnungsmodi (direkt/indirekt/Free CF) in einem Tool |
 | [kgv-rechner](https://konverter-7qc.pages.dev/de/kgv-rechner) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/kgv-rechner) | erstes Tool durch neue Sequential-Pipeline (§0 v1.5); 20/20 Tests; Phase A–F clean ohne Rework |
 | [stundenlohn-jahresgehalt](https://konverter-7qc.pages.dev/de/stundenlohn-jahresgehalt) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/stundenlohn-jahresgehalt) | — |
 | [zinseszins-rechner](https://konverter-7qc.pages.dev/de/zinseszins-rechner) | finance | ship-as-is | 2026-04-25 | [dev](http://localhost:4322/de/zinseszins-rechner) | — |
