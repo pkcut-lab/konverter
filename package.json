@@ -25,6 +25,7 @@
     "astro": "5.18.1",
     "heic2any": "^0.0.4",
     "mediabunny": "1.40.1",
+    "pdf-lib": "^1.17.1",
     "svelte": "5.55.4",
     "tailwindcss": "3.4.15",
     "tesseract.js": "^7.0.0",

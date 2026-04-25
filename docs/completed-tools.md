@@ -31,62 +31,63 @@ Backlog-Skip-Sync → Digest-Note → einzelner Commit.
 
 ## Tool-Liste
 
-| Slug | Category | Status | Shipped | Local |
-|---|---|---|---|---|
+| Slug | Category | Status | Shipped | Local | CEO-Notes |
+|---|---|---|---|---|---|
 <!-- CEO-APPEND -->
-| [stundenlohn-jahresgehalt](https://konverter-7qc.pages.dev/de/stundenlohn-jahresgehalt) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/stundenlohn-jahresgehalt) |
-| [zinseszins-rechner](https://konverter-7qc.pages.dev/de/zinseszins-rechner) | finance | ship-as-is | 2026-04-25 | [dev](http://localhost:4322/de/zinseszins-rechner) |
-| [brutto-netto-rechner](https://konverter-7qc.pages.dev/de/brutto-netto-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/brutto-netto-rechner) |
-| [kreditrechner](https://konverter-7qc.pages.dev/de/kreditrechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/kreditrechner) |
-| [rabatt-rechner](https://konverter-7qc.pages.dev/de/rabatt-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/rabatt-rechner) |
-| [tilgungsplan-rechner](https://konverter-7qc.pages.dev/de/tilgungsplan-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/tilgungsplan-rechner) |
-| [zinsrechner](https://konverter-7qc.pages.dev/de/zinsrechner) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/zinsrechner) |
-| [quadratkilometer-zu-quadratmeile](https://konverter-7qc.pages.dev/de/quadratkilometer-zu-quadratmeile) | area | shipped | 2026-04-24 | [dev](http://localhost:4322/de/quadratkilometer-zu-quadratmeile) |
-| [milliliter-zu-unzen](https://konverter-7qc.pages.dev/de/milliliter-zu-unzen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/milliliter-zu-unzen) |
-| [liter-zu-gallonen](https://konverter-7qc.pages.dev/de/liter-zu-gallonen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/liter-zu-gallonen) |
-| [hektar-zu-acre](https://konverter-7qc.pages.dev/de/hektar-zu-acre) | area | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hektar-zu-acre) |
-| [tonne-zu-pfund](https://konverter-7qc.pages.dev/de/tonne-zu-pfund) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/tonne-zu-pfund) |
-| [stone-zu-kilogramm](https://konverter-7qc.pages.dev/de/stone-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/stone-zu-kilogramm) |
-| [pfund-zu-kilogramm](https://konverter-7qc.pages.dev/de/pfund-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/pfund-zu-kilogramm) |
-| [gramm-zu-unzen](https://konverter-7qc.pages.dev/de/gramm-zu-unzen) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/gramm-zu-unzen) |
-| [seemeile-zu-kilometer](https://konverter-7qc.pages.dev/de/seemeile-zu-kilometer) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/seemeile-zu-kilometer) |
-| [fuss-zu-meter](https://konverter-7qc.pages.dev/de/fuss-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/fuss-zu-meter) |
-| [yard-zu-meter](https://konverter-7qc.pages.dev/de/yard-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/yard-zu-meter) |
-| [millimeter-zu-zoll](https://konverter-7qc.pages.dev/de/millimeter-zu-zoll) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/millimeter-zu-zoll) |
-| [bild-diff](https://konverter-7qc.pages.dev/de/bild-diff) | image | shipped | 2026-04-21 | [dev](http://localhost:4322/de/bild-diff) |
-| [json-zu-csv](https://konverter-7qc.pages.dev/de/json-zu-csv) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-zu-csv) |
-| [json-diff](https://konverter-7qc.pages.dev/de/json-diff) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-diff) |
-| [kontrast-pruefer](https://konverter-7qc.pages.dev/de/kontrast-pruefer) | color | shipped | 2026-04-21 | [dev](http://localhost:4322/de/kontrast-pruefer) |
-| [jwt-decoder](https://konverter-7qc.pages.dev/de/jwt-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/jwt-decoder) |
-| [css-formatter](https://konverter-7qc.pages.dev/de/css-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/css-formatter) |
-| [xml-formatter](https://konverter-7qc.pages.dev/de/xml-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/xml-formatter) |
-| [sql-formatter](https://konverter-7qc.pages.dev/de/sql-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/sql-formatter) |
-| [qr-code-generator](https://konverter-7qc.pages.dev/de/qr-code-generator) | image | shipped | 2026-04-21 | [dev](http://localhost:4322/de/qr-code-generator) |
-| [hash-generator](https://konverter-7qc.pages.dev/de/hash-generator) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hash-generator) |
-| [lorem-ipsum-generator](https://konverter-7qc.pages.dev/de/lorem-ipsum-generator) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/lorem-ipsum-generator) |
-| [zeitzonen-rechner](https://konverter-7qc.pages.dev/de/zeitzonen-rechner) | time | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zeitzonen-rechner) |
-| [roemische-zahlen](https://konverter-7qc.pages.dev/de/roemische-zahlen) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/roemische-zahlen) |
-| [url-encoder-decoder](https://konverter-7qc.pages.dev/de/url-encoder-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/url-encoder-decoder) |
-| [base64-encoder](https://konverter-7qc.pages.dev/de/base64-encoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/base64-encoder) |
-| [zoll-zu-zentimeter](https://konverter-7qc.pages.dev/de/zoll-zu-zentimeter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zoll-zu-zentimeter) |
-| [zeichenzaehler](https://konverter-7qc.pages.dev/de/zeichenzaehler) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zeichenzaehler) |
-| [uuid-generator](https://konverter-7qc.pages.dev/de/uuid-generator) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/uuid-generator) |
-| [unix-timestamp](https://konverter-7qc.pages.dev/de/unix-timestamp) | time | shipped | 2026-04-21 | [dev](http://localhost:4322/de/unix-timestamp) |
-| [text-diff](https://konverter-7qc.pages.dev/de/text-diff) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/text-diff) |
-| [regex-tester](https://konverter-7qc.pages.dev/de/regex-tester) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/regex-tester) |
-| [passwort-generator](https://konverter-7qc.pages.dev/de/passwort-generator) | dev | ship-as-is | 2026-04-21 | [dev](http://localhost:4322/de/passwort-generator) |
-| [json-formatter](https://konverter-7qc.pages.dev/de/json-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-formatter) |
-| [hex-rgb-konverter](https://konverter-7qc.pages.dev/de/hex-rgb-konverter) | color | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hex-rgb-konverter) |
-| [hevc-zu-h264](https://konverter-7qc.pages.dev/de/hevc-zu-h264) | video | shipped | 2026-04-20 | [dev](http://localhost:4322/de/hevc-zu-h264) |
-| [zentimeter-zu-zoll](https://konverter-7qc.pages.dev/de/zentimeter-zu-zoll) | length | shipped | 2026-04-19 | [dev](http://localhost:4322/de/zentimeter-zu-zoll) |
-| [webp-konverter](https://konverter-7qc.pages.dev/de/webp-konverter) | image | shipped | 2026-04-19 | [dev](http://localhost:4322/de/webp-konverter) |
-| [quadratmeter-zu-quadratfuss](https://konverter-7qc.pages.dev/de/quadratmeter-zu-quadratfuss) | area | shipped | 2026-04-19 | [dev](http://localhost:4322/de/quadratmeter-zu-quadratfuss) |
-| [meter-zu-fuss](https://konverter-7qc.pages.dev/de/meter-zu-fuss) | length | shipped | 2026-04-19 | [dev](http://localhost:4322/de/meter-zu-fuss) |
-| [kilometer-zu-meilen](https://konverter-7qc.pages.dev/de/kilometer-zu-meilen) | length | shipped | 2026-04-19 | [dev](http://localhost:4322/de/kilometer-zu-meilen) |
-| [kilogramm-zu-pfund](https://konverter-7qc.pages.dev/de/kilogramm-zu-pfund) | weight | shipped | 2026-04-19 | [dev](http://localhost:4322/de/kilogramm-zu-pfund) |
-| [hintergrund-entfernen](https://konverter-7qc.pages.dev/de/hintergrund-entfernen) | image | shipped | 2026-04-19 | [dev](http://localhost:4322/de/hintergrund-entfernen) |
-| [celsius-zu-fahrenheit](https://konverter-7qc.pages.dev/de/celsius-zu-fahrenheit) | temperature | shipped | 2026-04-19 | [dev](http://localhost:4322/de/celsius-zu-fahrenheit) |
-| [mehrwertsteuer-rechner](https://konverter-7qc.pages.dev/de/mehrwertsteuer-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/mehrwertsteuer-rechner) |
+| [kgv-rechner](https://konverter-7qc.pages.dev/de/kgv-rechner) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/kgv-rechner) | erstes Tool durch neue Sequential-Pipeline (§0 v1.5); 20/20 Tests; Phase A–F clean ohne Rework |
+| [stundenlohn-jahresgehalt](https://konverter-7qc.pages.dev/de/stundenlohn-jahresgehalt) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/stundenlohn-jahresgehalt) | — |
+| [zinseszins-rechner](https://konverter-7qc.pages.dev/de/zinseszins-rechner) | finance | ship-as-is | 2026-04-25 | [dev](http://localhost:4322/de/zinseszins-rechner) | — |
+| [brutto-netto-rechner](https://konverter-7qc.pages.dev/de/brutto-netto-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/brutto-netto-rechner) | — |
+| [kreditrechner](https://konverter-7qc.pages.dev/de/kreditrechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/kreditrechner) | — |
+| [rabatt-rechner](https://konverter-7qc.pages.dev/de/rabatt-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/rabatt-rechner) | — |
+| [tilgungsplan-rechner](https://konverter-7qc.pages.dev/de/tilgungsplan-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/tilgungsplan-rechner) | — |
+| [zinsrechner](https://konverter-7qc.pages.dev/de/zinsrechner) | finance | shipped | 2026-04-25 | [dev](http://localhost:4322/de/zinsrechner) | — |
+| [quadratkilometer-zu-quadratmeile](https://konverter-7qc.pages.dev/de/quadratkilometer-zu-quadratmeile) | area | shipped | 2026-04-24 | [dev](http://localhost:4322/de/quadratkilometer-zu-quadratmeile) | — |
+| [milliliter-zu-unzen](https://konverter-7qc.pages.dev/de/milliliter-zu-unzen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/milliliter-zu-unzen) | — |
+| [liter-zu-gallonen](https://konverter-7qc.pages.dev/de/liter-zu-gallonen) | volume | shipped | 2026-04-24 | [dev](http://localhost:4322/de/liter-zu-gallonen) | — |
+| [hektar-zu-acre](https://konverter-7qc.pages.dev/de/hektar-zu-acre) | area | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hektar-zu-acre) | — |
+| [tonne-zu-pfund](https://konverter-7qc.pages.dev/de/tonne-zu-pfund) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/tonne-zu-pfund) | — |
+| [stone-zu-kilogramm](https://konverter-7qc.pages.dev/de/stone-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/stone-zu-kilogramm) | — |
+| [pfund-zu-kilogramm](https://konverter-7qc.pages.dev/de/pfund-zu-kilogramm) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/pfund-zu-kilogramm) | — |
+| [gramm-zu-unzen](https://konverter-7qc.pages.dev/de/gramm-zu-unzen) | weight | shipped | 2026-04-21 | [dev](http://localhost:4322/de/gramm-zu-unzen) | — |
+| [seemeile-zu-kilometer](https://konverter-7qc.pages.dev/de/seemeile-zu-kilometer) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/seemeile-zu-kilometer) | — |
+| [fuss-zu-meter](https://konverter-7qc.pages.dev/de/fuss-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/fuss-zu-meter) | — |
+| [yard-zu-meter](https://konverter-7qc.pages.dev/de/yard-zu-meter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/yard-zu-meter) | — |
+| [millimeter-zu-zoll](https://konverter-7qc.pages.dev/de/millimeter-zu-zoll) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/millimeter-zu-zoll) | — |
+| [bild-diff](https://konverter-7qc.pages.dev/de/bild-diff) | image | shipped | 2026-04-21 | [dev](http://localhost:4322/de/bild-diff) | — |
+| [json-zu-csv](https://konverter-7qc.pages.dev/de/json-zu-csv) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-zu-csv) | — |
+| [json-diff](https://konverter-7qc.pages.dev/de/json-diff) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-diff) | — |
+| [kontrast-pruefer](https://konverter-7qc.pages.dev/de/kontrast-pruefer) | color | shipped | 2026-04-21 | [dev](http://localhost:4322/de/kontrast-pruefer) | — |
+| [jwt-decoder](https://konverter-7qc.pages.dev/de/jwt-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/jwt-decoder) | — |
+| [css-formatter](https://konverter-7qc.pages.dev/de/css-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/css-formatter) | — |
+| [xml-formatter](https://konverter-7qc.pages.dev/de/xml-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/xml-formatter) | — |
+| [sql-formatter](https://konverter-7qc.pages.dev/de/sql-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/sql-formatter) | — |
+| [qr-code-generator](https://konverter-7qc.pages.dev/de/qr-code-generator) | image | shipped | 2026-04-21 | [dev](http://localhost:4322/de/qr-code-generator) | — |
+| [hash-generator](https://konverter-7qc.pages.dev/de/hash-generator) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hash-generator) | — |
+| [lorem-ipsum-generator](https://konverter-7qc.pages.dev/de/lorem-ipsum-generator) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/lorem-ipsum-generator) | — |
+| [zeitzonen-rechner](https://konverter-7qc.pages.dev/de/zeitzonen-rechner) | time | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zeitzonen-rechner) | — |
+| [roemische-zahlen](https://konverter-7qc.pages.dev/de/roemische-zahlen) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/roemische-zahlen) | — |
+| [url-encoder-decoder](https://konverter-7qc.pages.dev/de/url-encoder-decoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/url-encoder-decoder) | — |
+| [base64-encoder](https://konverter-7qc.pages.dev/de/base64-encoder) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/base64-encoder) | — |
+| [zoll-zu-zentimeter](https://konverter-7qc.pages.dev/de/zoll-zu-zentimeter) | length | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zoll-zu-zentimeter) | — |
+| [zeichenzaehler](https://konverter-7qc.pages.dev/de/zeichenzaehler) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/zeichenzaehler) | — |
+| [uuid-generator](https://konverter-7qc.pages.dev/de/uuid-generator) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/uuid-generator) | — |
+| [unix-timestamp](https://konverter-7qc.pages.dev/de/unix-timestamp) | time | shipped | 2026-04-21 | [dev](http://localhost:4322/de/unix-timestamp) | — |
+| [text-diff](https://konverter-7qc.pages.dev/de/text-diff) | text | shipped | 2026-04-21 | [dev](http://localhost:4322/de/text-diff) | — |
+| [regex-tester](https://konverter-7qc.pages.dev/de/regex-tester) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/regex-tester) | — |
+| [passwort-generator](https://konverter-7qc.pages.dev/de/passwort-generator) | dev | ship-as-is | 2026-04-21 | [dev](http://localhost:4322/de/passwort-generator) | — |
+| [json-formatter](https://konverter-7qc.pages.dev/de/json-formatter) | dev | shipped | 2026-04-21 | [dev](http://localhost:4322/de/json-formatter) | — |
+| [hex-rgb-konverter](https://konverter-7qc.pages.dev/de/hex-rgb-konverter) | color | shipped | 2026-04-21 | [dev](http://localhost:4322/de/hex-rgb-konverter) | — |
+| [hevc-zu-h264](https://konverter-7qc.pages.dev/de/hevc-zu-h264) | video | shipped | 2026-04-20 | [dev](http://localhost:4322/de/hevc-zu-h264) | — |
+| [zentimeter-zu-zoll](https://konverter-7qc.pages.dev/de/zentimeter-zu-zoll) | length | shipped | 2026-04-19 | [dev](http://localhost:4322/de/zentimeter-zu-zoll) | — |
+| [webp-konverter](https://konverter-7qc.pages.dev/de/webp-konverter) | image | shipped | 2026-04-19 | [dev](http://localhost:4322/de/webp-konverter) | — |
+| [quadratmeter-zu-quadratfuss](https://konverter-7qc.pages.dev/de/quadratmeter-zu-quadratfuss) | area | shipped | 2026-04-19 | [dev](http://localhost:4322/de/quadratmeter-zu-quadratfuss) | — |
+| [meter-zu-fuss](https://konverter-7qc.pages.dev/de/meter-zu-fuss) | length | shipped | 2026-04-19 | [dev](http://localhost:4322/de/meter-zu-fuss) | — |
+| [kilometer-zu-meilen](https://konverter-7qc.pages.dev/de/kilometer-zu-meilen) | length | shipped | 2026-04-19 | [dev](http://localhost:4322/de/kilometer-zu-meilen) | — |
+| [kilogramm-zu-pfund](https://konverter-7qc.pages.dev/de/kilogramm-zu-pfund) | weight | shipped | 2026-04-19 | [dev](http://localhost:4322/de/kilogramm-zu-pfund) | — |
+| [hintergrund-entfernen](https://konverter-7qc.pages.dev/de/hintergrund-entfernen) | image | shipped | 2026-04-19 | [dev](http://localhost:4322/de/hintergrund-entfernen) | — |
+| [celsius-zu-fahrenheit](https://konverter-7qc.pages.dev/de/celsius-zu-fahrenheit) | temperature | shipped | 2026-04-19 | [dev](http://localhost:4322/de/celsius-zu-fahrenheit) | — |
+| [mehrwertsteuer-rechner](https://konverter-7qc.pages.dev/de/mehrwertsteuer-rechner) | finance | shipped | 2026-04-24 | [dev](http://localhost:4322/de/mehrwertsteuer-rechner) | — |
 
 ## Duplikat-Guard
 

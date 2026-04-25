@@ -111,6 +111,11 @@ const loaders: Record<string, ToolLoader> = {
   'audio-transkription': () =>
     import('./tools/audio-transkription-config').then((m) => m.audioTranskriptionConfig),
   'roi-calculator': () => import('./tools/roi-rechner').then((m) => m.roiRechner),
+  'cash-flow-calculator': () =>
+    import('./tools/cash-flow-calculator').then((m) => m.cashflowRechner),
+  'kgv-calculator': () => import('./tools/kgv-rechner').then((m) => m.kgvRechner),
+  'leasing-factor-calculator': () =>
+    import('./tools/leasing-faktor-rechner').then((m) => m.leasingFaktorRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

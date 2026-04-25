@@ -78,6 +78,9 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'ki-bild-detektor': { de: 'ki-bild-detektor' },
   'audio-transkription': { de: 'audio-transkription' },
   'roi-calculator': { de: 'roi-rechner' },
+  'cash-flow-calculator': { de: 'cashflow-rechner' },
+  'kgv-calculator': { de: 'kgv-rechner' },
+  'leasing-factor-calculator': { de: 'leasing-faktor-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
