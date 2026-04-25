@@ -84,6 +84,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'inheritance-tax-calculator': { de: 'erbschaftsteuer-rechner' },
   'jpg-to-pdf': { de: 'jpg-zu-pdf' },
   'pdf-merge': { de: 'pdf-zusammenfuehren' },
+  'pdf-split': { de: 'pdf-aufteilen' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
