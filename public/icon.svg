@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="kittokit">
   <rect width="512" height="512" rx="128" fill="#8F3A0C"/>
-  <path d="M107 107 L277 256 L107 405 M235 107 L405 256 L235 405"
-        fill="none" stroke="white" stroke-width="44"
+  <path d="M85 107 L192 256 L85 405 M320 107 L427 256 L320 405"
+        fill="none" stroke="white" stroke-width="43"
         stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="43" fill="white"/>
 </svg>
