@@ -2,43 +2,13 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Converter from '../../components/tools/Converter.svelte';
-import FileTool from '../../components/tools/FileTool.svelte';
-import ColorConverter from '../../components/tools/ColorConverter.svelte';
-import Formatter from '../../components/tools/Formatter.svelte';
-import BildDiffTool from '../../components/tools/BildDiffTool.svelte';
-import QrCodeGeneratorTool from '../../components/tools/QrCodeGeneratorTool.svelte';
-import ContrastCheckerTool from '../../components/tools/ContrastCheckerTool.svelte';
-import RegexTesterTool from '../../components/tools/RegexTesterTool.svelte';
-import MehrwertsteuerRechnerTool from '../../components/tools/MehrwertsteuerRechnerTool.svelte';
-import StundenlohnJahresgehaltTool from '../../components/tools/StundenlohnJahresgehaltTool.svelte';
-import TilgungsplanRechnerTool from '../../components/tools/TilgungsplanRechnerTool.svelte';
-import BruttoNettoRechnerTool from '../../components/tools/BruttoNettoRechnerTool.svelte';
-import KreditrechnerTool from '../../components/tools/KreditrechnerTool.svelte';
-import RabattRechnerTool from '../../components/tools/RabattRechnerTool.svelte';
-import ZinsrechnerTool from '../../components/tools/ZinsrechnerTool.svelte';
-import ZinseszinsRechnerTool from '../../components/tools/ZinseszinsRechnerTool.svelte';
-import RoiRechnerTool from '../../components/tools/RoiRechnerTool.svelte';
-import SkontoRechnerTool from '../../components/tools/SkontoRechnerTool.svelte';
-import CashflowRechnerTool from '../../components/tools/CashflowRechnerTool.svelte';
-import LeasingFaktorRechnerTool from '../../components/tools/LeasingFaktorRechnerTool.svelte';
-import ErbschaftsteuerRechnerTool from '../../components/tools/ErbschaftsteuerRechnerTool.svelte';
-import Comparer from '../../components/tools/Comparer.svelte';
-import Analyzer from '../../components/tools/Analyzer.svelte';
-import Generator from '../../components/tools/Generator.svelte';
-import Validator from '../../components/tools/Validator.svelte';
-import WebcamBlurTool from '../../components/tools/WebcamBlurTool.svelte';
-import KiTextDetektorTool from '../../components/tools/KiTextDetektorTool.svelte';
-import KiBildDetektorTool from '../../components/tools/KiBildDetektorTool.svelte';
-import AudioTranskriptionTool from '../../components/tools/AudioTranskriptionTool.svelte';
-import PdfZusammenfuehrenTool from '../../components/tools/PdfZusammenfuehrenTool.svelte';
-import PdfAufteilenTool from '../../components/tools/PdfAufteilenTool.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 import { asideDefaults } from '../../lib/content/aside-defaults';
+import type { AsideStep } from '../../lib/content/aside-defaults';
 
 // Tool-ids that need a specialised formatter UI. Everything else with
 // `type: 'formatter'` falls through to the generic textarea Formatter.
@@ -89,21 +59,10 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
 
-const componentByType = {
-  converter: Converter,
-  'file-tool': FileTool,
-  formatter: Formatter,
-  comparer: Comparer,
-  analyzer: Analyzer,
-  generator: Generator,
-  validator: Validator,
-  interactive: WebcamBlurTool,
-} as const;
-
 export async function getStaticPaths() {
   const entries = await getCollection('tools');
-  // Types that have a Svelte component in componentByType. Defined inline
-  // because Astro isolates getStaticPaths from page-level consts.
+  // Types that have a Svelte component. Defined inline because Astro
+  // isolates getStaticPaths from page-level consts.
   const routableTypes = new Set([
     'converter',
     'file-tool',
@@ -148,13 +107,6 @@ if (!config) {
   );
 }
 
-if (!(config.type in componentByType)) {
-  throw new Error(
-    `[slug].astro has no component mapped for type="${config.type}" ` +
-      `(toolId="${entry.data.toolId}"). Add an entry to componentByType.`,
-  );
-}
-
 const { Content } = await entry.render();
 
 // Default privacy-eyebrow: every client-side tool gets a trust signal above
@@ -189,6 +141,168 @@ const jsonLd = buildToolJsonLd(
   },
   Astro.url.href,
 );
+
+// ── Dynamic component imports (CSS code-split per tool type) ────────────
+// One import per page: only the component for THIS page's config.type (and
+// config.id for custom formatter/validator variants) is fetched at SSG time.
+// Vite code-splits each into its own CSS chunk (≤4 KB gzip), eliminating
+// the 24.81 KB shared bundle that eager top-level imports produced. (PE4 fix)
+const Converter =
+  config.type === 'converter'
+    ? (await import('../../components/tools/Converter.svelte')).default
+    : null;
+
+const FileTool =
+  config.type === 'file-tool'
+    ? (await import('../../components/tools/FileTool.svelte')).default
+    : null;
+
+const Comparer =
+  config.type === 'comparer'
+    ? (await import('../../components/tools/Comparer.svelte')).default
+    : null;
+
+const Analyzer =
+  config.type === 'analyzer'
+    ? (await import('../../components/tools/Analyzer.svelte')).default
+    : null;
+
+const Generator =
+  config.type === 'generator'
+    ? (await import('../../components/tools/Generator.svelte')).default
+    : null;
+
+const WebcamBlurTool =
+  config.type === 'interactive' && config.id === WEBCAM_BLUR_TOOL_ID
+    ? (await import('../../components/tools/WebcamBlurTool.svelte')).default
+    : null;
+
+// Validator: regex-tester has its own component; all others use generic Validator
+const RegexTesterTool =
+  config.type === 'validator' && config.id === REGEX_TESTER_TOOL_ID
+    ? (await import('../../components/tools/RegexTesterTool.svelte')).default
+    : null;
+
+const Validator =
+  config.type === 'validator' && config.id !== REGEX_TESTER_TOOL_ID
+    ? (await import('../../components/tools/Validator.svelte')).default
+    : null;
+
+// Formatter: 23 custom variants + generic fallback (exactly one import per page)
+const ColorConverter =
+  config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID
+    ? (await import('../../components/tools/ColorConverter.svelte')).default
+    : null;
+
+const BildDiffTool =
+  config.type === 'formatter' && config.id === IMAGE_DIFF_TOOL_ID
+    ? (await import('../../components/tools/BildDiffTool.svelte')).default
+    : null;
+
+const QrCodeGeneratorTool =
+  config.type === 'formatter' && config.id === QR_GENERATOR_TOOL_ID
+    ? (await import('../../components/tools/QrCodeGeneratorTool.svelte')).default
+    : null;
+
+const ContrastCheckerTool =
+  config.type === 'formatter' && config.id === CONTRAST_CHECKER_TOOL_ID
+    ? (await import('../../components/tools/ContrastCheckerTool.svelte')).default
+    : null;
+
+const MehrwertsteuerRechnerTool =
+  config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID
+    ? (await import('../../components/tools/MehrwertsteuerRechnerTool.svelte')).default
+    : null;
+
+const StundenlohnJahresgehaltTool =
+  config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID
+    ? (await import('../../components/tools/StundenlohnJahresgehaltTool.svelte')).default
+    : null;
+
+const TilgungsplanRechnerTool =
+  config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID
+    ? (await import('../../components/tools/TilgungsplanRechnerTool.svelte')).default
+    : null;
+
+const BruttoNettoRechnerTool =
+  config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID
+    ? (await import('../../components/tools/BruttoNettoRechnerTool.svelte')).default
+    : null;
+
+const KreditrechnerTool =
+  config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID
+    ? (await import('../../components/tools/KreditrechnerTool.svelte')).default
+    : null;
+
+const RabattRechnerTool =
+  config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID
+    ? (await import('../../components/tools/RabattRechnerTool.svelte')).default
+    : null;
+
+const ZinsrechnerTool =
+  config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID
+    ? (await import('../../components/tools/ZinsrechnerTool.svelte')).default
+    : null;
+
+const ZinseszinsRechnerTool =
+  config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID
+    ? (await import('../../components/tools/ZinseszinsRechnerTool.svelte')).default
+    : null;
+
+const RoiRechnerTool =
+  config.type === 'formatter' && config.id === ROI_CALCULATOR_TOOL_ID
+    ? (await import('../../components/tools/RoiRechnerTool.svelte')).default
+    : null;
+
+const SkontoRechnerTool =
+  config.type === 'formatter' && config.id === CASH_DISCOUNT_TOOL_ID
+    ? (await import('../../components/tools/SkontoRechnerTool.svelte')).default
+    : null;
+
+const CashflowRechnerTool =
+  config.type === 'formatter' && config.id === CASH_FLOW_TOOL_ID
+    ? (await import('../../components/tools/CashflowRechnerTool.svelte')).default
+    : null;
+
+const LeasingFaktorRechnerTool =
+  config.type === 'formatter' && config.id === LEASING_FACTOR_TOOL_ID
+    ? (await import('../../components/tools/LeasingFaktorRechnerTool.svelte')).default
+    : null;
+
+const ErbschaftsteuerRechnerTool =
+  config.type === 'formatter' && config.id === INHERITANCE_TAX_TOOL_ID
+    ? (await import('../../components/tools/ErbschaftsteuerRechnerTool.svelte')).default
+    : null;
+
+const KiTextDetektorTool =
+  config.type === 'formatter' && config.id === 'ki-text-detektor'
+    ? (await import('../../components/tools/KiTextDetektorTool.svelte')).default
+    : null;
+
+const KiBildDetektorTool =
+  config.type === 'formatter' && config.id === 'ki-bild-detektor'
+    ? (await import('../../components/tools/KiBildDetektorTool.svelte')).default
+    : null;
+
+const AudioTranskriptionTool =
+  config.type === 'formatter' && config.id === 'audio-transkription'
+    ? (await import('../../components/tools/AudioTranskriptionTool.svelte')).default
+    : null;
+
+const PdfZusammenfuehrenTool =
+  config.type === 'formatter' && config.id === 'pdf-merge'
+    ? (await import('../../components/tools/PdfZusammenfuehrenTool.svelte')).default
+    : null;
+
+const PdfAufteilenTool =
+  config.type === 'formatter' && config.id === 'pdf-split'
+    ? (await import('../../components/tools/PdfAufteilenTool.svelte')).default
+    : null;
+
+const Formatter =
+  config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id)
+    ? (await import('../../components/tools/Formatter.svelte')).default
+    : null;
 ---
 <BaseLayout
   lang={entry.data.language}
@@ -225,81 +339,81 @@ const jsonLd = buildToolJsonLd(
           ]}
           aria-label="Tool"
         >
-          {config.type === 'converter' && (
+          {config.type === 'converter' && Converter && (
             <Converter
               config={config}
               locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language}
               client:load
             />
           )}
-          {config.type === 'file-tool' && <FileTool config={config} client:load />}
-          {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
+          {config.type === 'file-tool' && FileTool && <FileTool config={config} client:load />}
+          {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && ColorConverter && (
             <ColorConverter config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === IMAGE_DIFF_TOOL_ID && (
+          {config.type === 'formatter' && config.id === IMAGE_DIFF_TOOL_ID && BildDiffTool && (
             <BildDiffTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === QR_GENERATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === QR_GENERATOR_TOOL_ID && QrCodeGeneratorTool && (
             <QrCodeGeneratorTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === CONTRAST_CHECKER_TOOL_ID && (
+          {config.type === 'formatter' && config.id === CONTRAST_CHECKER_TOOL_ID && ContrastCheckerTool && (
             <ContrastCheckerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID && MehrwertsteuerRechnerTool && (
             <MehrwertsteuerRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID && (
+          {config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID && StundenlohnJahresgehaltTool && (
             <StundenlohnJahresgehaltTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID && (
+          {config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID && TilgungsplanRechnerTool && (
             <TilgungsplanRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && (
+          {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && BruttoNettoRechnerTool && (
             <BruttoNettoRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID && KreditrechnerTool && (
             <KreditrechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID && RabattRechnerTool && (
             <RabattRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && ZinsrechnerTool && (
             <ZinsrechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && (
+          {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && ZinseszinsRechnerTool && (
             <ZinseszinsRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === ROI_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === ROI_CALCULATOR_TOOL_ID && RoiRechnerTool && (
             <RoiRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === CASH_DISCOUNT_TOOL_ID && (
+          {config.type === 'formatter' && config.id === CASH_DISCOUNT_TOOL_ID && SkontoRechnerTool && (
             <SkontoRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === CASH_FLOW_TOOL_ID && (
+          {config.type === 'formatter' && config.id === CASH_FLOW_TOOL_ID && CashflowRechnerTool && (
             <CashflowRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === LEASING_FACTOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === LEASING_FACTOR_TOOL_ID && LeasingFaktorRechnerTool && (
             <LeasingFaktorRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === INHERITANCE_TAX_TOOL_ID && (
+          {config.type === 'formatter' && config.id === INHERITANCE_TAX_TOOL_ID && ErbschaftsteuerRechnerTool && (
             <ErbschaftsteuerRechnerTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === 'ki-text-detektor' && (
+          {config.type === 'formatter' && config.id === 'ki-text-detektor' && KiTextDetektorTool && (
             <KiTextDetektorTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === 'ki-bild-detektor' && (
+          {config.type === 'formatter' && config.id === 'ki-bild-detektor' && KiBildDetektorTool && (
             <KiBildDetektorTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === 'audio-transkription' && (
+          {config.type === 'formatter' && config.id === 'audio-transkription' && AudioTranskriptionTool && (
             <AudioTranskriptionTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === 'pdf-merge' && (
+          {config.type === 'formatter' && config.id === 'pdf-merge' && PdfZusammenfuehrenTool && (
             <PdfZusammenfuehrenTool config={config} client:load />
           )}
-          {config.type === 'formatter' && config.id === 'pdf-split' && (
+          {config.type === 'formatter' && config.id === 'pdf-split' && PdfAufteilenTool && (
             <PdfAufteilenTool config={config} client:load />
           )}
-          {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
+          {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && Formatter && (
             <Formatter
               config={config}
               placeholder={config.placeholder ?? ''}
@@ -308,7 +422,7 @@ const jsonLd = buildToolJsonLd(
               client:load
             />
           )}
-          {config.type === 'comparer' && (
+          {config.type === 'comparer' && Comparer && (
             <Comparer
               config={config}
               placeholderA={config.placeholderA ?? ''}
@@ -316,25 +430,25 @@ const jsonLd = buildToolJsonLd(
               client:load
             />
           )}
-          {config.type === 'analyzer' && (
+          {config.type === 'analyzer' && Analyzer && (
             <Analyzer
               config={config}
               placeholder={config.placeholder ?? ''}
               client:load
             />
           )}
-          {config.type === 'generator' && <Generator config={config} client:load />}
-          {config.type === 'validator' && config.id === REGEX_TESTER_TOOL_ID && (
+          {config.type === 'generator' && Generator && <Generator config={config} client:load />}
+          {config.type === 'validator' && config.id === REGEX_TESTER_TOOL_ID && RegexTesterTool && (
             <RegexTesterTool config={config} client:load />
           )}
-          {config.type === 'validator' && config.id !== REGEX_TESTER_TOOL_ID && (
+          {config.type === 'validator' && config.id !== REGEX_TESTER_TOOL_ID && Validator && (
             <Validator
               config={config}
               placeholder={config.placeholder ?? ''}
               client:load
             />
           )}
-          {config.type === 'interactive' && config.id === WEBCAM_BLUR_TOOL_ID && (
+          {config.type === 'interactive' && config.id === WEBCAM_BLUR_TOOL_ID && WebcamBlurTool && (
             <WebcamBlurTool config={config} client:load />
           )}
         </section>
@@ -362,7 +476,7 @@ const jsonLd = buildToolJsonLd(
           <div class="tool-aside__content">
             <section class="tool-aside__steps">
               <ol>
-                {resolvedAside.steps.map((step, i) => (
+                {resolvedAside.steps.map((step: AsideStep, i: number) => (
                   <li>
                     <span class="tool-aside__step-number">
                       {String(i + 1).padStart(2, '0')}
