@@ -4,7 +4,8 @@ slug: internal-linking-strategist
 name: Internal-Linking-Strategist
 role: research
 tier: worker
-model: opus-4-7
+model: sonnet-4-6
+effort: max
 description: >-
   Topic-Cluster-Architect. Silo-Architektur, Pillar-Mapping, Anchor-
   Diversifikation, Orphan-Detection. Pflegt internal-links-manifest.json als

@@ -19,7 +19,13 @@ telemetry: false
 # Frontmatter `heartbeat: routine` + optional `heartbeat_cadence: cron-...`.
 # Agenten mit `heartbeat: event-driven` werden NICHT in Loop gezogen.
 heartbeat:
-  cadence: 30m
+  # v2.1 (2026-04-25 — User-Decision Plan B):
+  # 30m → 60m. CEO arbeitet jetzt mit Sonnet 4.6 + effort:max (statt Opus
+  # 4.7). Cost-per-heartbeat ~8x niedriger, also kann CEO seltener tickern
+  # ohne Overhead. Sequential-Pipeline §0.1 = 1 Tool zur Zeit, 60m gibt
+  # genug Zeit fuer Worker-Cycle (Build → Critics → End-Review) zwischen
+  # CEO-Coordination-Ticks.
+  cadence: 60m
   idle_behavior: wait
   phase_1_warmup: 60m
   # v2.0: Override-Protokoll
@@ -182,20 +188,30 @@ skills:
 # basierend auf diesem Mapping (Default: sonnet-4-6 wenn Agent nicht gelistet)
 models:
   default: sonnet-4-6
+  # v2.1 (2026-04-25 — User-Decision "Plan B + effort:max"):
+  # CEO + 3 weitere Strategie-Agenten von Opus 4.7 auf Sonnet 4.6 mit
+  # effort:max heruntergestuft. Kosten-Faktor 8x niedriger pro Heartbeat
+  # bei vergleichbarer Qualitaet fuer Rubric-Execution + Decision-Tree-Following.
+  # Hard-Cases (§7.15-Override, Architecture-Decisions) eskaliert CEO an
+  # User via inbox/to-user/ — siehe CEO AGENTS.md §0.7.
   assignments:
     opus_4_7:
-      - ceo
-      - legal-auditor
-      - differenzierungs-researcher
-      - seo-geo-strategist
-      - analytics-interpreter
-      - internal-linking-strategist
-      - meta-reviewer
-      - polish-agent
-      - cto
+      # Behalten — echtes Deep-Reasoning + Synthesis
+      - legal-auditor               # Regulatorisches Risiko
+      - seo-geo-strategist          # Kreatives Keyword-Mapping
+      - analytics-interpreter       # Synthesis-heavy (cron weekly)
+      - meta-reviewer               # Critic-Konflikt-Adjudication
+      - cto                         # Architektur-Eskalationen (Phase 3+)
     sonnet_4_6:
+      # NEU (v2.1) — alle mit effort:max statt Opus
+      - ceo                         # WAS Opus, jetzt Sonnet+max
+      - differenzierungs-researcher # WAS Opus, jetzt Sonnet+max
+      - internal-linking-strategist # WAS Opus, jetzt Sonnet+max
+      - polish-agent                # WAS Opus, jetzt Sonnet+max
+      # Bestehend
       - tool-dossier-researcher
       - tool-builder
+      - end-reviewer                # Schon vorher Sonnet+max
       - merged-critic
       - content-critic
       - design-critic

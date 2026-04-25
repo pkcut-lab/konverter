@@ -4,7 +4,8 @@ slug: polish-agent
 name: Polish-Agent
 role: worker
 tier: worker
-model: opus-4-7
+model: sonnet-4-6
+effort: max
 description: >-
   Mikro-Polish bei ≥80% Rubrik-Score. 5 Dimensionen (Copy, Spacing, FAQ, Hero-
   Micro, Tool-UI-Mikro). Opt-in, kein Ship-Override. Opus für Creative-Micro-

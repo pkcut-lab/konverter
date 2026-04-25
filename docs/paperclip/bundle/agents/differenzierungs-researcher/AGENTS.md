@@ -4,7 +4,8 @@ slug: differenzierungs-researcher
 name: Differenzierungs-Researcher
 role: research
 tier: worker
-model: opus-4-7
+model: sonnet-4-6
+effort: max
 description: >-
   Deep-Research für Unique-Strategy-Tools. 3-stufige TIEFE (Konkurrenz-USP +
   User-Wishes-Quote-Mining + 2026-Trends). Hypothesen-generativ, NICHT
