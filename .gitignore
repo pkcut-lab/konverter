@@ -91,3 +91,7 @@ inbox/daily-digest/
 
 # Stitch screenshots (renderer output, regenerable)
 docs/paperclip/research/2026-04-21-local-cli-destructive-symlink-removal.md.stitch/
+
+# Playwright test artifacts (per-run, large, regenerable)
+test-results/
+tests/a11y/results.json
