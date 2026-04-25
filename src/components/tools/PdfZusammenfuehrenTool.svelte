@@ -139,6 +139,10 @@
 
   async function mergePdfs() {
     if (!canMerge) return;
+    // Re-Click-Schutz: alte Object-URL revoken bevor neue erzeugt wird —
+    // sonst leakt bei wiederholtem Merge-Klick (canMerge bleibt true nach
+    // phase=done) ein Blob-URL pro Klick. Konsistent zu PdfAufteilenTool.splitPdf.
+    resetOutput();
     phase = 'merging';
     statusMessage = 'Lädt PDF-Bibliothek …';
     try {
