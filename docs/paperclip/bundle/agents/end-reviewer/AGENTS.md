@@ -78,6 +78,27 @@ dossier_ref=$(yq '.dossier_ref' "$ticket")
 build_commit=$(yq '.build_commit_sha' "$ticket")
 previous_ref=$(yq '.previous_pass_ref' "$ticket" 2>/dev/null)
 
+# v1.1 (2026-04-25) — STALE-SNAPSHOT-FIX
+# Pflicht: Filesystem auf den Build-SHA bringen, BEVOR irgendwas reviewed wird.
+# Sonst riskiert man, einen späteren Hotfix-Commit zu reviewen statt des
+# Build-Snapshots, den die Critics gesehen haben (siehe err-2026-04-25-001
+# brutto-netto-rechner: Pass 3 meldete FAQ-Blocker, der zum Review-Zeitpunkt
+# bereits in commit 9186eab gefixt war — Reviewer las HEAD statt build_commit_sha).
+#
+# Ablauf:
+#   1. Aktuellen HEAD merken (für Restore am Ende).
+#   2. git checkout <build_commit_sha> — detached HEAD ist akzeptabel.
+#   3. Review komplett durchführen (Build + alle Checks).
+#   4. Am Ende: git checkout <merken-HEAD> (auch bei Fehler/Abbruch via trap).
+original_head=$(git rev-parse HEAD)
+trap 'git checkout "$original_head" >/dev/null 2>&1' EXIT
+git fetch --quiet
+git checkout "$build_commit" >/dev/null 2>&1 || {
+  echo "ABORT: build_commit_sha=$build_commit nicht checkoutbar (fetch fehlgeschlagen?)"
+  exit 1
+}
+echo "Reviewing build SHA: $build_commit (originaler HEAD: $original_head)"
+
 # Rulebooks + Dossier §9 Differenzierung laden
 cat CLAUDE.md CONVENTIONS.md STYLE.md CONTENT.md DESIGN.md
 cat "$dossier_ref"   # fokussiere auf §9
