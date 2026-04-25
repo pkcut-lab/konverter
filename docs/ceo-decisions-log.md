@@ -32,6 +32,55 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
 <!-- CEO-DECISION-APPEND -->
 
+## 2026-04-26 · pdf-zu-jpg R1 Meta-Review (KON-505) — Severity-Coverage-Drift, route-to-builder-R2
+
+**Decision:** Meta-Reviewer Verdict für pdf-zu-jpg R1: `critics_convergent_on_fail`,
+`divergence_flagged=false` (merged=fail, nicht pass — §0-Strict-Rule nicht
+getriggert). 8/8 Critics vorhanden, Verdict-Verteilung 2 pass / 3 partial /
+3 fail (merged + a11y + conversion). **Severity-Coverage-Drift = true:**
+merged-critic flaggt 4 Fails, individuelle Critics liefern 5 weitere Blocker/
+Highs in nicht-merged-covered Domänen (a11y A3/A4/A6 Focus-Ring + Focus-Trap +
+aria-live; conversion C6 Tap-Targets + C8 Analytics; design D7 Accent-Use-Site).
+**Empfehlung:** route-to-builder-R2 mit 8 atomic edits (1 Hex-Extract, 2 Closer-
+Wording, 4 a11y-Patches, 1 axe-Spec-Datei) + 4 Site-wide-Spinoffs.
+
+**Affected Tools/Tickets:**
+- pdf-zu-jpg (R1, audited commit `a917d8a`, build KON-494, rework_counter 0/2 → 1/2)
+- Critic-Tickets: KON-496 (merged) + KON-497 (perf) + KON-498 (sec) +
+  KON-499 (PE) + KON-500 (a11y) + KON-501 (content) + KON-502 (design) +
+  KON-503 (conversion)
+
+**Builder-R2-Scope (8 atomic edits, 1 Tool-Komponente + 1 Content-Datei + 1 neuer Spec):**
+1. PdfZuJpgTool.svelte:289 Hex `#ffffff` → Konstante in pdf-zu-jpg-utils.ts
+2. de.md:83 H2 → `## Verwandte Dokumenten-Tools`
+3. de.md:85 Closer-Intro wortgenau §13.4
+4. PdfZuJpgTool.svelte CSS — Dropzone `:has(.pzj__input:focus-visible)`
+5. PdfZuJpgTool.svelte:385-409 Password-Dialog aria-modal + focus-on-open
+6. PdfZuJpgTool.svelte:411-419 Wrong-password role=alert (split-pattern)
+7. PdfZuJpgTool.svelte CSS — 3 Klassen min-height 2.75rem (.pzj__ghost-btn, .pzj__dl-link, .pzj__primary-btn--sm)
+8. tests/a11y/pdf-zu-jpg.spec.ts (Pattern aus pdf-komprimieren.spec.ts)
+
+**Spinoff-Tickets (eigene Backlog-Items, NICHT pdf-zu-jpg-R2-blockierend):**
+- S1 — Tool-Usage-Event-Instrumentation (FileTool-Layer, alle Tools — 5. Recurrence)
+- S2 — Rulebook-Klärung Accent-Use-Site-Whitelist für Selection-States (3. Recurrence)
+- S3 — Font-Budget Subsetting/Erhöhung (8. Recurrence)
+- S4 — `--tap-min: 2.75rem` Design-Token in tokens.css (4. Recurrence)
+
+**Recurrences (5+ in pdf-zu-jpg, alle out-of-scope für pdf-zu-jpg-R2):**
+- merged-axe-coverage-only-spec-existence (5. — Builder muss a11y-Specialist-Findings separat reviewen, merged-rubric reicht nicht)
+- conversion-C8-tool-usage-instrumentation (5. — systemic, FileTool-Layer-Patch nötig)
+- conversion-C6-tap-targets (4. — Token-Fehlend)
+- design-D7-accent-on-selection-state (3. — Rulebook-Ambiguität, taxative "NUR"-Liste)
+- perf-P9-font-budget (8. — pre-existing infra)
+
+**Reversibility:**
+- R2-Atomic-Edits: trivial (alle in 1 Component + 1 Content-File + 1 neue Spec-Datei)
+- Spinoffs: separate Tickets, je nach Scope moderat-trivial
+
+**Confirmed by User:** post-hoc.
+
+---
+
 ## 2026-04-26 · pdf-komprimieren §0.7 NBSP Hotfix — End-Review dispatched
 
 **Decision:** Meta-Review-R2 (KON-495) adapter dead-run. Meta-reviewer verdict: divergence_flagged=false, 1 real blocker (NBSP de.md:27), design-critic D9+D10 stale worktree (false-fail), P1/P9 carry-over (out of scope). CEO §0.7: applied NBSP hotfix directly (commit 7658055) instead of full Rework-R3 cycle. End-Review Triple-Pass (KON-504 Pass 1) dispatched. D8 motion-token → KON-506 backlog.
