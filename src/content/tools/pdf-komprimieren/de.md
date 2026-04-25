@@ -24,7 +24,7 @@ faq:
   - q: "Warum ist die Reduktion manchmal gering?"
     a: "Wenn eine PDF bereits mit einem modernen Tool erstellt wurde, sind Objekt-Streams und Metadaten oft schon optimiert. In diesem Fall bleibt wenig Spielraum — das Tool zeigt die tatsächliche Ersparnis transparent an, statt falsche Versprechen zu machen."
   - q: "Kann ich sehr große PDFs komprimieren?"
-    a: "Ja, bis 100 MB. Die Verarbeitung läuft vollständig im Browser — auf älteren Geräten kann es bei sehr großen Dateien einige Sekunden dauern. Es gibt kein künstliches Limit durch Rate-Limiting oder Abo-Schranken."
+    a: "Ja, bis 100&nbsp;MB. Die Verarbeitung läuft vollständig im Browser — auf älteren Geräten kann es bei sehr großen Dateien einige Sekunden dauern. Es gibt kein künstliches Limit durch Rate-Limiting oder Abo-Schranken."
 relatedTools:
   - pdf-zusammenfuehren
   - pdf-aufteilen
