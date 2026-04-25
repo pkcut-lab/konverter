@@ -868,4 +868,15 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .result-section {
+      animation: none;
+    }
+    .input-field,
+    .btn-copy,
+    .btn-reset {
+      transition: none;
+    }
+  }
 </style>

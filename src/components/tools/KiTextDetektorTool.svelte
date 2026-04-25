@@ -125,7 +125,7 @@
           value={phase === 'preparing' ? (prepareProgress.total ? prepareProgress.loaded / prepareProgress.total : 0) : 1}
           label={phase === 'preparing' ? 'KI-Modell wird geladen...' : 'Text wird analysiert...'}
         />
-        <p class="ki-tool__loading-note">Das Modell läuft 100 % lokal in deinem Browser. Keine Daten werden hochgeladen.</p>
+        <p class="ki-tool__loading-note">Beim ersten Mal lädt das Modell (~80 MB) einmalig — danach ist es offline verfügbar. Alle Analysen laufen 100 % lokal im Browser, keine Daten werden hochgeladen.</p>
       </div>
     </div>
   {:else if phase === 'done' && results}
@@ -419,5 +419,16 @@
   }
   .btn--secondary:hover {
     background: var(--color-surface);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ki-tool__field,
+    .ki-tool__char-count,
+    .circle,
+    .btn,
+    .btn--primary:active:not(:disabled) {
+      transition: none;
+      transform: none;
+    }
   }
 </style>

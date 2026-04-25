@@ -702,4 +702,13 @@
     font-size: 1rem;
     color: var(--color-text);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .upload-area,
+    .btn,
+    .btn--primary:active:not(:disabled) {
+      transition: none;
+      transform: none;
+    }
+  }
 </style>

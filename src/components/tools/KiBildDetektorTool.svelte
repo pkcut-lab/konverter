@@ -151,7 +151,7 @@
           value={phase === 'preparing' ? (prepareProgress.total ? prepareProgress.loaded / prepareProgress.total : 0) : 1}
           label={phase === 'preparing' ? 'KI-Modell wird geladen...' : 'Bild wird analysiert...'}
         />
-        <p class="ki-tool__loading-note">Lokale Analyse läuft. Keine Daten verlassen deinen Browser.</p>
+        <p class="ki-tool__loading-note">Beim ersten Mal lädt das Modell (~90 MB) einmalig — danach ist es offline verfügbar. Lokale Analyse, keine Daten verlassen deinen Browser.</p>
       </div>
     </div>
   {:else if phase === 'done' && results}
@@ -480,5 +480,15 @@
   }
   .btn--secondary:hover {
     background: var(--color-surface);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .upload-area,
+    .circle,
+    .btn,
+    .btn--primary:active:not(:disabled) {
+      transition: none;
+      transform: none;
+    }
   }
 </style>
