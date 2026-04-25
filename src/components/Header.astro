@@ -40,8 +40,8 @@ const popularLabelByLang: Record<string, string> = {
 const popularLabel = popularLabelByLang[lang] ?? popularLabelByLang.en!;
 
 const brandAriaByLang: Record<string, string> = {
-  de: 'Konverter — Startseite',
-  en: 'Konverter — Homepage',
+  de: 'kittokit — Startseite',
+  en: 'kittokit — Homepage',
 };
 const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
 
@@ -71,7 +71,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
           />
         </svg>
       </span>
-      <span class="wordmark">Konverter</span>
+      <span class="wordmark">kit<em>to</em>kit</span>
     </a>
 
     <nav class="nav" aria-label="Hauptnavigation">
@@ -161,6 +161,10 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     font-weight: 600;
     font-size: 1.125rem;
     letter-spacing: var(--tracking-tight);
+  }
+  .wordmark em {
+    font-style: normal;
+    color: var(--color-accent);
   }
 
   .nav {

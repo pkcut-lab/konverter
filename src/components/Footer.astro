@@ -36,8 +36,8 @@ const taglineByLang: Record<string, string> = {
 const tagline = taglineByLang[lang] ?? taglineByLang.en!;
 
 const brandAriaByLang: Record<string, string> = {
-  de: 'Konverter — Startseite',
-  en: 'Konverter — Homepage',
+  de: 'kittokit — Startseite',
+  en: 'kittokit — Homepage',
 };
 const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
 ---
@@ -60,7 +60,7 @@ const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
             />
           </svg>
         </span>
-        <span class="wordmark">Konverter</span>
+        <span class="wordmark">kit<em>to</em>kit</span>
       </a>
       <p class="footer-tagline">{tagline}</p>
     </div>
@@ -89,7 +89,7 @@ const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
 
     <!-- Copyright bottom bar -->
     <div class="footer-bottom">
-      <span>© {year} Konverter</span>
+      <span>© {year} kittokit</span>
       <a href="#top" class="footer-bottom__top">Nach oben</a>
     </div>
 
@@ -146,6 +146,10 @@ const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
     font-size: 1rem;
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
+  }
+  .wordmark em {
+    font-style: normal;
+    color: var(--color-accent);
   }
   .footer-tagline {
     margin: 0;

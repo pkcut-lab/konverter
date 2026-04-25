@@ -3,7 +3,7 @@ agentcompanies: v1
 company: kittokit
 name: kittokit
 description: >-
-  Multilinguales Konverter-Webtool-Portal (Astro 5 SSG + Svelte 5 + Tailwind),
+  kittokit — multilingualer Tool-Hub (Astro 5 SSG + Svelte 5 + Tailwind),
   Skalierungsziel 200–1000 Tools. Refined-Minimalism, pure-client, DSGVO-
   konform, AdSense ab Phase 2. Betrieben von einem einzelnen Menschen
   (pkcut-lab).
