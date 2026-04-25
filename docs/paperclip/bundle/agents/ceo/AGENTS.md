@@ -277,7 +277,13 @@ def pick_next_ticket(backlog, in_progress, completed_today):
     return candidates[0] if candidates else None
 ```
 
-## 2.5 Auto-Refill-Fallback — MASTERPLAN-PRIORITY-DRIVEN (v1.2, 2026-04-24)
+## 2.5 Auto-Refill-Fallback — MASTERPLAN-PRIORITY-DRIVEN (v1.5, 2026-04-25)
+
+> **§0.1-Override aktiv:** Auto-Refill darf MAX 1 neuen Tool-Slug pro Heartbeat
+> als `todo` in die Queue legen, und nur wenn 0 Tools in_progress/in_review
+> stehen. Die ursprünglichen `MAX_TICKETS_PER_HEARTBEAT=10` + `MAX_IN_FLIGHT=30`
+> Werte unten sind durch §0.1 auf 1/1 gecappt — Bash-Logic-Cap unten ist auf 1
+> gesetzt. Sequential-Pipeline = Pflicht.
 
 **Wann invoken.** Step 9 (§2 `pick_next_ticket`) returned `None` — keine open
 Tickets mit resolved dependencies + Dossier-Ready. Bevor du "Empty inbox, exit
@@ -313,9 +319,11 @@ Dann exit heartbeat cleanly.
 **C. Dispatch-Logic (Masterplan-Priority, v1.2):**
 
 ```bash
-# Hard-Caps (v1.3 2026-04-24 — User-Decision "Liste abarbeiten, parallel")
-MAX_TICKETS_PER_HEARTBEAT=10   # vorher 3 — User will dass CEO direkt die Queue fuellt
-MAX_IN_FLIGHT=30               # vorher 10 — Buffer fuer parallele Pipelines
+# Hard-Caps (v1.5 2026-04-25 — §0.1 Sequential-Pipeline-Override)
+# Vorher v1.3: 10/30 (Parallel-Mode) → Crash-Pattern (37 Zombie-Node-Prozesse).
+# Jetzt: 1/1 — ein Tool zur Zeit, durchziehen bis Ship, dann naechstes.
+MAX_TICKETS_PER_HEARTBEAT=1    # max 1 neuer Dossier-Research-Trigger pro HB
+MAX_IN_FLIGHT=1                # max 1 Tool-Slug in non-done State faellt drunter
 
 COMPANY_ID="f8ea7e27-8d40-438c-967b-fe958a45026b"   # kittokit
 API="http://127.0.0.1:3101/api/companies/$COMPANY_ID/issues"
@@ -426,7 +434,11 @@ wird NICHT durchlaufen.
 AGENTS.md ist die authoritative Quelle (Paperclip-Runtime lädt AGENTS.md als
 `instructionsFilePath`). HEARTBEAT.md ist Human-Reference.
 
-## 3. Assignment-Regeln (v1.2 — 2026-04-24, Parallel-Fan-Out)
+## 3. Assignment-Regeln (v1.5 — 2026-04-25, §0-Sequential-scoped)
+
+> **§0-Scope:** Diese Tabelle bleibt strukturell. Der Parallelismus passiert
+> NUR INNERHALB eines Tool-Slugs (Phase A intra-parallel, Phase D intra-parallel).
+> Nie zwei verschiedene Tool-Slugs gleichzeitig in einem Phasen-Set.
 
 | Ticket-Type | Default Assignee | Review-Gate |
 |-------------|-----------------|-------------|
@@ -869,7 +881,13 @@ mit `full pipeline` / `auto-merge` sind **Legacy**. CEO behandelt sie wie
 erzeugt. Researcher erzeugen NUR Dossier-Manifests, Builder erzeugen NUR
 Code-Commits. Downstream-Orchestration ist **ausschließlich** CEO-§3.4.
 
-### §3.5 Review-Round 1 Parallel-Fan-Out (v1.3 — 2026-04-24, verify-gate)
+### §3.5 Review-Round 1 Parallel-Fan-Out (v1.5 — 2026-04-25, §0-scoped)
+
+> **§0.1-Scope:** Fan-Out ist NUR INNERHALB EINES Tools erlaubt (Phase D
+> der Sequential-Pipeline). 8 Critics auf 1 Tool = ok. 8 Critics auf 8 Tools
+> oder mehrere Tools gleichzeitig = verboten. CEO darf §3.5 NUR triggern
+> wenn der gerade aktive Tool-Slug Phase B clean abgeschlossen hat und
+> KEIN anderer Tool-Slug noch in Phase A–E ist.
 
 **Verify-Gate vor Fan-Out (v1.3).** Bevor 8 Critic-Tickets erstellt werden:
 

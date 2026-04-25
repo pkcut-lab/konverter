@@ -1,5 +1,7 @@
 ---
+agentcompanies: v1
 slug: merged-critic
+name: Merged-Critic
 role: qa
 tier: worker
 heartbeat: event-driven
