@@ -22,6 +22,13 @@
   let outputSize = $state<number>(0);
   let outputUrl = $state<string>('');
   let outputDims = $state<Dims>(null);
+  let outputText = $state<string>('');
+  
+  // Image Zoom State
+  let isZooming = $state<boolean>(false);
+  let zoomX = $state<number>(50);
+  let zoomY = $state<number>(50);
+
   let errorMessage = $state<string>('');
   let outputFormat = $state<string>(config.defaultFormat ?? 'webp');
   let prepareProgress = $state<{ loaded: number; total: number }>({ loaded: 0, total: 0 });
@@ -77,6 +84,7 @@
       case 'png': return 'image/png';
       case 'jpg': return 'image/jpeg';
       case 'webp': return 'image/webp';
+      case 'txt': return 'text/plain';
       default: return 'image/webp';
     }
   }
@@ -85,6 +93,7 @@
       case 'png': return 'png';
       case 'jpg': return 'jpg';
       case 'webp': return 'webp';
+      case 'txt': return 'txt';
       default: return 'webp';
     }
   }
@@ -145,6 +154,7 @@
     outputSize = 0;
     outputUrl = '';
     outputDims = null;
+    outputText = '';
     prepareProgress = { loaded: 0, total: 0 };
     progress = null;
     convertStartMs = null;
@@ -254,6 +264,11 @@
       if (outputUrl) URL.revokeObjectURL(outputUrl);
       outputUrl = URL.createObjectURL(blob);
       outputSize = outBytes.byteLength;
+      if (outputFormat === 'txt') {
+        outputText = new TextDecoder().decode(outBytes);
+      } else {
+        outputText = '';
+      }
       phase = 'done';
       progress = null;
       convertStartMs = null;
@@ -322,6 +337,11 @@
       const blob = new Blob([newBytes as BlobPart], { type: formatToMime(newFormat) });
       outputUrl = URL.createObjectURL(blob);
       outputSize = newBytes.byteLength;
+      if (newFormat === 'txt') {
+        outputText = new TextDecoder().decode(newBytes);
+      } else {
+        outputText = '';
+      }
       void measureDims(blob).then((d) => { outputDims = d; });
     } catch (err) {
       errorMessage = err instanceof Error ? err.message : 'Format-Wechsel fehlgeschlagen.';
@@ -341,6 +361,22 @@
     if ((e.currentTarget as HTMLElement).contains(e.relatedTarget as Node)) return;
     isDragging = false;
   }
+  function handleDragOver(e: DragEvent) {
+    e.preventDefault();
+  }
+
+  function handleMouseMove(e: MouseEvent) {
+    const target = e.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    zoomX = ((e.clientX - rect.left) / rect.width) * 100;
+    zoomY = ((e.clientY - rect.top) / rect.height) * 100;
+    isZooming = true;
+  }
+
+  function handleMouseLeave() {
+    isZooming = false;
+  }
+
   function onDrop(e: DragEvent) {
     e.preventDefault();
     isDragging = false;
@@ -582,10 +618,17 @@
       <div class="compare">
         <figure class="compare__col">
           <figcaption class="compare__cap">ORIGINAL</figcaption>
-          <div class="frame">
+          <!-- svelte-ignore a11y_no_static_element_interactions -->
+          <div 
+            class="frame"
+            onmousemove={handleMouseMove}
+            onmouseleave={handleMouseLeave}
+          >
             {#if sourceUrl}
               <img
                 class="frame__img"
+                class:frame__img--zoomed={isZooming}
+                style={isZooming ? `transform-origin: ${zoomX}% ${zoomY}%;` : ''}
                 src={sourceUrl}
                 alt="Quelldatei"
               />
@@ -595,13 +638,17 @@
 
         <figure class="compare__col">
           <figcaption class="compare__cap">ERGEBNIS</figcaption>
-          <div class="preview">
-            <img
-              class="preview__img"
-              src={outputUrl}
-              alt="Vorschau des Ergebnisses"
-              data-testid="filetool-preview"
-            />
+          <div class="preview" class:preview--text={outputFormat === 'txt'}>
+            {#if outputFormat === 'txt'}
+              <textarea class="preview__text" readonly value={outputText} aria-label="Erkannter Text"></textarea>
+            {:else}
+              <img
+                class="preview__img"
+                src={outputUrl}
+                alt="Vorschau des Ergebnisses"
+                data-testid="filetool-preview"
+              />
+            {/if}
           </div>
         </figure>
       </div>
@@ -989,6 +1036,7 @@
 
   .frame,
   .preview {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -997,6 +1045,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
     background-color: var(--color-bg);
+    overflow: hidden;
   }
   .preview {
     /* Checkerboard to reveal alpha channel in ERGEBNIS (transparent PNG/WebP) */
@@ -1008,12 +1057,34 @@
     background-size: 12px 12px;
     background-position: 0 0, 0 6px, 6px -6px, -6px 0;
   }
+  .preview--text {
+    background-image: none;
+    background-color: transparent;
+  }
   .frame__img,
   .preview__img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     display: block;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+  }
+  .frame__img--zoomed {
+    transform: scale(2.5);
+    cursor: zoom-in;
+  }
+  .preview__text {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: none;
+    background: transparent;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text);
+    padding: var(--space-2);
+    outline: none;
   }
 
   .card__foot {

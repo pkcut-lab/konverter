@@ -66,6 +66,8 @@ already_built_skip_list:
   - ki-text-detektor
   - ki-bild-detektor
   - audio-transkription
+  - image-to-text
+  - roi-rechner
 total_tier_1_to_8: 172
 total_tier_9_psychology: 79
 total_tier_10_to_19: 650 (alle 8 neuen Enums freigegeben 2026-04-23: math, health, science, engineering, sport, automotive, education, agriculture)
@@ -128,9 +130,10 @@ siehe Frontmatter.
 
 ```
 distil-whisper               | audio       | Audio Transkription (Fast) (Distil-Whisper) | audio-root
+bild-zu-beschreibung         | image       | KI Bildbeschreibung (Alt-Text, Florence2)   | image-root
+text-zu-sprache              | audio       | Text-zu-Sprache (KI-Stimmen)               | audio-root
 depth-anything               | image       | Tiefen-Map-Generator (Depth Anything)       | image-root
 segment-anything             | image       | Objekt-Segmentierung (SAM-vit-b)           | image-root
-hintergrund-entfernen-ki     | image       | KI-Hintergrund Entferner (MODNet)           | image-root
 tokenizer-playground         | dev         | Tokenizer-Playground (BPE/WordPiece)       | dev-root
 lokaler-ki-chat              | dev         | Lokaler KI-Chat (Phi-3-mini-4k)            | dev-root
 video-objekt-erkennung       | video       | Video-Objekt-Erkennung (YOLOS-tiny)        | video-root
@@ -143,6 +146,14 @@ ki-musik-generator           | audio       | KI-Musik-Generator (MusicGen-small)
     *   *Modell:* `distil-whisper/distil-medium.en` (ca. 390MB).
     *   *Besonderheit:* Nur für Englisch optimiert. Ergänzung zu Whisper-Base (Multilingual).
     *   *Task:* `automatic-speech-recognition`.
+*   **bild-zu-beschreibung (Alt-Text):**
+    *   *Modell:* `microsoft/Florence-2-base` (WebGPU).
+    *   *Task:* `image-to-text`.
+    *   *USP:* Perfekt für SEO (automatisierte Alt-Texte).
+*   **text-zu-sprache:**
+    *   *Modell:* `Xenova/speecht5_tts` oder `Xenova/mms-tts-deu`.
+    *   *Task:* `text-to-audio`.
+    *   *UI:* Auswahl von Stimmen (Male/Female) und Download als MP3.
 *   **depth-anything:**
     *   *Modell:* `LiheYoung/depth-anything-small-hf` (~100MB).
     *   *Task:* `depth-estimation`.

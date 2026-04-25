@@ -54,3 +54,15 @@ export async function loadAnalyze(id: string): Promise<AnalyzeFn | undefined> {
   const loader = analyzeLoaders[id];
   return loader ? loader() : undefined;
 }
+
+export async function loadKiTextDetektor() {
+  return import('./ki-text-detektor');
+}
+
+export async function loadKiBildDetektor() {
+  return import('./ki-bild-detektor');
+}
+
+export async function loadAudioTranskription() {
+  return import('./audio-transkription');
+}
