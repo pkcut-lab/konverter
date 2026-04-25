@@ -85,7 +85,7 @@ Die Ampel-Empfehlung in diesem Rechner hilft dabei:
 5.000&nbsp;€ Brutto, 3&nbsp;% Skonto, 7&nbsp;Tage Frist, 30&nbsp;Tage Ziel → 150&nbsp;€ Skonto, 4.850&nbsp;€ zahlen, ~48&nbsp;% Jahreszins.
 
 **Netto-Buchhalter-Modus:**
-840&nbsp;€ Netto, 2&nbsp;% Skonto, 19&nbsp;% MwSt → 16,80&nbsp;€ Skonto auf Netto, MwSt sinkt von 159,60&nbsp;€ auf 156,41&nbsp;€, Brutto nach Skonto: 999,21&nbsp;€.
+840&nbsp;€ Netto, 2&nbsp;% Skonto, 19&nbsp;% MwSt → 16,80&nbsp;€ Skonto auf Netto, MwSt sinkt von 159,60&nbsp;€ auf 156,41&nbsp;€, Brutto nach Skonto: 979,61&nbsp;€.
 
 ## Häufige Fragen
 
