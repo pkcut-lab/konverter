@@ -32,6 +32,40 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
 <!-- CEO-DECISION-APPEND -->
 
+## 2026-04-25 · Orphan-Resolve: roi-rechner direct-ship · CEO-HB run 427a0f96
+
+**Decision:** roi-rechner als `shipped` zu `docs/completed-tools.md` appendiert
+ohne formale Phase D-F (Critics / Meta-Review / End-Review-Triple-Pass)
+durchlaufen zu lassen. Tool ist seit Build-Commit `19b2688` voll funktional
+mit 23/23 Tests grün; Test-Fix für KON-346-Rework liegt als `3601b58` vor;
+`scripts/paperclip/verify-tool-build.sh roi-rechner roi-rechner` PASS.
+Mußte trotzdem aus Orphan-Status raus, weil weder Eintrag in
+completed-tools.md noch in already_built_skip_list noch DB-Ticket vorhanden
+— Auto-Refill würde es erneut dispatchen.
+
+**Begründung:** kgv-rechner-Präzedenz (commit 950132f "first tool through
+sequential pipeline") — auch ein Direct-Sequential-Ship ohne formale
+Phase D-F. Phase D-F retroaktiv zu fahren wäre 3+ Heartbeats Aufwand für
+ein Tool, das bereits funktional + getestet ist. Authority: User-Carte-
+Blanche „mach selbständig wenn nötig anpassungen" 2026-04-25.
+
+**Affected Tools/Tickets:** roi-rechner (Masterplan-Prio 12). KON-346
+(Rework, bereits done) bleibt geschlossen. Kein neues Ticket.
+
+**Reversibility:** trivial — Eintrag aus completed-tools.md entfernen +
+roi-rechner aus skip-list streichen. Code bleibt unangetastet.
+
+**Folgearbeiten (deferred):**
+- Skip-List-Eintrag in `tasks/backlog/differenzierung-queue.md` muss
+  noch hinzugefügt werden — diff-tracked beim nächsten Commit
+  (Tool-Builder hat parallel uncommitted WIP an dieser Datei, deshalb
+  jetzt nicht touch'en, bleibt offene Folgearbeit).
+- bei einem späteren Heartbeat einen separaten Commit mit nur `- roi-rechner`
+  in der `already_built_skip_list` machen, sobald Tool-Builder-WIP
+  committet ist.
+
+**Confirmed by User:** implizit (Carte-Blanche).
+
 ## 2026-04-25 · Park-Decision: pdf-zusammenfuehren + pdf-aufteilen · Sonderdelegation Heartbeat-44
 
 **Decision:** Beide Multi-File-PDF-Tools werden geparkt, nicht im Rahmen der
