@@ -124,9 +124,9 @@ export async function prepareSpeechEnhancementModel(
     };
 
     (async () => {
-      // Configure ort WASM backend — use CDN until self-hosted (7a exception).
-      ort.env.wasm.wasmPaths =
-        'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/';
+      // Configure ort WASM backend — self-hosted under /ort/ (public/ort/*.wasm).
+      // Eliminates external CDN dependency (CSP connect-src + CLAUDE.md §18 #7).
+      ort.env.wasm.wasmPaths = '/ort/';
 
       // Stream-download with progress tracking.
       const response = await fetch(DFN3_MODEL_URL);

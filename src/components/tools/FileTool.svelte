@@ -619,28 +619,34 @@
         <figure class="compare__col">
           <figcaption class="compare__cap">ORIGINAL</figcaption>
           <!-- svelte-ignore a11y_no_static_element_interactions -->
-          <div 
+          <div
             class="frame"
             onmousemove={handleMouseMove}
             onmouseleave={handleMouseLeave}
           >
             {#if sourceUrl}
-              <img
-                class="frame__img"
-                class:frame__img--zoomed={isZooming}
-                style={isZooming ? `transform-origin: ${zoomX}% ${zoomY}%;` : ''}
-                src={sourceUrl}
-                alt="Quelldatei"
-              />
+              {#if config.categoryId === 'audio'}
+                <audio controls src={sourceUrl} class="audio-player">Dein Browser unterstützt kein Audio.</audio>
+              {:else}
+                <img
+                  class="frame__img"
+                  class:frame__img--zoomed={isZooming}
+                  style={isZooming ? `transform-origin: ${zoomX}% ${zoomY}%;` : ''}
+                  src={sourceUrl}
+                  alt="Quelldatei"
+                />
+              {/if}
             {/if}
           </div>
         </figure>
 
         <figure class="compare__col">
           <figcaption class="compare__cap">ERGEBNIS</figcaption>
-          <div class="preview" class:preview--text={outputFormat === 'txt'}>
+          <div class="preview" class:preview--text={outputFormat === 'txt'} class:preview--audio={config.categoryId === 'audio'}>
             {#if outputFormat === 'txt'}
               <textarea class="preview__text" readonly value={outputText} aria-label="Erkannter Text"></textarea>
+            {:else if config.categoryId === 'audio'}
+              <audio controls src={outputUrl} class="audio-player" data-testid="filetool-preview">Dein Browser unterstützt kein Audio.</audio>
             {:else}
               <img
                 class="preview__img"
@@ -674,7 +680,7 @@
             class="btn btn--ghost"
             data-testid="filetool-reset"
             onclick={reset}
-          >Neues Bild</button>
+          >{config.resetLabel ?? 'Neues Bild'}</button>
 
           <button
             type="button"
@@ -1060,6 +1066,16 @@
   .preview--text {
     background-image: none;
     background-color: transparent;
+  }
+  .preview--audio,
+  .frame:has(.audio-player) {
+    aspect-ratio: auto;
+    min-height: 5rem;
+    background-image: none;
+    align-items: center;
+  }
+  .audio-player {
+    width: 100%;
   }
   .frame__img,
   .preview__img {

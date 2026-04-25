@@ -4,12 +4,13 @@ language: "de"
 title: "Sprache verbessern: KI-Tool ohne Upload"
 metaDescription: "Entferne lästiges Audio-Rauschen und verbessere deine Sprachaufnahmen sofort. Das Tool läuft zu 100&nbsp;% lokal in deinem Browser — ohne Dateiupload."
 tagline: "Saubere Stimme in Sekunden — dein Audio verlässt den Browser nicht"
-intro: "Entferne Hintergrundgeräusche, Lüfterrauschen und Raumhall aus Sprachaufnahmen — vollständig in deinem Browser, ohne Upload auf einen Server. Das Tool nutzt das KI-Modell DeepFilterNet3 (MIT-Lizenz, 48&nbsp;kHz Full-Band) und verarbeitet WAV, MP3, OGG, M4A und FLAC direkt lokal. Keine Anmeldung, kein Cap, kein Tracking — auch für vertrauliche Podcasts, Interview-Mitschnitte und Firmen-Audio geeignet."
+intro: "KI-Rauschunterdrückung direkt im Browser — kein Upload. DeepFilterNet3 bereinigt WAV, MP3, OGG, M4A, FLAC lokal."
+headingHtml: "Sprache verbessern — <em>KI-Rauschunterdrückung</em>"
 category: "audio"
 contentVersion: 1
 howToUse:
   - "Audiodatei per Drag-and-Drop ablegen oder über die Auswahl öffnen (WAV, MP3, OGG, M4A, FLAC — bis 500&nbsp;MB)."
-  - "Stärke wählen: Dezent (empfohlen, 20 dB) verhindert Roboter-Artefakte; Maximal (100 dB) für stark verrauchte Aufnahmen."
+  - "Stärke wählen: Dezent (empfohlen, 20&nbsp;dB) verhindert Roboter-Artefakte; Maximal (100&nbsp;dB) für stark verrauchte Aufnahmen."
   - "Nach der KI-Verarbeitung erscheint der Download-Button — enhanced WAV-Datei herunterladen."
 faq:
   - q: "Wie funktioniert die Rauschunterdrückung ohne Server?"
@@ -24,7 +25,9 @@ faq:
     a: "Das hängt von der Länge der Aufnahme und deiner Hardware ab. Als Richtwert: 10&nbsp;Minuten Audio dauern in WASM-Modus (kein GPU) etwa 20–30&nbsp;Minuten. Auf Geräten mit WebGPU-Unterstützung (Chrome/Edge) ist die Verarbeitung deutlich schneller. Das Tool zeigt den Fortschritt in Echtzeit an."
   - q: "Ist das Tool DSGVO-konform für Stimm-Aufnahmen?"
     a: "Ja. Stimm-Aufnahmen können als biometrische Daten im Sinne von DSGVO Art. 9 eingestuft werden. Weil die Verarbeitung vollständig lokal stattfindet und keinerlei Daten an einen Server übertragen werden, entsteht kein Datenschutz-Risiko. Die Ausgabedatei enthält einen Metadaten-Tag (Software: kittokit.de AI-processed) gemäß EU-KI-Verordnung Art. 50."
-relatedTools: []
+relatedTools:
+  - hevc-zu-h264
+  - hintergrund-entfernen
 ---
 
 ## Was macht dieser Sprachverbesserer?
@@ -35,7 +38,7 @@ Straßenlärm, Tastaturrauschen und Raumhall lassen Stimmen unprofessionell wirk
 selbst wenn der Inhalt gut ist.
 
 Dieses Tool nutzt das KI-Modell **DeepFilterNet3** (MIT- und Apache-2.0-Lizenz), das am
-Fraunhofer-Institut entwickelt wurde und auf dem ICASSP 2023 als State-of-the-Art-Modell
+Fraunhofer-Institut entwickelt wurde und auf dem [ICASSP 2023 als State-of-the-Art-Modell](https://github.com/Rikorose/DeepFilterNet)
 für 48&nbsp;kHz Full-Band-Sprachverbesserung vorgestellt wurde. Im Gegensatz zu cloudbasierten
 Diensten wie Adobe Podcast Enhance, Cleanvoice oder Auphonic läuft die gesamte Verarbeitung
 in deinem Browser — deine Audiodatei verlässt deinen Rechner zu keinem Zeitpunkt.
@@ -74,8 +77,8 @@ Das Tool bietet vier Preset-Stufen, die unterschiedliche Anwendungsfälle abdeck
 | **Mittel** | 40&nbsp;dB | Klarer, leicht bearbeitet | Lautes Lüfterrauschen |
 | **Maximal** | 100&nbsp;dB | Sehr sauber, Artefakt-Risiko | Stark verrauchte Aufnahmen |
 
-Der Standard-Wert **Dezent (20&nbsp;dB)** wurde so gewählt, dass er dem Feedback-Muster
-zu Adobe Podcast V2 entspricht: Nutzer berichten, dass der Maximal-Wert Stimmen
+Der Standard-Wert **Dezent (20&nbsp;dB)** wurde so gewählt, dass er dem [Feedback-Muster
+zu Adobe Podcast V2](https://thepodcastconsultant.com/blog/adobe-podcast-enhance) entspricht: Nutzer berichten, dass der Maximal-Wert Stimmen
 roboterhaft klingen lässt, während 30&nbsp;% der maximalen Stärke eine natürliche Position ist.
 Das Tool implementiert diesen Wert als sinnvollen Default, statt wie Mitbewerber
 automatisch auf maximale Unterdrückung zu setzen.
@@ -151,7 +154,7 @@ ist strukturell lokal.
 
 ## Verwandte Audio-Tools
 
-Weitere Tools aus dem Konverter-Ökosystem, die zu Sprach- und Medienverarbeitung passen:
+Weitere Tools aus dem Audio-Ökosystem, die zum Thema passen:
 
 - **[iPhone-Video in MP4 umwandeln](/de/hevc-zu-h264)** — HEVC/MOV-Videos aus dem iPhone in universelles H.264-MP4 konvertieren, ebenfalls vollständig im Browser ohne Upload.
 - **[Hintergrund entfernen](/de/hintergrund-entfernen)** — KI-basiertes Freistellen von Motiven aus Fotos, lokal verarbeitet mit BEN2-Modell.

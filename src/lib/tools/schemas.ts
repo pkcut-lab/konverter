@@ -127,6 +127,7 @@ export const fileToolSchema = base.extend({
   cameraCapture: z.boolean().optional(),
   filenameSuffix: z.string().optional(),
   showQuality: z.boolean().optional(),
+  resetLabel: z.string().optional(),
   toggles: z.array(fileToolToggleSchema).optional(),
   presets: fileToolPresetsSchema.optional(),
 });

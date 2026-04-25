@@ -21,6 +21,7 @@ export const spracheVerbessern: FileToolConfig = {
   filenameSuffix: '_enhanced',
   showQuality: false,
   cameraCapture: false,
+  resetLabel: 'Neue Aufnahme',
   /**
    * Strength-presets — map to `atten_lim_db` in DeepFilterNet3.
    * Default 20 dB (Dezent) — matches §4 user-pain mitigation: natural sound

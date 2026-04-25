@@ -21,7 +21,7 @@
   --color-text-subtle: #575450;
   --color-accent: #8F3A0C;
   --color-accent-hover: #6B2A08;
-  --color-success: #4A6B4E;
+  --color-success: #3A5D3E; /* AAA fix: was 5.74:1, now ≥7:1 on --color-bg */
   --color-error: #8B3A3A;
   --color-warning: #5A3D00;
   --icon-filter: none;
@@ -124,7 +124,7 @@
   --color-text-subtle: #B3B0A9; /* AAA: #A8A59E was 6.37:1 on --color-surface; #B3B0A9 = 7.24:1 */
   --color-accent: #F0A066;
   --color-accent-hover: #F5B07C;
-  --color-success: #7FA582;
+  --color-success: #9DB8A0; /* AAA fix: was 6.36:1, now ≥7:1 on --color-bg (#1A1917) */
   --color-error: #EC9898; /* AAA: ≥7:1 on --color-bg (#1A1917) and --color-surface (#252320) */
   --color-warning: #E8A830; /* AAA: ≥7:1 on --color-bg (#1A1917) and --color-surface (#252320) */
   --icon-filter: invert(0.92) brightness(1.05);
