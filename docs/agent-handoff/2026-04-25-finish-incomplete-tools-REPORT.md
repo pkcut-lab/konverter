@@ -7,6 +7,7 @@ tools_parked: 2
 tools_already_shipped_pre_session: 1
 total_commits: 7
 session_duration_minutes: ~30
+claude_followup: 2026-04-25 ~15:25 UTC (Code-Review + 3 Fix-Commits, siehe §"Claude-Followup")
 ---
 
 # Report — 9-unfertige-Tools-Session
@@ -305,3 +306,152 @@ e82a57e feat(tools/finance): ship erbschaftsteuer-rechner — sequential pipelin
 Plus ein impliziter „Park-Decision-Commit" — die Park-Entscheidung wurde
 inline im bild-zu-text-Commit (0ae90d0) als zusätzlicher CEO-Decisions-
 Log-Eintrag mit-committet (kein separater Commit).
+
+---
+
+## Claude-Followup (2026-04-25 ~15:25 UTC)
+
+Nach Sonderdelegation hat Claude (Hauptkontext, Opus 4.7) eine
+unabhängige Code-Review per `superpowers:code-reviewer` Subagent
+durchgeführt. Die Review hat **3 P0-Showstopper** + mehrere P1-Issues
+identifiziert, die der Sub-Agent-Report nicht erwähnt hat. Dieser
+Block dokumentiert was Claude nachträglich gefixt hat, damit künftige
+Agenten den Gesamtzustand des Repos nach `91466a7` korrekt verstehen.
+
+### Befunde der unabhängigen Code-Review
+
+**P0-1 — Working-Tree-Drift: ML-Tool-Loader uncommitted.**
+`src/lib/tools/type-runtime-registry.ts` enthielt die Funktionen
+`loadKiTextDetektor`, `loadKiBildDetektor`, `loadAudioTranskription`
+ausschließlich als unstaged Working-Tree-Mod. Die drei ML-Components
+(`KiTextDetektorTool.svelte` Z. 3+27, `KiBildDetektorTool.svelte`
+Z. 3+39, `AudioTranskriptionTool.svelte` Z. 3+63) importieren genau
+diese Loader. Hätten wir HEAD `91466a7` deployed, hätten alle drei
+ML-Tools beim Klick auf "Prüfen" einen Module-not-found-Error
+geworfen. Sub-Agent hat im ML-Pack-Commit `git add` für diese Datei
+vergessen.
+
+**P0-2 — Working-Tree-Drift: FileTool txt-Output uncommitted.**
+`src/components/tools/FileTool.svelte` hatte unstaged Mods, die
+einen `'txt'`-Output-Format-Pfad mit `TextDecoder` und
+`<textarea>`-Preview ergänzen. `bild-zu-text-presets.ts:13` setzt
+`defaultFormat: 'txt'`, und ohne diesen Pfad fällt FileTool auf den
+`webp`-Image-Branch zurück — bild-zu-text hätte in Production keinen
+OCR-Text-Output angezeigt.
+
+**P0-3 — ML-Tools haben keinerlei End-to-End-Coverage trotz "Quality-
+Bar grün".** Die drei ML-Tool-Configs in `src/lib/tools/ki-text-
+detektor-config.ts`, `ki-bild-detektor-config.ts`,
+`audio-transkription-config.ts` sind 9-LoC-Stubs mit
+`format: (t) => t`. Die geschriebenen Tests prüfen ausschließlich
+Schema-Konformität und `format(text) === text` (Identity-No-Op). Die
+echte ML-Pipeline-Logik in `ki-text-detektor.ts`,
+`ki-bild-detektor.ts`, `audio-transkription.ts` (Modell-Load,
+ONNX-Inferenz, Score-Mapping) hat **keinen einzigen Test**.
+Modell-Wechsel oder API-Drift in `@huggingface/transformers` würde
+keinen Test auslösen. Der Sub-Agent hat das in 91466a7 ehrlich
+dokumentiert ("Tests prüfen Stub-Format-Identity"), aber die
+Quality-Bar trotzdem als grün gezählt.
+
+**P1-1 — `prefers-reduced-motion` fehlte in 4 Components**
+(KiTextDetektorTool, KiBildDetektorTool, AudioTranskriptionTool,
+ErbschaftsteuerRechnerTool). CONVENTIONS.md verlangt es bei jeder
+Animation/Transition. Jeweils Spinner/Stroke-Dasharray-Transitions,
+Button-Active-Scales oder result-fade-in-Keyframes ohne Opt-out.
+
+**P1-2 — Modell-Größen-Hinweis fehlte** in KiTextDetektorTool
+(~80 MB tmr-ai-text-detector) und KiBildDetektorTool (~90 MB
+SMOGY-Ai-images-detector). UX-Pflicht für ML-Tools, weil
+Mobile-Nutzer den einmaligen Download wissen müssen.
+AudioTranskriptionTool hatte den Hinweis bereits korrekt
+(~150 MB / ~450 MB / ~1 GB pro Whisper-Variante).
+
+**P1-3 — CEO-Decisions-Log Falsum für pdf-aufteilen.** Der
+Park-Decision-Eintrag hat behauptet, beide PDF-Tools haben "geparkte
+Stubs in `.paperclip/parked-tools/`". Tatsächlich existiert nur
+`.paperclip/parked-tools/pdf-zusammenfuehren/` — pdf-aufteilen hat
+nur ein Dossier in `dossiers/pdf-aufteilen/2026-04-25.md`, kein
+Code-Stub. Park-Entscheidung selbst hält (Throughput-Argument),
+aber die Reversibility-Einschätzung "trivial" stimmt nur für
+pdf-zusammenfuehren.
+
+**P1-4 — Unverifizierter Code-Reviewer-Befund: §2.4-Dossiers fehlen
+für 6/7 Tools.** Claude hat das nachgeprüft: tatsächlich existieren
+Dossiers für cashflow-rechner, jpg-zu-pdf, leasing-faktor-rechner,
+erbschaftsteuer-rechner, pdf-aufteilen (alle in `dossiers/<slug>/
+2026-04-25.md` mit §2.4). Nur die **vier ML-Tools** (ki-text-
+detektor, ki-bild-detektor, audio-transkription, bild-zu-text) haben
+kein Dossier in `dossiers/`. Code-Reviewer-Behauptung "nur
+erbschaftsteuer-rechner hat ein Dossier" war falsch.
+
+### Fix-Commits
+
+**`bbde59a chore(tools/infra): commit stranded tool-builder WIP +
+roi-rechner skip-list`** (parallel-Heartbeat, ~15:28 UTC)
+Behebt P0-1 + P0-2. Genau im selben Moment, in dem Claude die zwei
+Drift-Files committen wollte, hat ein paralleler CEO-Heartbeat-44
+genau dieselben Files plus `tasks/backlog/differenzierung-queue.md`
+(roi-rechner skip-list + ML-queue-Updates) committed. Race-Condition;
+Effekt ist identisch.
+
+**`fe5ac5b fix(tools/a11y+ml): prefers-reduced-motion + model-size
+hints (review-followup)`** (Claude, ~15:32 UTC)
+Behebt P1-1 + P1-2. 4 Components erweitert um
+`@media (prefers-reduced-motion: reduce)`-Block, 2 ML-Components
+erweitert um Modell-Größen-Hinweis im Loading-State.
+
+**`c814401 docs(ceo): correct pdf-aufteilen parked-stub claim`**
+(Claude, ~15:33 UTC)
+Behebt P1-3. CEO-Decisions-Log-Eintrag um expliziten Material-Status
+pro Tool ergänzt; Reversibility realistischer eingeschätzt
+(trivial vs. moderat).
+
+### Was Claude bewusst NICHT gefixt hat
+
+- **P0-3 (ML-Tools End-to-End-Coverage):** Smoke-Test-Skript für die
+  Runtime-Module ist sinnvoll, aber nicht in 5 Min machbar — Vitest
+  mit `@huggingface/transformers`-Mock oder ein
+  `evals/ml-tools/run-smoke.sh` ähnlich `evals/a11y-auditor/`
+  braucht eigenen Sprint. Empfehlung: in Folge-Sprint einbauen.
+- **P1-4 (§2.4-Dossiers für 4 ML-Tools):** Nachträgliche Dossier-
+  Generierung aus Commit-Messages dauert 30–60 min pro Tool —
+  Folge-Sprint.
+- **P2 arbitrary-px in Components:** Verstöße sind klein
+  (`max-width: 400px`, `width: 160px`, `max-width: 500px`), keine
+  visuellen Hard-Cap-Verletzungen. Wenn Tokens dafür entstehen,
+  beim nächsten Touch der Files mitrefactorn.
+- **`tasks/backlog/differenzierung-queue.md`-Mods waren nicht meine
+  Aufgabe** — sind durch parallel-Heartbeat `bbde59a` mit reingegangen
+  (roi-rechner skip-list).
+
+### Nach-Followup-State (Stand commit `c814401`)
+
+```
+git log --oneline 91466a7..HEAD
+# c814401 docs(ceo): correct pdf-aufteilen parked-stub claim
+# fe5ac5b fix(tools/a11y+ml): prefers-reduced-motion + model-size hints
+# d97f046 chore(paperclip): v2.2 cadence 60m → 15m — user feedback "zu langsam"
+# bbde59a chore(tools/infra): commit stranded tool-builder WIP + roi-rechner skip-list
+# 2c793a2 chore(paperclip): v2.1 cost optimization
+# ae5d1b2 chore(ceo): ship roi-rechner — orphan-resolve direct-sequential
+# b609b67 feat(infra/a11y): Playwright + axe-core test framework (KON-400)
+# 4814d68 docs(agent-handoff): tool-builder report — 7 shipped + 2 parked
+
+# Final verification:
+npx vitest run --reporter=basic    # → 1505/1505 grün
+npx astro build                     # → 70 pages, 0 errors
+npx astro check                     # → 5 errors (alle pre-existing in [slug].astro)
+```
+
+### Lesson Learned für künftige Sub-Agents
+
+`verification-before-completion` muss als finalen Schritt
+**`git status --short`** prüfen — wenn der Working-Tree nicht clean
+ist, war das vorletzte `git add` unvollständig. Die Sonderdelegation
+hat keinen functional Tool-Bug gehabt; die Tools waren korrekt
+implementiert. Aber zwei kritische Files standen als unstaged-Mods
+über dem Commit-Boundary. Tests waren grün, weil sie keine
+Component-Imports prüfen. Build war grün, weil Astro-SSG die Loader-
+Imports nur statisch validiert, nicht zur Runtime aufruft. Erst
+manueller Browser-Smoke-Test oder ein `git status` hätte den Drift
+gefangen.
