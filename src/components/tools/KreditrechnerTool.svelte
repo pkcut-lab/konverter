@@ -6,6 +6,7 @@
   } from '../../lib/tools/kreditrechner';
   import type { TilgungsplanZeile } from '../../lib/tools/kreditrechner';
   import { parseDE } from '../../lib/tools/parse-de';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -76,6 +77,15 @@
     const r = computeKreditErgebnis(kreditbetrag, sollzins, Math.round(laufzeit), sondertilgung);
     if (!Number.isFinite(r.monatsrate)) return null;
     return r;
+  });
+
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && ergebnis !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
   });
 
   // Tilgungsplan (jährliche Übersicht) — nur wenn Ergebnis da
@@ -425,7 +435,7 @@
   }
 
   .summary-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-transform: uppercase;
@@ -581,7 +591,7 @@
   /* Disclaimer */
   .disclaimer {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
@@ -590,7 +600,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

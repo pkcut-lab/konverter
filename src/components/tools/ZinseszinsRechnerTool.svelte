@@ -2,6 +2,7 @@
   import type { FormatterConfig } from '../../lib/tools/schemas';
   import { computeZinseszinsCalc } from '../../lib/tools/zinseszins-rechner';
   import { parseDE } from '../../lib/tools/parse-de';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -108,6 +109,15 @@
     return computeZinseszinsCalc(k0, r, zinssatz, laufzeit, i, t);
   });
 
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && result !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
+  });
+
   // ---- Copy-States ----
   type CopyState = 'idle' | 'copied';
   let copyNominal = $state<CopyState>('idle');
@@ -119,8 +129,6 @@
     const text = fmt(raw);
     try {
       await navigator.clipboard.writeText(text);
-      // C8 [Phase-2-deferred]: dispatch tool-usage analytics event here once
-      // shared useToolTracking() infrastructure is live (conversion-critic C8).
       if (which === 'nominal') { copyNominal = 'copied'; setTimeout(() => (copyNominal = 'idle'), 1500); }
       if (which === 'netto')   { copyNetto   = 'copied'; setTimeout(() => (copyNetto   = 'idle'), 1500); }
       if (which === 'real')    { copyReal    = 'copied'; setTimeout(() => (copyReal    = 'idle'), 1500); }
@@ -543,7 +551,7 @@
 
   .scenario-card__desc {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     line-height: 1.5;
   }
@@ -559,7 +567,7 @@
     border-radius: var(--r-md);
     background: transparent;
     color: var(--color-text-muted);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     cursor: pointer;
     transition: border-color var(--dur-fast) var(--ease-out),
                 color var(--dur-fast) var(--ease-out);
@@ -600,7 +608,7 @@
   }
 
   .detail-item__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     letter-spacing: 0.03em;
     text-transform: uppercase;
@@ -623,7 +631,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

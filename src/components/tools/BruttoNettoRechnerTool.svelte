@@ -8,6 +8,7 @@
     isSachsen,
   } from '../../lib/tools/brutto-netto-rechner';
   import type { Steuerklasse, Beschaeftigungsart } from '../../lib/tools/brutto-netto-rechner';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -95,6 +96,15 @@
 
   const isMinijob = $derived(result !== null && result.warnungen.includes('minijob'));
   const isMidijob = $derived(result !== null && result.warnungen.includes('midijob'));
+
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && result !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
+  });
 
   // ---- Transparenz-Layer: Formeltext pro Abzugsposten ----
   const formulaRV = $derived.by<string>(() => {
@@ -520,7 +530,7 @@
     border-color: var(--color-text);
   }
   .art-pill__sub {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     opacity: 0.7;
     font-family: var(--font-family-mono);
     margin-top: 1px;
@@ -682,7 +692,7 @@
     border-color: var(--color-text);
   }
   .summary-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-transform: uppercase;
@@ -748,7 +758,7 @@
     white-space: nowrap;
   }
   .bd-row--header .bd-cell--label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-text-subtle);
@@ -766,7 +776,7 @@
     white-space: nowrap;
   }
   .bd-row--header .bd-cell--value {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-text-subtle);
@@ -779,7 +789,7 @@
     color: var(--color-text);
   }
   .bd-cell--formula {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-family: var(--font-family-mono);
     color: var(--color-text-subtle);
     line-height: 1.4;
@@ -787,7 +797,7 @@
     min-width: 0;
   }
   .bd-row--header .bd-cell--formula {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-family: inherit;
@@ -860,7 +870,7 @@
   /* Disclaimer */
   .disclaimer {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
@@ -869,7 +879,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

@@ -6,6 +6,7 @@
     formatEuro,
     formatProzent,
   } from '../../lib/tools/zinsrechner';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -82,6 +83,15 @@
     if (hasErrors) return null;
     if (!Number.isFinite(k0) || !Number.isFinite(zinssatz) || !Number.isFinite(laufzeit)) return null;
     return computeZins(k0, zinssatz, laufzeit, steuersatz, freibetrag, inflation);
+  });
+
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && result !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
   });
 
   // ---- Reset ----
@@ -333,7 +343,7 @@
 
   .defaults-label {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -450,7 +460,7 @@
   }
 
   .result-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-subtle);
     text-transform: uppercase;
@@ -472,7 +482,7 @@
   }
 
   .result-card__sub {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     line-height: 1.4;
     margin-top: var(--space-1);
@@ -490,7 +500,7 @@
   }
 
   .effektivzins-label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-weight: 500;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -540,7 +550,7 @@
   /* Disclaimer */
   .disclaimer {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
@@ -549,7 +559,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

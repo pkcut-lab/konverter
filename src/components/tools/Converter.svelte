@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { ConverterConfig } from '../../lib/tools/schemas';
   import { computeConversion, type Direction } from '../../lib/tools/compute';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: ConverterConfig;
@@ -38,6 +39,16 @@
 
   const outputValue = $derived(computeConversion(config.formula, inputValue, direction));
   const outputFormatted = $derived(formatDecimal(outputValue, config.decimals));
+
+  // Track first valid conversion for AdSense attribution (Phase 2).
+  // Converters always start with a valid example value, so fire once on mount.
+  let _tracked = false;
+  $effect(() => {
+    if (!_tracked && Number.isFinite(outputValue)) {
+      _tracked = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale });
+    }
+  });
 
   function onInput(e: Event) {
     const target = e.target as HTMLInputElement;

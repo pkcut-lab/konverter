@@ -2,6 +2,7 @@
   import type { FormatterConfig } from '../../lib/tools/schemas';
   import { QUICK_COLORS } from '../../lib/tools/hex-rgb-konverter-presets';
   import { loadFormatter, type FormatFn } from '../../lib/tools/formatter-runtime-registry';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -54,6 +55,15 @@
       return cleaned;
     }
     return null;
+  });
+
+  // Track first valid color conversion for AdSense attribution (Phase 2).
+  let _tracked = false;
+  $effect(() => {
+    if (!_tracked && output) {
+      _tracked = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
   });
 
   function onInput(e: Event) {

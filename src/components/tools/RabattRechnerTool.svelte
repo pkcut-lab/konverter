@@ -10,6 +10,7 @@
     computeKettenrabatt,
   } from '../../lib/tools/rabatt-rechner';
   import type { RabattResult } from '../../lib/tools/rabatt-rechner';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -113,6 +114,15 @@
       return computeKettenrabatt(ursprungspreis, rabatt1, rabatt2);
     }
     return null;
+  });
+
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && result !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
   });
 
   // ---- Additivfallen-Erklärung (Kettenrabatt-Modus, White-Space-Feature) ----
@@ -563,7 +573,7 @@
   }
 
   .summary-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-transform: uppercase;
@@ -642,7 +652,7 @@
     border: 1.5px solid var(--color-text-muted);
     color: var(--color-text-muted);
     font-weight: 700;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     font-style: italic;
     line-height: 1;
     margin-top: 0.1rem;
@@ -721,7 +731,7 @@
 
   /* ---- Privacy Badge ---- */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;

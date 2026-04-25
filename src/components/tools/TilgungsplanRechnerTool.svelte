@@ -10,6 +10,7 @@
     computeTilgungsplan,
   } from '../../lib/tools/tilgungsplan-rechner';
   import type { TilgungsplanResult } from '../../lib/tools/tilgungsplan-rechner';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -142,6 +143,15 @@
       zinsbindungJahre: Math.round(zinsbindung),
       sondertilgungPA: Number.isFinite(sondertilgung) && sondertilgung > 0 ? sondertilgung : 0,
     });
+  });
+
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && result !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
   });
 
   // Abgeleitete Laufzeit (für Modus monatsrate — zeigt berechnete Laufzeit)
@@ -767,7 +777,7 @@
   }
 
   .summary-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -1031,7 +1041,7 @@
 
   .anschluss-hint {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
   }
 
@@ -1074,7 +1084,7 @@
   /* Disclaimer */
   .disclaimer {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     line-height: 1.5;
     border-top: 1px solid var(--color-border);
@@ -1083,7 +1093,7 @@
 
   /* Privacy badge */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
     text-align: center;

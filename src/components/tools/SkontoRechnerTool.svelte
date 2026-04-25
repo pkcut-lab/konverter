@@ -8,6 +8,7 @@
     formatProzent,
   } from '../../lib/tools/skonto-rechner';
   import type { SkontoResult, AmpelStatus } from '../../lib/tools/skonto-rechner';
+  import { dispatchToolUsed } from '../../lib/tracking';
 
   interface Props {
     config: FormatterConfig;
@@ -87,6 +88,15 @@
     if (!Number.isFinite(skontofrist) || !Number.isFinite(zahlungsziel)) return null;
     const mwst = basis === 'netto' && Number.isFinite(mwstSatz) ? mwstSatz : undefined;
     return computeSkonto(rechnungsBetrag, skontosatz, skontofrist, zahlungsziel, mwst);
+  });
+
+  // Track first result for AdSense conversion attribution (Phase 2).
+  let _firstResult = false;
+  $effect(() => {
+    if (!_firstResult && result !== null) {
+      _firstResult = true;
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+    }
   });
 
   const ampel = $derived.by<AmpelStatus>(() => {
@@ -450,7 +460,7 @@
   }
 
   .basis-hint {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     letter-spacing: 0.01em;
   }
@@ -555,7 +565,7 @@
   }
 
   .jahreszins-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -623,7 +633,7 @@
   }
 
   .summary-card__label {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -651,7 +661,7 @@
     border: 1px solid var(--color-border);
     background: transparent;
     color: var(--color-text-subtle);
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     border-radius: var(--r-sm);
     cursor: pointer;
     font-family: var(--font-family-mono);
@@ -682,7 +692,7 @@
 
   .netto-box__title {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     font-weight: 500;
@@ -725,7 +735,7 @@
 
   .netto-box__hint {
     margin: 0;
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     line-height: 1.4;
     font-style: italic;
@@ -768,7 +778,7 @@
 
   /* ---- Privacy Badge ---- */
   .privacy-badge {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-xs);
     letter-spacing: 0.04em;
     color: var(--color-text);
     text-align: center;
