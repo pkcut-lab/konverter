@@ -1,8 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Konverter">
-  <rect width="512" height="512" rx="96" fill="#FAFAF9"/>
-  <g fill="none" stroke="#1A1917" stroke-width="56" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M 180 128 L 180 384"/>
-    <path d="M 180 256 L 348 128"/>
-    <path d="M 180 256 L 348 384"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="kittokit">
+  <rect width="512" height="512" rx="128" fill="#8F3A0C"/>
+  <path d="M107 107 L277 256 L107 405 M235 107 L405 256 L235 405"
+        fill="none" stroke="white" stroke-width="44"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
