@@ -125,9 +125,26 @@ echo "$(date -I)|<ticket-id>|<verdict>|$failed_checks" \
   >> memory/content-critic-log.md
 [[ "$verdict" == "pass" || "$verdict" == "fail" ]] && \
   rm tasks/awaiting-critics/<ticket-id>/content-critic.lock
+
+# MUST — PATCH ticket status=done (Consumer-Loop C needs all critics done)
+scripts/paperclip-issue-update.sh --issue-id "$PAPERCLIP_TASK_ID" --status done <<MD
+Review complete. Verdict: $verdict. Report: tasks/awaiting-critics/<ticket-id>/content-critic.md
+MD
 ```
 
-## 6. Forbidden Actions
+## 6. Architektur-Notiz: `aside:` ist optional
+
+Das Frontmatter-Feld `aside:` in `src/content/tools/<slug>/de.md` ist **optional**.
+`src/lib/content/aside-defaults.ts` liefert automatisch kategorie-spezifische Defaults für alle Tool-Typen (`converter`, `file-tool`, `formatter`, `generator`, `validator`, `analyzer`, `comparer`, `interactive`).
+`src/pages/[lang]/[slug].astro` merged: `resolvedAside = entry.data.aside ?? asideDefaults[config.type] ?? null`.
+
+**Konsequenz für C-Checks:**
+- Ein Tool OHNE `aside:`-Feld im Content-File ist kein Fehler — Accordion wird trotzdem gerendert.
+- Nur prüfen: ob der Tool-Typ in `aside-defaults.ts` einen Eintrag hat (Coverage-Check).
+- `aside:`-Override im Content-File = gewollte individuelle Anpassung. Kein Warning.
+- Zentrale Anpassung der "So funktioniert es"-Schritte erfolgt in `aside-defaults.ts`, NICHT in 1000+ Content-Files.
+
+## 7. Forbidden Actions
 
 - Code fixen
 - Content selbst umschreiben

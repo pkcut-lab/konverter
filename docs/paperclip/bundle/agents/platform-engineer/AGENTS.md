@@ -45,7 +45,7 @@ commit_sha=$(git rev-parse HEAD)
 changed_files=$(git diff-tree --no-commit-id --name-only -r $commit_sha)
 
 # Shared-File-Match
-shared_pattern='(src/components/tools/[A-Z][a-zA-Z]+\.svelte|src/lib/tools/types\.ts|src/lib/tools/categories\.ts|src/styles/tokens.*\.css|src/styles/global\.css|src/layouts/BaseLayout\.astro|src/components/Header\.astro|src/components/Footer\.astro)'
+shared_pattern='(src/components/tools/[A-Z][a-zA-Z]+\.svelte|src/lib/tools/types\.ts|src/lib/tools/categories\.ts|src/lib/content/aside-defaults\.ts|src/styles/tokens.*\.css|src/styles/global\.css|src/layouts/BaseLayout\.astro|src/components/Header\.astro|src/components/Footer\.astro)'
 
 echo "$changed_files" | grep -qE "$shared_pattern" || {
   echo "Not a shared-file change, skip"
@@ -151,6 +151,11 @@ echo "$(date -I)|<ticket-id>|<verdict>|$failed_checks" \
 [[ "$verdict" == "pass" || "$verdict" == "fail" ]] && \
   rm tasks/awaiting-critics/<ticket-id>/platform-engineer.lock
 kill $PREVIEW_PID
+
+# MUST — PATCH ticket status=done (Consumer-Loop C needs all critics done)
+scripts/paperclip-issue-update.sh --issue-id "$PAPERCLIP_TASK_ID" --status done <<MD
+Review complete. Verdict: $verdict. Report: tasks/awaiting-critics/<ticket-id>/platform-engineer.md
+MD
 ```
 
 ## 7. Baseline-Update (User-Approval-Only)

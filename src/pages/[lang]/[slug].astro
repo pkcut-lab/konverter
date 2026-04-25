@@ -33,6 +33,7 @@ import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
+import { asideDefaults } from '../../lib/content/aside-defaults';
 
 // Tool-ids that need a specialised formatter UI. Everything else with
 // `type: 'formatter'` falls through to the generic textarea Formatter.
@@ -155,6 +156,10 @@ const defaultEyebrowByLang: Record<string, string> = {
 const eyebrowText =
   entry.data.eyebrow ?? defaultEyebrowByLang[entry.data.language] ?? defaultEyebrowByLang.en!;
 
+// Merge: content-file aside wins over category default.
+// This means every tool gets the accordion — no per-tool content needed.
+const resolvedAside = entry.data.aside ?? asideDefaults[config.type] ?? null;
+
 const jsonLd = buildToolJsonLd(
   {
     toolId: entry.data.toolId,
@@ -163,7 +168,8 @@ const jsonLd = buildToolJsonLd(
     description: entry.data.metaDescription,
     category: entry.data.category,
     faq: entry.data.faq ?? [],
-    steps: (entry.data.howToUse ?? []).map((text: string, i: number) => ({
+    // Prefer aside.steps (titled steps) over howToUse (plain strings) for HowTo schema.
+    steps: resolvedAside?.steps ?? (entry.data.howToUse ?? []).map((text: string, i: number) => ({
       title: `Schritt ${i + 1}`,
       description: text,
     })),
@@ -313,7 +319,7 @@ const jsonLd = buildToolJsonLd(
         )}
       </div>
 
-      {entry.data.aside && (
+      {resolvedAside && (
         <details class="tool-aside" aria-labelledby="tool-aside-heading">
           <summary class="tool-aside__summary">
             <h2 id="tool-aside-heading">So funktioniert es</h2>
@@ -324,7 +330,7 @@ const jsonLd = buildToolJsonLd(
           <div class="tool-aside__content">
             <section class="tool-aside__steps">
               <ol>
-                {entry.data.aside.steps.map((step: { title: string; description: string }, i: number) => (
+                {resolvedAside.steps.map((step, i) => (
                   <li>
                     <span class="tool-aside__step-number">
                       {String(i + 1).padStart(2, '0')}
@@ -339,7 +345,7 @@ const jsonLd = buildToolJsonLd(
             </section>
             <section class="tool-aside__privacy" aria-labelledby="tool-aside-privacy-heading">
               <h3 id="tool-aside-privacy-heading">Datenschutz</h3>
-              <p>{entry.data.aside.privacy}</p>
+              <p>{resolvedAside.privacy}</p>
             </section>
           </div>
         </details>
