@@ -32,6 +32,194 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
 <!-- CEO-DECISION-APPEND -->
 
+## 2026-04-25 · pdf-komprimieren Architektur-Entscheidung — Option A (Lossless-only, pdf-lib MIT)
+
+**Decision: Option A — Lossless-only compression via pdf-lib (MIT license) (§0.7 autonomous)**
+
+Dossier KON-324 flagged architecture decision required:
+- Option A: pdf-lib (MIT) — lossless only (metadata strip, structure compaction, xref stream) → 5–25% reduction
+- Option B: AGPL-WASM library — full image re-encoding → up to 90% reduction, but requires license purchase
+- Option C: Server-side — maximum compression, violates Non-Negotiable #2 (Privacy-First, no server upload)
+
+**Decision rationale:**
+- Option C rejected: hard Non-Negotiable #2 violation
+- Option B rejected: AGPL license purchase out of CEO budget authorization scope; AGPL viral clause risks codebase
+- **Option A selected**: pdf-lib already in dependencies (package.json), MIT license, no new risk. Positioning: "Structure-Optimization" (metadata + xref compaction, linearization) — honest 5–25% reduction. Differenzierung: real-time progress, before/after size comparison, privacy-first badge (no upload). Competitors (ilovepdf, smallpdf) do server-side lossy — we own the privacy/offline angle.
+
+**Build scope for tool-builder:**
+- categoryId: document, type: file-tool
+- pdf-lib: stripMetadata, removeUnusedObjects, optimize linearized xref streams
+- Output: download compressed PDF with size-reduction stats shown
+- Content: position as "Datei-Optimierung" not "Maximalkomprimierung" — honest about 5–25% range
+
+---
+
+## 2026-04-25 · KON-403 CSS-Bundle-Fix Reverted → Phase-2 Park · shared CSS bundle performance
+
+**Decision: PARK KON-403 as Phase-2 infra work (§0.7 autonomous)**
+
+KON-454 attempted fix (commit 3a56f1d): replaced 31 eager static imports in `[slug].astro` with `await import()` per config.type/id. Astro build succeeded. However commit `7bc2ac7` (video-hintergrund-entfernen ship) reverted it: `await import()` broke Astro `client:load` hydration code generation — compiler emits "No matching import has been found for AudioTranskriptionTool" because Astro requires static imports at module scope to generate hydration manifests.
+
+PE re-audit (KON-458) confirmed: CSS still 26.62 KB gzip (target ≤8 KB), Lighthouse still ~78.
+
+**Park rationale:**
+- Fix requires Astro-compatible approach: `import.meta.glob` + dynamic component registry, or per-tool CSS extraction via Vite plugin — more than a heartbeat builder task
+- Non-blocking: tools work correctly, CSS is cosmetic perf metric
+- Phase-2 is the right scope: launch with 26 KB, optimize after Analytics show LCP impact
+- Re-evaluation trigger: Phase-2 Analytics → if LH < 80 consistently on mobile → escalate to CTO for Astro-specific bundling strategy
+
+**Action:** KON-403 stays `blocked` (PE-assessed). No further builder dispatches until Phase-2. CEO-Decisions-Log entry for User review.
+
+---
+
+## 2026-04-26 · video-hintergrund-entfernen V1-Ship · Spike-Verify + 4 autonome Scope-Cuts + PE4-Revert
+
+**Decision (5 Punkte, autonom unter §0/§7.15-Gate):**
+
+1. **Spike-Verifikation grün** (CONVENTIONS §10 separater Commit `3af9bc0`):
+   Mediabunny VP9+Alpha funktioniert via `alpha: 'keep'` Encoder-Option (NICHT
+   Constructor-Flag wie der Spec §3.3-Pseudo-Code zeigt — API-Korrektur in
+   Worker dokumentiert). BiRefNet_lite via `pipeline('image-segmentation',
+   'onnx-community/BiRefNet_lite-ONNX')` analog zu BEN2-Pattern in
+   `remove-background.ts`. CanvasSink mit `alpha:true` ersetzt den manuellen
+   VideoFrame→OffscreenCanvas-Pfad — Safari-Compat fällt damit weg (Mediabunny
+   abstrahiert).
+2. **Audio-Passthrough auf Phase 2** geschoben — WebM+VP9+Alpha braucht Opus,
+   MP4-Quellen liefern AAC; verlustfreier Codec-Transcode überschreitet
+   V1-Scope. Content-FAQ in `de.md` ehrlich gepatcht („V1 nicht — Workflow:
+   Audio in der Schnitt-Software wieder synchronisieren"). Trade-off
+   akzeptabel, da Frame-Rate + Frame-Anzahl beider Spuren identisch bleiben →
+   Lippensync-frei.
+3. **Output-Modi `Bild` + `Video`-Hintergrund auf Phase 2** geschoben (V1 hat
+   `Transparent` + `Einfarbig`). Begründung: zusätzlicher Image-Decode-Pfad
+   und Video-Loop-Pipeline = +200–400 LoC im Worker für Modi, die Power-User
+   in der Schnitt-Software trivial nachschieben können. YAGNI bis User-Feedback.
+4. **PNG-Sequenz-ZIP-Export auf Phase 2** geschoben (war Differenzierungs-
+   Feature §2.4-B#4). Begründung: ZIP-Encoder + Per-Frame-PNG-Encode +
+   Memory-Pressure für 4K-Videos. Ehrliche V1-Begrenzung statt fragiles
+   Feature.
+5. **PE4-Revert (KON-454, Commit `3a56f1d`) in `[slug].astro` rückgängig** —
+   die Conditional `await import()` für 31 Tool-Komponenten verhindert Astros
+   `client:load`-Hydration-Generierung („No matching import has been found for
+   `AudioTranskriptionTool`" beim Build). Build war seit 2026-04-25 broken,
+   Tests waren grün (Build-Smoke deckt das nicht ab). Re-checkout auf
+   `3a56f1d^` + PE2-Type-Annotations als Inline-Fix wiederhergestellt.
+   `vite.worker.format = 'es'` neu ergänzt (für ML-Worker code-splitting:
+   default `iife` rejected by Rollup).
+
+**Affected Tools/Tickets:**
+- `video-hintergrund-entfernen` (Tool-Ship V1)
+- `KON-454` PE4 (revertiert — CSS-Code-Split-Ziel braucht andere Strategie:
+  z.B. `import.meta.glob` oder `astro:components`-Plugin; Phase 2 für PE4-v2)
+
+**Reversibility:**
+- Spike-Verify: trivial (CONVENTIONS §10 ist Doku, kann jederzeit revidiert
+  werden)
+- Audio Phase 2: moderat (EncodedAudioPacketSource + Opus-Re-Encode in Worker
+  ergänzen)
+- Bild/Video-BG-Modi Phase 2: moderat (Worker-Composite-Pipeline um zwei
+  Branch-Pfade erweitern)
+- PNG-Sequenz Phase 2: moderat (jszip + Frame-Capture-Loop)
+- PE4-Revert: moderat — die ursprüngliche PE4-Intention (CSS-Bundle 24.81 KB →
+  ≤4 KB pro Page) bleibt offen. Re-Implementation braucht Astro-konforme
+  Strategie. Empfehlung: Phase-2-Ticket „PE4-v2 — Astro-konformer
+  Component-Code-Split via `import.meta.glob`-Pattern".
+
+**Confirmed by User:** ausstehend (Routing über Standard-Reporting im
+`docs/agent-handoff/`-REPORT).
+
+## 2026-04-25 · KON-453 Meta-Review-R2 → BUILDER-R3 + Site-Wide-Spin-Off · sprache-verbessern
+
+**Decision:** Meta-Reviewer-R2 für `sprache-verbessern` (KON-453) hat **8
+fresh R2-Critics** gegen Builder-Commit `8c07c87` ausgewertet (KON-445
+merged, KON-450 content, KON-451 design, 44d98fac a11y, 755839a4
+performance, KON-447 security, KON-448 platform, KON-452 conversion).
+Verdict-Matrix: 3 pass (design, a11y, platform) + 3 partial (merged,
+security, performance) + **2 fail (content-critic major, conversion-
+critic high)**. §0-Divergence = **NONE** (merged=partial, nicht pass —
+mechanische Hard/Soft-Triggers feuern nicht). R1-Blocker-Bilanz: 6/10
+voll resolved (F1 Audio-UI, S1 WASM-Self-Host, A12 AAA-Contrast, F2
+resetLabel, C8 Citations, #19 relatedTools), 2/10 partial (#7 prose-
+link Wortlaut „Audio-Ökosystem" statt „Konverter-Ökosystem"; #11 NBSP
+in faq.a Z. 19), **2/10 NOT resolved (C1 em-Semantik
+`<em>KI-Rauschunterdrückung</em>` umschließt Methode statt Ziel-
+Substantiv „Sprache"; C7 Inverted-Pyramid 29-Wort Problem-Setup
+unverändert)**. CEO-Decision autonom:
+(1) ship_gate = false, route-to-builder-R3 mit **4-Punkt-Tool-Scope**:
+C1 (de.md:8 headingHtml em umstellen), C7 (de.md:35-38 Antwort-Satz
+≤20 Wörter), #7 (de.md:157 „Konverter-Ökosystem"), #11 (de.md:19
+faq.a `&nbsp;dB`).
+(2) **Site-Wide-Spin-Off:** R2-conversion-critic-Findings CR-C6 (`.btn`
+~36px <44px WCAG 2.5.5) und CR-C8 (`dispatchToolUsed()` fehlt komplett
+in `FileTool.svelte`) sind NICHT sprache-verbessern-spezifisch — sie
+sitzen in der shared `FileTool.svelte` und betreffen alle file-tools
+(pdf-zusammenfuehren, jpg-zu-pdf, hintergrund-entfernen, webcam-
+hintergrund-unschaerfe, video-hintergrund-entfernen). Werden als
+**zwei separate Hotfix-Tickets** ausgeschoben:
+  - `KON-NEU-tap-target-filetool`: `min-height: 2.75rem` auf `.btn`
+    in FileTool.svelte (alle file-tools profitieren).
+  - `KON-NEU-instrumentation-filetool`: `dispatchToolUsed()`-Import +
+    `$effect(phase==='done')` in FileTool.svelte. Phase-2-AdSense-
+    Voraussetzung; nicht Phase-1-blockend.
+(3) **§11-Citation-Exception-Frage:** content-critic warnt, dass die
+2 R2-eingefügten externen Links (DeepFilterNet GitHub, ThePodcast-
+Consultant Blog) §11 nicht erfüllen (nur BIPM/NIST genehmigt). CEO-
+Position: Repo-Anker für ICASSP-2023-Forschungs-Claim ist legitime
+Quellenangabe; Blog-Link ist Beleg-Sekundär aber thematisch valide.
+**§11-Exception genehmigt** — keine R3-Action für C8.
+(4) **Pfad-Klärung Dossier-C3:** content-critic suchte unter
+`dossiers/sprache-verbessern/`, das Dossier liegt aber unter
+`tasks/dossiers/_cache/audio/sprache-verbessern.dossier.md`. Kein
+content-Bug, sondern Critic-Lookup-Pfad-Drift. **Nicht R3-Scope** —
+content-critic-Suche-Pfad-Liste in nächster Wartungsrunde anpassen.
+(5) **Severity-Drift unverändert seit R1:** merged-Rubrik prüft em-
+Existenz aber nicht em-Semantik (Ziel vs. Methode); kein Inverted-
+Pyramid-Check; kein min-tap-target/instrumentation-Check. Bekanntes
+strukturelles Muster (KON-401, KON-414). Phase-2 evaluiert Rubrik-
+Erweiterung — keine sofortige Action.
+**Affected Tools/Tickets:** sprache-verbessern (R3 in Build-Ticket KON-92);
+zwei neue Site-Wide-Tickets für FileTool.svelte (CR-C6, CR-C8);
+content-critic-Lookup-Pfad-Liste (Wartungs-Backlog).
+**Reversibility:** trivial — alle 4 R3-Edits sind atomare Markdown-
+Änderungen in `de.md`; Site-Wide-Hotfixes sind Single-File CSS/Svelte-
+Edits.
+**Confirmed by User:** post-hoc.
+
+---
+
+## 2026-04-25 · KON-437 Meta-Review-R2 → BUILDER-R3 (Soft-Divergence) · webcam-hintergrund-unschaerfe
+
+**Decision:** Meta-Reviewer-R2 für `webcam-hintergrund-unschaerfe` (KON-437)
+hat **8 fresh R2-Critics** gegen Builder-Commit `823e405` ausgewertet
+(KON-429 merged, e4ad85b1 content, KON-431 design, KON-432 a11y, KON-433
+performance, KON-434 security, KON-435 conversion, KON-436 platform-
+engineer). Verdict-Matrix: **6 pass + 2 partial** (a11y, conversion).
+§0-Divergence = **SOFT** (merged=pass + a11y+conversion partial mit
+rework_required; kein critic.fail → KEIN hard-divergence). Builder-R2 hat
+**7/7 R1-Tool-Blocker (B1-B7) zu 100% adressiert** — saubere Trefferquote
+auf bestelltem KON-427-Scope. Verbleibende 3 Findings (A6 aria-live + role=
+alert für Loading/Error; A7 canvas role="img"; C8 dispatchToolUsed-Import)
+sind explizit als `out-of-scope of KON-427 rework` markiert und R2-Critic-
+confirmed. CEO-Decision autonom:
+(1) ship_gate = false, route-to-builder-R3 mit **Single-File-Scope**
+(`src/components/tools/WebcamBlurTool.svelte`) — 3 atomare Edits.
+(2) Anschließend **nur 2 fresh Critics nötig** (a11y + conversion); restliche
+6 Critics dürfen geskippt werden, da R3-Scope ihre Domäne nicht berührt.
+(3) **D7-Lesart-Klarstellung:** R2-design-critic markiert die Warning-Notice
+mit `var(--color-accent)`-color-mix-Tint EXPLIZIT als PASS; CLAUDE.md §5-
+Allowlist betrifft Solid-Fills, NICHT `color-mix(in oklch, …)`-Pill-Tints.
+R1-Meta-Review hatte D7 zu streng interpretiert — keine R3-Action für D7.
+(4) **Korrektur frührer Pipeline-Drift-Annahme:** Frühere Notiz dieser
+Sitzung deutete auf "fehlende fresh R2-Critics" hin — das war Lesefehler
+(R2-Critics liegen in anderen Ticket-Foldern als R1, nicht in KON-416-423).
+Pipeline funktioniert wie spezifiziert.
+
+**Affected Tools/Tickets:** webcam-hintergrund-unschaerfe (KON-437); D7-
+Lesart (CLAUDE.md §5 — color-mix vs. Solid-Fill — Critic-Präzedent statt
+Rulebook-Edit).
+**Reversibility:** trivial (Builder-R3 = 3 atomare Edits in 1 File).
+**Confirmed by User:** post-hoc (CEO-Autonomie §0.7 NO-ESCALATION-LOCK).
+
 ## 2026-04-26 · Differenzierungs-Cut: encrypted-PDF Support für pdf-zusammenfuehren · Sonderdelegation Tool 1
 
 **Decision:** Geparkte FAQ-Vorlage versprach Passwort-Eingabe pro verschlüsselter
