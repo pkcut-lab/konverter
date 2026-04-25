@@ -81,6 +81,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'cash-flow-calculator': { de: 'cashflow-rechner' },
   'kgv-calculator': { de: 'kgv-rechner' },
   'leasing-factor-calculator': { de: 'leasing-faktor-rechner' },
+  'inheritance-tax-calculator': { de: 'erbschaftsteuer-rechner' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {

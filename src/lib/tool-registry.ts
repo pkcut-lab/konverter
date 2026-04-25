@@ -116,6 +116,8 @@ const loaders: Record<string, ToolLoader> = {
   'kgv-calculator': () => import('./tools/kgv-rechner').then((m) => m.kgvRechner),
   'leasing-factor-calculator': () =>
     import('./tools/leasing-faktor-rechner').then((m) => m.leasingFaktorRechner),
+  'inheritance-tax-calculator': () =>
+    import('./tools/erbschaftsteuer-rechner').then((m) => m.erbschaftsteuerRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before
