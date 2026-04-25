@@ -60,21 +60,9 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     <a class="brand" href={`/${lang}`} aria-label={brandAria}>
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="26" height="26">
-          <defs>
-            <clipPath id="km-h-l"><rect x="3" y="7" width="8" height="10" rx="2"/></clipPath>
-            <clipPath id="km-h-r"><rect x="13" y="7" width="8" height="10" rx="2"/></clipPath>
-          </defs>
           <rect width="24" height="24" rx="6" fill="var(--color-accent)" />
-          <rect x="3" y="7" width="8" height="10" rx="2" fill="var(--color-text)"/>
-          <g clip-path="url(#km-h-l)">
-            <rect x="3" y="7" width="2" height="10" fill="var(--color-bg)"/>
-            <path d="M5,12 L11,7 M5,12 L11,17" stroke="var(--color-bg)" stroke-width="2" stroke-linecap="round" fill="none"/>
-          </g>
-          <rect x="13" y="7" width="8" height="10" rx="2" fill="var(--color-text)"/>
-          <g clip-path="url(#km-h-r)">
-            <rect x="13" y="7" width="2" height="10" fill="var(--color-bg)"/>
-            <path d="M15,12 L21,7 M15,12 L21,17" stroke="var(--color-bg)" stroke-width="2" stroke-linecap="round" fill="none"/>
-          </g>
+          <path d="M9,9 A3,3 0 0 1 15,9" stroke="var(--color-text)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="6" y="9" width="12" height="10" rx="1.5" fill="var(--color-text)"/>
         </svg>
       </span>
       <span class="wordmark">kit<em>to</em>kit</span>

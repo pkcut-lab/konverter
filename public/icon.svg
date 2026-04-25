@@ -1,17 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="kittokit">
-  <defs>
-    <clipPath id="km-l"><rect x="64" y="149" width="171" height="213" rx="43"/></clipPath>
-    <clipPath id="km-r"><rect x="277" y="149" width="171" height="213" rx="43"/></clipPath>
-  </defs>
   <rect width="512" height="512" rx="128" fill="#8F3A0C"/>
-  <rect x="64" y="149" width="171" height="213" rx="43" fill="#1A1917"/>
-  <g clip-path="url(#km-l)">
-    <rect x="64" y="149" width="43" height="213" fill="#FAFAF9"/>
-    <path d="M107,256 L235,149 M107,256 L235,362" stroke="#FAFAF9" stroke-width="43" stroke-linecap="round" fill="none"/>
-  </g>
-  <rect x="277" y="149" width="171" height="213" rx="43" fill="#1A1917"/>
-  <g clip-path="url(#km-r)">
-    <rect x="277" y="149" width="43" height="213" fill="#FAFAF9"/>
-    <path d="M320,256 L448,149 M320,256 L448,362" stroke="#FAFAF9" stroke-width="43" stroke-linecap="round" fill="none"/>
-  </g>
+  <path d="M192,192 A64,64 0 0 1 320,192" stroke="#1A1917" stroke-width="32" fill="none" stroke-linecap="round"/>
+  <rect x="128" y="192" width="256" height="213" rx="32" fill="#1A1917"/>
 </svg>
