@@ -81,7 +81,116 @@ references:
   - graphify-out/GRAPH_REPORT.md   # knowledge graph — god nodes, communities, tool-review state
 ---
 
-# AGENTS — CEO-Prozeduren (v1.1)
+# AGENTS — CEO-Prozeduren (v1.5)
+
+## §0 — Sequential Pipeline Override (v1.5, 2026-04-25, USER-LOCKED)
+
+**Diese Sektion überstimmt alle nachfolgenden Sektionen bei Konflikt.** User-
+Anweisung 2026-04-25: „mehrere Agenten dürfen gleichzeitig arbeiten, aber von
+den Aufgaben her muss ein Tool nach dem anderen abgeschlossen werden". Die
+folgenden Regeln sind nicht verhandelbar.
+
+### §0.1 — Ein Tool gleichzeitig (Hard-Cap)
+
+- **In-Flight-Cap = 1 Tool-Slug zur Zeit.** CEO darf einen neuen Tool-Build
+  (Dossier → Build → Critics → End-Review → Ship) ERST starten, wenn der
+  vorherige Tool-Slug komplett auf `docs/completed-tools.md` mit Status
+  `shipped` oder `ship-as-is` steht.
+- Innerhalb desselben Tools dürfen Sub-Agenten parallel arbeiten:
+  - Phase A (Vorbereitung): Dossier-Researcher + Differenzierungs-Researcher
+    + Schema-Markup-Enricher + Image-Optimizer parallel
+  - Phase D (Critics): alle Critics gleichzeitig (Merged + Conversion + Legal)
+- ABER: nie zwei verschiedene Tool-Slugs gleichzeitig in_progress.
+- Die §3.5 Parallel-Fan-Out-Regel und §2.5 Auto-Refill-Fallback bleiben
+  formal bestehen, werden aber durch §0.1 auf max-1-Tool-Slug gecappt.
+
+### §0.2 — Kein Schritt darf abbrechen (Reject-Loop-Pflicht)
+
+Wenn eine Phase rejected wird, MUSS CEO die Korrektur durchsetzen — nie
+einfach „später erledigen". Drei Optionen pro Reject:
+1. **Zurück an Agent** mit scoped Fix-Liste (file:line-Anchors). Max 2 Runden,
+   `rework_counter` 0→1→2.
+2. **CEO-Hotfix** wenn `rework_counter` erschöpft ODER Fix trivial (≤1 Datei,
+   ≤10 Zeilen).
+3. **§7.15-Override** wenn weder Agent noch CEO den Blocker lösen können →
+   Eintrag in `docs/ceo-decisions-log.md` mit Reversibility-Notiz.
+
+Niemand darf das Tool „abandoned" lassen. Wenn ein Schritt fundamental nicht
+abschließbar ist (z.B. Tool-Konzept ist unbaubar), → Tool wird explizit
+**parked** mit Park-Decision in `ceo-decisions-log.md` UND Slug raus aus
+`differenzierung-queue.md`. Niemals stille Aufgabe.
+
+### §0.3 — Pflicht-Ablauf pro Tool (Sequenz)
+
+```
+Phase A — Vorbereitung (parallel intern erlaubt):
+  1. Dossier-Researcher
+  2. Differenzierungs-Researcher (§2.4-Analyse)
+  3. Schema-Markup-Enricher (pre-build-prep)
+  4. Image-Optimizer (nur bei Bild-/File-Tools)
+  CEO-Gate-1: Dossier vollständig? → pass: B / fail: §0.2
+
+Phase B — Build:
+  5. Tool-Builder (Code + Content + Tests, eigener Commit)
+  6. Platform-Engineer (NUR wenn shared-component betroffen)
+  CEO-Gate-2: Build grün, Tests pass? → pass: C / fail: §0.2
+
+Phase C — Pre-Publish (parallel erlaubt):
+  7. SEO-GEO-Strategist (Meta + Headings)
+  8. FAQ-Gap-Finder (FAQ-Vollständigkeit)
+  CEO-Gate-3: SEO + FAQ ready? → pass: D / fail: §0.2
+
+Phase D — Critics (parallel erlaubt):
+  9.  Merged-Critic (Content+Design+a11y+Perf+Security)
+  10. Conversion-Critic (Phase 2+ optional, Phase 1 skip)
+  11. Legal-Auditor (Pflicht jeden Release)
+  CEO-Aggregation: alle pass → E / Conflict → Meta-Reviewer → §0.2
+
+Phase E — End-Review (3-Pass-Pflicht):
+  12. End-Reviewer Pass 1
+  13. End-Reviewer Pass 2 (verifiziert Pass-1-Fixes)
+  14. End-Reviewer Pass 3 (final Sanity-Check)
+  Bei blockers in einem Pass: §0.2 Builder-Rework, dann Pass wiederholen
+  rework_counter erschöpft (2/2): CEO-Hotfix oder §7.15-Override
+
+Phase F — Ship:
+  15. CEO committet Ship-Append in completed-tools.md MIT CEO-Notes-Spalte
+  16. Awaiting-Critics-Einträge dieses Slugs nach _processed/ archivieren
+  17. CEO-Decisions-Log-Eintrag wenn nicht-trivial entschieden
+  Tool ist FERTIG. CEO darf nächstes Tool starten.
+```
+
+### §0.4 — Pre-Flight-Hook bei Heartbeat-Start
+
+Bevor CEO neue Arbeit startet, MUSS er prüfen:
+1. `inbox/to-ceo/` — Blocker-Notes ZUERST verarbeiten (resolve oder ack)
+2. `tasks/awaiting-critics/` — Einträge älter als 24h nach `_processed/`
+3. Zombie-Node-Prozess-Check (Cleanup wenn >5 Stück alt sind)
+4. Working-Tree-Check (`git status`) — uncommitted Tool-Code aus alter
+   Session? → Resume statt neu dispatchen
+5. Server-Log-Check — wenn `>50 MB` → Log-Rotation triggern
+
+### §0.5 — CEO-Notes-Pflicht in completed-tools.md
+
+Bei jedem Ship-Append MUSS Spalte `CEO-Notes` einen Eintrag haben:
+- `—` wenn keine besondere Entscheidung
+- Knappe Notiz wenn ja: `"§7.15-Override für P6 LCP"`, `"pdf-lib install"`,
+  `"Conversion-Hook deferred Phase-2"`, `"3 Reworks bei perf"`
+
+Bei nicht-trivialen Entscheidungen ZUSÄTZLICH Eintrag in
+`docs/ceo-decisions-log.md` mit Affected/Reversibility/Confirmed-Felder.
+
+### §0.6 — Resume-Before-New-Work
+
+Beim Heartbeat-Start prüft CEO ob im Working-Tree Code zu einem Tool liegt,
+das im DB-State als „in_progress" oder „awaiting_critics" markiert ist:
+- Code da + Tests grün → resume von der nächsten Phase, NICHT neu starten
+- Code da + Tests fail → Phase-B-Reject, zurück an Builder mit Fix-Liste
+- Code da + Tool nicht in DB → CEO erstellt Resume-Ticket und routet weiter
+
+Niemals halbfertige Arbeit verwerfen.
+
+---
 
 ## 0. Projekt-Überblick (einmalig pro Heartbeat, vor Schritt 1)
 

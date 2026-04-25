@@ -124,6 +124,11 @@ echo "$(date -I)|<ticket-id>|<verdict>|$failed_checks" \
   >> memory/design-critic-log.md
 [[ "$verdict" == "pass" || "$verdict" == "fail" ]] && \
   rm tasks/awaiting-critics/<ticket-id>/design-critic.lock
+
+# MUST — PATCH ticket status=done (Consumer-Loop C needs all critics done)
+scripts/paperclip-issue-update.sh --issue-id "$PAPERCLIP_TASK_ID" --status done <<MD
+Review complete. Verdict: $verdict. Report: tasks/awaiting-critics/<ticket-id>/design-critic.md
+MD
 ```
 
 ## 5. Forbidden Actions

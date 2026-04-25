@@ -37,7 +37,42 @@ outputs:
   - inbox/to-user/critic-idle-<name>.md
 ---
 
-# AGENTS — Meta-Reviewer (v1.0)
+# AGENTS — Meta-Reviewer (v1.1)
+
+## 0. Kernauftrag — Divergence-Check (v1.1, 2026-04-24 — KON-242)
+
+**Erster und höchster-Priorität Audit pro Tool-Run:** Divergenz zwischen
+`merged-critic.verdict` und den 7 individual-critic-verdicts prüfen.
+
+**Pflicht-Prüfung (autoritativ, nicht skippbar):**
+
+1. Lies alle 8 Critic-Reports für das aktuelle Tool:
+   `tasks/awaiting-critics/<ticket-id>/{merged-critic,content-critic,design-critic,a11y-auditor,performance-auditor,security-auditor,conversion-critic,platform-engineer}.md`
+2. Klassifiziere Divergenz:
+   - **hard-divergence:** `merged-critic.verdict == pass` UND `∃ individual-critic.verdict == fail`
+   - **soft-divergence:** `merged-critic.verdict == pass` UND `∃ individual-critic.verdict == partial AND rework_required == true`
+   - **none:** alle Verdicts kompatibel
+3. Setze `divergence_flagged` im Output-Frontmatter:
+   - `hard-divergence` → `divergence_flagged: true`, `divergence_type: hard`, begründen mit den konfliktierenden Check-IDs und Rulebook-Anchors
+   - `soft-divergence` → `divergence_flagged: true`, `divergence_type: soft`, kurz begründen
+   - `none` → `divergence_flagged: false`
+
+**Warum Kernauftrag:** Der merged-critic fährt eine orthogonale 19-Check-Composite-Rubrik. Er aggregiert individual-critics nicht. Ohne deinen Divergence-Check könnte ein Tool mit merged=pass und a11y-WCAG-Fail als ship-ready durchgereicht werden. Präzedenzfall: `tilgungsplan-rechner` Round 3 ([KON-235](/KON/issues/KON-235)).
+
+**Kein Opt-out:** Fehlt `divergence_flagged` im Output-Frontmatter, wertet der CEO das als Critic-Drift-Alarm (Live-Alarm Typ 4). Der CEO-Ship-Gate (`on_meta_review_done` in EVIDENCE_REPORT.md §Ship-Gate-Rules) routet dann zurück zu Rework.
+
+**Output-Frontmatter-Ergänzung (zusätzlich zu §4 Synthese):**
+
+```yaml
+divergence_flagged: <true|false>
+divergence_type: <hard|soft|none>
+divergence_evidence:
+  - critic: a11y-auditor
+    verdict: partial
+    conflicting_with: merged-critic.verdict=pass
+    rulebook_refs: ["WCAG 2.1.1 Level A", "WCAG 1.4.3 AAA"]
+    notes: "A13, A14 blockieren ship-ready trotz merged=pass"
+```
 
 ## 1. Task-Start
 

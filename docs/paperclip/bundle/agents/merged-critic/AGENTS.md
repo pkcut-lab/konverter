@@ -29,7 +29,19 @@ budget_caps:
   duration_minutes_soft: 15
 ---
 
-# AGENTS — Merged-Critic-Prozeduren (v1.0)
+# AGENTS — Merged-Critic-Prozeduren (v1.1)
+
+## 0. Scope & Autorität (v1.1, 2026-04-24 — KON-242)
+
+**Du bist keine Aggregations-Rolle.** Deine 19-Check-Rubrik (§3) ist ein **cross-cutting composite** — Brand-Guide + Basics — das PARALLEL zu den individual-critics (content, design, a11y, performance, security, conversion, platform) läuft. Du aggregierst deren Verdicts NICHT und darfst sie NICHT überstimmen.
+
+**Harte Folgen daraus:**
+
+- Ein `pass` von dir signalisiert NUR, dass deine 19 Composite-Checks grün sind. Es bedeutet NICHT, dass das Tool ship-ready ist. Das Ship-Gate-Gesamt-Verdikt wird vom CEO via `ship_gate()` (EVIDENCE_REPORT.md §Ship-Gate-Rules) gebildet; individual-critics haben dort eigenständiges Veto-Recht.
+- Wenn deine Rubrik Checks abdeckt, die auch ein individual-critic prüft (z.B. Check #10 axe-core vs. a11y-auditor WCAG-Audit), sind beide Verdicts unabhängig zu notieren. Bei Widerspruch ist der individual-critic autoritativ; dein Report gibt die Composite-Sicht.
+- Kein „Rollup" in Notes schreiben wie „a11y-auditor hat FAIL, also mein pass wird partial" — dein Verdict reflektiert NUR deine Checks.
+
+**Check-Überlappungen als Info-Feld kennzeichnen**, nicht als Aggregation: wenn Check #10 (axe-core) grün ist, schreib in `evidence`: „axe-core clean — a11y-auditor führt tieferen WCAG-2.2-AAA-Audit parallel (autoritativ bei Widerspruch)."
 
 ## 1. Task-Start
 
@@ -137,7 +149,9 @@ words=$(sed '/^---$/,/^---$/d' "src/content/tools/<slug>/<lang>.md" | wc -w)
 
 ### Check #9 — Schema.org JSON-LD
 ```bash
-curl -s http://localhost:4321/<lang>/<slug>/ | \
+# Port 4399 = astro preview (prod build). Never use :4321 (Vite dev-server).
+# Ref: KON-311
+curl -s http://localhost:4399/<lang>/<slug>/ | \
   grep -oE 'application/ld\+json' | wc -l
 # ≥ 3 (WebApplication + FAQPage + BreadcrumbList)
 ```
@@ -190,13 +204,21 @@ node scripts/dossier-compliance-check.mjs "$builder_output" "$dossier_ref"
 bundle_kb=$(du -k dist/<lang>/<slug>/index.html dist/_astro/<slug>*.{js,css} 2>/dev/null | awk '{s+=$1} END {print s}')
 [[ $bundle_kb -gt 50 ]] && echo "FAIL — bundle $bundle_kb KB > 50 KB"
 
-# Lighthouse-CI gegen astro preview
-npx lhci autorun --collect.url=http://localhost:4321/<lang>/<slug>/ \
-  --assert.preset=lighthouse:recommended \
-  --assert.assertions.categories:performance="{aggregationMethod:median-run,minScore:0.9}" \
-  --assert.assertions.cumulative-layout-shift="{maxNumericValue:0.1}" \
-  --assert.assertions.largest-contentful-paint="{maxNumericValue:2500}"
-# Exit 0 = pass
+# Pre-flight: reject Vite dev-server (port 4321 / X-Powered-By: Vite).
+# LCP from dev-server is categorically non-authoritative. Ref: KON-311
+_mc_vite=$(curl -sI "http://localhost:4399/<lang>/<slug>/" | grep -i "x-powered-by: vite")
+if [[ -n "$_mc_vite" ]]; then
+  echo "FAIL P14 — Dev-server target detected on :4399; LCP not authoritative. Restart as astro preview."
+  # Mark check fail; do not proceed with lhci
+else
+  # Lighthouse-CI gegen astro preview (:4399, prod build — never :4321)
+  npx lhci autorun --collect.url=http://localhost:4399/<lang>/<slug>/ \
+    --assert.preset=lighthouse:recommended \
+    --assert.assertions.categories:performance="{aggregationMethod:median-run,minScore:0.9}" \
+    --assert.assertions.cumulative-layout-shift="{maxNumericValue:0.1}" \
+    --assert.assertions.largest-contentful-paint="{maxNumericValue:2500}"
+  # Exit 0 = pass
+fi
 ```
 
 ### Check #15 — hreflang bidirectional
@@ -416,6 +438,11 @@ review_count=$(wc -l < memory/merged-critic-log.md)
 if (( review_count % 10 == 0 )); then
   bash evals/merged-critic/run-trend-check.sh
 fi
+
+# MUST — PATCH ticket status=done (Consumer-Loop C needs all critics done)
+scripts/paperclip-issue-update.sh --issue-id "$PAPERCLIP_TASK_ID" --status done <<MD
+Review complete. Verdict: $verdict. Report: tasks/awaiting-critics/<ticket-id>/merged-critic.md
+MD
 ```
 
 ## 6. Blocker-Behandlung

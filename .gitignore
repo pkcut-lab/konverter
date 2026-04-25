@@ -54,3 +54,7 @@ audit/
 
 # Generated skill-lockfile
 skills-lock.json
+
+# Paperclip runtime task-artifacts (volatile, large historical critic outputs)
+tasks/awaiting-critics/_processed/
+tasks/.ceo-tmp/
