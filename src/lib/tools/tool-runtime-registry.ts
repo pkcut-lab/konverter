@@ -57,6 +57,22 @@ function loadRemoveBg(): Promise<RemoveBgModule> {
   return removeBgModulePromise;
 }
 
+// Lazy singleton for video-bg-remove. Heavier than remove-background
+// (Mediabunny ~70 KB + transformers ~1 MB + worker file). Worker is owned
+// by the process module — this thunk only loads the main-thread shim.
+type VideoBgRemoveModule = typeof import('./process-video-bg-remove');
+let videoBgRemoveModulePromise: Promise<VideoBgRemoveModule> | null = null;
+let videoBgRemoveModule: VideoBgRemoveModule | null = null;
+function loadVideoBgRemove(): Promise<VideoBgRemoveModule> {
+  if (!videoBgRemoveModulePromise) {
+    videoBgRemoveModulePromise = import('./process-video-bg-remove').then((m) => {
+      videoBgRemoveModule = m;
+      return m;
+    });
+  }
+  return videoBgRemoveModulePromise;
+}
+
 export type ProgressCallback = (progress: number) => void;
 
 export type ProcessFn = (
@@ -146,22 +162,36 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
       return null;
     },
   },
-  // video-bg-remove: ML pipeline stub. Full implementation requires spike tasks
-  // documented in docs/superpowers/specs/2026-04-22-video-hintergrund-entfernen-design.md §9
-  // (Mediabunny VP9+Alpha mux + onnxruntime-web BiRefNet_lite ONNX worker).
+  // video-bg-remove: ML video pipeline (BiRefNet_lite or MODNet via @huggingface/
+  // transformers + Mediabunny VP9+Alpha mux). Worker-based per CONVENTIONS.md §10
+  // (MLFileTool-Template). The component reads typed `phase: 'model' | 'frame'`
+  // progress directly from `process-video-bg-remove` to drive its dual-progress
+  // UI; the registry's narrow ProgressCallback is satisfied by mapping the frame
+  // ratio through. `isPrepared` and `clearLastResult` are sync façades over the
+  // module singleton so the FileTool reset path stays effect-free.
   'video-bg-remove': {
-    process: async () => {
-      throw new Error(
-        'video-bg-remove: ML pipeline not yet implemented — spike tasks required (see design spec §9).',
+    process: async (input, config, onProgress) => {
+      const m = await loadVideoBgRemove();
+      const modelKey = (config?.modelKey === 'speed' ? 'speed' : 'quality') as 'quality' | 'speed';
+      const outputMode = (config?.outputMode === 'solid' ? 'solid' : 'transparent') as 'transparent' | 'solid';
+      const bgColor = typeof config?.bgColor === 'string' ? config.bgColor : '#ffffff';
+      const result = await m.processVideoBgRemove(
+        input,
+        { modelKey, outputMode, bgColor },
+        (e) => {
+          if (onProgress && e.phase === 'frame' && e.totalFrames > 0) {
+            onProgress(e.frameIdx / e.totalFrames);
+          }
+        },
       );
+      return result.output;
     },
-    prepare: async () => {
-      throw new Error(
-        'video-bg-remove: model loading not yet implemented — spike tasks required.',
-      );
+    prepare: async (onProgress) => {
+      const m = await loadVideoBgRemove();
+      await m.prepareVideoBgRemoveModel(onProgress, 'quality');
     },
-    isPrepared: () => false,
-    clearLastResult: () => { /* no-op until pipeline is implemented */ },
+    isPrepared: () => videoBgRemoveModule?.isVideoBgRemovePrepared() ?? false,
+    clearLastResult: () => videoBgRemoveModule?.clearVideoBgRemoveLastResult(),
     preflightCheck: () => {
       if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
         return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';

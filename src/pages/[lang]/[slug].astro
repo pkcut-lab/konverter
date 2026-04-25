@@ -28,6 +28,7 @@ import Analyzer from '../../components/tools/Analyzer.svelte';
 import Generator from '../../components/tools/Generator.svelte';
 import Validator from '../../components/tools/Validator.svelte';
 import WebcamBlurTool from '../../components/tools/WebcamBlurTool.svelte';
+import VideoHintergrundEntfernenTool from '../../components/tools/VideoHintergrundEntfernenTool.svelte';
 import KiTextDetektorTool from '../../components/tools/KiTextDetektorTool.svelte';
 import KiBildDetektorTool from '../../components/tools/KiBildDetektorTool.svelte';
 import AudioTranskriptionTool from '../../components/tools/AudioTranskriptionTool.svelte';
@@ -88,6 +89,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
 ]);
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
+const VIDEO_BG_REMOVE_TOOL_ID = 'video-bg-remove';
 
 const componentByType = {
   converter: Converter,
@@ -232,7 +234,12 @@ const jsonLd = buildToolJsonLd(
               client:load
             />
           )}
-          {config.type === 'file-tool' && <FileTool config={config} client:load />}
+          {config.type === 'file-tool' && config.id === VIDEO_BG_REMOVE_TOOL_ID && (
+            <VideoHintergrundEntfernenTool config={config} client:load />
+          )}
+          {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && (
+            <FileTool config={config} client:load />
+          )}
           {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
             <ColorConverter config={config} client:load />
           )}
@@ -362,7 +369,7 @@ const jsonLd = buildToolJsonLd(
           <div class="tool-aside__content">
             <section class="tool-aside__steps">
               <ol>
-                {resolvedAside.steps.map((step, i) => (
+                {resolvedAside.steps.map((step: { title: string; description: string }, i: number) => (
                   <li>
                     <span class="tool-aside__step-number">
                       {String(i + 1).padStart(2, '0')}

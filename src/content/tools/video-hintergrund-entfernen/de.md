@@ -156,9 +156,14 @@ Weichzeichner auf der Maske.
 
 ### Bleiben Audio-Spuren erhalten?
 
-Ja. Der Audio-Track wird aus dem Quell-Video kopiert und ohne Re-Encoding
-in das Ausgabe-Video übernommen. Kein Qualitätsverlust, keine Lippensync-
-Verschiebung.
+In V1 nicht — das Ausgabe-Video enthält ausschließlich die Bild-Spur.
+Hintergrund: WebM mit VP9+Alpha braucht Opus als Audio-Codec, MP4-Quellen
+liefern aber meist AAC; ein verlustfreier Codec-Transcode überschreitet
+den V1-Scope. Workflow-Empfehlung: Original-Video parallel offen lassen,
+Audio in der Schnitt-Software (DaVinci Resolve, Premiere Pro, Final Cut)
+auf das BG-entfernte Video legen — ohne Lippensync-Verschiebung, da
+Frame-Rate und Frame-Anzahl beider Spuren identisch bleiben. Audio-
+Passthrough ist auf der Phase-2-Roadmap.
 
 ### Was ist eine PNG-Sequenz und wofür brauche ich sie?
 

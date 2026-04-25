@@ -75,4 +75,13 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
+  vite: {
+    worker: {
+      // ES-module workers are required for the video-bg-remove worker to
+      // dynamically import @huggingface/transformers + mediabunny chunks.
+      // Default 'iife' rejects code-splitting (Rollup error
+      // "UMD and IIFE output formats are not supported for code-splitting").
+      format: 'es',
+    },
+  },
 });
