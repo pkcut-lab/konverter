@@ -289,7 +289,7 @@ const jsonLd = buildToolJsonLd(
           {config.type === 'formatter' && config.id === 'audio-transkription' && (
             <AudioTranskriptionTool config={config} client:load />
           )}
-          {!CUSTOM_FORMATTER_IDS.has(config.id) && (
+          {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
               config={config}
               placeholder={config.placeholder ?? ''}

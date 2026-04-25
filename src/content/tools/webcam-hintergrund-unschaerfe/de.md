@@ -2,7 +2,7 @@
 toolId: "webcam-blur"
 language: "de"
 title: "Webcam-Hintergrund unscharf machen — direkt im Browser"
-headingHtml: "Webcam-Hintergrund <em>unscharf machen</em>"
+headingHtml: "Webcam-<em>Hintergrund</em> unscharf machen"
 metaDescription: "Webcam-Hintergrund online unscharf machen — ohne Installation, ohne Upload, ohne Konto. Einstellbare Blur-Intensität, 100&nbsp;% lokal im Browser."
 tagline: "Einstellbare Unschärfe für deinen Videocall-Hintergrund — kein Download nötig."
 intro: "Mach deinen Webcam-Hintergrund unscharf, direkt im Browser-Tab. Keine Extension, keine App, kein Konto. Das Tool greift über die Browser-Kamera-API auf deinen Stream zu, verarbeitet jeden Frame lokal und zeigt das Ergebnis sofort — deine Kameradaten verlassen den Browser zu keinem Zeitpunkt."
@@ -127,7 +127,7 @@ Hintergrundunschärfe ist Chrome&nbsp;114+ mit einer modernen Webcam empfohlen.
 
 Indirekt: Dieses Tool ist kein Virtual-Camera-Treiber — es zeigt den verarbeiteten Stream
 nur im Browser-Tab. Für die Nutzung in Zoom oder Teams werden Tools wie OBS mit VirtualCAM-Plugin
-oder VCam-Softwarebenötigt. Unser Tool eignet sich gut für Browser-basierte Videocalls
+oder VCam-Softwarebenötigt. Das Tool eignet sich gut für Browser-basierte Videocalls
 (Google Meet, Jitsi) oder als Vorschau.
 
 ## Verwandte Video-Tools

@@ -347,7 +347,7 @@
     border: 2px solid var(--color-border);
     border-top-color: var(--color-accent);
     border-radius: 50%;
-    animation: spin 700ms linear infinite;
+    animation: spin var(--dur-fast) linear infinite;
   }
 
   @keyframes spin {
@@ -411,12 +411,15 @@
   .toggle {
     position: relative;
     width: 2.75rem;
-    height: 1.5rem;
-    border-radius: 9999px;
+    min-height: 2.75rem; /* WCAG 2.5.5: 44px tap target */
+    border-radius: var(--r-lg);
     border: 1px solid var(--color-border);
     background: var(--color-surface-sunk);
     cursor: pointer;
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition:
       background var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out);
@@ -430,8 +433,9 @@
 
   .toggle__thumb {
     position: absolute;
-    top: 2px;
+    top: 50%;
     left: 2px;
+    transform: translateY(-50%);
     width: 1.125rem;
     height: 1.125rem;
     border-radius: 50%;
@@ -440,7 +444,7 @@
   }
 
   .toggle--on .toggle__thumb {
-    transform: translateX(1.25rem);
+    transform: translate(1.25rem, -50%);
     background: var(--color-bg);
   }
 
@@ -462,7 +466,7 @@
 
   .slider-row__value {
     font-family: var(--font-family-mono);
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
   }
 
@@ -533,6 +537,7 @@
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-3) var(--space-5);
+    min-height: 2.75rem; /* WCAG 2.5.5: 44px tap target */
     border-radius: var(--r-md);
     border: none;
     background: var(--color-text);
@@ -548,11 +553,17 @@
     opacity: 0.85;
   }
 
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
   .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem; /* WCAG 2.5.5: 44px tap target */
     border-radius: var(--r-md);
     border: 1px solid var(--color-border);
     background: var(--color-surface);
@@ -568,11 +579,17 @@
     border-color: var(--color-text-muted);
   }
 
+  .btn-secondary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
   .btn-ghost {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
+    min-height: 2.75rem; /* WCAG 2.5.5: 44px tap target */
     border-radius: var(--r-md);
     border: none;
     background: transparent;
@@ -586,6 +603,16 @@
 
   .btn-ghost:hover {
     color: var(--color-text);
+  }
+
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .toggle:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
