@@ -12,6 +12,12 @@ sichtbar sein müssen. Format: neue Einträge **oben**, ältere wandern nach
 unten. Jede Entscheidung verweist auf die betroffenen Tools/Tickets, sodass
 der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
+## 2026-04-26 · pdf-passwort §0.7 Architecture Pivot — Decrypt-Only Phase 1 · KON-509
+**Decision:** `qpdf.wasm` existiert nicht als npm-Paket (Dossier-Fehler). Phase-1-Scope auf Decrypt-Only reduziert — pdf-lib@1.17.1 (bereits installiert) lädt passwortgeschützte PDFs via `PDFDocument.load(bytes, { password })` und speichert ohne Passwort. Encrypt-Mode auf Phase 2 verschoben (Kandidaten: @cantoo/pdf-lib@2.6.5 für AES-256 oder qpdf-wasm@0.1.0 wenn ausgereift). Kein neues npm-Paket benötigt.
+**Affected Tools/Tickets:** KON-509 (pdf-passwort Tool-Build, re-dispatched todo).
+**Reversibility:** trivial — Phase-2-Encrypt-Mode kann durch eigenes Ticket nachgezogen werden.
+**Confirmed by User:** ausstehend.
+
 **Wann ein Eintrag entsteht:**
 - Neue npm-Dependency installiert
 - §7.15-Override (rework_counter erschöpft → ship-with-debt / park)
