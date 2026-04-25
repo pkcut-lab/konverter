@@ -81,7 +81,7 @@
   });
 </script>
 
-<div class="search-host" aria-label="Tool-Suche">
+<div class="search-host" role="search" aria-label="Tool-Suche">
   <div bind:this={host} class:is-ready={ready}></div>
 
   {#if unavailable}
