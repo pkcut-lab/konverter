@@ -19,13 +19,16 @@ telemetry: false
 # Frontmatter `heartbeat: routine` + optional `heartbeat_cadence: cron-...`.
 # Agenten mit `heartbeat: event-driven` werden NICHT in Loop gezogen.
 heartbeat:
-  # v2.1 (2026-04-25 — User-Decision Plan B):
-  # 30m → 60m. CEO arbeitet jetzt mit Sonnet 4.6 + effort:max (statt Opus
-  # 4.7). Cost-per-heartbeat ~8x niedriger, also kann CEO seltener tickern
-  # ohne Overhead. Sequential-Pipeline §0.1 = 1 Tool zur Zeit, 60m gibt
-  # genug Zeit fuer Worker-Cycle (Build → Critics → End-Review) zwischen
-  # CEO-Coordination-Ticks.
-  cadence: 60m
+  # v2.2 (2026-04-25 — User-Feedback "60m zu langsam, soll vorangehen"):
+  # 60m → 15m. Mit CEO auf Sonnet 4.6 + effort:max ist ein Heartbeat-Tick
+  # ~8x billiger als Opus, also lohnt es sich oefter zu tickern. CEO
+  # reagiert dann schneller auf done-Worker-Tickets (Critic-Aggregation,
+  # End-Review-Pass-Routing, Ship-Append) statt 60min zu warten.
+  # Empty-Queue-Heartbeat exittet schnell (~30s, ~$0.30) per CEO §0.4
+  # Pre-Flight-Hook + §2.5 Auto-Refill-Cap MAX_IN_FLIGHT=1.
+  # Bei 96 Heartbeats/Tag ~ $30/Tag = $900/Monat, immer noch 7x guenstiger
+  # als Opus-30m-Konfiguration ($6600/Monat).
+  cadence: 15m
   idle_behavior: wait
   phase_1_warmup: 60m
   # v2.0: Override-Protokoll

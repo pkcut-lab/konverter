@@ -14,7 +14,7 @@ description: >-
   v2.1 (2026-04-25): Opus 4.7 → Sonnet 4.6 + effort:max. Hard-Cases
   (§7.15-Override, Architecture-Decisions) eskaliert via inbox/to-user/
   statt selbst zu entscheiden — siehe §0.7.
-heartbeat: 60m
+heartbeat: 15m
 can_dispatch:
   # Core Worker (Phase 1)
   - tool-dossier-researcher
