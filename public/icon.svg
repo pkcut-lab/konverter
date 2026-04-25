@@ -1,7 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="kittokit">
+  <defs>
+    <clipPath id="km-l"><rect x="64" y="149" width="171" height="213" rx="43"/></clipPath>
+    <clipPath id="km-r"><rect x="277" y="149" width="171" height="213" rx="43"/></clipPath>
+  </defs>
   <rect width="512" height="512" rx="128" fill="#8F3A0C"/>
-  <rect x="64" y="149" width="171" height="213" rx="43" fill="white"/>
-  <rect x="277" y="149" width="171" height="213" rx="43" fill="white"/>
-  <path d="M79,160 L79,352 M79,256 L220,160 M79,256 L220,352" stroke="#8F3A0C" stroke-width="26" stroke-linecap="round" fill="none"/>
-  <path d="M292,160 L292,352 M292,256 L433,160 M292,256 L433,352" stroke="#8F3A0C" stroke-width="26" stroke-linecap="round" fill="none"/>
+  <rect x="64" y="149" width="171" height="213" rx="43" fill="#1A1917"/>
+  <g clip-path="url(#km-l)">
+    <rect x="64" y="149" width="43" height="213" fill="#FAFAF9"/>
+    <path d="M107,256 L235,149 M107,256 L235,362" stroke="#FAFAF9" stroke-width="43" stroke-linecap="round" fill="none"/>
+  </g>
+  <rect x="277" y="149" width="171" height="213" rx="43" fill="#1A1917"/>
+  <g clip-path="url(#km-r)">
+    <rect x="277" y="149" width="43" height="213" fill="#FAFAF9"/>
+    <path d="M320,256 L448,149 M320,256 L448,362" stroke="#FAFAF9" stroke-width="43" stroke-linecap="round" fill="none"/>
+  </g>
 </svg>
