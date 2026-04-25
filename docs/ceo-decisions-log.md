@@ -32,6 +32,30 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
 <!-- CEO-DECISION-APPEND -->
 
+## 2026-04-25 · Park-Decision: pdf-zusammenfuehren + pdf-aufteilen · Sonderdelegation Heartbeat-44
+
+**Decision:** Beide Multi-File-PDF-Tools werden geparkt, nicht im Rahmen der
+Sonderdelegation gebaut. Ein Multi-File-Drag-Drop-Reorder-UI
+(pdf-zusammenfuehren) plus eine Page-Range-Selector-UI (pdf-aufteilen)
+brauchen jeweils ein eigenes Custom-Svelte-Component der Größenordnung
+600–900 LoC. In den verbleibenden Tool-Slots der Sonderdelegation würde
+das die Auslieferung der vier ML-Tools (bild-zu-text, ki-text-detektor,
+ki-bild-detektor, audio-transkription) blockieren, die bereits Component +
+Runtime fertig haben und nur Tests benötigen. Throughput-Optimum:
+4 ML-Tools shippen statt 1 PDF-Tool halbfertig liegen lassen. Die
+geparkten Stubs in `.paperclip/parked-tools/` bleiben unverändert.
+
+**Affected Tools/Tickets:** pdf-zusammenfuehren (Tool 5 Sonderdelegation),
+pdf-aufteilen (Tool 6 Sonderdelegation). Material in
+`.paperclip/parked-tools/pdf-zusammenfuehren*` bleibt liegen.
+
+**Reversibility:** trivial — geparktes Material ist kompletter Stub plus
+Content. Künftiger Build-Sprint nimmt es auf, baut die Custom-Components,
+unparkt nach `src/lib/tools/` + `src/components/tools/`. Geschätzter
+Aufwand pro Tool: 4–6 Stunden.
+
+**Confirmed by User:** ausstehend (Report dokumentiert die Entscheidung).
+
 ## 2026-04-25 · Pipeline-Refactor: Sequential Tool-Workflow · global
 
 **Decision:** CEO-AGENTS.md komplett umgestellt von paralleler Fan-Out-Orchestrierung
