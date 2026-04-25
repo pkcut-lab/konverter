@@ -486,7 +486,9 @@
     .upload-area,
     .circle,
     .btn,
-    .btn--primary:active:not(:disabled) {
+    .btn--primary:active:not(:disabled),
+    .remove-btn,
+    .remove-btn:hover {
       transition: none;
       transform: none;
     }
