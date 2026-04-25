@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="kittokit">
   <rect width="512" height="512" rx="128" fill="#1A1917"/>
   <polyline points="213,149 128,256 213,363" stroke="#FAFAF9" stroke-width="32" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-  <line x1="256" y1="149" x2="256" y2="363" stroke="#FAFAF9" stroke-width="32" stroke-linecap="round"/>
+  <line x1="256" y1="149" x2="256" y2="363" stroke="#8F3A0C" stroke-width="32" stroke-linecap="round"/>
   <polyline points="299,149 384,256 299,363" stroke="#FAFAF9" stroke-width="32" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
 </svg>
