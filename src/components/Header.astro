@@ -100,7 +100,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
         {langLinks.map((l) => (
           <a
             class:list={['lang-link', l.hreflang === lang && 'lang-link--active']}
-            href={l.href}
+            href={new URL(l.href).pathname}
             hreflang={l.hreflang}
             data-lang={l.hreflang}
             aria-current={l.hreflang === lang ? 'true' : undefined}
