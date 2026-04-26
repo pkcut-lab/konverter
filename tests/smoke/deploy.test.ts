@@ -35,11 +35,16 @@ describe('Deploy — Cloudflare Pages wiring', () => {
     expect(headers).toMatch(/Referrer-Policy:\s*strict-origin-when-cross-origin/);
   });
 
-  it('public/_redirects sends / to /de/ as 301 (replaces Astro\'s meta-refresh stub)', () => {
-    const path = join(root, 'public', '_redirects');
-    expect(existsSync(path)).toBe(true);
-    const redirects = readFileSync(path, 'utf8');
-    expect(redirects).toMatch(/^\/\s+\/de\/\s+301\s*$/m);
+  it('root / redirect is handled by CF Pages Function (functions/index.js), not a static 301', () => {
+    // Phase 3: language-negotiated redirect via CF Function replaces the static /de/ 301.
+    const fnPath = join(root, 'functions', 'index.js');
+    expect(existsSync(fnPath)).toBe(true);
+    const fn = readFileSync(fnPath, 'utf8');
+    // Function must intercept root and redirect to a language-prefixed path.
+    expect(fn).toMatch(/pathname.*!==.*\//);
+    // _redirects must document that the static fallback is intentionally disabled.
+    const redirects = readFileSync(join(root, 'public', '_redirects'), 'utf8');
+    expect(redirects).toMatch(/functions\/index\.js/);
   });
 
   it('GitHub Actions workflow wires verify → deploy on push to main', () => {

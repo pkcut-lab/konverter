@@ -6,8 +6,8 @@ import {
 } from '../../src/lib/hreflang';
 
 describe('ACTIVE_LANGUAGES', () => {
-  it('contains exactly de in Phase 0', () => {
-    expect(ACTIVE_LANGUAGES).toEqual(['de']);
+  it('contains de and en in Phase 3 (bilingual)', () => {
+    expect(ACTIVE_LANGUAGES).toEqual(['de', 'en']);
   });
 
   it('DEFAULT_LANGUAGE is de', () => {

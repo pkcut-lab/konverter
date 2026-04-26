@@ -109,7 +109,7 @@ describe('toolContentFrontmatterSchema', () => {
   });
 
   it('rejects language not in ACTIVE_LANGUAGES', () => {
-    const r = toolContentFrontmatterSchema.safeParse({ ...valid, language: 'en' });
+    const r = toolContentFrontmatterSchema.safeParse({ ...valid, language: 'fr' });
     expect(r.success).toBe(false);
   });
 

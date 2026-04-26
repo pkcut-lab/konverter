@@ -48,7 +48,7 @@ describe('slug-map — meter-to-feet entry', () => {
     expect(getToolId('de', 'meter-zu-fuss')).toBe('meter-to-feet');
   });
 
-  it('getSupportedLangs("meter-to-feet") returns ["de"]', () => {
-    expect(getSupportedLangs('meter-to-feet')).toEqual(['de']);
+  it('getSupportedLangs("meter-to-feet") returns ["de","en"]', () => {
+    expect(getSupportedLangs('meter-to-feet')).toEqual(['de', 'en']);
   });
 });
