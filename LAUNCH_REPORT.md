@@ -148,6 +148,21 @@ _(launch-coordinator updates this block each heartbeat)_
 
 **Übergabe:** quality-reviewer → tasks/awaiting-review/T9/a11y-auditor.md
 
+#### Review-Pass T9 — 2026-04-26T07:45:00+02:00
+**Reviewer:** quality-reviewer
+**Verdict:** 🟡 corrected
+**Layer-Failure:** Layer 3 — Funktional
+**Issue:** Worker reported axe-violations 29→0, but worker's own `/c/tmp/axe-results-full.json` saved 5 violations at `/`. Astro i18n routing (`prefixDefaultLocale:true`) overrides `src/pages/index.astro` with its own auto-generated redirect HTML (2-second delay, no `lang`, no `<main>`, no `<h1>`), making the worker's `index.astro` fix ineffective in SSG mode.
+**Fix:** Added `redirectToDefaultLocale: false` to `astro.config.mjs` `i18n.routing` (1 line, commit 124dba2). This disables Astro's auto-redirect stub and lets `index.astro` be served at `/` directly — with `lang="de"`, `<main>`, `<h1>`, and `content="0;url=/de"` (WCAG-exempt immediate refresh).
+**Re-Verify:**
+- axe-core: 0 violations (10-page spot check incl. /, /de, /de/datenschutz, /de/kontrast-pruefer, /de/qr-code-generator)
+- `npm run check`: ✅ 0/0/0
+- `npx vitest run`: ✅ 1761/1761
+- Layer 1 Hard-Caps: ✅ tokens-only in changed file (astro.config.mjs = config, not component)
+- Layer 2 Build: ✅
+- Layer 3 Funktional: ✅ axe-core 0 violations
+- Layer 4 Look: N/A (config change only, no visual impact)
+
 ---
 
 ### T13 — Email Routing @kittokit.com (2026-04-26 cf-infra-engineer)
