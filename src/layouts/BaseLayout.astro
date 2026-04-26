@@ -18,8 +18,11 @@ interface Props {
   /** Per-tool OG image path (e.g. '/og/tools/meter-zu-fuss.webp').
    *  Falls back to the site-wide '/og-image.png' when absent. */
   ogImagePath?: string | undefined;
+  /** AVIF variant of the OG image (preferred by modern crawlers). When set,
+   *  emitted BEFORE the WebP og:image so crawlers that support AVIF pick it. */
+  ogAvifPath?: string | undefined;
 }
-const { lang, title, description, pathWithoutLang, ogImagePath } = Astro.props;
+const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath } = Astro.props;
 const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
 
@@ -87,7 +90,13 @@ const websiteJsonLd = {
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
+    {ogAvifPath && <meta property="og:image" content={new URL(ogAvifPath, Astro.site).toString()} />}
+    {ogAvifPath && <meta property="og:image:type" content="image/avif" />}
+    {ogAvifPath && <meta property="og:image:width" content="1200" />}
+    {ogAvifPath && <meta property="og:image:height" content="630" />}
+    {ogAvifPath && <meta property="og:image:alt" content={strings.ogImageAlt} />}
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={strings.ogImageAlt} />

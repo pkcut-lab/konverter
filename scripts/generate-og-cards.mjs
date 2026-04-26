@@ -255,11 +255,10 @@ for (const slug of slugDirs.sort()) {
   }
 
   const svg = buildSvg({ name, category, slug, interB64, monoB64 });
-  const outPath = join(outDir, `${slug}.webp`);
+  const buf = Buffer.from(svg);
 
-  await sharp(Buffer.from(svg))
-    .webp({ quality: 90 })
-    .toFile(outPath);
+  await sharp(buf).webp({ quality: 90 }).toFile(join(outDir, `${slug}.webp`));
+  await sharp(buf).avif({ quality: 80 }).toFile(join(outDir, `${slug}.avif`));
 
   results.push({ slug, name, category });
   generated++;

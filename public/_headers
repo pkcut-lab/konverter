@@ -67,7 +67,7 @@
 /pagefind/*
   Cache-Control: public, max-age=3600
 
-# OG images are hashed by content (og/tools/*.webp); long cache is safe.
+# OG images (WebP + AVIF): content-keyed by slug, long cache is safe.
 /og/*
   Cache-Control: public, max-age=31536000, immutable
 

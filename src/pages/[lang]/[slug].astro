@@ -214,6 +214,10 @@ const ogCardExists =
   deSlug !== undefined &&
   existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.webp`));
 const ogImagePath = ogCardExists ? `/og/tools/${deSlug}.webp` : undefined;
+const ogAvifExists =
+  deSlug !== undefined &&
+  existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.avif`));
+const ogAvifPath = ogAvifExists ? `/og/tools/${deSlug}.avif` : undefined;
 
 // Default privacy-eyebrow: every client-side tool gets a trust signal above
 // its H1 unless the content file explicitly overrides via frontmatter.eyebrow.
@@ -267,6 +271,7 @@ const dateModifiedFormatted = entry.data.dateModified
   description={entry.data.metaDescription}
   pathWithoutLang={pathByLang}
   ogImagePath={ogImagePath}
+  ogAvifPath={ogAvifPath}
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="tool-page">
