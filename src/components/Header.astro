@@ -36,7 +36,17 @@ const navByLang: Record<string, NavItem[]> = {
 const nav = navByLang[lang] ?? navByLang.en!;
 
 // Language switcher: filter out x-default, keep only real lang alternates.
+// `langAlternates` already omits langs without a translation (hreflang.ts),
+// so the switcher only renders buttons that lead to real pages.
 const langLinks = langAlternates?.filter((l) => l.hreflang !== 'x-default') ?? [];
+
+// Endonyms — aria-label ensures screen readers announce "Deutsch" / "English"
+// rather than spelling out "DE" / "EN" letter by letter. Visible label stays
+// compact (2-letter code) for the header design.
+const LANG_ENDONYMS: Record<string, string> = {
+  de: 'Deutsch',
+  en: 'English',
+};
 
 // Beliebt-Bar: resolve slug per current language, drop tools that lack a
 // translation for `lang` so links never 404.
@@ -102,8 +112,11 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
             class:list={['lang-link', l.hreflang === lang && 'lang-link--active']}
             href={new URL(l.href).pathname}
             hreflang={l.hreflang}
+            lang={l.hreflang}
             data-lang={l.hreflang}
             aria-current={l.hreflang === lang ? 'true' : undefined}
+            aria-label={LANG_ENDONYMS[l.hreflang] ?? l.hreflang.toUpperCase()}
+            title={LANG_ENDONYMS[l.hreflang] ?? l.hreflang.toUpperCase()}
           >{l.hreflang.toUpperCase()}</a>
         ))}
       </div>
@@ -143,7 +156,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
       var lang = this.getAttribute('data-lang');
       if (!lang) return;
       try { localStorage.setItem('kittokit-lang', lang); } catch (_) {}
-      document.cookie = 'kittokit-lang=' + lang + '; path=/; max-age=31536000; SameSite=Lax';
+      document.cookie = 'kittokit-lang=' + lang + '; path=/; max-age=31536000; SameSite=Lax; Secure';
     });
   });
 </script>
