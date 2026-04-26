@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const CONTENT_ROOT = join(process.cwd(), 'src/content/tools');
@@ -15,24 +15,33 @@ function getAllMdFiles(dir: string): string[] {
   return files;
 }
 
+function extractFrontmatterDate(content: string, key: string): string | null {
+  const m = content.match(new RegExp(`^${key}:\\s*'?(\\S+?)'?\\s*$`, 'm'));
+  return m ? m[1]! : null;
+}
+
 describe('SEO — dateModified frontmatter', () => {
   const allFiles = getAllMdFiles(CONTENT_ROOT);
 
-  it('all tool content files have dateModified in frontmatter', () => {
-    const missing: string[] = [];
+  it('all tool content files have dateModified in valid ISO format', () => {
+    const issues: string[] = [];
     for (const f of allFiles) {
       const content = readFileSync(f, 'utf-8');
-      if (!content.includes('dateModified:')) missing.push(f);
+      const val = extractFrontmatterDate(content, 'dateModified');
+      if (!val) issues.push(`${f}: missing`);
+      else if (!ISO_DATE_RE.test(val)) issues.push(`${f}: invalid format "${val}"`);
     }
-    expect(missing, `Files missing dateModified: ${missing.join(', ')}`).toHaveLength(0);
+    expect(issues, `dateModified issues: ${issues.join('; ')}`).toHaveLength(0);
   });
 
-  it('all tool content files have datePublished in frontmatter', () => {
-    const missing: string[] = [];
+  it('all tool content files have datePublished in valid ISO format', () => {
+    const issues: string[] = [];
     for (const f of allFiles) {
       const content = readFileSync(f, 'utf-8');
-      if (!content.includes('datePublished:')) missing.push(f);
+      const val = extractFrontmatterDate(content, 'datePublished');
+      if (!val) issues.push(`${f}: missing`);
+      else if (!ISO_DATE_RE.test(val)) issues.push(`${f}: invalid format "${val}"`);
     }
-    expect(missing, `Files missing datePublished: ${missing.join(', ')}`).toHaveLength(0);
+    expect(issues, `datePublished issues: ${issues.join('; ')}`).toHaveLength(0);
   });
 });
