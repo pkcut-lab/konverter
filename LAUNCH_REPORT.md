@@ -99,6 +99,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T07:08 UTC+2 (Heartbeat-11) — **FIX: Review-Issues jetzt QR zugewiesen.** Ursache für QR-Stagnation: KIT-1/2/4/8/9 waren nach Worker-Submit weiter dem jeweiligen Worker zugewiesen — nicht quality-reviewer. QR-Inbox war leer, daher kein Review. Fix: KIT-1(T8)/KIT-2(T9)/KIT-4(T12)/KIT-8(T11)/KIT-9(T15) alle auf quality-reviewer reassigned. QR-lastHB 05:10 UTC — nächster Tick ~05:25 UTC, dann 5 Reviews in der Inbox.
 >
 > 2026-04-26T07:26 UTC+2 (Heartbeat-12) — **T8 APPROVED. REVIEW-PIPELINE LÄUFT.** KIT-1(T8) ✅ done — QR hat Review-Pass T8 geschrieben (Lighthouse avg 98, 1761/1761 vitest, LGTM). KIT-2(T9) in_progress — QR aktiv runnend (run c9fbb3eb, Checkout 05:30 UTC). KIT-4(T12)/KIT-8(T11)/KIT-9(T15) in_review queued, kein aktiver Run — werden nach KIT-2 gepickt. KIT-5(T13) bleibt blocked (User-Input nötig). Sprint-Ende prüfbar sobald KIT-2/4/8/9 alle done.
+>
+> 2026-04-26T07:45 UTC+2 (Heartbeat-13) — **T9 APPROVED (🟡 corrected). KIT-4 REVIEW LÄUFT.** KIT-2(T9) ✅ done — QR: 5 violations bei `/` durch Astro i18n `prefixDefaultLocale:true` Override; Fix: `redirectToDefaultLocale: false` in astro.config.mjs (commit 124dba2), axe-core 0 violations / 1761/1761 vitest. KIT-4(T12) in_progress — QR aktiv. KIT-8(T11)/KIT-9(T15) in_review queued. Sprint-Finale: noch KIT-4/8/9.
 
 ---
 
@@ -110,7 +112,7 @@ _(launch-coordinator updates this block each heartbeat)_
 | T6 | Cookie-Banner | cookie-consent-builder | ✅ approved [KIT-7 done] | ✅ approved |
 | T7 | JSON-LD per Tool | jsonld-enricher | ✅ approved [KIT-6 done] | ✅ approved 2026-04-26T06:25 |
 | T8 | Performance + CWV | perf-auditor | ✅ approved [KIT-1 done, 87→98 Lighthouse, 66e669f] | ✅ approved 2026-04-26T07:26 |
-| T9 | WCAG 2.2 AAA a11y | a11y-auditor | ⏳ in_review [KIT-2, 29→0 violations, 130bec5] | — |
+| T9 | WCAG 2.2 AAA a11y | a11y-auditor | ✅ approved [KIT-2 done, 29→0 violations, fix 124dba2] | 🟡 corrected+approved 2026-04-26T07:45 |
 | T10 | 404/500 + sitemap + robots | error-pages-builder | ✅ approved [KIT-3 done] | ✅ approved |
 | T11 | CF Web Analytics + Clarity | cf-infra-engineer | ⏳ in_review [KIT-8, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | — |
 | T12 | OG-Bilder + Brand-Assets | og-image-generator | ⏳ in_review [KIT-4, aabc68d] | — |
