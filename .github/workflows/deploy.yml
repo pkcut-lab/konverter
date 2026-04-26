@@ -88,5 +88,5 @@ jobs:
           # automatically.
           command: >-
             pages deploy dist
-            --project-name=konverter-7qc
+            --project-name=kittokit
             --branch=${{ github.head_ref || github.ref_name }}
