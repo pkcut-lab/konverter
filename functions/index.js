@@ -51,7 +51,9 @@ export async function onRequest({ request, next }) {
 
 function redirect(url, lang) {
   const dest = new URL(url);
-  dest.pathname = `/${lang}/`;
+  // No trailing slash — astro.config.mjs has trailingSlash: 'never', so /de/
+  // would chain into a second 301 to /de. One redirect, not two.
+  dest.pathname = `/${lang}`;
   return Response.redirect(dest.toString(), 302);
 }
 
