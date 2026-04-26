@@ -49,7 +49,7 @@ All output files can be downloaded as individual PDFs or bundled into a single Z
 
 ## How It Works
 
-The tool uses [PDF-lib](https://pdf-lib.js.org/), a pure-JavaScript PDF manipulation library, running entirely in your browser via a Web Worker. When you open a file:
+The tool uses a pure-JavaScript PDF manipulation library, running entirely in your browser via a Web Worker. When you open a file:
 
 1. The library parses the PDF structure in memory.
 2. Page thumbnails are rendered so you can visually confirm your selection.

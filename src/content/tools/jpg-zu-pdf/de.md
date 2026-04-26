@@ -11,15 +11,15 @@ headingHtml: "JPG zu <em>PDF</em> umwandeln"
 howToUse:
   - "Wähle eine JPG-, PNG- oder WebP-Datei per Klick, Drag-and-Drop oder Strg+V aus der Zwischenablage."
   - "Optional auf Mobilgeräten: Direkt mit der Kamera ein Foto aufnehmen — der Browser ruft die Kamera auf."
-  - "Das PDF wird sofort lokal erzeugt — JPEG-Bytes werden lossless via DCTDecode-Filter eingebettet, PNG und WebP werden zu JPEG re-encoded."
+  - "Das PDF wird sofort lokal erzeugt — JPEGs werden verlustfrei eingebettet, PNG und WebP werden vor dem Einbetten zu JPEG konvertiert."
   - "Lade das fertige PDF herunter — die Quelldatei verlässt nie deinen Browser."
 faq:
   - q: "Werden meine Bilder auf einen Server hochgeladen?"
     a: "Nein. Die Konvertierung passiert vollständig in deinem Browser via JavaScript und WebAssembly. Es gibt keinen Server-Upload, kein Backend, das deine Datei sieht. Du kannst dein WLAN nach dem Laden der Seite ausschalten und das Tool funktioniert weiter — der beste Beweis für lokale Verarbeitung."
   - q: "Welche Bildformate werden unterstützt?"
-    a: "JPG/JPEG, PNG und WebP werden unterstützt. JPEGs werden ohne Qualitätsverlust direkt in das PDF eingebettet (DCTDecode-Filter nach PDF 1.4-Spezifikation). PNG und WebP werden vor dem Einbetten zu JPEG re-encoded, da PDF kein natives PNG-Streaming kennt."
+    a: "JPG/JPEG, PNG und WebP werden unterstützt. JPEGs werden ohne Qualitätsverlust direkt in das PDF eingebettet — die Original-Bytes wandern unverändert in die Datei. PNG und WebP werden vor dem Einbetten zu JPEG konvertiert, da PDF kein natives PNG-Streaming kennt."
   - q: "Bleibt die Bildqualität erhalten?"
-    a: "Bei JPEG-Eingabe ja — kein Re-Encoding, die Original-JPEG-Bytes werden 1:1 ins PDF übernommen. Bei PNG- oder WebP-Eingabe wird einmalig zu JPEG mit Qualität 90 Prozent konvertiert. Konkurrenten wie jsPDF re-komprimieren auch JPEG-Eingaben zusätzlich, was zu Qualitätsverlust führt."
+    a: "Bei JPEG-Eingabe ja — kein Re-Encoding, die Original-JPEG-Bytes werden 1:1 ins PDF übernommen. Bei PNG- oder WebP-Eingabe wird einmalig zu JPEG mit Qualität 90 Prozent konvertiert. Viele Konkurrenten re-komprimieren auch JPEG-Eingaben zusätzlich, was zu Qualitätsverlust führt — wir nicht."
   - q: "Wie groß darf meine Datei sein?"
     a: "Die maximale Dateigröße beträgt 25 Megabyte pro Bild. Das deckt typische Smartphone-Fotos (8–12 Megapixel, 5–15 MB), eingescannte Dokumente (300 DPI bei A4 etwa 2–8 MB) und Bewerbungsfotos vollständig ab. Bei größeren Dateien empfiehlt sich vorherige Komprimierung."
   - q: "Funktioniert das Tool offline?"
@@ -34,7 +34,7 @@ dateModified: '2026-04-25'
 
 ## Was leistet der JPG-zu-PDF-Konverter?
 
-Das Tool wandelt einzelne JPG-, PNG- oder WebP-Bilder in PDF-Dokumente um — vollständig im Browser, ohne Server-Upload. Die Konvertierung nutzt die native Bildeinbettung der PDF-1.4-Spezifikation (ISO 32000-1:2008 §8.9): JPEG-Streams werden direkt mit dem DCTDecode-Filter eingebettet, PNG und WebP werden via OffscreenCanvas zu JPEG re-encoded, bevor sie ins PDF eingebettet werden.
+Das Tool wandelt einzelne JPG-, PNG- oder WebP-Bilder in PDF-Dokumente um — vollständig im Browser, ohne Server-Upload. Die Konvertierung nutzt die native Bildeinbettung der PDF-Spezifikation (ISO 32000): JPEG-Streams werden direkt und verlustfrei eingebettet, PNG und WebP werden vor dem Einbetten lokal in JPEG umgewandelt.
 
 Im Gegensatz zu allen sieben großen Online-Konkurrenten findet keine Übertragung an einen externen Server statt. Die Datei verlässt nie dein Gerät. Das ist DSGVO-Konformität durch Architektur, nicht durch Datenschutz-Versprechen.
 
@@ -48,11 +48,11 @@ Drei Vorteile gegenüber Server-Tools:
 - **Keine AI-Training-Verwertung.** Cloud-Anbieter dürfen — sofern in den AGB versteckt — hochgeladene Dateien für Modell-Training verwenden. Lokale Verarbeitung schließt das aus.
 - **Offline-Fähigkeit.** Nach dem ersten Laden der Seite funktioniert das Tool ohne Internet.
 
-## Was ist Lossless JPEG-Einbettung?
+## Was ist verlustfreie JPEG-Einbettung?
 
-Die meisten browser-basierten und Server-basierten Konkurrenten re-komprimieren JPEG-Eingaben intern (Beispiel: jsPDF, das Standard-Library für Browser-PDF-Erzeugung). Das führt zu zusätzlichem Qualitätsverlust durch Doppel-Kompression — die Original-JPEG ist bereits lossy, eine zweite JPEG-Codierung addiert sichtbare Artefakte.
+Die meisten browser- und server-basierten Konkurrenten re-komprimieren JPEG-Eingaben intern. Das führt zu zusätzlichem Qualitätsverlust durch Doppel-Kompression — die Original-JPEG ist bereits lossy, eine zweite JPEG-Codierung addiert sichtbare Artefakte.
 
-Der Konverter nutzt stattdessen `pdf-lib`, der JPEG-Streams via DCTDecode-Filter direkt einbettet. Das bedeutet: deine 5-MB-JPEG-Datei landet als 5-MB-JPEG-Stream im PDF, byte-identisch zur Eingabe. Kein Quality-Verlust, kein zusätzliches Speicher-Overhead.
+Unser Konverter bettet JPEG-Streams stattdessen direkt und unverändert ins PDF ein. Das bedeutet: deine 5-MB-JPEG-Datei landet als 5-MB-JPEG-Stream im PDF, byte-identisch zur Eingabe. Kein Qualitätsverlust, kein zusätzliches Speicher-Overhead.
 
 ## Welche Anwendungsbeispiele gibt es?
 
@@ -82,4 +82,4 @@ Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
 - **[Cashflow Rechner](/de/cashflow-rechner)** — Liquidität nach direkter, indirekter und Free-Cashflow-Methode mit live Formel-Aufschlüsselung berechnen.
 - **[Erbschaftsteuer Rechner](/de/erbschaftsteuer-rechner)** — Erbschaftsteuer 2026 mit Freibetrag, Steuerklasse und Härteausgleich §24 ErbStG ermitteln.
-- **[Bild zu Text](/de/bild-zu-text)** — Text aus Bildern lokal extrahieren via Tesseract.js, ohne Server-Upload.
+- **[Bild zu Text](/de/bild-zu-text)** — Text aus Bildern lokal im Browser extrahieren, ohne Server-Upload.

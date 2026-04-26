@@ -21,7 +21,7 @@ faq:
   - q: "Warum ist Text in der entsperrten PDF nicht mehr auswählbar?"
     a: "Die Entsperrung rendert die PDF-Seiten als hochauflösende Bilder (150 DPI) und packt sie in eine neue PDF. Das macht die Datei vollständig lesbar und teilbar — jedoch ohne auswählbaren oder durchsuchbaren Text. Für rein lesbare, archivierbare PDFs ist das in den meisten Fällen ausreichend."
   - q: "Welche PDF-Verschlüsselungstypen werden unterstützt?"
-    a: "Das Tool nutzt PDF.js (Mozilla, Apache-2.0) zur Entschlüsselung. PDF.js unterstützt RC4-40, RC4-128, AES-128 und AES-256 — also alle gängigen PDF-Verschlüsselungsstandards der Spezifikationen PDF 1.3 bis PDF 2.0."
+    a: "Das Tool unterstützt RC4-40, RC4-128, AES-128 und AES-256 — also alle gängigen PDF-Verschlüsselungsstandards der Spezifikationen PDF 1.3 bis PDF 2.0."
   - q: "Gibt es eine Größenbeschränkung?"
     a: "Es gibt kein künstliches Limit. Die Grenze ist dein Browser-Arbeitsspeicher. Ab 50 MB zeigt das Tool eine Hinweis-Warnung. Auf normalen Desktop-Geräten werden PDFs bis 150 MB problemlos verarbeitet."
   - q: "Was ist der Unterschied zu PDF24 oder Smallpdf?"
@@ -38,7 +38,7 @@ aside:
       description: "Gib das bekannte Passwort ein. Es wird ausschließlich zur Entschlüsselung im Browser-Speicher verwendet — kein Netzwerkzugriff."
     - title: "Entsperren & herunterladen"
       description: "Klicke auf „Entsperren“. Das Tool rendert alle Seiten lokal und erstellt eine neue passwortfreie PDF zum Herunterladen."
-  privacy: "Deine PDF verlässt den Browser nicht. Das Passwort wird nicht gespeichert oder übertragen. Die Verarbeitung läuft vollständig lokal mit PDF.js (Mozilla, Apache-2.0) und pdf-lib (MIT-Lizenz)."
+  privacy: "Deine PDF verlässt den Browser nicht. Das Passwort wird nicht gespeichert oder übertragen. Die Verarbeitung läuft vollständig lokal über bewährte Open-Source-Bibliotheken im Browser-Tab."
 datePublished: '2026-04-26'
 dateModified: '2026-04-26'
 
@@ -46,16 +46,15 @@ dateModified: '2026-04-26'
 
 ## Wie funktioniert das Tool?
 
-Das Tool nutzt **PDF.js** (Mozilla, Apache-2.0-Lizenz) zur Entschlüsselung und **pdf-lib**
-(MIT-Lizenz) zur Erzeugung der entsperrten Ausgabedatei. Beide Bibliotheken laufen
-vollständig im Browser — ohne Serververbindung, ohne Upload und ohne Verarbeitung
-durch Dritte.
+Das Tool nutzt bewährte Open-Source-Bibliotheken zur Entschlüsselung und Erzeugung
+der entsperrten Ausgabedatei. Beide laufen vollständig im Browser — ohne
+Serververbindung, ohne Upload und ohne Verarbeitung durch Dritte.
 
-Der technische Ablauf: PDF.js öffnet die verschlüsselte PDF mit dem angegebenen
-Passwort und entschlüsselt den Inhalt im Browser-Speicher. Anschließend rendert das
-Tool jede Seite als hochauflösendes JPEG-Bild (150 DPI) und verpackt die Bilder in eine
-neue PDF-Datei ohne Passwortschutz. Das Passwort wird zu keiner Zeit gespeichert,
-protokolliert oder übertragen.
+Der technische Ablauf: Der Browser öffnet die verschlüsselte PDF mit dem
+angegebenen Passwort und entschlüsselt den Inhalt im Speicher. Anschließend
+rendert das Tool jede Seite als hochauflösendes JPEG-Bild (150 DPI) und verpackt
+die Bilder in eine neue PDF-Datei ohne Passwortschutz. Das Passwort wird zu
+keiner Zeit gespeichert, protokolliert oder übertragen.
 
 **Wichtig:** Die erzeugte PDF enthält die Seiten als Bilder. Text ist nicht mehr
 auswählbar oder über Suchfunktionen auffindbar. Für das Teilen und Archivieren von
@@ -98,5 +97,6 @@ läuft in deinem Browser. Weder die PDF noch das Passwort verlassen deinen
 Computer. Es gibt keine Serververbindung, kein Analytics-Tracking und keine
 Anmeldepflicht.
 
-Die verwendeten Bibliotheken sind quelloffen: PDF.js wird von Mozilla entwickelt
-(Apache-2.0), pdf-lib ist MIT-lizenziert. Beide können im Quellcode eingesehen werden.
+Die verwendeten Bibliotheken sind quelloffen unter permissiven Lizenzen, die
+auch kommerzielle Nutzung erlauben. Sie laufen ausschließlich im Browser-Tab,
+ohne Verbindung zu externen Diensten.

@@ -50,7 +50,7 @@ There are no page count limits, no watermarks, and no requirement to create an a
 
 ## How It Works
 
-The merger uses [PDF-lib](https://pdf-lib.js.org/), a pure-JavaScript PDF manipulation library, running in a browser Web Worker to avoid blocking the UI:
+The merger uses a pure-JavaScript PDF manipulation library, running in a browser Web Worker to avoid blocking the UI:
 
 1. **Parse** — each uploaded PDF is parsed independently to extract its page tree, embedded resources (fonts, images, ICC profiles), and metadata.
 2. **Collate** — pages from all documents are appended in sequence to a new PDF document, with embedded resources deduplicated to keep the output file size efficient.

@@ -3,7 +3,7 @@ toolId: remove-background
 language: de
 title: "Hintergrund entfernen — direkt im Browser"
 headingHtml: "<em>Hintergrund</em> entfernen"
-metaDescription: "Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert mit BEN2, WebGPU-beschleunigt."
+metaDescription: "Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert und WebGPU-beschleunigt für Sekunden-Resultate."
 tagline: "Freisteller in Sekunden — das Bild bleibt auf deinem Gerät."
 intro: "Das Tool trennt ein Motiv vom Hintergrund und speichert das Ergebnis als transparente PNG-Datei. Die Analyse läuft vollständig auf deinem Gerät über ein KI-Modell, das einmalig ins Browser-Cache geladen wird. Danach funktioniert alles offline — kein Server, keine Anmeldung, kein Tracking. Ideal für Produktfotos, Porträts, Tiere und alles, was einen sauberen Freisteller braucht."
 howToUse:
@@ -17,8 +17,8 @@ faq:
     a: "Nach dem einmaligen Modell-Download dauert die eigentliche Freistellung pro Bild typischerweise 100 bis 500 Millisekunden auf Geräten mit WebGPU-Unterstützung. Ohne WebGPU fällt das Tool auf WebAssembly zurück, was etwa zwei- bis viermal langsamer ist, aber immer noch flüssig nutzbar bleibt."
   - q: "Welche Bilder eignen sich am besten?"
     a: "Gute Ergebnisse gibt es bei Motiven mit klarer Trennung vom Hintergrund: Produktfotos, Porträts, Tiere, Alltagsgegenstände. Schwieriger wird es bei transparenten Objekten wie Glas oder bei sehr feinen Strukturen wie einzelnen Haaren vor unruhigem Hintergrund."
-  - q: "Welches Modell wird verwendet?"
-    a: "Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist rund 110&nbsp;MB groß und wird nach dem ersten Laden vom Browser gecacht."
+  - q: "Wie funktioniert die Erkennung technisch?"
+    a: "Ein spezialisiertes neuronales Netz für Vordergrund-Hintergrund-Segmentierung läuft direkt in deinem Browser. Es erzeugt für jedes Bild eine sogenannte Alpha-Maske, die für jeden Pixel angibt, wie stark er zum Motiv gehört. Die Modell-Datei ist rund 110&nbsp;MB groß und wird nach dem ersten Laden vom Browser gecacht."
   - q: "Kann ich das Ergebnis als JPG speichern?"
     a: "Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP (kleinere Dateigröße bei vergleichbarer Qualität)."
 relatedTools:
@@ -31,7 +31,7 @@ aside:
     - title: "Bild auswählen"
       description: "Ziehe eine Datei per Drag & Drop in den Bereich oder wähle sie aus deinem Gerät aus. PNG, JPG, WebP, AVIF oder HEIC bis 15&nbsp;MB."
     - title: "KI-Verarbeitung"
-      description: "Das lokale BEN2-Modell trennt Motiv und Hintergrund direkt im Browser — ohne Upload, ohne Serverkontakt."
+      description: "Ein lokales KI-Modell trennt Motiv und Hintergrund direkt im Browser — ohne Upload, ohne Serverkontakt."
     - title: "Ergebnis speichern"
       description: "Lade den Freisteller als PNG mit Transparenz herunter oder kopiere ihn direkt in die Zwischenablage."
   privacy: "Die Verarbeitung läuft ausschließlich auf deinem Gerät. Deine Bilder verlassen den Browser nicht, werden nicht auf unsere Server übertragen und nach dem Schließen des Tabs gelöscht. Damit ist das Tool DSGVO-konform nutzbar."
@@ -50,23 +50,22 @@ dateModified: '2026-04-24'
 
 ## Wie funktioniert das Tool?
 
-Das Tool nutzt ein vortrainiertes neuronales Netz namens BEN2 — kurz für Binary
-Enhanced Network v2 —, das speziell für die Trennung von Vordergrund und
-Hintergrund auf Fotografien entwickelt wurde. Das Modell ist in das
-ONNX-Format konvertiert, ein offener Standard, der direkt im Browser ausgeführt
-werden kann. Dafür wird die Bibliothek Transformers.js von Hugging Face
-eingesetzt, die WebGPU und WebAssembly als Ausführungsziele unterstützt.
+Das Tool nutzt ein vortrainiertes neuronales Netz, das speziell für die
+Trennung von Vordergrund und Hintergrund auf Fotografien entwickelt wurde.
+Das Modell läuft direkt in deinem Browser und nutzt dabei WebGPU oder
+WebAssembly — moderne Browser-Schnittstellen, die KI-Berechnungen lokal auf
+deiner Grafikkarte oder CPU ausführen.
 
-Beim ersten Aufruf lädt der Browser die Modell-Datei (rund 110&nbsp;MB) einmalig
-vom Hugging-Face-CDN und legt sie im internen Cache ab. Alle weiteren
+Beim ersten Aufruf lädt der Browser die Modell-Datei (rund 110&nbsp;MB)
+einmalig herunter und legt sie im internen Cache ab. Alle weiteren
 Freistellungen laufen vollständig offline. Unterstützt dein Gerät WebGPU —
 das gilt für die meisten aktuellen Chrome-, Edge- und Safari-Versionen —,
-läuft die Inferenz auf der Grafikkarte und dauert typischerweise 100 bis 500
-Millisekunden pro Bild. Ohne WebGPU springt automatisch ein
-WebAssembly-Fallback ein, der etwa zwei- bis viermal länger braucht, aber auf
-allen modernen Browsern funktioniert.
+läuft die Berechnung auf der Grafikkarte und dauert typischerweise 100 bis
+500 Millisekunden pro Bild. Ohne WebGPU springt automatisch ein
+WebAssembly-Fallback ein, der etwa zwei- bis viermal länger braucht, aber
+auf allen modernen Browsern funktioniert.
 
-Das Modell erzeugt eine sogenannte Alpha-Maske: eine Graustufen-Matrix, in der
+Im Hintergrund erzeugt das Modell eine sogenannte Alpha-Maske: eine Graustufen-Matrix, in der
 jeder Pixel beschreibt, wie stark er zum Vordergrund gehört. Diese Maske wird
 dann auf das Originalbild angewendet — Pixel außerhalb des Motivs werden
 transparent, Pixel innerhalb bleiben unverändert. Bei weichen Kanten wie
@@ -91,15 +90,15 @@ analysiert. Es gibt kein Cookie-Banner für Drittanbieter, keine Anmeldung und
 kein Tracking — auch keine anonymen Nutzungsstatistiken.
 
 Eine Ausnahme ist der einmalige Modell-Download beim ersten Aufruf: Die
-BEN2-Datei (rund 110&nbsp;MB) wird vom Content-Delivery-Network von Hugging Face
-geladen, einem US-Unternehmen mit Sitz in New York. Dieser Request enthält
-ausschließlich die URL der Modell-Datei. Es werden keine Bilddaten, keine
-Nutzer-IDs und keine personenbezogenen Informationen übertragen. Technisch
-bedingt kennt Hugging Face die IP-Adresse und den User-Agent des Browsers,
-aus dem der Download stammt — dieselben Daten also, die auch dein
-Internetanbieter beim Aufruf jeder beliebigen Webseite sieht. Nach dem ersten
-Laden liegt das Modell im Browser-Cache und wird für alle weiteren Aufrufe
-dort abgerufen; die CDN wird dann nicht mehr kontaktiert.
+Modell-Datei (rund 110&nbsp;MB) wird einmalig von einem öffentlichen
+Modell-CDN geladen. Dieser Request enthält ausschließlich die URL der
+Modell-Datei. Es werden keine Bilddaten, keine Nutzer-IDs und keine
+personenbezogenen Informationen übertragen. Technisch bedingt sieht der
+Modell-Anbieter die IP-Adresse und den User-Agent des Browsers, aus dem der
+Download stammt — dieselben Daten also, die auch dein Internetanbieter beim
+Aufruf jeder beliebigen Webseite sieht. Nach dem ersten Laden liegt das
+Modell im Browser-Cache und wird für alle weiteren Aufrufe dort abgerufen;
+das CDN wird dann nicht mehr kontaktiert.
 
 Wer diese CDN-Verbindung vermeiden möchte, kann den Seitenaufruf abbrechen,
 sobald der Modell-Download startet — das Tool ist dann nicht nutzbar, aber es
@@ -111,9 +110,9 @@ die das Bild zwingend hochladen müssen. Weitere Details stehen in der
 
 ## Wann liefert das Tool gute Ergebnisse?
 
-BEN2 ist auf natürliche Fotografien trainiert und liefert in vielen typischen
-Situationen sehr saubere Freisteller. Die folgenden Kategorien decken den
-Alltag gut ab:
+Das Modell ist auf natürliche Fotografien trainiert und liefert in vielen
+typischen Situationen sehr saubere Freisteller. Die folgenden Kategorien
+decken den Alltag gut ab:
 
 **Produktfotos** mit einfarbigem oder unscharfem Hintergrund sind der
 klassische Anwendungsfall. Ob Schuhe auf Holztisch, Schmuck auf Stoff oder
@@ -175,12 +174,13 @@ Produktfotos, Porträts, Tiere, Alltagsgegenstände. Schwieriger wird es bei
 transparenten Objekten wie Glas oder bei sehr feinen Strukturen wie einzelnen
 Haaren vor unruhigem Hintergrund.
 
-### Welches Modell wird verwendet?
+### Wie funktioniert die Erkennung technisch?
 
-Das Tool nutzt BEN2 (Binary Enhanced Network v2), ein spezialisiertes
-neuronales Netz für Foreground-Segmentation, im ONNX-Format. BEN2 ist
-MIT-lizenziert und öffentlich auf Hugging Face verfügbar. Die Modell-Datei ist
-rund 110&nbsp;MB groß und wird nach dem ersten Laden vom Browser gecacht.
+Ein spezialisiertes neuronales Netz für Vordergrund-Hintergrund-Segmentierung
+läuft direkt in deinem Browser. Es erzeugt für jedes Bild eine sogenannte
+Alpha-Maske, die für jeden Pixel angibt, wie stark er zum Motiv gehört. Die
+Modell-Datei ist rund 110&nbsp;MB groß und wird nach dem ersten Laden vom
+Browser gecacht.
 
 ### Kann ich das Ergebnis als JPG speichern?
 

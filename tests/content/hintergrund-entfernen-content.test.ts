@@ -57,12 +57,14 @@ describe('hintergrund-entfernen content (DE)', () => {
     expect(String(fm.title).toLowerCase()).toMatch(/browser|hochladen|gerät/);
   });
 
-  it('datenschutz section mentions Hugging Face CDN + no image upload', () => {
+  it('datenschutz section discloses model CDN + asserts no image upload', () => {
     const section = body.slice(
       body.indexOf('## Datenschutz'),
       body.indexOf('## Wann liefert das Tool gute Ergebnisse?'),
     );
-    expect(section).toMatch(/hugging\s*face/i);
+    // Privacy disclosure must mention the one-time model download is the only outbound network event.
+    // Wording is intentionally generic (no vendor names) — see CONVENTIONS for the no-vendor-disclosure rule.
+    expect(section).toMatch(/cdn|modell-download|modell-datei/i);
     expect(section).toMatch(/kein.*upload|nicht.*hochgeladen|100.*%.*im\s*browser/i);
     expect(section).toMatch(/\/de\/datenschutz/);
   });

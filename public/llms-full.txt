@@ -12,7 +12,7 @@
 
 ## Privacy & licensing
 
-- All compute happens client-side. ML tools use a Web Worker that streams models from the Hugging Face CDN; the user's data never leaves the browser.
+- All compute happens client-side. ML tools load model weights from a public model CDN once and cache them in the browser; the user's data never leaves the device.
 - No analytics in Phase 1. Phase 2 introduces consented, privacy-respecting analytics.
 - Tool descriptions and how-to articles: CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 
@@ -71,10 +71,10 @@
 
 - **Bilder vergleichen — Pixel-Diff mit Statistik** ([DE](https://kittokit.com/de/bild-diff) · [EN](https://kittokit.com/en/image-diff)): Zwei Bilder vergleichen: Pixel-Diff mit Kanal-Delta, Dimensionen, Dateigröße und optionaler Toleranz. Komplett im Browser, ohne Server-Upload, DSGVO-konform.
 - **Bild zu Text (OCR) — direkt im Browser** ([DE](https://kittokit.com/de/bild-zu-text) · [EN](https://kittokit.com/en/image-to-text)): Text aus Bildern extrahieren — komplett offline im Browser, ohne Upload, ohne Anmeldung. KI-basierte Texterkennung für Scans, Screenshots und Fotos.
-- **Hintergrund entfernen — direkt im Browser** ([DE](https://kittokit.com/de/hintergrund-entfernen) · [EN](https://kittokit.com/en/background-remover)): Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert mit BEN2, WebGPU-beschleunigt.
+- **Hintergrund entfernen — direkt im Browser** ([DE](https://kittokit.com/de/hintergrund-entfernen) · [EN](https://kittokit.com/en/background-remover)): Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert und WebGPU-beschleunigt für Sekunden-Resultate.
 - **KI-Bild-Detektor: Prüfe Bilder auf KI-Generierung** ([DE](https://kittokit.com/de/ki-bild-detektor) · [EN](https://kittokit.com/en/ai-image-detector)): Analysiere Bilder auf KI-Muster von Midjourney und DALL-E. Unser Tool arbeitet 100 % lokal im Browser ohne Upload deiner Dateien – für maximale Privatsphäre.
 - **QR-Code Generator — QR-Code aus Text erstellen** ([DE](https://kittokit.com/de/qr-code-generator) · [EN](https://kittokit.com/en/qr-code-generator)): QR-Code Generator: Text oder URL in einen QR-Code umwandeln und als SVG herunterladen. 100&nbsp;% im Browser, kein Upload, DSGVO-konform und kostenlos.
-- **Video Hintergrund entfernen — KI, kein Upload** ([DE](https://kittokit.com/de/video-hintergrund-entfernen) · [EN](https://kittokit.com/en/video-background-remover)): Hintergrund aus Videos entfernen — KI-basiert, direkt im Browser, ohne Upload, ohne Anmeldung. Unscreen-Alternative kostenlos und DSGVO-konform.
+- **Video Hintergrund entfernen — KI, kein Upload** ([DE](https://kittokit.com/de/video-hintergrund-entfernen) · [EN](https://kittokit.com/en/video-background-remover)): Hintergrund aus Videos entfernen — KI-basiert, direkt im Browser, ohne Upload, ohne Anmeldung. Kostenlose Alternative zu Cloud-Diensten, DSGVO-konform.
 - **Webcam-Hintergrund unscharf machen — direkt im Browser** ([DE](https://kittokit.com/de/webcam-hintergrund-unschaerfe) · [EN](https://kittokit.com/en/webcam-background-blur)): Webcam-Hintergrund online unscharf machen — ohne Installation, ohne Upload, ohne Konto. Einstellbare Blur-Intensität, 100&nbsp;% lokal im Browser.
 - **PNG und JPG in WebP umwandeln – ohne Upload** ([DE](https://kittokit.com/de/webp-konverter) · [EN](https://kittokit.com/en/webp-converter)): PNG oder JPG in WebP umwandeln: deutlich kleinere Dateien bei gleicher Qualität. Läuft komplett im Browser, ohne Upload, Anmeldung oder Tracking.
 
@@ -97,7 +97,7 @@
 
 ## Tools — text
 
-- **Audio Transkription – Sprache zu Text im Browser** ([DE](https://kittokit.com/de/audio-transkription) · [EN](https://kittokit.com/en/audio-transcription)): Wandle Audioaufnahmen direkt im Browser in Text um. Whisper-KI Transkription 100 % lokal, privat und kostenlos. Unterstützt MP3, WAV und mehr ohne Upload.
+- **Audio Transkription – Sprache zu Text im Browser** ([DE](https://kittokit.com/de/audio-transkription) · [EN](https://kittokit.com/en/audio-transcription)): Wandle Audioaufnahmen direkt im Browser in Text um. KI-Transkription 100 % lokal, privat und kostenlos. Unterstützt MP3, WAV und mehr ohne Upload.
 - **JSON vergleichen — Unterschiede mit Pfad-Anzeige finden** ([DE](https://kittokit.com/de/json-diff) · [EN](https://kittokit.com/en/json-diff)): Zwei JSON-Dokumente online vergleichen: JSON-Path pro Änderung, Typ-Erkennung und Array-Order-Option. 100&nbsp;% im Browser, ohne Upload, DSGVO-konform.
 - **KI-Text-Detektor: Prüfe kostenlos Texte auf KI-Muster** ([DE](https://kittokit.com/de/ki-text-detektor) · [EN](https://kittokit.com/en/ai-text-detector)): Nutze unseren kostenlosen KI Text Detektor, um herauszufinden, ob ein Text von einer künstlichen Intelligenz geschrieben wurde. Lokal und ohne Datenspeicherung.
 - **Lorem Ipsum Generator — Blindtext erzeugen** ([DE](https://kittokit.com/de/lorem-ipsum-generator) · [EN](https://kittokit.com/en/lorem-ipsum-generator)): Lorem Ipsum Generator: Blindtext in Latein oder Deutsch mit Umlauten erzeugen. Absätze, Sätze oder Wörter mit Live-Statistik — 100 % im Browser, DSGVO-konform.

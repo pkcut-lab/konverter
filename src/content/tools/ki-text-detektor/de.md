@@ -15,7 +15,7 @@ faq:
   - q: "Welche KI-Generatoren werden von dem Detektor erkannt?"
     a: "Das Tool ist darauf trainiert, die generischen Sprachmuster von Large Language Models (LLMs) wie ChatGPT (GPT-3.5, GPT-4), Claude, Gemini und ähnlichen KI-Textgeneratoren zu erkennen. Je generischer die KI schreibt, desto wahrscheinlicher wird sie erkannt."
   - q: "Was bedeutet die Prozentzahl bei der KI-Erkennung?"
-    a: "Die Prozentzahl gibt die Wahrscheinlichkeit an, mit der das eingesetzte Machine-Learning-Modell (RoBERTa) den Text als maschinell generiert einstuft. Werte über 80 % sind ein sehr starkes Indiz für eine künstliche Intelligenz, sollten aber immer im Kontext betrachtet werden."
+    a: "Die Prozentzahl gibt die Wahrscheinlichkeit an, mit der das eingesetzte Sprachmodell den Text als maschinell generiert einstuft. Werte über 80 % sind ein sehr starkes Indiz für eine künstliche Intelligenz, sollten aber immer im Kontext betrachtet werden."
 howToUse:
   - Kopiere den Text, den du prüfen möchtest, in die Zwischenablage.
   - Füge den Text in das Eingabefeld auf dieser Seite ein.
@@ -30,7 +30,7 @@ aside:
     - title: "Text einfügen"
       description: "Kopiere den zu prüfenden Text und füge ihn in das Eingabefeld ein."
     - title: "KI-Analyse"
-      description: "Das RoBERTa-Modell analysiert Sprachmuster und Vorhersehbarkeit des Textes direkt in deinem Browser."
+      description: "Ein spezialisiertes Sprachmodell analysiert Sprachmuster und Vorhersehbarkeit des Textes direkt in deinem Browser."
     - title: "Ergebnis ablesen"
       description: "Du erhältst eine prozentuale Einschätzung, ob der Text wahrscheinlich von einer KI oder einem Menschen verfasst wurde."
   privacy: "Die Analyse läuft komplett lokal in deinem Browser. Dein Text wird nicht auf einen Server gesendet und nach dem Schließen der Seite sind alle Daten weg."
@@ -45,7 +45,7 @@ dateModified: '2026-04-25'
 
 ---
 
-Da wir wissen, wie wichtig Vertraulichkeit bei Dokumenten, Hausarbeiten oder Geschäftstexten ist, haben wir dieses Tool so entwickelt, dass es **komplett offline in deinem Browser** läuft. Wir laden ein speziell quantisiertes KI-Modell (RoBERTa) direkt in deinen Browser Cache. Wenn du auf "Prüfen" klickst, analysiert dein Computer den Text selbst – ganz ohne Server-Anfragen.
+Da wir wissen, wie wichtig Vertraulichkeit bei Dokumenten, Hausarbeiten oder Geschäftstexten ist, haben wir dieses Tool so entwickelt, dass es **komplett offline in deinem Browser** läuft. Wir laden ein speziell quantisiertes Sprachmodell direkt in deinen Browser-Cache. Wenn du auf "Prüfen" klickst, analysiert dein Computer den Text selbst – ganz ohne Server-Anfragen.
 
 ### Darauf solltest du achten
 Die Erkennung von KI-Texten ist Wahrscheinlichkeitsrechnung. Das Modell vergleicht den Text mit Mustern, die typisch für maschinell generierte Texte sind. Zeigt der Detektor eine Wahrscheinlichkeit von über 80 % an, ist die Chance sehr hoch, dass eine KI am Werk war. Dennoch solltest du das Ergebnis immer als Hilfsmittel und nicht als absolutes Urteil betrachten.

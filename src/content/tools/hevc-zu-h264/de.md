@@ -138,9 +138,8 @@ der auch beim Videotelefonat die Bildkompression erledigt.
 Es gibt kein Cookie-Banner für externe Video-CDNs, keine Anmeldung und keine
 anonymen Nutzungsstatistiken, die Dateinamen oder Auflösungen mittracken. Die
 einzige Netzwerkverbindung, die der Browser beim Laden dieser Seite herstellt,
-ist der initiale Seitenaufruf selbst — die Encoder-Bibliothek (Mediabunny,
-etwa 70&nbsp;KB) wird als Teil der Seite ausgeliefert, nicht von einem fremden
-CDN nachgezogen.
+ist der initiale Seitenaufruf selbst — die Encoder-Bibliothek (rund 70&nbsp;KB)
+wird als Teil der Seite ausgeliefert, nicht von einem fremden CDN nachgezogen.
 
 Für vertrauliche Aufnahmen — Hochzeitsvideos, medizinische Aufnahmen,
 Firmen-interne Dokumentationen — ist das der entscheidende Unterschied zu

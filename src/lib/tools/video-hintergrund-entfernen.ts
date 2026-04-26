@@ -32,12 +32,12 @@ export const videoBgRemove: FileToolConfig = {
       {
         id: 'quality',
         label: 'Qualität',
-        subLabel: 'BiRefNet_lite · SOTA Haar',
+        subLabel: 'beste Haarkanten',
       },
       {
         id: 'speed',
         label: 'Schnell',
-        subLabel: 'MODNet · Real-time',
+        subLabel: 'nahezu Echtzeit',
       },
     ],
     default: 'quality',

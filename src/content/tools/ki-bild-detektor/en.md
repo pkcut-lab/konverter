@@ -16,9 +16,9 @@ faq:
   - q: "How accurate is the AI image detector?"
     a: "Accuracy varies by image type and generation model. On standard benchmarks the classifier achieves around 85–92% accuracy for clean, unmodified AI images. Accuracy drops for heavily edited, compressed, or watermarked images. No detector is 100% reliable — use the result as one signal, not a verdict."
   - q: "Does this tool upload my image to a server?"
-    a: "No. The ML model runs in your browser using ONNX Runtime Web. Your image is processed locally and never transmitted. This makes the tool safe for sensitive or proprietary images."
+    a: "No. The ML model runs entirely in your browser using on-device acceleration. Your image is processed locally and never transmitted. This makes the tool safe for sensitive or proprietary images."
   - q: "Which AI generators does it detect?"
-    a: "The classifier is trained on outputs from Stable Diffusion (1.x–XL), Midjourney (v4–v6), DALL-E 2 and 3, Adobe Firefly, and several GAN-based generators. Newer models not in the training set may have lower detection rates."
+    a: "The classifier is trained on outputs from the major diffusion-based and GAN-based image generators on the market. Newer models that weren't part of the training set may have lower detection rates."
   - q: "Can I fool the detector by compressing or cropping the image?"
     a: "Heavy JPEG compression, cropping, and color grading can reduce detection confidence. Adversarial post-processing specifically designed to evade detectors is an active research area. No client-side detector is robust against a determined adversary."
   - q: "Why does a real photo score 30% AI probability?"
@@ -49,7 +49,7 @@ Modern AI image detectors use binary classifiers trained on large datasets of re
 | Step | What Happens |
 |---|---|
 | Preprocessing | Image resized to 224×224, normalized to model input range |
-| Inference | ONNX model runs in browser via ONNX Runtime Web |
+| Inference | Neural network runs in your browser, accelerated by your GPU when available |
 | Output | Softmax probability: P(AI-generated) and P(real photograph) |
 | Display | Score + confidence band (low / uncertain / high) |
 

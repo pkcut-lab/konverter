@@ -21,7 +21,7 @@ faq:
   - q: "Wie groß darf das PDF sein?"
     a: "Es gibt kein künstliches Limit — die Grenze ist dein Browser-Arbeitsspeicher. Auf einem normalen Desktop-Gerät sind PDFs bis 200&nbsp;MB problemlos. Bei deutlich größeren Dateien zeigt das Tool eine Hinweis-Warnung."
   - q: "Was passiert bei passwortgeschützten PDFs?"
-    a: "Verschlüsselte PDFs werden mit einer klaren Fehlermeldung übersprungen — die zugrundeliegende Bibliothek pdf-lib kann verschlüsselte Inhalte nicht öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe Acrobat oder Vorschau) und lade sie dann erneut."
+    a: "Verschlüsselte PDFs werden mit einer klaren Fehlermeldung übersprungen — die zugrundeliegende Bibliothek kann verschlüsselte Inhalte nicht öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe Acrobat oder Vorschau) und lade sie dann erneut."
   - q: "Was ist der Unterschied zwischen „eine Datei“ und „pro Bereich“?"
     a: "Bei „eine Datei“ landen alle ausgewählten Seiten in einer einzigen Output-PDF. Bei „pro Bereich“ wird für jeden Komma-Eintrag eine separate PDF erzeugt — z.&nbsp;B. liefert „1-3, 5, 7-9“ drei getrennte Dateien."
 relatedTools:
@@ -35,7 +35,7 @@ aside:
       description: "Gib die gewünschten Seitenbereiche ein, z.&nbsp;B. „1-3, 5, 7-9“. Das Tool prüft live, ob alle Bereiche gültig sind."
     - title: "Aufteilen & herunterladen"
       description: "Klicke auf „Aufteilen“. Bei „eine Datei“ entsteht eine PDF, bei „pro Bereich“ erscheint eine Liste mit einem Download-Link pro Bereich."
-  privacy: "Deine PDF verlässt den Browser nicht. Die gesamte Verarbeitung läuft lokal mit pdf-lib (MIT-Lizenz). Kein Upload, kein Server, keine Anmeldung erforderlich."
+  privacy: "Deine PDF verlässt den Browser nicht. Die gesamte Verarbeitung läuft lokal über eine bewährte Open-Source-Bibliothek im Browser-Tab. Kein Upload, kein Server, keine Anmeldung erforderlich."
 datePublished: '2026-04-25'
 dateModified: '2026-04-25'
 
@@ -43,13 +43,12 @@ dateModified: '2026-04-25'
 
 ## Wie funktioniert das Tool?
 
-Das Tool nutzt **pdf-lib**, eine quelloffene JavaScript-Bibliothek (MIT-Lizenz),
-um PDF-Dateien direkt im Browser zu zerlegen. Die Bibliothek läuft vollständig
-lokal — es gibt keine Serververbindung, keinen Upload und keine Verarbeitung
-durch Dritte.
+Das Tool nutzt eine bewährte Open-Source-JavaScript-Bibliothek, um PDF-Dateien
+direkt im Browser zu zerlegen. Sie läuft vollständig lokal — es gibt keine
+Serververbindung, keinen Upload und keine Verarbeitung durch Dritte.
 
-Technisch gesehen kopiert das Tool die ausgewählten Seiten mit
-`PDFDocument.copyPages()` in ein neues Zieldokument. Schriften, eingebettete
+Technisch gesehen kopiert das Tool die ausgewählten Seiten in ein neues
+Zieldokument. Schriften, eingebettete
 Bilder, Vektorgrafiken, Formularfelder und Annotations bleiben dabei
 verlustfrei erhalten — es wird nicht neu gerendert oder reenkodiert. Die
 Seitengrößen (A4, Letter, A5 etc.) werden 1:1 übernommen.
@@ -150,9 +149,9 @@ PDF erzeugt — z.&nbsp;B. liefert `1-3, 5, 7-9` drei getrennte Dateien.
 ### Was passiert bei passwortgeschützten PDFs?
 
 Verschlüsselte PDFs werden mit einer klaren Fehlermeldung übersprungen —
-die zugrundeliegende Bibliothek pdf-lib kann verschlüsselte Inhalte nicht
-öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe
-Acrobat oder Vorschau) und lade sie dann erneut.
+die zugrundeliegende Bibliothek kann verschlüsselte Inhalte nicht öffnen.
+Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe Acrobat
+oder Vorschau) und lade sie dann erneut.
 
 ## Welche Dokumenten-Tools sind verwandt?
 

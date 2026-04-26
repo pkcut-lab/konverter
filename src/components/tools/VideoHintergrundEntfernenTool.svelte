@@ -277,7 +277,7 @@
               bind:group={modelKey}
               data-testid="vbg-model-quality"
             />
-            <span>Qualität <span class="vbg__hint">— BiRefNet_lite, SOTA Haar</span></span>
+            <span>Qualität <span class="vbg__hint">— beste Haarkanten</span></span>
           </label>
           <label class="vbg__radio">
             <input
@@ -287,7 +287,7 @@
               bind:group={modelKey}
               data-testid="vbg-model-speed"
             />
-            <span>Schnell <span class="vbg__hint">— MODNet, real-time</span></span>
+            <span>Schnell <span class="vbg__hint">— nahezu Echtzeit</span></span>
           </label>
         </div>
       </fieldset>

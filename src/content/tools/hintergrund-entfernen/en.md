@@ -49,7 +49,7 @@ Input image (JPG / PNG / WebP)
     ↓
 Resize to model input dimensions (typically 320×320 or 512×512)
     ↓
-Inference: semantic segmentation model (e.g., U2-Net or RMBG)
+Inference: semantic segmentation model
      → outputs per-pixel alpha mask (0.0 = background, 1.0 = foreground)
     ↓
 Upsample mask to original image dimensions
@@ -61,7 +61,7 @@ Output: PNG with transparent background
 
 ### What "Runs in the Browser" Means
 
-The model is loaded once as an ONNX or TensorFlow.js artifact. Inference runs via WebGL (GPU-accelerated) or WASM (CPU fallback). No network request carries your image data — only the model weights are downloaded on first use.
+The model is loaded once into your browser cache. Inference runs on the GPU (where supported) or falls back to CPU. No network request carries your image data — only the model weights are downloaded on first use.
 
 ### Segmentation Quality by Subject Type
 
@@ -114,7 +114,7 @@ The browser-based model processes images internally at a fixed resolution (typic
 
 ### Can I remove backgrounds from multiple images at once?
 
-The current version processes images one at a time. Drag and drop the next image after downloading the previous result. Batch processing (queue multiple images) is a planned feature. For high-volume batch work, command-line tools like `rembg` (a Python library using the same underlying U2-Net model) offer an efficient alternative.
+The current version processes images one at a time. Drag and drop the next image after downloading the previous result. Batch processing (queue multiple images) is a planned feature. For high-volume batch work, command-line tools designed for batch ML inference offer an efficient alternative.
 
 ### Why is the output always PNG?
 

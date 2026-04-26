@@ -20,7 +20,7 @@ faq:
   - q: "Gehen Schriften, Bilder und Formularfelder beim Merge verloren?"
     a: "Nein. Das Tool kopiert die Seiten verlustfrei — Schriften, eingebettete Bilder, Formularfelder und Annotations bleiben vollständig erhalten."
   - q: "Was passiert bei passwortgeschützten PDFs?"
-    a: "Verschlüsselte PDFs werden mit einer klaren Fehlermeldung übersprungen — die zugrundeliegende Bibliothek pdf-lib kann verschlüsselte Inhalte nicht öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe Acrobat oder Vorschau) und lade sie dann erneut."
+    a: "Verschlüsselte PDFs werden mit einer klaren Fehlermeldung übersprungen — die zugrundeliegende Bibliothek kann verschlüsselte Inhalte nicht öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe Acrobat oder Vorschau) und lade sie dann erneut."
   - q: "Werden die Metadaten (Autor, Erstellungsdatum) aus den Quelldateien übernommen?"
     a: "Das zusammengeführte Dokument erhält ein neues Erstellungsdatum. Über die Option „Metadaten bereinigen“ kannst du Autor, Titel und Erstellungsinfo aus dem Output entfernen — kein anderes kostenloses Tool bietet diese Kontrolle."
 relatedTools:
@@ -33,7 +33,7 @@ aside:
       description: "Schiebe die Dateikarten in die gewünschte Reihenfolge. Was oben steht, landet zuerst im Ergebnis."
     - title: "Zusammenführen & herunterladen"
       description: "Klicke auf „Zusammenführen“. Die fertige PDF-Datei wird sofort als Download bereitgestellt — keine Wartezeit, kein Cloud-Speicher."
-  privacy: "Deine PDFs verlassen den Browser nicht. Die gesamte Verarbeitung läuft lokal mit pdf-lib (MIT-Lizenz). Kein Upload, kein Server, keine Anmeldung erforderlich."
+  privacy: "Deine PDFs verlassen den Browser nicht. Die gesamte Verarbeitung läuft lokal über eine bewährte Open-Source-Bibliothek im Browser-Tab. Kein Upload, kein Server, keine Anmeldung erforderlich."
 datePublished: '2026-04-25'
 dateModified: '2026-04-25'
 
@@ -41,13 +41,12 @@ dateModified: '2026-04-25'
 
 ## Wie funktioniert das Tool?
 
-Das Tool nutzt **pdf-lib**, eine quelloffene JavaScript-Bibliothek (MIT-Lizenz),
-um PDF-Dateien direkt im Browser zusammenzuführen. Die Bibliothek läuft vollständig
-lokal — es gibt keine Serververbindung, keinen Upload und keine Verarbeitung durch
-Dritte.
+Das Tool nutzt eine bewährte Open-Source-JavaScript-Bibliothek, um PDF-Dateien
+direkt im Browser zusammenzuführen. Sie läuft vollständig lokal — es gibt
+keine Serververbindung, keinen Upload und keine Verarbeitung durch Dritte.
 
-Technisch gesehen kopiert das Tool die Seiten jeder Quelldatei mit der Methode
-`PDFDocument.copyPages()` in ein neues Zieldokument. Dabei werden alle
+Technisch gesehen kopiert das Tool die Seiten jeder Quelldatei in ein neues
+Zieldokument. Dabei werden alle
 Einbettungen übernommen: Schriften, Rasterbilder, Vektorgrafiken,
 Formularfelder und Annotations — verlustfrei und ohne Neuenkodierung. Die
 Seitengrößen (A4, Letter, A5 etc.) bleiben unverändert; gemischte Formate
@@ -139,9 +138,9 @@ wird nicht neu gerendert oder reenkodiert.
 ### Was passiert bei passwortgeschützten PDFs?
 
 Verschlüsselte PDFs werden mit einer klaren Fehlermeldung übersprungen —
-die zugrundeliegende Bibliothek pdf-lib kann verschlüsselte Inhalte nicht
-öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe
-Acrobat oder Vorschau) und lade sie dann erneut.
+die zugrundeliegende Bibliothek kann verschlüsselte Inhalte nicht öffnen.
+Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe Acrobat
+oder Vorschau) und lade sie dann erneut.
 
 ### Werden die Metadaten aus den Quelldateien übernommen?
 

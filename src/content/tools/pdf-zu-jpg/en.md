@@ -5,7 +5,7 @@ title: "PDF to JPG Converter — Export Pages as Images"
 headingHtml: "Convert PDF pages to <em>high-quality JPEGs</em>"
 metaDescription: "Convert every PDF page to a high-quality JPG image — choose resolution and quality level, fully browser-based, no upload to any server, completely free."
 tagline: "Render each PDF page as a sharp JPEG — pick your DPI and quality, download individually or as a ZIP, all processed locally."
-intro: "Need to share a PDF page as an image, post a document preview online, or import a PDF into an image editor? The kittokit PDF to JPG converter renders each page of your PDF as a high-quality JPEG using PDF.js — entirely in your browser. No upload, no account, no watermarks."
+intro: "Need to share a PDF page as an image, post a document preview online, or import a PDF into an image editor? The kittokit PDF to JPG converter renders each page of your PDF as a high-quality JPEG — entirely in your browser. No upload, no account, no watermarks."
 howToUse:
   - "Click 'Choose PDF' or drag your file onto the upload zone."
   - "Set your desired resolution (72, 150, or 300 DPI) and JPEG quality (1–100)."
@@ -17,7 +17,7 @@ faq:
   - q: "What resolution should I choose?"
     a: "72 DPI is suitable for web previews and social media. 150 DPI works for screen-quality images and email. 300 DPI produces print-quality output suitable for professional printing."
   - q: "Is my PDF uploaded to a server?"
-    a: "No. PDF.js renders the pages locally in your browser. The file never leaves your device."
+    a: "No. The PDF is rendered locally in your browser. The file never leaves your device."
   - q: "Can I convert only specific pages?"
     a: "Yes. After the PDF loads, you can select which pages to convert by checking them in the thumbnail strip."
   - q: "What JPEG quality setting should I use?"
@@ -51,12 +51,12 @@ JPEG quality runs from 1 (maximum compression) to 100 (minimum compression). Qua
 
 ## How It Works
 
-The tool uses [PDF.js](https://mozilla.github.io/pdf.js/), Mozilla's open-source PDF rendering engine, to draw each PDF page onto an HTML `<canvas>` element inside your browser. The rendering pipeline:
+The tool uses a battle-tested open-source PDF rendering engine to draw each PDF page onto an HTML `<canvas>` element inside your browser. The rendering pipeline:
 
-1. **Load** — PDF.js parses the PDF structure and font resources in memory.
+1. **Load** — the renderer parses the PDF structure and font resources in memory.
 2. **Render** — each requested page is drawn onto a canvas at the selected DPI (using the device pixel ratio as a multiplier for sharpness on high-density screens).
 3. **Encode** — the canvas is exported as a JPEG using the browser's native `canvas.toBlob('image/jpeg', quality)` API.
-4. **Download** — finished images are made available for download individually or as a ZIP archive via JSZip.
+4. **Download** — finished images are made available for download individually or as a ZIP archive.
 
 No server is involved at any step. After the initial page load, the tool works offline.
 
@@ -80,8 +80,8 @@ No server is involved at any step. After the initial page load, the tool works o
 
 **Do I get the full page or just a crop?** The full page is rendered, including margins, exactly as it appears in the PDF viewer.
 
-**Does the tool handle multi-column layouts correctly?** Yes. PDF.js renders pages visually — it does not parse the text flow — so complex layouts including multi-column text, tables, and overlapping elements are reproduced accurately.
+**Does the tool handle multi-column layouts correctly?** Yes. The renderer draws pages visually — it does not parse the text flow — so complex layouts including multi-column text, tables, and overlapping elements are reproduced accurately.
 
-**What happens with PDFs that use custom fonts?** PDF.js loads embedded fonts from the PDF itself. Most PDFs embed the fonts they use, so the output image matches the original. PDFs that reference system fonts not installed on your device may substitute a fallback font, but this is rare in well-prepared PDFs.
+**What happens with PDFs that use custom fonts?** Embedded fonts are loaded from the PDF itself. Most PDFs embed the fonts they use, so the output image matches the original. PDFs that reference system fonts not installed on your device may substitute a fallback font, but this is rare in well-prepared PDFs.
 
 **Can I convert PDF to PNG instead of JPG?** The current version outputs JPEG. For lossless output (important for PDFs with thin lines or solid color blocks), a PNG export option is on the roadmap.

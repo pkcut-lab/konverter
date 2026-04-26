@@ -51,7 +51,7 @@ The pipeline runs in three stages on each frame:
 | Stage | API / Technology | Latency |
 |---|---|---|
 | Frame capture | getUserMedia | ~1 ms |
-| ML segmentation | ONNX Runtime WASM | 15–50 ms |
+| ML segmentation | WebAssembly / WebGPU | 15–50 ms |
 | Blur + composite | Canvas 2D / WebGL | ~2 ms |
 | Virtual output | HTMLVideoElement | ~1 ms |
 

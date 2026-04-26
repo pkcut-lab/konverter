@@ -24,7 +24,7 @@ faq:
   - q: "Why is some text missing from the output?"
     a: "Low image resolution, poor lighting, skewed perspective, or decorative fonts reduce OCR accuracy. Try increasing brightness and contrast in your phone's photo editor before running OCR, or re-scan at a higher DPI."
   - q: "Is the tool free for commercial use?"
-    a: "Yes. The tool is free with no usage limits. The underlying OCR library is open-source (Tesseract.js, Apache 2.0 license), making it suitable for both personal and commercial workflows."
+    a: "Yes. The tool is free with no usage limits, and the underlying OCR engine is open-source under a permissive license — making it suitable for both personal and commercial workflows."
 relatedTools:
   - audio-transcription
   - ai-text-detector
@@ -40,7 +40,7 @@ dateModified: '2026-04-26'
 
 This OCR tool reads the pixels of an image and converts recognizable text characters into a plain-text string you can copy, search, and edit. It handles printed documents, screenshots, photos of signs, book pages, receipts, business cards, and more.
 
-The OCR engine is Tesseract.js — a WebAssembly port of Google's open-source Tesseract OCR engine. It runs entirely in your browser, so image data never leaves your device.
+The OCR engine is a WebAssembly build of a battle-tested open-source recognition pipeline. It runs entirely in your browser, so image data never leaves your device.
 
 ## How Does It Work?
 
@@ -105,4 +105,4 @@ No. The output is pure plain text — no styling, no table grid, no font attribu
 Common causes: resolution too low (under 100 DPI effective), image is blurry or out of focus, text is printed on a dark background without sufficient contrast, or the font is highly decorative. Try increasing the image contrast and brightness before running OCR again.
 
 **Is the tool free for commercial use?**
-Yes. There are no usage limits and no account required. The OCR engine (Tesseract.js) is released under the Apache 2.0 license, which permits commercial use without royalties or attribution requirements.
+Yes. There are no usage limits and no account required. The underlying OCR engine is released under a permissive open-source license, which permits commercial use without royalties or attribution requirements.

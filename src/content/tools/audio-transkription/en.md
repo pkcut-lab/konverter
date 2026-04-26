@@ -44,7 +44,7 @@ Supported input formats include MP3, WAV, M4A (AAC), OGG Vorbis, and WebM Opus �
 
 ## How Does It Work?
 
-The engine is based on a Whisper-architecture model distilled for browser inference:
+The engine is a modern speech-recognition model distilled for browser inference:
 
 ```
 Audio file → decode to PCM → chunk into 30-second windows

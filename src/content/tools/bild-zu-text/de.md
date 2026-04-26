@@ -12,7 +12,7 @@ howToUse:
   - "Den extrahierten Text kopieren oder als .txt speichern"
 faq:
   - q: "Werden meine Bilder hochgeladen?"
-    a: "Nein. Die Texterkennung (OCR) läuft vollständig in deinem Browser über Tesseract-WASM. Das Bild verlässt dein Gerät zu keinem Zeitpunkt. Nur die KI-Modelle zur Texterkennung werden einmalig heruntergeladen."
+    a: "Nein. Die Texterkennung (OCR) läuft vollständig in deinem Browser über WebAssembly. Das Bild verlässt dein Gerät zu keinem Zeitpunkt. Nur die Sprachmodelle zur Texterkennung werden einmalig heruntergeladen."
   - q: "Welche Sprachen werden erkannt?"
     a: "Standardmäßig ist das Tool für deutsche und englische Texte optimiert. Es erkennt gedruckten Text wie Dokumente, Scans, Screenshots und klar erkennbare Schriften auf Fotos besonders gut."
   - q: "Geht das auch offline?"
@@ -29,7 +29,7 @@ aside:
     - title: "Bild auswählen"
       description: "Ziehe eine Bilddatei in das Fenster oder nutze den Button, um sie auszuwählen."
     - title: "KI-Texterkennung"
-      description: "Die Tesseract-OCR analysiert das Bild Pixel für Pixel und wandelt Buchstaben in echten Text um."
+      description: "Die OCR-Engine analysiert das Bild Pixel für Pixel und wandelt Buchstaben in echten Text um."
     - title: "Kopieren & Speichern"
       description: "Den fertigen Text kannst du mit einem Klick in die Zwischenablage kopieren oder herunterladen."
   privacy: "Die Verarbeitung läuft ausschließlich lokal auf deinem Gerät ab. Niemand außer dir sieht die Bilder, die du hochlädst. Ideal für vertrauliche Dokumente."
@@ -48,7 +48,7 @@ dateModified: '2026-04-25'
 
 ## Wie funktioniert die Bild-zu-Text Erkennung?
 
-Das Tool nutzt die weit verbreitete und bewährte Tesseract-Engine. Diese wurde in WebAssembly (WASM) kompiliert, wodurch sie direkt in modernen Browsern laufen kann. Anstatt Bilder mühsam auf einen Server hochzuladen, zu verarbeiten und das Ergebnis zurückzuschicken, macht dein Gerät die komplette Arbeit.
+Das Tool nutzt eine bewährte Open-Source-OCR-Engine, die in WebAssembly kompiliert wurde und direkt in modernen Browsern laufen kann. Anstatt Bilder mühsam auf einen Server hochzuladen, zu verarbeiten und das Ergebnis zurückzuschicken, macht dein Gerät die komplette Arbeit.
 
 Sobald du ein Bild hochlädst, versucht die Engine, Kontraste und Formen zu erkennen, Zeilen zu identifizieren und letztendlich die einzelnen Buchstaben zusammenzusetzen. Die Ausgabe erfolgt dann als normaler Text, den du weiterbearbeiten kannst.
 

@@ -42,7 +42,7 @@ This tool removes backgrounds from video files using a machine learning model th
 
 ## How It Works
 
-The tool uses a body/subject segmentation model (similar architectures to MediaPipe Selfie Segmentation or ONNX-based alternatives) compiled to WebAssembly for browser execution:
+The tool uses a specialized neural network for subject/background segmentation, accelerated by WebGPU for browser execution:
 
 1. **Frame extraction** — the video is decoded frame-by-frame using the browser's built-in Video API.
 2. **Segmentation** — each frame is passed through the ML model, which outputs a binary mask indicating which pixels belong to the foreground subject.
@@ -52,7 +52,7 @@ The tool uses a body/subject segmentation model (similar architectures to MediaP
 | Stage | Technology | Runs On |
 |---|---|---|
 | Frame decode | Browser Video API | Client |
-| ML inference | ONNX Runtime / WASM | Client CPU/GPU |
+| ML inference | WebGPU / WASM | Client CPU/GPU |
 | Compositing | Canvas API | Client GPU |
 | Re-encoding | MediaRecorder | Client |
 

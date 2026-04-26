@@ -16,13 +16,13 @@ howToUse:
   - "Seiten einzeln oder alle auf einmal als ZIP herunterladen."
 faq:
   - q: "Wird mein PDF auf einen Server hochgeladen?"
-    a: "Nein. Das Tool läuft vollständig in deinem Browser via PDF.js. Deine Datei verlässt dein Gerät zu keinem Zeitpunkt — technisch ist kein Upload möglich."
+    a: "Nein. Das Tool läuft vollständig in deinem Browser. Deine Datei verlässt dein Gerät zu keinem Zeitpunkt — technisch ist kein Upload möglich."
   - q: "Welche DPI-Einstellung brauche ich?"
     a: "72 DPI reicht für Web-Vorschauen und E-Mails. 150 DPI ist der Standard für Bildschirme und Präsentationen. 300 DPI ist Druckqualität — ideal für Visitenkarten, Poster oder Bewerbungsunterlagen."
   - q: "Kann ich einzelne Seiten aus einem mehrseitigen PDF auswählen?"
     a: "Ja. Nach dem Laden des PDFs siehst du ein Vorschau-Grid aller Seiten. Wähle per Checkbox aus, welche Seiten du als JPG exportieren möchtest."
   - q: "Was passiert bei passwortgeschützten PDFs?"
-    a: "PDF.js zeigt einen Passwort-Dialog. Gib das korrekte Passwort ein und die Konvertierung läuft wie gewohnt ab."
+    a: "Das Tool erkennt verschlüsselte PDFs und zeigt einen Passwort-Dialog. Gib das korrekte Passwort ein und die Konvertierung läuft wie gewohnt ab."
   - q: "Warum ist JPG und nicht PNG sinnvoll?"
     a: "JPG ist kompakter und geeignet für farbige Dokumente, Fotos und Präsentationen. PNG wäre besser für reine Texte oder Screenshots mit scharfen Kanten. Für den typischen Dokumenten-Export ist JPG bei 300 DPI die bessere Wahl."
   - q: "Gibt es ein Datei-Limit?"
@@ -38,7 +38,7 @@ dateModified: '2026-04-26'
 
 ## Was macht dieser Konverter?
 
-Dieser PDF-zu-JPG-Konverter rasterisiert jede PDF-Seite direkt in deinem Browser — ohne Server, ohne Upload, ohne Datenschutz-Kompromisse. Die Konvertierung basiert auf PDF.js, der Open-Source-Rendering-Engine von Mozilla (Apache-2.0-Lizenz), die intern denselben Render-Stack nutzt wie Firefox.
+Dieser PDF-zu-JPG-Konverter rasterisiert jede PDF-Seite direkt in deinem Browser — ohne Server, ohne Upload, ohne Datenschutz-Kompromisse. Die Konvertierung läuft über eine bewährte Open-Source-Rendering-Engine, die in modernen Browsern nativ verfügbar ist.
 
 Jede Seite wird auf ein Canvas-Element gerendert und als JPEG-Blob exportiert. Deine Dateien werden niemals an externe Server übertragen — ein klarer technischer Unterschied zu den 9&nbsp;anderen Anbietern, die alle auf Server-Upload angewiesen sind.
 
@@ -62,7 +62,7 @@ Dieses Feature fehlt bei 7 von 9&nbsp;Konkurrenten — der häufigste Use-Case (
 
 Gehaltsabrechnungen, Verträge, Ausweise: Diese Dokumente sollten nie auf fremde Server geladen werden. Die Rechtslage in der DSGVO ist eindeutig — das Hochladen auf Drittanbieter-Server kann bereits eine Datenübermittlung darstellen.
 
-Dieser Konverter macht Server-Upload technisch unmöglich. PDF.js läuft als JavaScript-Modul direkt im Browser-Sandbox. Die einzige Netzwerkanfrage beim Besuch dieser Seite ist das Laden der Seite selbst — danach ist alles lokal.
+Dieser Konverter macht Server-Upload technisch unmöglich. Die Render-Engine läuft als JavaScript-Modul direkt in der Browser-Sandbox. Die einzige Netzwerkanfrage beim Besuch dieser Seite ist das Laden der Seite selbst — danach ist alles lokal.
 
 ## Welche Anwendungsbeispiele gibt es?
 
@@ -73,7 +73,7 @@ Dieser Konverter macht Server-Upload technisch unmöglich. PDF.js läuft als Jav
 
 ## Welche technischen Hinweise gibt es?
 
-**Passwortgeschützte PDFs:** PDF.js löst eine `PasswordException` und zeigt einen Eingabe-Dialog. Bei falschem Passwort folgt eine klare Fehlermeldung.
+**Passwortgeschützte PDFs:** Das Tool erkennt verschlüsselte PDFs und zeigt einen Eingabe-Dialog. Bei falschem Passwort folgt eine klare Fehlermeldung.
 
 **Transparente Ebenen:** JPEG unterstützt keinen Alpha-Kanal. Transparente PDF-Elemente werden auf weißem Hintergrund gerendert — dies ist bei Dokumenten-PDFs nahezu immer das gewünschte Ergebnis.
 

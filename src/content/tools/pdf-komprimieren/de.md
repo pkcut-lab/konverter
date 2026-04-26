@@ -20,7 +20,7 @@ faq:
   - q: "Gehen Schriften, Bilder oder Formatierungen verloren?"
     a: "Nein. Die Komprimierung ist vollständig verlustlos — es werden keine Bilder neu kodiert, keine Schriften entfernt und keine Seiteninhalte verändert. Nur Metadaten und redundante interne Strukturen werden bereinigt."
   - q: "Was passiert mit passwortgeschützten PDFs?"
-    a: "Verschlüsselte PDFs können nicht verarbeitet werden — pdf-lib kann den Inhalt ohne Schlüssel nicht lesen. Entsperre die Datei zuerst in deinem PDF-Reader (z. B. Adobe Acrobat oder Vorschau) und lade sie dann erneut hoch."
+    a: "Verschlüsselte PDFs können nicht verarbeitet werden — die Bibliothek kann den Inhalt ohne Schlüssel nicht lesen. Entsperre die Datei zuerst in deinem PDF-Reader (z. B. Adobe Acrobat oder Vorschau) und lade sie dann erneut hoch."
   - q: "Warum ist die Reduktion manchmal gering?"
     a: "Wenn eine PDF bereits mit einem modernen Tool erstellt wurde, sind Objekt-Streams und Metadaten oft schon optimiert. In diesem Fall bleibt wenig Spielraum — das Tool zeigt die tatsächliche Ersparnis transparent an, statt falsche Versprechen zu machen."
   - q: "Kann ich sehr große PDFs komprimieren?"
@@ -36,8 +36,8 @@ dateModified: '2026-04-26'
 ## Was macht dieses Tool?
 
 Dieses Tool reduziert die Dateigröße einer PDF verlustlos — vollständig im Browser,
-ohne dass die Datei jemals deinen Computer verlässt. Es verwendet **pdf-lib** (MIT-Lizenz),
-eine quelloffene JavaScript-Bibliothek, die direkt im Tab läuft.
+ohne dass die Datei jemals deinen Computer verlässt. Die Verarbeitung läuft
+über eine bewährte Open-Source-Bibliothek, die direkt im Browser-Tab ausgeführt wird.
 
 Die Optimierung erfolgt in drei Schritten:
 

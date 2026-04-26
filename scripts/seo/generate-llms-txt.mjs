@@ -166,7 +166,7 @@ let llmsFullTxt = `# kittokit — full inventory
 
 ## Privacy & licensing
 
-- All compute happens client-side. ML tools use a Web Worker that streams models from the Hugging Face CDN; the user's data never leaves the browser.
+- All compute happens client-side. ML tools load model weights from a public model CDN once and cache them in the browser; the user's data never leaves the device.
 - No analytics in Phase 1. Phase 2 introduces consented, privacy-respecting analytics.
 - Tool descriptions and how-to articles: CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 
