@@ -286,6 +286,8 @@ const dateModifiedFormatted = entry.data.dateModified
       <p class="tagline">{entry.data.tagline}</p>
     </header>
 
+    <p class="tool-intro-answer">{entry.data.intro}</p>
+
     {entry.data.stats && entry.data.stats.length > 0 && (
       <ToolStats stats={entry.data.stats} />
     )}
@@ -488,8 +490,6 @@ const dateModifiedFormatted = entry.data.dateModified
     <aside class="ad-slot ad-slot--in-content" aria-hidden="true" role="presentation"></aside>
 
     <article class="tool-article">
-      <p class="intro">{entry.data.intro}</p>
-
       <header class="section-head">
         <span class="section-head__label">{strings.howToSectionLabel}</span>
         <h2 class="section-head__title" set:html={strings.howToHeadingHtml} />
@@ -752,11 +752,14 @@ const dateModifiedFormatted = entry.data.dateModified
        und einen border-top, der die visuelle Trennung übernimmt. */
     padding-bottom: var(--space-8);
   }
-  .tool-article .intro {
-    font-size: 1.125rem;
+  .tool-intro-answer {
+    max-width: 42rem;
+    width: 100%;
+    margin: 0 auto var(--space-12);
+    font-size: 1.0625rem;
     line-height: 1.55;
     color: var(--color-text);
-    margin: 0 0 var(--space-12) 0;
+    text-align: center;
   }
   .tool-article h2 {
     margin: 0 0 var(--space-6) 0;
@@ -817,9 +820,9 @@ const dateModifiedFormatted = entry.data.dateModified
       margin-bottom: var(--space-12);
       min-height: 4.5rem;
     }
-    .tool-article .intro {
+    .tool-intro-answer {
       margin-bottom: var(--space-8);
-      font-size: 1.0625rem;
+      font-size: 1rem;
     }
     .how {
       margin-bottom: var(--space-12);
