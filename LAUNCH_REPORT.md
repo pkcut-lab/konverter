@@ -83,6 +83,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T05:31 UTC+2 (Heartbeat-3) — **BLOCKER WEITERHIN AKTIV — cwd fehlt.** Teilfortschritt: User hat model/effort/heartbeat/instructionsFilePath für alle Worker gesetzt (✅). Workers haben nun lastHeartbeatAt ~03:28 UTC. ABER: adapterConfig enthält KEIN `cwd` → Worker-Workspaces sind leer, kein Zugriff auf Konverter-Webseite-Repo. JSON-LD-Enricher läuft gerade (status=running) aber in leerem Workspace. tasks/awaiting-review/: leer. Dispatch-Files (9x) noch unberührt. Einziger fehlender Schritt: `cwd` = `C:\Users\carin\.gemini\Konverter Webseite` für alle 9 Worker via Paperclip-Dashboard setzen. Follow-up in inbox/to-user/BLOCKED-cwd-missing.md.
 >
 > 2026-04-26T05:46 UTC+2 (Heartbeat-4) — **KORREKTUR + FORTSCHRITT.** cwd-Blocker war übervorsichtig: JSON-LD-Enricher lief ohne explizites `cwd` und lieferte vollständigen T7-Output (03:37 UTC). T7 war pre-sprint implementiert (commit 67f26b2), Worker hat verifiziert und Review-File geschrieben. tasks/awaiting-review/T7/jsonld-enricher.md vorhanden. Quality-Reviewer ran 03:44 UTC — keine Verdict-Datei gefunden (ran kurz nach T7-Commit, möglicherweise missed oder cwd-Problem). Andere Workers (T6/T8/T9/T10/T12/T13) haben 30min Interval, letzte Run 03:28 UTC, nächste ~03:58 UTC. Erwarte T8/T9/T10/T12/T13 Output in nächsten 30-60min. T6 (Cookie-Banner) hat Dep T5 — keine pre-sprint Impl gefunden. T12 (OG-Images): public/og/ leer, Worker nötig. Sprint läuft.
+>
+> 2026-04-26T05:57 UTC+2 (Heartbeat-5) — **PAPERCLIP ISSUES ERSTELLT.** Ursache für Worker-Inaktivität: Workers prüfen Paperclip-Inbox (leer) und exiten — Dispatch-Files auf Filesystem werden nicht gefunden. Fix: Sprint-Goal (KIT) + 9 Issues erstellt und Workers zugewiesen. KIT-1 T8→perf-auditor, KIT-2 T9→a11y-auditor, KIT-3 T10→error-pages-builder, KIT-4 T12→og-image-generator, KIT-5 T13→cf-infra-engineer, KIT-6 T7-Review→quality-reviewer, KIT-7 T6→cookie-consent-builder, KIT-8 T11→cf-infra-engineer (blocked KIT-7), KIT-9 T15→adsense-prep-checker (blocked KIT-7+KIT-8). Workers werden Issues beim nächsten Heartbeat (~04:28-04:30 UTC) in ihrer Inbox finden.
 
 ---
 
@@ -91,16 +93,16 @@ _(launch-coordinator updates this block each heartbeat)_
 | ID | Task | Owner | Status | Reviewer-Verdict |
 |----|------|-------|--------|-------------------|
 | T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
-| T6 | Cookie-Banner | cookie-consent-builder | pending (dispatch ready) | — |
-| T7 | JSON-LD per Tool | jsonld-enricher | ⏳ awaiting-review | — |
-| T8 | Performance + CWV | perf-auditor | pending (dispatch ready) | — |
-| T9 | WCAG 2.2 AAA a11y | a11y-auditor | pending (dispatch ready) | — |
-| T10 | 404/500 + sitemap + robots | error-pages-builder | pending (dispatch ready) | — |
-| T11 | CF Web Analytics + Clarity | cf-infra-engineer | pending (dispatch ready) | — |
-| T12 | OG-Bilder + Brand-Assets | og-image-generator | pending (dispatch ready) | — |
-| T13 | Email Routing @kittokit.com | cf-infra-engineer | pending (dispatch ready) | — |
+| T6 | Cookie-Banner | cookie-consent-builder | todo [KIT-7] (dep T5 extern) | — |
+| T7 | JSON-LD per Tool | jsonld-enricher | ⏳ awaiting-review [KIT-6→quality-reviewer] | — |
+| T8 | Performance + CWV | perf-auditor | todo [KIT-1] | — |
+| T9 | WCAG 2.2 AAA a11y | a11y-auditor | todo [KIT-2] | — |
+| T10 | 404/500 + sitemap + robots | error-pages-builder | todo [KIT-3] | — |
+| T11 | CF Web Analytics + Clarity | cf-infra-engineer | blocked [KIT-8] on KIT-7 | — |
+| T12 | OG-Bilder + Brand-Assets | og-image-generator | todo [KIT-4] | — |
+| T13 | Email Routing @kittokit.com | cf-infra-engineer | todo [KIT-5] | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
-| T15 | AdSense Prep Checklist | adsense-prep-checker | pending (dispatch ready) | — |
+| T15 | AdSense Prep Checklist | adsense-prep-checker | blocked [KIT-9] on KIT-7+KIT-8 | — |
 
 ---
 
