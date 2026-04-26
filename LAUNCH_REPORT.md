@@ -240,3 +240,13 @@ _(filled when sprint complete — leer bis Sprint Ende)_
 **Layer 2 (Build):** `npm run check` 0 errors / 0 warnings / 0 hints ✅. `npx vitest run`: 111 test files, 1761 tests — all pass ✅ (pre-existing 4 failures from T7 review resolved by KIT-10 commit `5a9d4dd`). Git account: pkcut-lab ✅.
 **Layer 3 (Funktional):** Lighthouse (7 URLs): Perf min=97, avg=98 (≥90 ✅). SEO all=100 (≥95 ✅). A11y all=100 ✅. Critical fix: pagefind WASM deferred to interaction (TBT 7,230ms→0ms on /de/werkzeuge, P 58→99). Cache-Control immutable for OG/icon assets added.
 **Layer 4 (Look):** N/A — perf + a11y fixes only, no visual design changes. Refined Minimalism unaffected.
+
+#### Review-Pass T12 — 2026-04-26T07:49:00+02:00
+**Reviewer:** quality-reviewer
+**Verdict:** ✅ approved
+**Layer-Check:** Hard-Caps ✅ · Build ✅ · Funktional ✅ · Look ✅
+
+**Layer 1 (Hard-Caps):** PASS — Hex values only in `scripts/generate-og-cards.mjs` (build script, not component/token-file scope). No Hex in `src/layouts/BaseLayout.astro` or `src/pages/[lang]/[slug].astro`. No React/Next.js imports. `existsSync` is build-time SSG (pure-client maintained). Orange accent (#F0A066) used correctly (wordmark accent "o", left bar). Dark theme: #1A1917 BG / #FAFAF9 Text — AAA contrast passes. No rounded-full, no maximalism, no pastels. Git author: pkcut-lab ✅.
+**Layer 2 (Build):** `npm run check` 0 errors / 0 warnings / 0 hints ✅. `npx vitest run`: 111 test files, 1761 tests — all pass ✅. Git status: T12-scope files committed in `aabc68d` (pkcut-lab) ✅.
+**Layer 3 (Funktional):** 5 sample pages verified in built dist: `de/meter-zu-fuss` → `/og/tools/meter-zu-fuss.webp` ✅ · `en/meter-to-feet` → `/og/tools/meter-zu-fuss.webp` (DE-Card-Reuse) ✅ · `de/json-formatter` → `/og/tools/json-formatter.webp` ✅ · `de/passwort-generator` → `/og/tools/passwort-generator.webp` ✅ · `de/brutto-netto-rechner` → `/og/tools/brutto-netto-rechner.webp` ✅ · Homepage → `/og-image.png` (fallback) ✅. OG width=1200, height=630 on all pages ✅. 72/72 WebP cards present in `public/og/tools/` ✅.
+**Layer 4 (Look):** 3 cards visually reviewed (meter-zu-fuss, passwort-generator, brutto-netto-rechner). Dark graphite BG, white Inter semi-bold tool name, muted JetBrains Mono uppercase eyebrow, orange "o" accent on wordmark, left accent bar, horizontal divider, footer URL — all on-brand Refined Minimalism ✅. Word-wrap working correctly (1- and 2-line variants verified). No gradients, no pastels.
