@@ -85,6 +85,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T05:46 UTC+2 (Heartbeat-4) — **KORREKTUR + FORTSCHRITT.** cwd-Blocker war übervorsichtig: JSON-LD-Enricher lief ohne explizites `cwd` und lieferte vollständigen T7-Output (03:37 UTC). T7 war pre-sprint implementiert (commit 67f26b2), Worker hat verifiziert und Review-File geschrieben. tasks/awaiting-review/T7/jsonld-enricher.md vorhanden. Quality-Reviewer ran 03:44 UTC — keine Verdict-Datei gefunden (ran kurz nach T7-Commit, möglicherweise missed oder cwd-Problem). Andere Workers (T6/T8/T9/T10/T12/T13) haben 30min Interval, letzte Run 03:28 UTC, nächste ~03:58 UTC. Erwarte T8/T9/T10/T12/T13 Output in nächsten 30-60min. T6 (Cookie-Banner) hat Dep T5 — keine pre-sprint Impl gefunden. T12 (OG-Images): public/og/ leer, Worker nötig. Sprint läuft.
 >
 > 2026-04-26T05:57 UTC+2 (Heartbeat-5) — **PAPERCLIP ISSUES ERSTELLT.** Ursache für Worker-Inaktivität: Workers prüfen Paperclip-Inbox (leer) und exiten — Dispatch-Files auf Filesystem werden nicht gefunden. Fix: Sprint-Goal (KIT) + 9 Issues erstellt und Workers zugewiesen. KIT-1 T8→perf-auditor, KIT-2 T9→a11y-auditor, KIT-3 T10→error-pages-builder, KIT-4 T12→og-image-generator, KIT-5 T13→cf-infra-engineer, KIT-6 T7-Review→quality-reviewer, KIT-7 T6→cookie-consent-builder, KIT-8 T11→cf-infra-engineer (blocked KIT-7), KIT-9 T15→adsense-prep-checker (blocked KIT-7+KIT-8). Workers werden Issues beim nächsten Heartbeat (~04:28-04:30 UTC) in ihrer Inbox finden.
+>
+> 2026-04-26T06:08 UTC+2 (Heartbeat-6) — **SPRINT LIVE — 8/9 WORKERS RUNNING.** Alle KIT-Issues picked up: KIT-1..KIT-7 in_progress, KIT-8 blocked ✅, KIT-9 in_progress (worker wird selbst blocked-Exit machen). 8 Agents gleichzeitig running. Erwarte erste Commits/Outputs in dieser Runde.
 
 ---
 
@@ -100,13 +102,31 @@ _(launch-coordinator updates this block each heartbeat)_
 | T10 | 404/500 + sitemap + robots | error-pages-builder | todo [KIT-3] | — |
 | T11 | CF Web Analytics + Clarity | cf-infra-engineer | blocked [KIT-8] on KIT-7 | — |
 | T12 | OG-Bilder + Brand-Assets | og-image-generator | todo [KIT-4] | — |
-| T13 | Email Routing @kittokit.com | cf-infra-engineer | todo [KIT-5] | — |
+| T13 | Email Routing @kittokit.com | cf-infra-engineer | partial-done [KIT-5] (blocked: user-input email-target + token permission) | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
 | T15 | AdSense Prep Checklist | adsense-prep-checker | blocked [KIT-9] on KIT-7+KIT-8 | — |
 
 ---
 
 ## Worker-Reports
+
+### T13 — Email Routing @kittokit.com (2026-04-26 cf-infra-engineer)
+
+**T-ID:** T13 | **Status:** partial-done (Restschuld: Aliases)
+
+**Was geändert:**
+- Cloudflare Email Routing aktiviert via API (`POST /zones/.../email/routing/enable`)
+- 5 DNS-Records angelegt (automatisch): 3x MX (route1/2/3), SPF-TXT, DKIM-TXT
+
+**Verifikation:**
+- `GET /zones/.../email/routing` → `enabled: true`, `status: "ready"`
+- `GET /zones/.../dns_records?type=MX,TXT` → alle 5 Records vorhanden
+
+**Restschuld:**
+- Destination address (Ziel-Email) nicht gesetzt — API-Token fehlt `Zone > Email Routing > Edit` Permission
+- 6 Routing-Rules (hello/support/dmca/dpo/adsense/postmaster) noch nicht angelegt
+- User-Input-File: `inbox/to-user/REQUIRES-USER-INPUT-email-target.md`
+- Unblocking: User bestätigt Ziel-Email + Option A (Token-Update) oder Option B (manuell im Dashboard)
 
 _(Workers append here as tasks complete — leer bis Sprint läuft)_
 
