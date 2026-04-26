@@ -1,14 +1,5 @@
-# kittokit security.txt — RFC 9116
-# https://kittokit.com/.well-known/security.txt
-
 Contact: mailto:security@kittokit.com
-Contact: mailto:hello@kittokit.com
 Expires: 2027-04-26T00:00:00.000Z
 Preferred-Languages: de, en
 Canonical: https://kittokit.com/.well-known/security.txt
-Policy: https://kittokit.com/de/datenschutz
-
-# Disclosure Policy
-# We follow Coordinated Vulnerability Disclosure (CVD).
-# Please do NOT publish vulnerabilities before we have responded
-# (typical response time: 48 hours).
+Policy: https://kittokit.com/security-policy
