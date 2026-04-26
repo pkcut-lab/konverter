@@ -21,8 +21,12 @@ interface Props {
   /** AVIF variant of the OG image (preferred by modern crawlers). When set,
    *  emitted BEFORE the WebP og:image so crawlers that support AVIF pick it. */
   ogAvifPath?: string | undefined;
+  /** LCP hero image path for above-the-fold preload (e.g. '/heroes/tools/slug.webp').
+   *  Injected as <link rel="preload" fetchpriority="high"> when present.
+   *  No-op today (0/72 heroes exist) — wired up for future hero rollout. */
+  heroImagePath?: string | undefined;
 }
-const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath } = Astro.props;
+const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath, heroImagePath } = Astro.props;
 const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
 
@@ -136,6 +140,12 @@ const websiteJsonLd = {
       type="font/woff2"
       crossorigin
     />
+
+    {/* LCP hero image preload — fetchpriority=high signals the browser to
+        fetch the above-the-fold image immediately (no-op when path absent). */}
+    {heroImagePath && (
+      <link rel="preload" as="image" href={heroImagePath} fetchpriority="high" />
+    )}
 
     {hreflangs.map((l) => (
       <link rel="alternate" hreflang={l.hreflang} href={l.href} />

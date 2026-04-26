@@ -219,6 +219,13 @@ const ogAvifExists =
   existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.avif`));
 const ogAvifPath = ogAvifExists ? `/og/tools/${deSlug}.avif` : undefined;
 
+// X.4 — LCP hero preload. Heroes don't exist yet (0/72 public/heroes/tools/).
+// Code is wired so adding hero images automatically activates the preload.
+const heroExists =
+  deSlug !== undefined &&
+  existsSync(resolve(process.cwd(), 'public', 'heroes', 'tools', `${deSlug}.webp`));
+const heroImagePath = heroExists ? `/heroes/tools/${deSlug}.webp` : undefined;
+
 // Default privacy-eyebrow: every client-side tool gets a trust signal above
 // its H1 unless the content file explicitly overrides via frontmatter.eyebrow.
 // Because all tools on this site run fully in the browser (Spec §7, pure-client
@@ -272,6 +279,7 @@ const dateModifiedFormatted = entry.data.dateModified
   pathWithoutLang={pathByLang}
   ogImagePath={ogImagePath}
   ogAvifPath={ogAvifPath}
+  heroImagePath={heroImagePath}
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="tool-page">
