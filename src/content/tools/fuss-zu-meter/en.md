@@ -28,13 +28,16 @@ relatedTools:
   - inches-to-cm
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter translates feet (ft) into meters (m) and meters back into feet, instantly and bidirectionally. Enter any value in either field and the opposite result appears right away — no button to press, no page reload.
 
-## Formula / How It Works
+## How Does It Work?
 
 The conversion is based on the internationally agreed-upon definition of the foot:
 
@@ -51,7 +54,7 @@ feet    = meters ÷ 0.3048  (≈ meters × 3.280839895)
 
 Because 0.3048 is exact, converting feet to meters introduces no approximation error. Converting meters to feet does produce a repeating decimal in theory, but for any practical precision (up to 10 decimal places) the tool handles it correctly.
 
-## Reference Table — Feet to Meters
+## How Do You Convert Feet to Meters?
 
 | Feet | Meters |
 |------|--------|
@@ -65,7 +68,7 @@ Because 0.3048 is exact, converting feet to meters introduces no approximation e
 | 20 ft | 6.0960 m |
 | 100 ft | 30.480 m |
 
-## Reference Table — Meters to Feet
+## How Do You Convert Meters to Feet?
 
 | Meters | Feet |
 |--------|------|
@@ -78,7 +81,7 @@ Because 0.3048 is exact, converting feet to meters introduces no approximation e
 | 10 m | 32.808 ft |
 | 100 m | 328.08 ft |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Height conversions.** In the US, height is nearly always expressed in feet and inches. When a foreign job application, medical form, or travel document asks for height in centimeters or meters, this tool converts your 5 ft 10 in directly to 1.778 m.
 

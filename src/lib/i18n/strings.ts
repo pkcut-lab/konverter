@@ -28,6 +28,16 @@ export interface UiStrings {
   // Structured data / meta
   orgDescription: string;
   ogImageAlt: string;
+
+  // Tool article footer
+  lastUpdatedLabel: string;
+
+  // Breadcrumb navigation
+  breadcrumbHome: string;
+  breadcrumbTools: string;
+
+  // Related tools block (inside article)
+  relatedToolsHeading: string;
 }
 
 const strings: Record<Lang, UiStrings> = {
@@ -83,6 +93,12 @@ const strings: Record<Lang, UiStrings> = {
     orgDescription:
       'kittokit — schnelle Browser-Tools: Konverter, Rechner, Datei-Werkzeuge. Pure-client, ohne Upload, ohne Tracking.',
     ogImageAlt: 'kittokit — Schnelle Tools. Kein Upload. Kein Tracking.',
+
+    lastUpdatedLabel: 'Zuletzt aktualisiert:',
+
+    breadcrumbHome: 'Start',
+    breadcrumbTools: 'Werkzeuge',
+    relatedToolsHeading: 'Verwandte Werkzeuge',
   },
 
   en: {
@@ -137,6 +153,12 @@ const strings: Record<Lang, UiStrings> = {
     orgDescription:
       'kittokit — fast browser tools: converters, calculators, file utilities. Pure client-side, no uploads, no tracking.',
     ogImageAlt: 'kittokit — Fast Tools. No Uploads. No Tracking.',
+
+    lastUpdatedLabel: 'Last updated:',
+
+    breadcrumbHome: 'Home',
+    breadcrumbTools: 'Tools',
+    relatedToolsHeading: 'Related Tools',
   },
 };
 

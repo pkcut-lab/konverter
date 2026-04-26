@@ -31,13 +31,16 @@ relatedTools:
   - text-diff
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This tool performs a deep, recursive diff of two JSON documents. It compares them key-by-key (for objects) and index-by-index (for arrays), reporting three types of differences: added entries, removed entries, and changed values. The result is shown as a color-coded side-by-side view and an optional tree view. No data leaves your browser — both parsing and diffing run in local JavaScript.
 
-## Formula / How It Works
+## How Does It Work?
 
 The JSON diff algorithm traverses both documents simultaneously using depth-first recursion:
 
@@ -79,7 +82,7 @@ function diff(left, right, path = ""):
 
 Arrays are diffed positionally — index 0 in the left document is compared to index 0 in the right document. This means if an array is reordered (same elements, different order), the tool will report differences at each affected index, not recognize it as a "reorder." For sorted sets stored as arrays, this is expected behavior — the order is semantically significant in JSON arrays.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Debugging API response changes between versions.** A backend service is updated and its API response JSON structure changes. Log the response before and after the update, paste both into this tool, and immediately see which fields were added, removed, or changed. This is faster than reading a long diff in a git commit or searching console logs manually.
 

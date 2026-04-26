@@ -31,6 +31,9 @@ relatedTools:
   - character-counter
 category: audio
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -53,7 +56,7 @@ Audio enhancement is a two-stage process:
 | Standard | Moderate noise reduction, voice boost | Typical home office, HVAC noise |
 | Aggressive | Heavy noise reduction | Loud fans, air conditioning, outdoor ambience |
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Podcast episode cleanup** — US podcast production often involves home studios with HVAC noise or street traffic. A quick enhancement pass removes the noise floor before sending to a podcast host or editor.
 
@@ -67,7 +70,7 @@ Audio enhancement is a two-stage process:
 
 **YouTube and social media content** — Creators recording voiceovers, tutorials, or commentary in non-studio environments use noise reduction to avoid viewer complaints about audio quality.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Why is browser-side processing important for privacy?**
 Many audio enhancement tools require uploading your file to a server, where it is processed (and potentially retained) by a third party. For sensitive content — legal depositions, medical consultations, confidential business calls — server-side processing creates a privacy risk. This tool never transmits your audio.

@@ -26,6 +26,9 @@ relatedTools:
   - gramm-zu-unzen
 category: weight
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -35,7 +38,7 @@ Kilogramm (kg) um und zeigt gleichzeitig den Rückweg. Er eignet sich für
 Körpergewicht aus US-Quellen, Import-Angaben in Pound, Kochrezepte mit
 angelsächsischen Maßen und Gepäck-Limits internationaler Fluggesellschaften.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Das internationale avoirdupois-Pfund entspricht seit dem Yard-und-Pfund-Abkommen
 von 1959 exakt 0,45359237&nbsp;kg. Die Gegenrichtung ist damit ebenfalls gelockt:
@@ -54,7 +57,7 @@ gerundet ergibt das 81,6&nbsp;kg — präzise genug für jedes metrische Formula
 Faustregel ohne Taschenrechner: Pfund halbieren und zehn Prozent vom Ergebnis
 abziehen. 200&nbsp;lb ÷ 2 = 100, minus 10&nbsp;% = 90 — tatsächlicher Wert 90,72&nbsp;kg.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf ein
 bis zwei Nachkommastellen.
@@ -71,7 +74,7 @@ bis zwei Nachkommastellen.
 Ein US-Körpergewicht von 180&nbsp;lb entspricht 81,65&nbsp;kg. Eine US-Rezept-Angabe mit
 „2&nbsp;lb ground beef" bedeutet 907 g Hackfleisch.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Körpergewicht und Fitness:** US-Fitness-Apps, Arztunterlagen, Flugzeug-
 Gewichtslimits und Sport-Statistiken stehen durchgängig in Pfund. Wer seine
@@ -122,7 +125,7 @@ nie verpflichtend durchgesetzt. Im Alltag, im Einzelhandel und in der Medizin
 dominiert weiterhin das Pfund. In Forschung, Technik und Export arbeiten
 US-Betriebe aber metrisch.
 
-## Verwandte Gewichts-Tools
+## Welche Gewichts-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

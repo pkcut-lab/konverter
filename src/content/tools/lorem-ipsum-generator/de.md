@@ -28,13 +28,16 @@ relatedTools:
   - zeichenzaehler
   - text-diff
   - roemische-zahlen
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Generator?
 
 Der Lorem Ipsum Generator erzeugt Platzhaltertext für Layouts, Mockups und Designentwürfe. Du gibst eine Zahl und die gewünschte Einheit ein — Absätze, Sätze oder Wörter — und erhältst sofort den generierten Blindtext. Zwei Varianten stehen zur Wahl: klassisches lateinisches Lorem Ipsum oder deutscher Blindtext mit Umlauten. Eine Live-Statistik zeigt Wort- und Zeichenzahl direkt unter dem generierten Text an.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Die Textgenerierung folgt einem einfachen Baukastenprinzip:
 
@@ -44,7 +47,7 @@ Die Textgenerierung folgt einem einfachen Baukastenprinzip:
 
 Die Eingabe `5 absätze deutsch` erzeugt demnach 5 Absätze aus dem deutschen Wortpool. `20 wörter latein` liefert genau 20 lateinische Wörter. Ohne Variantenangabe wird Latein verwendet, ohne Einheitenangabe werden Absätze generiert.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Typische Eingaben und ihr Ergebnis:
 
@@ -60,7 +63,7 @@ Typische Eingaben und ihr Ergebnis:
 
 Die Statistikzeile am Ende zeigt jeweils die exakte Wort- und Zeichenzahl — nützlich, wenn du eine bestimmte Textlänge für dein Layout benötigst.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Webdesign und Prototyping** — Designer und Entwickler füllen Layouts mit Blindtext, um Schriftgrößen, Zeilenabstände und Spaltenbreiten zu testen. Deutscher Blindtext zeigt dabei realistischer, wie die Seite mit tatsächlichen deutschen Texten wirkt.
 
@@ -74,7 +77,7 @@ Die Statistikzeile am Ende zeigt jeweils die exakte Wort- und Zeichenzahl — n�
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Text-Tools
+## Welche Text-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

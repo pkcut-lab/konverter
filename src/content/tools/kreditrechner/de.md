@@ -27,6 +27,9 @@ faq:
   - q: "Lohnt sich eine Sondertilgung?"
     a: "Fast immer, wenn du die Möglichkeit hast. Eine jährliche Sondertilgung von 5.000&nbsp;€ bei einem 100.000-€-Kredit mit 4&nbsp;% auf 10&nbsp;Jahre spart rund 6.700&nbsp;€ Zinsen und verkürzt die Laufzeit um ca. 3&nbsp;Jahre — der Rechner zeigt das Delta live. Der genaue Wert hängt vom Zeitpunkt der Sondertilgung ab: Je früher, desto mehr sparst du, weil die Zinsersparnis über die restliche Laufzeit kumuliert."
 relatedTools: ['mehrwertsteuer-rechner']
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -37,7 +40,7 @@ Alle Berechnungen laufen ausschließlich in deinem Browser. Kein Server empfäng
 
 Der Rechner ist auf das **Annuitätendarlehen** ausgelegt — der Standardtyp für Baufinanzierungen und Konsumkredite in Deutschland. Die monatliche Rate bleibt konstant; im Laufe der Zeit verschiebt sich das Verhältnis von Zins- zu Tilgungsanteil zugunsten der Tilgung.
 
-## Annuitätenformel
+## Was ist die Annuitätenformel?
 
 Die monatliche Rate eines Annuitätendarlehens folgt einer exakten mathematischen Formel:
 
@@ -79,7 +82,7 @@ Unser Rechner zeigt dir das Delta direkt: „Du sparst **X&nbsp;€** Zinsen und
 
 Die Höhe der Einsparung hängt vom Zeitpunkt der Sondertilgung ab: Je früher im Kreditverlauf, desto größer die Zinseinsparung, weil der Effekt über mehr verbleibende Monate kumuliert.
 
-## Anschlussfinanzierung verstehen
+## Was ist Anschlussfinanzierung?
 
 Viele Immobilienkredite haben eine Zinsbindungsperiode von 10 oder 15&nbsp;Jahren — danach muss die verbleibende Restschuld zu neuen Konditionen refinanziert werden. Wer 2016–2021 bei Bauzinsen von 1–2&nbsp;% abgeschlossen hat, steht 2026–2031 vor einer Anschlussfinanzierung zum aktuellen Marktlevel (ca. 3,5–4,5&nbsp;%).
 
@@ -95,7 +98,7 @@ Der Rechner zeigt dir die **Restschuld nach deiner Zinsbindungsperiode** — tra
 
 ## Häufige Fragen
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

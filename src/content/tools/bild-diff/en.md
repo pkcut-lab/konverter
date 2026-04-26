@@ -31,6 +31,9 @@ relatedTools:
   - contrast-checker
 category: image
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -44,7 +47,7 @@ Three view modes are available:
 
 All processing uses the Canvas API directly in your browser. Images are never uploaded.
 
-## Formula / How It Works
+## How Does It Work?
 
 The comparison algorithm computes a perceptual difference score for each pixel pair using the YIQ color model (which better reflects human color sensitivity than raw RGB):
 
@@ -65,7 +68,7 @@ For each pixel at (x, y):
 
 This approach is based on the same perceptual model used in the widely adopted `pixelmatch` library. The threshold value (0–255) is user-adjustable.
 
-## Sensitivity Threshold Guide
+## How Does the Sensitivity Threshold Work?
 
 | Threshold | What It Filters |
 |---|---|
@@ -74,7 +77,7 @@ This approach is based on the same perceptual model used in the widely adopted `
 | 30–50 | Minor anti-aliasing and sub-pixel rendering differences |
 | 70+ | Only significant structural or color changes |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **UI regression testing.** Compare a staging screenshot against the production baseline after a deployment. Even a 1px layout shift shows up immediately in the diff overlay.
 

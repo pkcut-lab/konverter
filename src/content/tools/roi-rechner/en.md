@@ -28,6 +28,9 @@ relatedTools:
   - pe-ratio-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -55,7 +58,7 @@ This is the compound annual growth rate (CAGR) equivalent of your ROI, assuming 
 - ROI: (1,500 ÷ 5,000) × 100 = **30%**
 - Annualized ROI: ((1.30)^(12/18) − 1) × 100 ≈ **19.3% per year**
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Google Ads and Meta Ads campaigns** — Digital marketing ROI is one of the most common business calculations in the US. Spend $2,000 on ads, generate $9,000 in revenue with $4,000 in product costs → net profit = $3,000 → ROI = 150%. Industry benchmarks suggest 200–500% ROI on well-optimized campaigns.
 
@@ -69,7 +72,7 @@ This is the compound annual growth rate (CAGR) equivalent of your ROI, assuming 
 
 **HVAC and energy efficiency upgrades** — A $6,000 heat pump installation reduces energy bills by $1,200 per year. Payback period = 5 years, ROI after 10 years = 100% (annualized ≈ 7.2%).
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **What is a negative ROI?**
 A negative ROI means you lost money. If you invested $1,000 and got back $700, net profit = −$300, ROI = −30%. Negative ROI is still useful data — it tells you the magnitude of the loss and helps you decide whether to cut or continue an investment.

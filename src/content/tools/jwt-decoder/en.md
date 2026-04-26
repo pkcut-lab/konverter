@@ -31,6 +31,9 @@ relatedTools:
   - url-encoder-decoder
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ A JSON Web Token (JWT) is a compact, URL-safe string used to transmit claims bet
 
 This decoder splits the token at the two dot separators, base64url-decodes each segment, and presents the header and payload as formatted, color-highlighted JSON. The signature segment is displayed as raw bytes and is clearly marked as unverified.
 
-## Formula or How It Works
+## How Does It Work?
 
 A JWT has the structure: `Base64url(Header) . Base64url(Payload) . Base64url(Signature)`
 
@@ -61,7 +64,7 @@ A JWT has the structure: `Base64url(Header) . Base64url(Payload) . Base64url(Sig
 | `iat` | Issued At | Unix timestamp when the token was issued |
 | `jti` | JWT ID | Unique identifier for the token |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Auth debugging:** A user reports they are being logged out unexpectedly. Grab their token from the browser's cookies or localStorage and check the `exp` claim to see if it expired.
 - **RBAC inspection:** Your app uses role-based access. Decode the token to verify the `roles` or `permissions` claim is present and correct after a login.

@@ -29,13 +29,16 @@ relatedTools:
   - interest-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This loan calculator computes three numbers for any fixed-rate installment loan: **monthly payment**, **total interest paid**, and **total repayment cost**. It works for auto loans, personal loans, student loans, home equity loans — any loan with a fixed rate and regular monthly payments.
 
-## Formula: How Monthly Payments Are Calculated
+## How Are Monthly Payments Calculated?
 
 Fixed-rate loan payments follow the standard amortization formula:
 
@@ -55,7 +58,7 @@ Fixed-rate loan payments follow the standard amortization formula:
 - Total paid = $395.45 × 60 = **$23,727**
 - Total interest = $23,727 − $20,000 = **$3,727**
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Auto Loans
 
@@ -79,14 +82,14 @@ In the early months of a loan, most of each payment goes toward interest. As the
 
 A simple rule: paying one extra monthly payment per year on a 30-year mortgage shortens the term by about 4 years and saves tens of thousands in interest. The same logic applies to any installment loan.
 
-## Tips for Getting a Better Rate
+## How Do You Get a Better Rate?
 
 - **Check your credit score** before applying. Rates for borrowers above 740 are typically 1–3% lower than for those in the 620–679 range.
 - **Shop multiple lenders.** Credit unions consistently offer lower auto loan rates than dealership financing arms.
 - **Choose a shorter term** if your budget allows. Monthly payments are higher, but total interest shrinks significantly.
 - **Make a larger down payment** to reduce the financed amount — smaller principal means less interest regardless of rate.
 
-## FAQ
+## Häufige Fragen?
 
 **Does paying biweekly instead of monthly save money?**
 

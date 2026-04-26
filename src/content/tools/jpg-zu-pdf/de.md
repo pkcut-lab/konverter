@@ -27,6 +27,9 @@ faq:
   - q: "Kann ich mehrere Bilder zu einem PDF zusammenfügen?"
     a: "Aktuell wird ein Bild pro PDF unterstützt. Für mehrseitige PDFs aus mehreren Bildern ist ein erweitertes Multi-Page-Mode geplant. Alternativ einzelne PDFs erstellen und mit dem PDF-Zusammenführen-Tool kombinieren, sobald verfügbar."
 relatedTools: ['cashflow-rechner', 'erbschaftsteuer-rechner', 'bild-zu-text']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was leistet der JPG-zu-PDF-Konverter?
@@ -45,13 +48,13 @@ Drei Vorteile gegenüber Server-Tools:
 - **Keine AI-Training-Verwertung.** Cloud-Anbieter dürfen — sofern in den AGB versteckt — hochgeladene Dateien für Modell-Training verwenden. Lokale Verarbeitung schließt das aus.
 - **Offline-Fähigkeit.** Nach dem ersten Laden der Seite funktioniert das Tool ohne Internet.
 
-## Lossless JPEG-Einbettung — der technische Unterschied
+## Was ist Lossless JPEG-Einbettung?
 
 Die meisten browser-basierten und Server-basierten Konkurrenten re-komprimieren JPEG-Eingaben intern (Beispiel: jsPDF, das Standard-Library für Browser-PDF-Erzeugung). Das führt zu zusätzlichem Qualitätsverlust durch Doppel-Kompression — die Original-JPEG ist bereits lossy, eine zweite JPEG-Codierung addiert sichtbare Artefakte.
 
 Der Konverter nutzt stattdessen `pdf-lib`, der JPEG-Streams via DCTDecode-Filter direkt einbettet. Das bedeutet: deine 5-MB-JPEG-Datei landet als 5-MB-JPEG-Stream im PDF, byte-identisch zur Eingabe. Kein Quality-Verlust, kein zusätzliches Speicher-Overhead.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Bewerbungsfoto:** Du fotografierst dein Bewerbungsfoto mit dem Smartphone, öffnest die Seite mobil und tippst „Foto aufnehmen" — die Browser-Kamera startet, du löst aus, das PDF ist fertig. Für die meisten Bewerbungs-Onlineformulare wird PDF statt JPG verlangt.
 
@@ -61,7 +64,7 @@ Der Konverter nutzt stattdessen `pdf-lib`, der JPEG-Streams via DCTDecode-Filter
 
 **Quittungs-Archivierung:** Belege für Steuererklärung sammeln, jeweils als PDF speichern. Lokal funktioniert das auch ohne WLAN — z.B. unterwegs nach dem Tankstellenbesuch.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - Bewerbungs-Onlineformulare (LinkedIn, Stepstone, indeed) verlangen PDF statt Bild
 - Vermieter-Anfragen (Schufa, Einkommensnachweis, Mietschuldenfreiheitsbescheinigung)
@@ -73,7 +76,7 @@ Der Konverter nutzt stattdessen `pdf-lib`, der JPEG-Streams via DCTDecode-Filter
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Dokumenten-Tools
+## Welche Dokumenten-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

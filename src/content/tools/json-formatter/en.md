@@ -30,7 +30,19 @@ relatedTools:
   - sql-formatter
   - json-to-csv
 category: dev
+stats:
+  - label: "Max input"
+    value: "10"
+    unit: "MB"
+  - label: "Processing"
+    value: "<50"
+    unit: "ms"
+  - label: "Privacy"
+    value: "local"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -45,7 +57,7 @@ The formatter uses the browser's built-in `JSON.parse()` to validate, then `JSON
 
 Error detection works at the character level — if a comma is missing between two object keys, the tool highlights the offending token and shows the line and column number.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **API debugging:** Copy a raw response from the Network tab in DevTools and format it for inspection.
 - **Config file editing:** Prettify `package.json`, `tsconfig.json`, or AWS/GCP policy documents before editing.
@@ -54,7 +66,7 @@ Error detection works at the character level — if a comma is missing between t
 - **Teaching:** Explain JSON structure to students or junior developers with the collapsed-node view.
 - **Clipboard quick-check:** Paste a JWT payload or webhook body and instantly confirm it is valid JSON.
 
-## Formula or How It Works
+## How Does It Work?
 
 | Input | Process | Output |
 |---|---|---|

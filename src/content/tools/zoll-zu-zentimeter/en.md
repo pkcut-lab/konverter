@@ -30,6 +30,9 @@ relatedTools:
   - mm-to-inches
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -45,7 +48,7 @@ The formula is exact: multiply inches by 2.54 to get centimeters. Divide centime
 - Centimeters → Inches: `in = cm ÷ 2.54`
 - Feet & Inches → Centimeters: `cm = (ft × 12 + in) × 2.54`
 
-## Common Inch-to-Centimeter Reference Values
+## What Are Common Inch-to-Centimeter Values?
 
 | Inches | Centimeters | Common Context |
 |--------|-------------|----------------|
@@ -62,7 +65,7 @@ The formula is exact: multiply inches by 2.54 to get centimeters. Divide centime
 | 55" | 139.70 cm | TV diagonal |
 | 65" | 165.10 cm | TV diagonal |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Converting US clothing sizes for international shopping.** Buying clothing from European, Asian, or South American brands requires converting your US measurements (in inches) to centimeters. A 32-inch waist is 81.28 cm. A 38-inch chest is 96.52 cm. A 30-inch inseam is 76.2 cm. Many international size guides list measurements in centimeters with no inch equivalent. Knowing your cm measurements prevents returns and sizing mistakes.
 
@@ -76,7 +79,7 @@ The formula is exact: multiply inches by 2.54 to get centimeters. Divide centime
 
 **Sewing and pattern conversion.** US sewing patterns use inches; European patterns use centimeters. A 1/4-inch seam allowance is 0.635 cm (~6 mm). A pattern calling for a 5/8-inch seam is 1.5875 cm (~16 mm). Quilting patterns with fractional inch blocks (6.5", 9.5", 12.5") convert to 16.51 cm, 24.13 cm, and 31.75 cm respectively.
 
-## FAQ
+## Häufige Fragen?
 
 **Is 1 inch always 2.54 cm exactly?**
 Yes — the international inch is defined as exactly 2.54 centimeters, with no uncertainty. This definition is fixed by international agreement and has been in force since 1959. The conversion is exact to any number of decimal places: 1 inch = 2.54000... cm with no rounding.

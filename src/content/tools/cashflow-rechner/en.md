@@ -31,6 +31,9 @@ relatedTools:
   - loan-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ The Cash Flow Calculator computes net cash flow across the three standard financ
 
 The output includes a category-by-category breakdown and a closing cash balance. This matches the structure of a formal Statement of Cash Flows (SCF) as defined by US GAAP (ASC 230) and IFRS (IAS 7), making the results immediately useful for accountants, lenders, and investors.
 
-## Formula / How It Works
+## How Does It Work?
 
 ```
 Net Cash Flow = Operating Cash Flow + Investing Cash Flow + Financing Cash Flow
@@ -69,7 +72,7 @@ Closing Cash Balance:
   = Opening Cash Balance + Net Cash Flow
 ```
 
-## Cash Flow Health Indicators
+## What Are Cash Flow Health Indicators?
 
 | Metric | Formula | Healthy Range |
 |---|---|---|
@@ -78,7 +81,7 @@ Closing Cash Balance:
 | Cash Flow Margin | Operating CF ÷ Revenue × 100 | Industry-dependent (10–25% for most) |
 | CF Coverage Ratio | Operating CF ÷ Total Debt Service | ≥ 1.25 |
 
-## Operating vs. Investing vs. Financing
+## What Is the Difference Between Operating, Investing, and Financing?
 
 | Category | Typical Inflows | Typical Outflows |
 |---|---|---|
@@ -86,7 +89,7 @@ Closing Cash Balance:
 | Investing | Asset sale proceeds, loan collections | Equipment, property, acquisitions |
 | Financing | Bank loans, equity raises | Debt repayment, dividends |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Small business cash planning.** A restaurant owner can model monthly cash flow — seasonally high summer receipts against fixed rent and payroll — to decide whether they need a line of credit before a slow winter season.
 

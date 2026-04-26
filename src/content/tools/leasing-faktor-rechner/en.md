@@ -31,13 +31,16 @@ relatedTools:
   - amortization-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This calculator computes the monthly payment for a US car lease using the standard closed-end lease formula. It handles the full cost structure: capitalized cost, cap cost reductions, residual value, depreciation component, and finance charge. It also converts money factor to APR so you can make apples-to-apples comparisons.
 
-## Formula: How Lease Payments Are Calculated
+## How Are Lease Payments Calculated?
 
 A US lease payment has two components:
 
@@ -68,7 +71,7 @@ Finance charge = ($41,000 + $24,750) × 0.00135 = **$88.76/month**
 
 **Monthly payment before tax ≈ $540.15**
 
-## Money Factor to APR Conversion
+## How Do You Convert Money Factor to APR?
 
 | Money Factor | Approximate APR |
 |-------------|----------------|
@@ -81,7 +84,7 @@ Finance charge = ($41,000 + $24,750) × 0.00135 = **$88.76/month**
 
 Formula: **APR = Money Factor × 2,400**
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Comparing Lease vs. Buy
 
@@ -99,7 +102,7 @@ Some lease deals feature subvented money factors (below-market rates set by the 
 
 At lease end, you can typically purchase the vehicle at the residual value. If market value exceeds the residual, purchasing (then selling or keeping) can be financially advantageous. The residual is set at signing and does not change regardless of market conditions.
 
-## Key Lease Terms Explained
+## What Are Key Lease Terms?
 
 **Closed-End Lease:** The standard US consumer lease. You return the vehicle at lease end with no obligation if it is within mileage limits and normal wear. The lender absorbs any difference between actual market value and the predetermined residual.
 
@@ -109,7 +112,7 @@ At lease end, you can typically purchase the vehicle at the residual value. If m
 
 **Excess Mileage:** Standard leases allow 10,000–15,000 miles per year. Excess is charged at $0.15–$0.30 per mile depending on the lender and vehicle class.
 
-## FAQ
+## Häufige Fragen?
 
 **Should I put money down on a lease?**
 

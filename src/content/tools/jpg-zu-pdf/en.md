@@ -31,13 +31,16 @@ relatedTools:
   - pdf-compressor
 category: document
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This tool packages one or more JPG or PNG images into a PDF document, running entirely in your browser. Each image becomes one page in the output PDF. You control page size, orientation, margins, and image fit. The PDF is assembled using a client-side JavaScript library — no server receives your files.
 
-## Formula / How It Works
+## How Does It Work?
 
 PDF generation in the browser follows this process:
 
@@ -85,7 +88,7 @@ DPI = 800 / 8.5 ≈ 94 DPI  (screen quality, may appear soft in print)
 
 For crisp printed output, use source images at least 150 DPI at the target page size. For screen-only PDFs, 72–96 DPI is fine.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Submitting scanned documents and receipts.** Many US government agencies, employers, and financial institutions require documents in PDF format. If you took photos of a signed form, insurance document, or set of receipts with your phone, this tool bundles them into a single PDF ready for email or upload.
 

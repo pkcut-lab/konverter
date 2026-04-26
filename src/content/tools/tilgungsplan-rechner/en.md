@@ -31,6 +31,9 @@ relatedTools:
   - interest-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -57,7 +60,7 @@ Each row in the schedule then calculates:
 | Principal payment | Monthly payment − interest payment |
 | Remaining balance | Previous balance − principal payment |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **30-Year Fixed Mortgage.** The most common US home loan. A $350,000 loan at 7.00% has a monthly P&I payment of $2,329. Over 360 payments, total interest paid is approximately $488,000 — nearly 1.4× the original loan.
 
@@ -69,7 +72,7 @@ Each row in the schedule then calculates:
 
 **Extra Payment Analysis.** By adding an extra principal payment each period, you shorten the schedule. The tool recalculates the remaining balance row-by-row so you can see exactly which month the loan pays off.
 
-## Reading the Schedule
+## How Do You Read the Amortization Schedule?
 
 | Period | Payment | Interest | Principal | Balance |
 |---|---|---|---|---|
@@ -83,7 +86,7 @@ Each row in the schedule then calculates:
 
 Notice how the interest column declines gradually while the principal column grows — the crossover point where principal exceeds interest occurs around payment 252 (month 21 of year 21) for this example.
 
-## FAQ
+## Häufige Fragen?
 
 **Can I use this for adjustable-rate mortgages (ARMs)?**
 This tool calculates fixed-rate schedules. For ARMs, the rate resets periodically — run separate calculations for each rate period and manually chain the results, using the end balance of one period as the principal for the next.

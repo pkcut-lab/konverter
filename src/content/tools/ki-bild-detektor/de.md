@@ -37,6 +37,9 @@ kbdHints:
   - key: "Drag"
     label: "Ziehen"
 contentVersion: 1
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Wie erkennt das Tool KI-generierte Bilder?
@@ -53,7 +56,7 @@ Da die Analyse komplett in deinem Browser läuft, musst du dir keine Sorgen um d
 
 Unser Detektor ist darauf trainiert, Artefakte und Muster von führenden KI-Generatoren wie **DALL-E 3, Midjourney, Stable Diffusion** und **Adobe Firefly** zu erkennen. Je nach Komplexität des Bildes kann die Analyse ein paar Sekunden dauern, liefert dafür aber ein fundiertes Ergebnis basierend auf moderner ML-Technologie.
 
-## Tipps für zuverlässigere Ergebnisse
+## Wie erhalte ich zuverlässigere Ergebnisse?
 
 - **Originaldatei verwenden:** Stark komprimierte oder mehrfach hochgeladene Bilder können die Analyse erschweren.
 - **Ergebnis als Hinweis verstehen:** Ein Wert über 70 % ist ein starkes Indiz, kein Beweis. Stark bearbeitete echte Fotos oder hochwertige KI-Bilder können den Detektor täuschen.

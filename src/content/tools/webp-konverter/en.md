@@ -30,7 +30,18 @@ relatedTools:
   - image-diff
   - qr-code-generator
 category: image
+stats:
+  - label: "Max file size"
+    value: "50"
+    unit: "MB"
+  - label: "Output formats"
+    value: "3"
+  - label: "Processing"
+    value: "in browser"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -45,7 +56,7 @@ Modern browsers expose a Canvas API that can encode image data in WebP format na
 
 For reverse conversion (WebP to PNG or JPG), the same canvas renders the WebP pixels and re-encodes in the target format. PNG output is lossless; JPG output uses your chosen quality setting.
 
-## Format Comparison
+## How Do the Formats Compare?
 
 | Format | Typical Use | Compression | Transparency | Animation |
 |--------|-------------|-------------|--------------|-----------|
@@ -56,7 +67,7 @@ For reverse conversion (WebP to PNG or JPG), the same canvas renders the WebP pi
 
 WebP hits the sweet spot: it beats JPEG on file size, beats PNG on compression, and supports transparency — making it the single format that can replace both for most web use cases.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Web developers optimizing page speed.** Google's Lighthouse audit explicitly flags images that are not in next-gen formats (WebP or AVIF). Converting your hero images, product photos, and blog thumbnails to WebP is a direct fix for this audit warning and often shaves 200–500 KB off a typical product page.
 
@@ -68,7 +79,7 @@ WebP hits the sweet spot: it beats JPEG on file size, beats PNG on compression, 
 
 **Portfolio and landing pages.** A single large hero image converted from PNG (often 1–3 MB) to WebP with quality 85 typically yields a 300–900 KB file — a meaningful improvement for first contentful paint on mobile connections.
 
-## FAQ
+## Häufige Fragen?
 
 **Should I use lossless or lossy WebP?**
 Lossy WebP (quality 75–90) is best for photographs and complex imagery where the eye cannot detect subtle compression artifacts. Lossless WebP is better for screenshots, diagrams, icons, and any image where pixel-perfect accuracy matters — though lossless WebP files are larger than lossy, they are still often smaller than PNG equivalents.

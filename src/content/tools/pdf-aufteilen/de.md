@@ -36,6 +36,9 @@ aside:
     - title: "Aufteilen & herunterladen"
       description: "Klicke auf „Aufteilen“. Bei „eine Datei“ entsteht eine PDF, bei „pro Bereich“ erscheint eine Liste mit einem Download-Link pro Bereich."
   privacy: "Deine PDF verlässt den Browser nicht. Die gesamte Verarbeitung läuft lokal mit pdf-lib (MIT-Lizenz). Kein Upload, kein Server, keine Anmeldung erforderlich."
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Wie funktioniert das Tool?
@@ -55,7 +58,7 @@ Vor dem Laden wird die Datei auf einen gültigen `%PDF-`-Magic-Header geprüft.
 Beschädigte oder umbenannte Nicht-PDF-Dateien werden mit einer Fehlermeldung
 abgewiesen, ohne dass die Bibliothek geladen werden muss.
 
-## So teilst du ein PDF auf
+## Wie teilst du ein PDF auf?
 
 Lade dein PDF per Drag&nbsp;&amp;&nbsp;Drop oder über den Datei-Browser hoch.
 Das Tool zeigt sofort die Gesamtseitenzahl an. Im Eingabefeld „Seitenbereiche“
@@ -151,7 +154,7 @@ die zugrundeliegende Bibliothek pdf-lib kann verschlüsselte Inhalte nicht
 öffnen. Entsperre die Datei vorher in deinem PDF-Reader (z.&nbsp;B. Adobe
 Acrobat oder Vorschau) und lade sie dann erneut.
 
-## Verwandte Dokumenten-Tools
+## Welche Dokumenten-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

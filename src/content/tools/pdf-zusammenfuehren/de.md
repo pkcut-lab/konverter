@@ -34,6 +34,9 @@ aside:
     - title: "Zusammenführen & herunterladen"
       description: "Klicke auf „Zusammenführen“. Die fertige PDF-Datei wird sofort als Download bereitgestellt — keine Wartezeit, kein Cloud-Speicher."
   privacy: "Deine PDFs verlassen den Browser nicht. Die gesamte Verarbeitung läuft lokal mit pdf-lib (MIT-Lizenz). Kein Upload, kein Server, keine Anmeldung erforderlich."
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Wie funktioniert das Tool?
@@ -54,7 +57,7 @@ Vor dem Laden wird jede Datei auf einen gültigen `%PDF-`-Magic-Header geprüft.
 Beschädigte oder umbenannte Nicht-PDF-Dateien werden mit einer Fehlermeldung
 übersprungen, ohne den gesamten Merge-Vorgang zu blockieren.
 
-## So führst du PDFs zusammen
+## Wie führst du PDFs zusammen?
 
 Ziehe die gewünschten Dateien per Drag&nbsp;&amp;&nbsp;Drop auf die Dropzone
 oder öffne den Datei-Browser über den Auswahl-Button. Du kannst mehrere
@@ -146,7 +149,7 @@ Das zusammengeführte Dokument erhält ein neues Erstellungsdatum. Über die
 Option „Metadaten bereinigen" kannst du Autor, Titel und Erstellungsinfo
 aus dem Output entfernen. Kein anderes kostenloses Tool bietet diese Kontrolle.
 
-## Verwandte Dokumenten-Tools
+## Welche Dokumenten-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

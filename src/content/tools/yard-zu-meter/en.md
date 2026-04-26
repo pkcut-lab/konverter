@@ -28,6 +28,9 @@ relatedTools:
   - km-to-miles
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -42,7 +45,7 @@ The conversion is arithmetic: multiply yards by 0.9144 to get meters. Divide met
 - Yards → Meters: `m = yd × 0.9144`
 - Meters → Yards: `yd = m ÷ 0.9144`
 
-## Common Yard-to-Meter Reference Values
+## What Are Common Yard-to-Meter Values?
 
 | Yards | Meters | Context |
 |-------|--------|---------|
@@ -56,7 +59,7 @@ The conversion is arithmetic: multiply yards by 0.9144 to get meters. Divide met
 | 440 yd | 402.336 m | Quarter mile (track and field) |
 | 1,760 yd | 1,609.344 m | One US mile |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **American football.** Every yard marker on a football field is a unit of measure. Converting to meters is common when explaining the sport to international audiences, or when US coaches work with metric-system athletes from outside North America. The red zone is the 20-yard territory closest to the end zone — 18.29 meters in metric terms.
 
@@ -70,7 +73,7 @@ The conversion is arithmetic: multiply yards by 0.9144 to get meters. Divide met
 
 **Track and field.** Older track records in the US were set on 440-yard tracks. Modern tracks are 400 meters. The difference (37.664 meters per lap) means times are not directly comparable. Athletes converting their performance data between legacy yard-based records and current metric standards use this conversion regularly.
 
-## FAQ
+## Häufige Fragen?
 
 **Why does the US still use yards instead of meters?**
 The United States uses a customary system (derived from the British Imperial system) that predates metrication. Unlike most countries, the US has not mandated metric adoption for everyday commerce, sports, or construction — though science, medicine, and the military use metric. This dual-system reality makes yard-to-meter conversion a practical daily need for many Americans working with international content.

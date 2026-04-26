@@ -31,6 +31,9 @@ relatedTools:
   - base64-encoder
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -53,7 +56,7 @@ xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
 
 The tool calls `crypto.randomUUID()` natively where supported (all modern browsers), with a `crypto.getRandomValues()` fallback for older environments.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Database primary keys.** UUID primary keys are standard in microservices architectures where multiple services create records independently. Unlike auto-increment integers, UUIDs don't require a centralized sequence and don't expose record counts to clients.
 
@@ -67,7 +70,7 @@ The tool calls `crypto.randomUUID()` natively where supported (all modern browse
 
 **Synthetic test data.** When seeding a test database with realistic-looking records, generate UUIDs for ID columns instead of sequential integers. This more accurately reflects production data distribution for index performance testing.
 
-## UUID Versions Comparison
+## How Do UUID Versions Compare?
 
 | Version | Source | Sortable | Privacy-Safe | Common Use |
 |---|---|---|---|---|
@@ -79,7 +82,7 @@ The tool calls `crypto.randomUUID()` natively where supported (all modern browse
 
 UUID v4 is the right choice when you need a guaranteed-unique, opaque, privacy-safe identifier and sort order does not matter.
 
-## Output Format Options
+## What Output Format Options Are Available?
 
 | Format | Example |
 |---|---|
@@ -89,7 +92,7 @@ UUID v4 is the right choice when you need a guaranteed-unique, opaque, privacy-s
 | Braces (Windows GUID) | `{550e8400-e29b-41d4-a716-446655440000}` |
 | URN | `urn:uuid:550e8400-e29b-41d4-a716-446655440000` |
 
-## FAQ
+## Häufige Fragen?
 
 **Are the UUIDs generated here truly random?**
 Yes. The Web Crypto API derives randomness from the operating system's entropy pool — hardware events, CPU timing jitter, and similar sources. This is the same CSPRNG used for HTTPS and password hashing. The output is not predictable.

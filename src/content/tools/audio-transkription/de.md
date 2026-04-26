@@ -37,6 +37,9 @@ kbdHints:
   - key: "⌘C"
     label: "Kopieren"
 contentVersion: 1
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Wie funktioniert die Audio-Transkription?

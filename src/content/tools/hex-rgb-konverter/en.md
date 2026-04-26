@@ -29,14 +29,24 @@ relatedTools:
   - css-formatter
   - webp-converter
 category: color
+stats:
+  - label: "Color formats"
+    value: "5"
+  - label: "Conversion"
+    value: "real-time"
+  - label: "Color space"
+    value: "sRGB"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter translates between the color notations used in CSS and design tools: hexadecimal (#RRGGBB), RGB, RGBA, and HSL. It works bidirectionally — enter a hex code to get RGB and HSL, or enter RGB channels to generate the corresponding hex. A live color preview shows the actual color as you type.
 
-## Formula / How It Works
+## How Does It Work?
 
 All four formats encode the same underlying data: three color channels (red, green, blue) each ranging from 0 to 255, plus an optional alpha channel.
 
@@ -96,7 +106,7 @@ H = (if max = r): 60 × ((g - b) / delta % 6)
     (if max = b): 60 × ((r - g) / delta + 4)
 ```
 
-## Color Format Reference
+## What Color Formats Are Supported?
 
 | Format | Syntax | Example |
 |--------|--------|---------|
@@ -108,7 +118,7 @@ H = (if max = r): 60 × ((g - b) / delta % 6)
 | HSL | hsl(h, s%, l%) | hsl(217, 100%, 61%) |
 | HSLA | hsla(h, s%, l%, a) | hsla(217, 100%, 61%, 0.8) |
 
-## Common US Web Design Use Cases
+## What Are Common US Web Design Use Cases?
 
 **Translating design tool colors to CSS.** Figma, Sketch, and Adobe XD all display colors in hex by default. When writing CSS manually, you might need the RGB equivalent to use `rgba()` for semi-transparent overlays: `background: rgba(58, 134, 255, 0.15)` creates a light blue tint with 15% opacity.
 

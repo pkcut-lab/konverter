@@ -28,6 +28,9 @@ relatedTools:
   - base64-encoder
   - json-formatter
   - regex-tester
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ Der URL Encoder Decoder nimmt beliebigen Text und wandelt ihn in eine percent-en
 
 Das Tool erkennt automatisch, ob der Input bereits percent-encoded Sequenzen enthält, und warnt vor Double-Encoding — dem häufigsten Fehler bei der URL-Kodierung. Leerer Input wird mit einer klaren Meldung abgewiesen, ungültige Percent-Sequenzen wie %2G oder alleinstehende %-Zeichen erzeugen eine verständliche Fehlermeldung.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Percent-Encoding arbeitet auf Byte-Ebene. Der Algorithmus:
 
@@ -46,7 +49,7 @@ Percent-Encoding arbeitet auf Byte-Ebene. Der Algorithmus:
 
 Beispiel: `Hallo Welt` ergibt `Hallo%20Welt` — nur das Leerzeichen wird kodiert. `ä` (UTF-8-Bytes 0xC3 0xA4) wird zu `%C3%A4`. Ein Emoji wie `😀` (4 Bytes UTF-8) ergibt `%F0%9F%98%80`.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Input | Encoded | Kontext |
 |-------|---------|---------|
@@ -58,7 +61,7 @@ Beispiel: `Hallo Welt` ergibt `Hallo%20Welt` — nur das Leerzeichen wird kodier
 
 Percent-Encoding ist keine Verschlüsselung. Jeder kann eine kodierte URL trivial dekodieren. Für sensible Daten wie API-Keys in URLs ist zusätzliche Absicherung Pflicht.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Query-Parameter in APIs** — Wenn Werte Sonderzeichen enthalten (Leerzeichen, &, =, Umlaute), müssen sie kodiert werden, damit die URL-Struktur intakt bleibt. Ein unkodiertes `&` in einem Parameterwert würde als Trennzeichen interpretiert und die Abfrage zerstören.
 
@@ -72,7 +75,7 @@ Percent-Encoding ist keine Verschlüsselung. Jeder kann eine kodierte URL trivia
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -27,13 +27,16 @@ relatedTools:
   - quadratmeter-zu-quadratfuss
 category: length
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
 
 Der Konverter wandelt einen Wert in Zoll (in) in die entsprechende Angabe in Zentimetern (cm) um und zeigt gleichzeitig den Rückweg. Er eignet sich für Bildschirmdiagonalen, Rohrdurchmesser, Reifengrößen und jede Rechnung, die zwischen imperialem und metrischem Längenmaß pendelt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Zoll entspricht seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 exakt 2,54&nbsp;cm. Die Gegenrichtung ist damit gelockt: `1 cm = 0,3937 in` auf vier Nachkommastellen, exakt `1/2,54` in. Vor 1959 existierten leicht abweichende nationale Inch-Definitionen in den USA, Großbritannien, Kanada und weiteren angelsächsischen Staaten — seit dem Abkommen gilt derselbe Wert in Wissenschaft, Technik und im allgemeinen Sprachgebrauch.
 
@@ -44,7 +47,7 @@ Formeln:
 
 Rechen-Beispiel: 10 in × 2,54 = 25,40&nbsp;cm. Auf zwei Nachkommastellen gerundet ergibt das 25,40&nbsp;cm — präzise genug für Alltag und Handwerk. Wer exakt rechnet (z.&nbsp;B. Maschinenbau), behält alle Stellen und rundet erst am Ende der Rechenkette.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei bis vier Nachkommastellen.
 
@@ -61,7 +64,7 @@ Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwe
 
 Ein 55-Zoll-Fernseher misst 139,70&nbsp;cm Diagonale. Ein Zollstock zeigt 12&nbsp;Zoll auf 30,48&nbsp;cm — also exakt einen Fuß.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Bildschirme und Displays:** TV-Diagonalen, Monitor-Größen, Smartphone-Displays und Tablet-Screens werden weltweit in Zoll angegeben. Für die Passung in Regale, Halterungen oder TV-Möbel braucht man die cm-Entsprechung. Gängige Größen reichen von 5,5&nbsp;Zoll (14&nbsp;cm, Smartphone) bis 85&nbsp;Zoll (216&nbsp;cm, Großbild-TV).
 
@@ -93,7 +96,7 @@ Ja — Zoll ist die deutsche Bezeichnung für die angloamerikanische Einheit Inc
 
 Technische Geräte-Standards stammen aus dem angloamerikanischen Raum. RCA und andere US-Hersteller führten die Zoll-Angabe für TV-Diagonalen in den 1940er-Jahren ein — der Markt hat sie beibehalten.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

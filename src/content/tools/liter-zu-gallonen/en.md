@@ -28,13 +28,16 @@ relatedTools:
   - km-to-miles
 category: volume
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter handles liters ↔ US gallons (and optionally Imperial gallons) with full precision. It is useful for fuel economy comparisons, cooking and food-service volumes, water storage planning, aquarium and pool sizing, and any situation where metric and US measurements meet.
 
-## Formula: Liters to US Gallons
+## How Do You Convert Liters to US Gallons?
 
 **US Gallons = Liters ÷ 3.785411784**
 
@@ -48,7 +51,7 @@ The conversion factor is exact by definition: the US liquid gallon equals exactl
 
 If you are working with British or Commonwealth fuel economy figures, use the Imperial gallon setting.
 
-## Common Volume Reference Table
+## What Are Common Volume Reference Values?
 
 | Volume | Liters | US Gallons |
 |--------|--------|------------|
@@ -62,7 +65,7 @@ If you are working with British or Commonwealth fuel economy figures, use the Im
 | 55-gallon drum | 208.2 L | 55.0 gal |
 | 1,000-gallon water tank | 3,785 L | 1,000 gal |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Fuel Economy and Gas Prices
 
@@ -86,7 +89,7 @@ US recipes use cups, quarts, and gallons. Many bulk food service containers are 
 
 Home brewing recipes specify volumes in both gallons and liters depending on the source. A standard US 5-gallon homebrew batch equals 18.93 liters. Most fermenters sold in the US are rated in gallons; most European equipment in liters.
 
-## US Gallon vs. Imperial Gallon: When It Matters
+## When Does the US vs. Imperial Gallon Difference Matter?
 
 The Imperial gallon is larger than the US gallon by exactly 20%. This discrepancy causes real confusion in fuel economy comparisons:
 
@@ -95,7 +98,7 @@ The Imperial gallon is larger than the US gallon by exactly 20%. This discrepanc
 
 Always verify which gallon a source uses before comparing fuel costs or economy figures across countries.
 
-## FAQ
+## Häufige Fragen?
 
 **Is a liter bigger than a quart?**
 

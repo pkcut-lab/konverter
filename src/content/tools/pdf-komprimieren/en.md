@@ -28,6 +28,9 @@ relatedTools:
   - pdf-to-jpg
 category: document
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -56,7 +59,7 @@ The compressor works in three passes:
 
 Processing runs in a Web Worker to keep the browser UI responsive during large file operations.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Email attachments.** Gmail, Outlook, and Yahoo Mail cap attachments at 25 MB. Scanned contracts and filled-in forms often exceed this limit; Medium compression typically brings them under the threshold.
 
@@ -70,7 +73,7 @@ Processing runs in a Web Worker to keep the browser UI responsive during large f
 
 **Academic submissions.** Many university portals cap PDF uploads at 10 MB. Compressing a thesis or dissertation scan before submission prevents upload errors.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Can I undo the compression?** Once you download the compressed file, the original is unchanged on your device — the tool never modifies your source file. If the compressed result is unsatisfactory, simply try a lower compression level.
 

@@ -30,7 +30,19 @@ relatedTools:
   - base64-encoder
   - url-encoder-decoder
 category: image
+stats:
+  - label: "Error correction"
+    value: "4"
+    unit: "levels"
+  - label: "Max data"
+    value: "4296"
+    unit: "chars"
+  - label: "Output"
+    value: "SVG + PNG"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -57,7 +69,7 @@ QR codes encode data using a matrix of black and white squares following the ISO
 3. **Render** — draw the matrix onto an HTML canvas (for PNG) or build an inline SVG (for vector output).
 4. **Download** — the canvas is exported as a PNG blob or the SVG is serialized for download. Nothing leaves your device.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Restaurant menus.** Since 2020, QR-code menus have become standard in US restaurants. Print a QR code linking to your PDF menu or online ordering page and place it on tables or at the host stand.
 
@@ -73,7 +85,7 @@ QR codes encode data using a matrix of black and white squares following the ISO
 
 **Classroom and education.** Teachers use QR codes on printed handouts to link to supplemental videos, Google Forms quizzes, or classroom portals — making resources accessible without students manually typing URLs.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **What is the difference between static and dynamic QR codes?** Static QR codes (what this tool generates) encode the destination directly. Dynamic QR codes use a short redirect URL managed by a third-party service, allowing the destination to be changed after printing. Dynamic codes require a paid subscription to services like Bitly or QR Tiger. For most personal and small business use, static codes are sufficient.
 

@@ -28,6 +28,9 @@ relatedTools:
   - km-to-miles
 category: area
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -59,7 +62,7 @@ Therefore: 1 km² = 1 / 2.58998811 mi² = 0.386102159 mi²
 
 The tool applies the full-precision factor and rounds the display to 3–6 significant figures depending on the input magnitude.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **US Geography and Education.** Students and educators comparing international country sizes to US states use km² from encyclopedias and Wikipedia, then need mi² to match the familiar US framing.
 
@@ -90,7 +93,7 @@ US state and territory reference table:
 | Ohio | 116,098 | 44,826 |
 | Rhode Island | 4,001 | 1,545 |
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **How does km² compare to acres?** 1 km² = 247.105 acres. For small land areas, acres are often more intuitive for US users than square miles (which are large units). This converter focuses on km² to mi²; for hectares to acres, use our dedicated tool.
 

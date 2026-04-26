@@ -25,6 +25,9 @@ relatedTools:
   - milliliter-zu-unzen
 category: volume
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -34,7 +37,7 @@ den Rückweg. Er eignet sich für Tankvolumen, Kochrezepte, Getränkehandel und
 jede Situation, in der Flüssigkeitsmengen zwischen dem metrischen und dem
 US-amerikanischen System wechseln müssen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Eine US-Gallone (US liquid gallon) entspricht exakt 3,785411784 Litern. Die
 britische Imperial-Gallone ist größer und fasst 4,54609 Liter. Dieser Konverter
@@ -54,7 +57,7 @@ Imperial-Gallone (4,546 l). In Kanada und Großbritannien begegnet man gelegentl
 noch der Imperial-Gallone, während die USA ausschließlich die kleinere US-Gallone
 verwenden.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Literwerte und ihre Entsprechung in
 US-Gallonen, gerundet auf vier Nachkommastellen.
@@ -71,7 +74,7 @@ US-Gallonen, gerundet auf vier Nachkommastellen.
 Ein Standard-PKW-Tank mit 55 Litern fasst etwa 14,53 US-Gallonen. Ein
 US-Rezept mit 2 Gallonen Wasser entspricht rund 7,57 Litern.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Tanken und Fahrzeuge:** US-Tankstellen zeigen Preise pro Gallone an. Wer ein
 US-Fahrzeug fährt oder Verbrauchswerte vergleicht (Meilen pro Gallone vs.
@@ -123,7 +126,7 @@ Alltags- und Industrieanwendungen ist das mehr als ausreichend.
 Multipliziere den Gallonen-Wert mit 3,785411784 oder nutze die
 Richtungstausch-Funktion des Konverters, die das automatisch erledigt.
 
-## Verwandte Volumen-Tools
+## Welche Volumen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

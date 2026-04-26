@@ -43,6 +43,9 @@ kbdHints:
   - key: "⌘C"
     label: "Kopieren"
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Wie funktioniert das Tool?
@@ -70,7 +73,7 @@ transparent, Pixel innerhalb bleiben unverändert. Bei weichen Kanten wie
 Haaren oder Fell sorgt die Graustufen-Maske für einen fließenden Übergang
 statt harter Pixelkanten.
 
-## So entfernst du einen Hintergrund
+## Wie entfernst du einen Hintergrund?
 
 Lade eine Datei über die Auswahl, per Drag-and-Drop oder mit Strg&nbsp;+&nbsp;V
 aus der Zwischenablage. Auf dem Smartphone steht zusätzlich eine
@@ -185,7 +188,7 @@ Ja, aber JPG unterstützt keine Transparenz. Wenn du JPG wählst, wird der
 Hintergrund weiß gefüllt. Für Transparenz nimm PNG (verlustfrei) oder WebP
 (kleinere Dateigröße bei vergleichbarer Qualität).
 
-## Verwandte Bild-Tools
+## Welche Bild-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

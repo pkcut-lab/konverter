@@ -29,6 +29,9 @@ relatedTools:
   - json-formatter
   - zeichenzaehler
   - text-diff
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -37,7 +40,7 @@ Ein Unix-Timestamp zählt Sekunden seit dem 1.&nbsp;Januar 1970 00:00:00&nbsp;UT
 
 Die Umrechnung klingt trivial, ist aber eine der häufigsten Fehlerquellen beim Datenaustausch zwischen Backend und Frontend. Wer einen 10-stelligen Timestamp in `new Date()` steckt, landet im Januar 1970 statt im aktuellen Jahr.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Die Formel ist exakt, ohne Rundung:
 
@@ -47,7 +50,7 @@ Die Formel ist exakt, ohne Rundung:
 
 Beispiel: Der Unix-Timestamp `1745230000` (Sekunden) entspricht `1745230000000` (Millisekunden). In JavaScript: `new Date(1745230000000)` ergibt den 21.&nbsp;April 2025, 12:26:40&nbsp;UTC.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Gängige Werte und ihre Umrechnung:
 
@@ -63,7 +66,7 @@ Gängige Werte und ihre Umrechnung:
 
 Merke: Ein Tag hat exakt 86.400&nbsp;Sekunden, eine Woche 604.800. Diese Werte sind konstant, weil Unix-Timestamps keine Schaltsekunden zählen.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Log-Analyse und Debugging:** Server-Logs, Kafka-Events und Datenbank-Einträge speichern Zeitpunkte als Unix-Timestamps. Beim Vergleich zwischen Python-Backend (Sekunden) und JavaScript-Frontend (Millisekunden) ist der Faktor 1000 entscheidend. Ohne korrekte Umrechnung zeigen Dashboards Zeitpunkte im Jahr 1970 statt im aktuellen Monat.
 
@@ -98,7 +101,7 @@ Die Temporal-API (ES2026, seit März 2026 Stage 4) verwendet intern Nanosekunden
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Zeit-Tools
+## Welche Zeit-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -30,6 +30,9 @@ relatedTools:
   - discount-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -54,7 +57,7 @@ For someone earning $25/hour on a standard US full-time schedule:
 - **Bi-weekly:** $52,000 ÷ 26 = **$2,000**
 - **Weekly:** $25 × 40 = **$1,000**
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Evaluating a job offer.** A recruiter quotes $28/hour. You want to know if that beats your current $55,000 salary. At 2,080 hours, $28/hour = $58,240/year — $3,240 more before taxes.
 
@@ -66,7 +69,7 @@ For someone earning $25/hour on a standard US full-time schedule:
 
 **Overtime planning.** If you regularly work 45 hours/week, your overtime pay (1.5× for 5 hours) adds roughly $1.5× rate × 5 hours × 52 weeks to your base. At $20/hour, that's an extra $7,800/year in gross overtime pay.
 
-## Common US Wage Benchmarks (2025)
+## What Are Common US Wage Benchmarks?
 
 | Role | Median Hourly | Annual (2,080 hrs) |
 |---|---|---|
@@ -78,7 +81,7 @@ For someone earning $25/hour on a standard US full-time schedule:
 
 Source: BLS Occupational Employment Statistics, 2024.
 
-## FAQ
+## Häufige Fragen?
 
 **Is 2,080 always the right divisor?**
 Only for a standard 40-hour, 52-week year with no unpaid time off. If you take 2 weeks of unpaid leave, use 50 weeks (2,000 hours). Always match the divisor to your actual schedule.

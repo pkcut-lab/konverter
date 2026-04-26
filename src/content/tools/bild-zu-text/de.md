@@ -41,6 +41,9 @@ kbdHints:
   - key: "⌘C"
     label: "Kopieren"
 contentVersion: 1
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Wie funktioniert die Bild-zu-Text Erkennung?
@@ -53,7 +56,7 @@ Sobald du ein Bild hochlädst, versucht die Engine, Kontraste und Formen zu erke
 
 Da die Analyse lokal erfolgt, ist dieses OCR-Tool ideal für Rechnungen, Verträge, persönliche Notizen oder andere sensible Dokumente. Es gibt keinen Cloud-Upload. Nach dem Schließen der Seite ist alles restlos weg.
 
-## Tipps für optimale Ergebnisse
+## Wie erhalte ich optimale Ergebnisse?
 
 - **Guter Kontrast:** Schwarze Schrift auf weißem Grund funktioniert am besten.
 - **Scharfes Bild:** Achte darauf, dass das Bild nicht verwackelt ist.

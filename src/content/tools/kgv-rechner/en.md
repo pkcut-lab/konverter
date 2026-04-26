@@ -31,6 +31,9 @@ relatedTools:
   - interest-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ The P/E ratio (price-to-earnings ratio) is the ratio of a company's current shar
 
 This calculator takes the two inputs you need — share price and EPS — and outputs the P/E ratio instantly. It also shows how the result stacks up against historical S&P 500 averages so you have immediate context.
 
-## Formula or How It Works
+## How Does It Work?
 
 **P/E Ratio = Stock Price ÷ Earnings Per Share (EPS)**
 
@@ -60,7 +63,7 @@ This calculator takes the two inputs you need — share price and EPS — and ou
 | Post-COVID peak (2021) | ~37 |
 | Typical "value" threshold | <15 |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Stock screening:** You're looking at a consumer staples stock trading at 18× earnings versus the sector average of 22×. Is it undervalued? Use the P/E to start the conversation.
 - **Earnings season review:** After a quarterly earnings release, the EPS changes. Recalculate the P/E with the new number to see if the stock re-rated fairly.

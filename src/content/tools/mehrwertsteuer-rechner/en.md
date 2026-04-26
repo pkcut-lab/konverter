@@ -30,6 +30,9 @@ relatedTools:
   - interest-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ This calculator works in both directions for any sales tax or VAT scenario:
 1. **Add tax:** Enter a pre-tax (net) price and a rate → get the tax amount and total (gross) price.
 2. **Remove tax:** Enter a tax-inclusive (gross) price and the rate → extract the original pre-tax price and the tax component.
 
-## Formulas
+## What Are the Formulas?
 
 ### Adding Tax to a Net Price
 
@@ -57,7 +60,7 @@ This calculator works in both directions for any sales tax or VAT scenario:
 
 **Example:** Receipt total is $54.99 in a state with 6.5% tax → $54.99 ÷ 1.065 = **$51.63 pre-tax**, tax = $3.36
 
-## US State Sales Tax Quick Reference
+## What Are US State Sales Tax Rates?
 
 | State | State Rate | Notes |
 |-------|-----------|-------|
@@ -73,7 +76,7 @@ This calculator works in both directions for any sales tax or VAT scenario:
 
 *Note: Combined rates (state + county + city) often differ significantly from state base rates. Always use the combined rate for your jurisdiction.*
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Retail and E-Commerce Shopping
 
@@ -95,7 +98,7 @@ European business travelers can sometimes claim a VAT refund on purchases made i
 
 Bookkeepers routinely need to back out sales tax from bank deposit totals to reconcile POS reports. This calculator handles batch mental math for any rate.
 
-## US Sales Tax vs. International VAT: Key Differences
+## What Are the Differences Between US Sales Tax and VAT?
 
 | Feature | US Sales Tax | EU/International VAT |
 |---------|-------------|---------------------|
@@ -105,7 +108,7 @@ Bookkeepers routinely need to back out sales tax from bank deposit totals to rec
 | Typical rate range | 0%–10.25% | 17%–27% |
 | Reduced rates? | Some states exempt groceries/medicine | Common (5%–12% for food, medicine) |
 
-## FAQ
+## Häufige Fragen?
 
 **Why does my total seem higher than expected?**
 

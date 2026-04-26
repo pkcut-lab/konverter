@@ -27,6 +27,9 @@ relatedTools:
   - zentimeter-zu-zoll
 category: temperature
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -37,7 +40,7 @@ eignet sich für US-Wetterberichte, Kochrezepte mit Ofen-Temperaturen,
 Fieber-Werte aus amerikanischen Arztunterlagen und für jeden Kontext, in dem
 die beiden Temperatur-Skalen aufeinandertreffen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Im Gegensatz zu Längen- oder Gewichts-Umrechnungen ist die Temperatur-Formel
 nicht rein multiplikativ. Beide Skalen haben unterschiedliche Nullpunkte:
@@ -61,7 +64,7 @@ Faustregel ohne Taschenrechner: Celsius verdoppeln und 30 dazu. 25&nbsp;°C × 2
 = 80&nbsp;°F (exakt 77&nbsp;°F). Die Abweichung liegt unter 3 Grad im Alltagsbereich —
 für Wetter reicht das, für Fieber oder Ofen nicht.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf
 zwei Nachkommastellen.
@@ -78,7 +81,7 @@ zwei Nachkommastellen.
 Normaltemperatur von 37&nbsp;°C entspricht 98,6&nbsp;°F. Ein US-Rezept mit „bake at
 350&nbsp;°F" meint 177&nbsp;°C.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Wetter und Reise:** US-Nachrichten, Apps und Thermostate nutzen Fahrenheit.
 Wer Reiseziele plant oder US-Prognosen liest, rechnet laufend um. 80&nbsp;°F
@@ -128,7 +131,7 @@ Für schnelle Schätzungen: Celsius verdoppeln und 30 addieren. 20&nbsp;°C × 2
 Für präzise Werte — vor allem bei Fieber oder Ofen-Temperaturen — die exakte
 Formel nutzen.
 
-## Verwandte Temperatur-Tools
+## Welche Temperatur-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

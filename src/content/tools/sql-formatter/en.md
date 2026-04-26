@@ -29,6 +29,9 @@ relatedTools:
   - css-formatter
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -67,7 +70,7 @@ WHERE o.total > 100
 ORDER BY o.total DESC
 ```
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Reading ORM-generated queries** — ORMs like Django ORM, SQLAlchemy, ActiveRecord, and Hibernate generate SQL that is functional but unreadable. Enable SQL logging, paste the output into the formatter, and understand exactly what query your application is running — useful for performance debugging and N+1 query detection.
 
@@ -81,7 +84,7 @@ ORDER BY o.total DESC
 
 **Sharing queries in Slack or GitHub** — Formatted SQL in a code block is immediately readable without asking colleagues to mentally parse a compressed string. Paste formatted output directly into PR comments or Slack messages.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Should I use leading or trailing commas in SQL?**
 Both are valid. Trailing commas (`col1,\n col2,`) are the SQL standard default and what most teams use. Leading commas (`,col1\n,col2`) make it easier to comment out individual columns without touching the previous line. This tool defaults to trailing commas but supports both styles in settings.

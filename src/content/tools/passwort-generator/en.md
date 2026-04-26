@@ -30,7 +30,19 @@ relatedTools:
   - uuid-generator
   - base64-encoder
 category: dev
+stats:
+  - label: "Charset"
+    value: "94"
+    unit: "chars"
+  - label: "Max entropy"
+    value: "512"
+    unit: "bit"
+  - label: "Security"
+    value: "cryptographic"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -47,7 +59,7 @@ Most programming languages offer two types of random number generation:
 
 The Web Crypto API is standardized across all modern browsers (Chrome, Firefox, Safari, Edge) and is audited as part of browser security reviews.
 
-## Password Entropy Explained
+## What Is Password Entropy?
 
 Entropy measures how unpredictable a password is. Higher entropy = harder to crack.
 
@@ -74,7 +86,7 @@ Entropy measures how unpredictable a password is. Higher entropy = harder to cra
 
 At 16 characters using the full character set, a password has ~105 bits of entropy. Cracking it at 100 billion guesses per second (an aggressive GPU array) would take longer than the age of the universe.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Account Registration
 
@@ -96,7 +108,7 @@ WPA2 passphrases support up to 63 characters. A randomly generated 20-character 
 
 IT teams creating initial passwords for new employees should use random generation rather than patterns (FirstName+Year, Company+Random). Initial passwords should be marked as requiring change on first login.
 
-## Password Security Best Practices
+## What Are Password Security Best Practices?
 
 **Use a password manager.** The only way to have unique, random passwords on every site without memorizing them is a password manager. Bitwarden is open-source and free; 1Password and Dashlane offer premium features. Apple Keychain and Google Password Manager work for less complex needs.
 
@@ -108,7 +120,7 @@ IT teams creating initial passwords for new employees should use random generati
 
 **Longer beats complex.** A random 20-character lowercase password (75 bits of entropy) is harder to crack than an 8-character mixed-case password with symbols (52 bits). NIST's current guidance deprioritizes mandatory complexity rules in favor of length and avoiding known breached passwords.
 
-## Character Set Reference
+## What Characters Are Supported?
 
 | Set | Characters | Count |
 |-----|-----------|-------|
@@ -120,7 +132,7 @@ IT teams creating initial passwords for new employees should use random generati
 
 Note: Some password policies exclude ambiguous characters (l, 1, I, O, 0) to prevent transcription errors. If you need to read or type the password manually, consider enabling an "exclude ambiguous" option.
 
-## FAQ
+## Häufige Fragen?
 
 **What is the maximum secure password length?**
 

@@ -30,6 +30,9 @@ relatedTools:
   - mm-to-inches
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -45,7 +48,7 @@ The conversion uses the exact defined equivalence: 1 inch = 2.54 centimeters. To
 - Inches → Centimeters: `cm = in × 2.54`
 - Inches → Feet and Inches: `ft = floor(in ÷ 12)`, `remaining_in = in mod 12`
 
-## Common Centimeter-to-Inch Reference Values
+## What Are Common Centimeter-to-Inch Values?
 
 | Centimeters | Decimal Inches | Fractional Inches | Common Context |
 |-------------|---------------|-------------------|----------------|
@@ -60,7 +63,7 @@ The conversion uses the exact defined equivalence: 1 inch = 2.54 centimeters. To
 | 165.1 cm | 65.000 in | 65" | 65-inch TV diagonal |
 | 177.8 cm | 70.000 in | 70" | 5 feet 10 inches tall |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **TV and monitor screen sizes.** The US uses diagonal inches for screen sizes. Product listings from international retailers often show screen diagonals in centimeters. Dividing by 2.54 gives the inch size. A 139.7 cm screen is exactly a 55-inch TV. A 190.5 cm screen is exactly 75 inches. This conversion prevents ordering a screen that doesn't fit your designated space.
 
@@ -74,7 +77,7 @@ The conversion uses the exact defined equivalence: 1 inch = 2.54 centimeters. To
 
 **Electronics and hardware.** Screw and bolt diameters, drill bit sizes, and PCB dimensions are often specified in metric (mm or cm) in international specs and in fractional inches in US catalogs. A 6 mm screw is 0.236 inches — close to but not the same as 1/4" (6.35 mm). This distinction matters for hardware selection.
 
-## FAQ
+## Häufige Fragen?
 
 **What is 5 feet in centimeters?**
 5 feet = 60 inches = 60 × 2.54 = 152.4 centimeters. 6 feet = 72 inches = 182.88 cm. The conversion from feet to centimeters goes through inches: multiply feet by 12 to get inches, then multiply by 2.54.

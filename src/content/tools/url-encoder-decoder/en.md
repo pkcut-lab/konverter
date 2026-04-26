@@ -31,6 +31,9 @@ relatedTools:
   - jwt-decoder
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -46,7 +49,7 @@ The URL specification (RFC 3986) defines which characters are allowed in a URL w
 
 Any character outside this set must be percent-encoded. The encoder converts each byte to `%XX` where `XX` is the uppercase hexadecimal byte value.
 
-## Encoding Modes Explained
+## How Do Encoding Modes Work?
 
 | Mode | Leaves Unencoded | Encodes | Use Case |
 |---|---|---|---|
@@ -63,7 +66,7 @@ Input: `https://example.com/search?q=hello world&lang=en`
 - `encodeURI` → `https://example.com/search?q=hello%20world&lang=en`
   (Structure preserved, only the space encoded — correct when you want the URL to remain functional.)
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Query string parameters.** A search term like `C++ programming` must be encoded as `C%2B%2B%20programming` before appending to a URL. Unencoded `+` characters are interpreted as spaces by some servers.
 
@@ -77,7 +80,7 @@ Input: `https://example.com/search?q=hello world&lang=en`
 
 **File path encoding.** File names with spaces or special characters in web URLs must be encoded. `My Report (Final).pdf` becomes `My%20Report%20(Final).pdf` — parentheses are safe in paths but encoded in query values.
 
-## Common Encodings Reference
+## What Are Common Encodings?
 
 | Character | Encoded | Context |
 |---|---|---|
@@ -90,7 +93,7 @@ Input: `https://example.com/search?q=hello world&lang=en`
 | `?` | `%3F` | Query values |
 | `@` | `%40` | Query values |
 
-## FAQ
+## Häufige Fragen?
 
 **Is URL encoding the same as HTML encoding?**
 No. HTML encoding (also called HTML entity encoding) replaces characters like `<`, `>`, and `&` with `&lt;`, `&gt;`, and `&amp;` for safe display in HTML. URL encoding is a separate standard for safe transmission in URLs. The two serve different purposes and should not be conflated.

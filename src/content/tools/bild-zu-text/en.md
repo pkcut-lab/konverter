@@ -31,6 +31,9 @@ relatedTools:
   - character-counter
 category: text
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ This OCR tool reads the pixels of an image and converts recognizable text charac
 
 The OCR engine is Tesseract.js — a WebAssembly port of Google's open-source Tesseract OCR engine. It runs entirely in your browser, so image data never leaves your device.
 
-## Formula / How It Works
+## How Does It Work?
 
 OCR works in a pipeline of image processing stages before any character recognition begins:
 
@@ -58,7 +61,7 @@ Image input
 
 Language models are loaded on-demand. Selecting "English" loads an ~8 MB LSTM model trained on printed English text. Other languages load separate model files.
 
-## DPI and Resolution Guide
+## How Does DPI Affect Image Quality?
 
 Image resolution is the single biggest factor in OCR accuracy:
 
@@ -72,7 +75,7 @@ Image resolution is the single biggest factor in OCR accuracy:
 
 For printed documents, 300 DPI is the practical minimum for reliable accuracy. Scanning at 600 DPI rarely improves accuracy further but increases processing time.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Digitizing receipts and invoices.** Photograph a paper receipt and extract the line items and totals to paste into a spreadsheet — much faster than manual retyping, especially for expense reports.
 

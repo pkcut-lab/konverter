@@ -28,6 +28,9 @@ relatedTools:
   - square-km-to-square-miles
 category: area
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -66,7 +69,7 @@ The tool applies the full-precision factor (10.763910417...) and rounds the disp
 
 **m² = ft² × 0.09290304** (exact, since 0.3048² = 0.09290304)
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Apartment and home shopping.** US buyers browsing international property listings — Canadian MLS, Spanish portals (Fotocasa, Idealista), or Australian REA — encounter m². Converting to ft² lets them compare directly to US listings they are familiar with.
 
@@ -96,7 +99,7 @@ US room size reference table:
 | 2-bedroom apartment | 900–1,300 ft² | 83.6–120.8 m² |
 | Median new US home | ~2,300 ft² | ~213.7 m² |
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Why does the US use square feet instead of square meters?** The US is one of three countries (along with Liberia and Myanmar) that has not fully adopted the SI metric system for everyday use. Square feet are embedded in real estate law, building codes, and common vernacular — a change that is unlikely in the foreseeable future.
 

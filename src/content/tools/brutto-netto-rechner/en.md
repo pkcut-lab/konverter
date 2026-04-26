@@ -30,7 +30,18 @@ relatedTools:
   - vat-calculator
   - interest-calculator
 category: finance
+stats:
+  - label: "Tax classes"
+    value: "6"
+  - label: "Federal states"
+    value: "16"
+  - label: "Precision"
+    value: "±0.01"
+    unit: "EUR"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +50,7 @@ The Gross-to-Net Salary Calculator shows how much of your paycheck you actually 
 
 The results display as an annual and monthly breakdown, making it easy to compare job offers, plan a budget, or understand why your paycheck doesn't match your quoted salary.
 
-## Formula / How It Works
+## How Does It Work?
 
 The calculation follows standard US payroll withholding rules for 2024:
 
@@ -75,7 +86,7 @@ Step 6: State Income Tax (simplified representative rate)
 Step 7: Net Pay = Gross − Federal Tax − FICA − State Tax − Pre-tax Deductions
 ```
 
-## 2024 Federal Tax Brackets Reference
+## What Are the 2024 Federal Tax Brackets?
 
 | Tax Rate | Single | Married Filing Jointly |
 |---|---|---|
@@ -87,11 +98,11 @@ Step 7: Net Pay = Gross − Federal Tax − FICA − State Tax − Pre-tax Deduc
 | 35% | $243,726 – $609,350 | $487,451 – $731,200 |
 | 37% | $609,351+ | $731,201+ |
 
-## States with No Income Tax (2024)
+## Which States Have No Income Tax?
 
 Alaska, Florida, Nevada, New Hampshire (wages only), South Dakota, Tennessee (wages only), Texas, Washington (wages only), Wyoming.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Comparing job offers.** Two offers — $95,000 in Texas vs. $105,000 in California — look very different once state taxes are applied. Enter each scenario to compare net pay side by side.
 

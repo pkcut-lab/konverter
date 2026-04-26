@@ -31,6 +31,9 @@ relatedTools:
   - stone-to-kg
 category: weight
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ The United States uses pounds (lbs) while most of the rest of the world uses kil
 
 This converter applies the exact, internationally defined conversion factor and returns the pounds value instantly as you type. A reference table covers the most common real-world weights so you can double-check results at a glance.
 
-## Formula or How It Works
+## How Does It Work?
 
 **Pounds = Kilograms × 2.20462262**
 
@@ -56,7 +59,7 @@ The conversion factor derives from the exact SI definition: 1 international poun
 | 70 kg | 154.324 lbs | Average adult male body weight (US) |
 | 100 kg | 220.462 lbs | Heavyweight division cutoff (boxing) |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Air travel:** Airlines publish weight limits in pounds. Your bathroom scale reads kg. Convert before you pack to avoid overweight fees ($100–$200 per bag on US carriers).
 - **Fitness and gym:** Weight plates, barbells, and dumbbell sets imported from Europe are labeled in kg. Convert to know what you're lifting in lbs.

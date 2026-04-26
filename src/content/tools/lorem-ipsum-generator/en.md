@@ -30,13 +30,16 @@ relatedTools:
   - uuid-generator
 category: text
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This generator produces lorem ipsum placeholder text in three flexible modes: paragraph count, sentence count, or exact word count. Output starts with the classic "Lorem ipsum dolor sit amet…" opening and continues with varied, realistic-length sentences to simulate authentic body copy.
 
-## The Classic Opening
+## What Is the Classic Opening?
 
 The canonical lorem ipsum passage begins:
 
@@ -44,7 +47,7 @@ The canonical lorem ipsum passage begins:
 
 This text is recognized universally by designers and developers as a placeholder signal — it will never be mistaken for real content.
 
-## Output Modes Explained
+## How Do Output Modes Work?
 
 ### Paragraph Mode
 
@@ -58,7 +61,7 @@ Outputs a specific number of individual sentences. Useful for testing single-lin
 
 Outputs text truncated to an exact word count. This is the most precise option for components with strict character or word limits — navigation labels, meta description previews, or CTA text testing.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### UI and Web Design Mockups
 
@@ -80,7 +83,7 @@ InDesign and other DTP tools have built-in lorem ipsum generators, but this tool
 
 PowerPoint and Keynote slides benefit from placeholder text that resembles real copy density. Three sentences of lorem ipsum in a content slide shows whether your font size is readable at presentation distance.
 
-## Tips for Working with Placeholder Text
+## How Do You Work with Placeholder Text?
 
 **Match your word count to realistic copy.** A homepage hero headline is typically 6–10 words. A feature card description is 20–40 words. A full blog post body is 600–2,000 words. Using representative lengths prevents layout surprises when real copy arrives.
 
@@ -90,7 +93,7 @@ PowerPoint and Keynote slides benefit from placeholder text that resembles real 
 
 **Set a reminder.** Placeholder text left in production is an SEO signal (thin content) and a credibility issue. Add a content ticket before any lorem ipsum makes it past staging.
 
-## FAQ
+## Häufige Fragen?
 
 **Is lorem ipsum Latin?**
 

@@ -28,6 +28,9 @@ relatedTools:
   - yards-to-meters
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -54,7 +57,7 @@ The conversion uses the internationally defined exact value:
 | 100 nmi | 185.2 km | 115.078 mi |
 | 500 nmi | 926.0 km | 575.39 mi |
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **US Coast Guard operations** — The USCG uses nautical miles for all patrol zones, distress coordinates, and search-and-rescue planning. Converting search-area dimensions to kilometers is routine when coordinating with international partners.
 
@@ -68,7 +71,7 @@ The conversion uses the internationally defined exact value:
 
 **Navy and military operations** — US Navy surface ships, submarines, and carrier strike groups operate using nautical miles and knots. Range-to-target calculations, tanker rendezvous planning, and patrol sectors all use nautical units.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Why is the nautical mile exactly 1.852 km?**
 The nautical mile was originally defined as one arcminute of a great circle of Earth. Early measurements of Earth's circumference were slightly inconsistent across countries, leading to different "nautical miles." In 1929, the International Hydrographic Conference in Monaco standardized it at exactly 1,852 meters (1.852 km), reconciling the various national definitions.

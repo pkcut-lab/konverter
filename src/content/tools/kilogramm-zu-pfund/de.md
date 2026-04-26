@@ -27,6 +27,9 @@ relatedTools:
   - celsius-zu-fahrenheit
 category: weight
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ in Pfund (lb) um und zeigt gleichzeitig den Rückweg. Er eignet sich für
 Körpergewicht im US-Format, Kochrezepte mit Pound-Angaben, Fitness-Statistiken
 und für jeden Handel mit angelsächsisch normierten Waren.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Das internationale avoirdupois-Pfund entspricht seit dem Yard-und-Pfund-Abkommen
 von 1959 exakt 0,45359237&nbsp;kg. Die Gegenrichtung ist damit ebenfalls gelockt:
@@ -55,7 +58,7 @@ gerundet ergibt das 165,3&nbsp;lb — präzise genug für jedes Körpergewichts-
 Faustregel ohne Taschenrechner: mal zwei und zehn Prozent draufschlagen. 80&nbsp;kg
 × 2 = 160, plus 10&nbsp;% = 176 — tatsächlicher Wert 176,37 Pfund.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf ein
 bis zwei Nachkommastellen.
@@ -72,7 +75,7 @@ bis zwei Nachkommastellen.
 Ein Körpergewicht von 80&nbsp;kg entspricht 176,37&nbsp;lb. Eine US-Rezept-Angabe mit
 „2&nbsp;lb ground beef" bedeutet 907 g Hackfleisch.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Körpergewicht und Fitness:** US-Fitness-Apps, Arztunterlagen, Flugzeug-
 Gewichtslimits und Sport-Statistiken stehen durchgängig in Pfund. Wer seine
@@ -121,7 +124,7 @@ nie verpflichtend durchgesetzt. Im Alltag, im Einzelhandel und in der Medizin
 dominiert weiterhin das Pfund. In Forschung, Technik und Export arbeiten
 US-Betriebe aber metrisch.
 
-## Verwandte Gewichts-Tools
+## Welche Gewichts-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

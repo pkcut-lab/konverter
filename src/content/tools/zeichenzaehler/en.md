@@ -30,6 +30,9 @@ relatedTools:
   - roman-numeral-converter
 category: text
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -44,7 +47,7 @@ The counter processes text using JavaScript string methods that update on every 
 
 Reading time is estimated at 200–238 words per minute — the average adult reading speed for on-screen content — and rounded to the nearest half minute.
 
-## Platform Character Limits Reference
+## What Are the Platform Character Limits?
 
 | Platform | Limit | Notes |
 |----------|-------|-------|
@@ -60,7 +63,7 @@ Reading time is estimated at 200–238 words per minute — the average adult re
 | YouTube title | 100 chars | Search results show ~70 chars |
 | YouTube description | 5,000 chars | First 157 chars shown in search |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Twitter/X thread writing.** Each tweet in a thread has its own 280-character limit. Composing threads in a text editor with a live counter lets you plan break points before pasting into the platform, avoiding awkward mid-sentence cuts.
 
@@ -74,7 +77,7 @@ Reading time is estimated at 200–238 words per minute — the average adult re
 
 **Password field validation.** Many systems impose character limits or minimum requirements on passwords (e.g., 8–64 characters, no spaces). Checking a draft password against these constraints before submission saves a frustrating round trip.
 
-## FAQ
+## Häufige Fragen?
 
 **Does copying formatted text (bold, links) affect the count?**
 Pasting rich text into the input area strips formatting — only the raw text characters are counted. This matches how most platforms count characters: they see the plaintext, not the HTML markup.

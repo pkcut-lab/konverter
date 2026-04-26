@@ -29,7 +29,18 @@ relatedTools:
   - hintergrund-entfernen
   - meter-zu-fuss
 category: video
+stats:
+  - label: "Max. Dateigröße"
+    value: "4"
+    unit: "GB"
+  - label: "Video-API"
+    value: "WebCodecs"
+  - label: "Qualität"
+    value: "konfigurierbar"
 contentVersion: 1
+datePublished: '2026-04-20'
+dateModified: '2026-04-24'
+
 ---
 
 ## Warum spielt mein iPhone-Video nicht überall?
@@ -96,7 +107,7 @@ Dateigröße".
   </div>
 </div>
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Drei typische Situationen, in denen eine Umwandlung nötig wird:
 
@@ -136,7 +147,7 @@ Firmen-interne Dokumentationen — ist das der entscheidende Unterschied zu
 cloud-basierten Konvertern. Weitere Details stehen in der
 <a href="/de/datenschutz">Datenschutzerklärung</a>.
 
-## Grenzen dieses Tools
+## Welche Grenzen hat dieses Tool?
 
 Ehrliche Erwartungsführung ist uns wichtiger als Marketing-Versprechen:
 
@@ -228,7 +239,7 @@ vorhanden — die GPS-Koordinaten in die fertige MP4-Datei. Viele
 Konkurrenzdienste entfernen diese Metadaten stillschweigend, was
 Foto-Chronologien durcheinanderbringt.
 
-## Verwandte Video-Tools
+## Welche Video-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

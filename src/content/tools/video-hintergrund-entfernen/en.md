@@ -31,6 +31,9 @@ relatedTools:
   - hevc-to-h264
 category: video
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -53,7 +56,7 @@ The tool uses a body/subject segmentation model (similar architectures to MediaP
 | Compositing | Canvas API | Client GPU |
 | Re-encoding | MediaRecorder | Client |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Social media content creation.** Short-form video creators on YouTube, TikTok, and Instagram use background removal to place themselves in branded environments without renting a studio. This tool processes clips locally — no subscription to a SaaS editor required.
 
@@ -67,7 +70,7 @@ The tool uses a body/subject segmentation model (similar architectures to MediaP
 
 **Social media ads.** Marketing teams can take raw video footage of talent and composite them against multiple branded backgrounds to create ad variants without re-shooting.
 
-## Output Options
+## What Output Options Are Available?
 
 | Background Replacement | Format | Use Case |
 |---|---|---|
@@ -76,7 +79,7 @@ The tool uses a body/subject segmentation model (similar architectures to MediaP
 | Custom image (JPG/PNG) | MP4 or WebM | Branded environments |
 | Blur (Gaussian) | MP4 or WebM | Privacy-focused calls |
 
-## FAQ
+## Häufige Fragen?
 
 **Why does the segmentation look rough around hair and fine details?**
 Edge refinement on complex boundaries (hair, fur, fine fabric) is the hardest problem in video matting. The model applies feathering at the mask boundary to soften edges, but fine strands may not be perfectly isolated. For professional broadcast-quality matting, a physical green screen provides significantly cleaner results.

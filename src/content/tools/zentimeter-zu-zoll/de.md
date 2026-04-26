@@ -27,6 +27,9 @@ relatedTools:
   - quadratmeter-zu-quadratfuss
 category: length
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ in Zoll (in) um und zeigt gleichzeitig den Rückweg. Er eignet sich für
 Körpergrößen im US-Format, Bildschirmdiagonalen, DIY-Maße und für jede Rechnung,
 die zwischen metrischem und imperialem System pendelt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Zoll entspricht seit dem Internationalen Yard-und-Pfund-Abkommen von 1959
 exakt 2,54&nbsp;cm. Die Gegenrichtung ist damit ebenfalls gelockt: `1 cm = 0,3937 in`
@@ -54,7 +57,7 @@ Rechen-Beispiel: 30&nbsp;cm × 0,3937 = 11,811 in. Auf zwei Nachkommastellen ger
 ergibt das 11,81 in — präzise genug für Alltag und Handwerk. Wer exakt rechnet
 (z. B. Maschinenbau), behält alle Stellen und rundet erst am Ende der Kette.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei
 bis vier Nachkommastellen.
@@ -71,7 +74,7 @@ bis vier Nachkommastellen.
 Eine Körpergröße von 180&nbsp;cm ergibt knapp 5 Fuß 11 Zoll (70,87 in). Ein
 15-Zoll-Laptop-Display misst 38,10&nbsp;cm Diagonale.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Bildschirme und Displays:** Diagonalen werden international in Zoll angegeben
 — 13" Laptop, 27" Monitor, 55" Fernseher. Für Passformen in Rucksäcken,
@@ -116,7 +119,7 @@ Optik behält man alle Stellen und rundet erst am Ende der Rechenkette.
 15 Zoll entsprechen 38,1&nbsp;cm Diagonale. Für einen 16:9-Bildschirm bedeutet das
 rund 33,2&nbsp;cm Breite und 18,7&nbsp;cm Höhe — wichtig für Koffer- oder Tisch-Planung.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

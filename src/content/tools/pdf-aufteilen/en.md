@@ -28,6 +28,9 @@ relatedTools:
   - pdf-to-jpg
 category: document
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -55,7 +58,7 @@ The tool uses [PDF-lib](https://pdf-lib.js.org/), a pure-JavaScript PDF manipula
 
 Because computation happens locally, the tool works offline after the initial page load.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Legal and contracts.** Attorneys frequently receive multi-contract bundles from opposing counsel. Splitting out individual agreements makes them easier to route for review.
 
@@ -69,7 +72,7 @@ Because computation happens locally, the tool works offline after the initial pa
 
 **Print-on-demand.** Many POD services require single-page PDF uploads. Burst a chapter PDF into individual pages ready for upload.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Can I reorder pages before splitting?** The current version focuses on extraction. For reordering before merging, use our PDF Merger tool, which supports drag-and-drop page ordering.
 

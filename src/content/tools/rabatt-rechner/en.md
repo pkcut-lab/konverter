@@ -28,6 +28,9 @@ relatedTools:
   - roi-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -51,7 +54,7 @@ The reverse calculation:
 
 All calculations happen in your browser. Nothing is sent to a server.
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Black Friday & Cyber Monday shopping** — Retailers advertise "up to 70% off," but the actual savings vary by item. Paste in the price tag and the advertised sale price to verify you're actually getting the deal claimed.
 
@@ -65,7 +68,7 @@ All calculations happen in your browser. Nothing is sent to a server.
 
 **Restaurant and app promo codes** — Food delivery apps (DoorDash, Uber Eats) frequently offer 20–30% off your first order or $15 off orders over $30. Check which deal type saves you more for your order size.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Why does stacking two 10% discounts not equal 20% off?**
 Because each discount applies to the already-reduced price. First 10% off $100 = $90. Second 10% off $90 = $81. Total savings: $19, which is 19% — not 20%.

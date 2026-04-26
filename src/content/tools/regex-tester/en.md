@@ -31,6 +31,9 @@ relatedTools:
   - character-counter
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -47,7 +50,7 @@ The tool feeds your pattern and flags directly into JavaScript's `RegExp` constr
 
 Everything runs in your browser. Your pattern and test data never leave your machine.
 
-## Flag Reference
+## What Regex Flags Are Available?
 
 | Flag | Name | Effect |
 |---|---|---|
@@ -58,7 +61,7 @@ Everything runs in your browser. Your pattern and test data never leave your mac
 | `u` | Unicode | Enable full Unicode matching |
 | `d` | Indices | Include start/end indices per group (ES2022) |
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Validating US phone number formats** — US phone numbers appear in dozens of formats: `(555) 867-5309`, `555-867-5309`, `5558675309`. A regex like `\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{4}` matches all variants. Test every format before deploying to a form validator.
 
@@ -70,7 +73,7 @@ Everything runs in your browser. Your pattern and test data never leave your mac
 
 **Find-and-replace in editors** — VS Code, JetBrains IDEs, and Sublime Text all support regex find-and-replace. Prototype the pattern here where you can see matches highlighted, then paste it into your editor.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **What is the difference between `test()` and `match()`?**
 `RegExp.prototype.test(str)` returns a boolean — useful when you only need to know if a pattern matches. `String.prototype.match()` returns the match array. This tool uses `matchAll()` to surface all matches and their groups.

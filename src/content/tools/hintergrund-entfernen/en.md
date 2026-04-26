@@ -31,13 +31,16 @@ relatedTools:
   - webp-converter
 category: image
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This tool removes the background from any image using a convolutional neural network (CNN) running entirely inside your browser. The ML model segments the image into foreground and background, generates a transparency mask, and composites the result onto a transparent layer. The output is a PNG with an alpha channel — ready for use in e-commerce listings, graphic design, social media, or further editing.
 
-## Formula / How It Works
+## How Does It Work?
 
 The background removal pipeline runs these steps locally:
 
@@ -72,7 +75,7 @@ The model is loaded once as an ONNX or TensorFlow.js artifact. Inference runs vi
 | Transparent or glass objects | Challenging — may retain background |
 | Complex outdoor scenes | Variable |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **E-commerce product photography.** Online stores require product images on white or transparent backgrounds for marketplaces like Amazon, Etsy, eBay, and Shopify. Hiring a photographer or post-production service for every SKU is expensive. This tool lets sellers remove backgrounds from photos taken with a smartphone, producing marketplace-ready images in seconds.
 

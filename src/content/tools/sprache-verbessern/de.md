@@ -28,6 +28,9 @@ faq:
 relatedTools:
   - hevc-zu-h264
   - hintergrund-entfernen
+datePublished: '2026-04-24'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was macht dieser Sprachverbesserer?
@@ -65,7 +68,7 @@ arbeitet rein auf spektraler Ebene und behandelt Deutsch, Englisch, Türkisch un
 anderen Sprachen gleich. Adobe Podcast V2 wurde dokumentiert als stärker auf amerikanisches
 Englisch optimiert.
 
-## Stärke-Einstellungen
+## Welche Stärke-Einstellungen gibt es?
 
 Das Tool bietet vier Preset-Stufen, die unterschiedliche Anwendungsfälle abdecken:
 
@@ -82,7 +85,7 @@ roboterhaft klingen lässt, während 30&nbsp;% der maximalen Stärke eine natür
 Das Tool implementiert diesen Wert als sinnvollen Default, statt wie Mitbewerber
 automatisch auf maximale Unterdrückung zu setzen.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Sprach-Nachbearbeitung ist in vielen Kontexten nötig — das Tool deckt die häufigsten ab:
 
@@ -151,7 +154,7 @@ Als Richtwert: 10&nbsp;Minuten Audio dauern im WASM-Modus ca. 20–30&nbsp;Minut
 Ja. Da keinerlei Daten übertragen werden, entsteht kein Datenschutz-Risiko. Die Verarbeitung
 ist strukturell lokal.
 
-## Verwandte Audio-Tools
+## Welche Audio-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

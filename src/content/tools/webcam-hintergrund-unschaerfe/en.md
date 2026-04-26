@@ -31,6 +31,9 @@ relatedTools:
   - hevc-to-h264
 category: video
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -54,7 +57,7 @@ The pipeline runs in three stages on each frame:
 
 Total per-frame latency is 20–60ms on modern hardware — sufficient for 20–30fps video call quality.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Remote work from home.** The home office background — bookshelves, kids walking by, laundry drying — is distracting and can undermine professional presence in client calls. Background blur maintains focus on the speaker without requiring a dedicated office or green screen.
 
@@ -68,7 +71,7 @@ Total per-frame latency is 20–60ms on modern hardware — sufficient for 20–
 
 **Traveling professionals.** Hotel rooms, airport lounges, and co-working spaces are notoriously distracting video call backgrounds. Browser-based blur requires no software install on the travel laptop.
 
-## Blur Type Comparison
+## How Do the Blur Types Compare?
 
 | Mode | Effect | Best For |
 |---|---|---|
@@ -77,7 +80,7 @@ Total per-frame latency is 20–60ms on modern hardware — sufficient for 20–
 | Bokeh / depth-of-field | Simulated lens blur, subject sharp | Professional, cinematic look |
 | Custom background | Solid color or uploaded image | Branding, fully controlled look |
 
-## Setting Up with OBS (Recommended)
+## How Do You Set Up with OBS?
 
 To use the blurred feed in any video call app:
 
@@ -89,7 +92,7 @@ To use the blurred feed in any video call app:
 
 This routes the browser-processed, blurred feed as a system-wide virtual camera available to all applications.
 
-## FAQ
+## Häufige Fragen?
 
 **Why is the blur edge around my hair imperfect?**
 Real-time segmentation at 30fps runs a lighter model than still-image processing. Hair and flyaways at the boundary are harder to classify correctly at speed. Increasing ambient light and wearing clothing that contrasts with your background significantly improves edge quality.

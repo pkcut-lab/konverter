@@ -31,6 +31,9 @@ relatedTools:
   - css-formatter
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -45,7 +48,7 @@ Modern browsers include a built-in `DOMParser` that parses XML natively. This to
 
 This approach is fast, dependency-free, and identical in behavior to the XML parsers used in production environments — meaning the well-formedness check here reflects what a real parser will do.
 
-## Common XML Formats by Industry
+## What Are Common XML Formats by Industry?
 
 | Format | Common In | Typical Issue |
 |--------|-----------|---------------|
@@ -57,7 +60,7 @@ This approach is fast, dependency-free, and identical in behavior to the XML par
 | SVG | Design exports | Unreadable after Figma/Illustrator export |
 | XLIFF | Localization files | Large, deeply nested translation pairs |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Debugging SOAP API responses.** SOAP services return XML responses that are typically minified or single-line. Pasting the response here makes it immediately readable, letting you locate the specific element causing an error without manually counting brackets.
 
@@ -71,7 +74,7 @@ This approach is fast, dependency-free, and identical in behavior to the XML par
 
 **Cleaning up localization files.** XLIFF (`.xlf`) files used in iOS, Android, and web localization are XML. Formatting them makes it easier to spot untranslated segments or malformed translation units.
 
-## FAQ
+## Häufige Fragen?
 
 **What characters need to be escaped in XML?**
 The five predefined XML entities are: `&amp;` for `&`, `&lt;` for `<`, `&gt;` for `>`, `&quot;` for `"` inside attribute values, and `&apos;` for `'` inside attribute values. Forgetting to escape an `&` character in element content is one of the most common XML well-formedness errors.

@@ -31,6 +31,9 @@ relatedTools:
   - xml-formatter
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ REST APIs, NoSQL databases, and SaaS exports all speak JSON. But analysts, proje
 
 The converter handles the most common friction point — nested objects — by flattening them into additional columns using dot-path keys. An object like `{"order": {"id": 42, "total": 19.99}}` becomes two columns: `order.id` and `order.total`. Nothing is silently dropped.
 
-## Formula or How It Works
+## How Does It Work?
 
 | Step | What Happens |
 |---|---|
@@ -51,7 +54,7 @@ The converter handles the most common friction point — nested objects — by f
 
 **Delimiter options:** comma (RFC 4180), semicolon (common in European locales), tab (TSV — useful for pasting directly into Google Sheets).
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Salesforce / HubSpot exports:** API responses are JSON arrays. Convert to CSV and open in Excel for reporting.
 - **Airtable / Notion data migration:** Export as JSON, convert to CSV, import into the target app.

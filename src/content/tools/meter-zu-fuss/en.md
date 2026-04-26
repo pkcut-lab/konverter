@@ -27,14 +27,26 @@ relatedTools:
   - km-to-miles
   - sqm-to-sqft
 category: length
+stats:
+  - label: "Precision"
+    value: "5"
+    unit: "decimals"
+  - label: "Processing"
+    value: "<1"
+    unit: "ms"
+  - label: "Privacy"
+    value: "local"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter handles meters ↔ feet in both directions with full floating-point precision. It also supports feet+inches input mode for human height conversions, where Americans typically express height as feet and inches (e.g., 5'10") rather than a decimal foot value.
 
-## Formula: Meters to Feet
+## How Do You Convert Meters to Feet?
 
 **Feet = Meters × 3.280839895**
 
@@ -49,7 +61,7 @@ For height expressed as feet and inches:
 1. Convert total inches to meters: Total inches = (feet × 12) + inches → meters = total inches × 0.0254
 2. Or convert meters to feet: decimal feet = meters ÷ 0.3048 → whole feet = floor(decimal feet), inches = (decimal feet − whole feet) × 12
 
-## Meters to Feet Conversion Table
+## How Do You Convert Meters to Feet?
 
 | Meters | Feet | Feet + Inches |
 |--------|------|---------------|
@@ -67,7 +79,7 @@ For height expressed as feet and inches:
 | 10.0 m | 32.808 ft | 32' 9.7" |
 | 100 m | 328.084 ft | 328' 1.0" |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Human Height
 
@@ -101,7 +113,7 @@ Aviation worldwide uses feet for altitude, even in countries that use metric for
 
 US pool depths are given in feet (3 ft shallow end, 6 ft deep end is standard). Pool volume calculations for chemical treatment use gallons. European pool specifications use meters and liters — this converter bridges the two when comparing or purchasing international pool equipment.
 
-## US vs. International Context
+## How Does the US Context Differ Internationally?
 
 The US is one of only three countries (with Liberia and Myanmar) not officially using the metric system as primary. In practice, US science, medicine, nutrition labels, and international trade use metric — but consumer-facing contexts (real estate, human height, road signs, weather, sports) remain in US customary units.
 
@@ -111,7 +123,7 @@ This creates friction when:
 - Following international fitness or health benchmarks
 - Understanding foreign news reports ("the storm surge reached 3 meters")
 
-## FAQ
+## Häufige Fragen?
 
 **Is 6 feet considered tall in the US?**
 

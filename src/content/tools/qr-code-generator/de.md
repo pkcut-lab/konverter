@@ -7,6 +7,15 @@ metaDescription: "QR-Code Generator: Text oder URL in einen QR-Code umwandeln un
 tagline: "Beliebigen Text oder eine URL als QR-Code im SVG-Format erzeugen — direkt im Browser, ohne Server."
 intro: "Der QR-Code Generator wandelt Text, URLs oder beliebige Zeichenketten in einen scannbaren QR-Code um. Die Ausgabe erfolgt als SVG-Grafik, die sich verlustfrei skalieren laesst. Die gesamte Kodierung laeuft lokal im Browser — kein Upload, kein Tracking, kein Server-Kontakt."
 category: "image"
+stats:
+  - label: "Fehlerkorrektur"
+    value: "4"
+    unit: "Stufen"
+  - label: "Max. Daten"
+    value: "4296"
+    unit: "Zeichen"
+  - label: "Ausgabe"
+    value: "SVG + PNG"
 contentVersion: 1
 eyebrow: "GENERATOR"
 howToUse:
@@ -27,13 +36,16 @@ faq:
 relatedTools:
   - webp-konverter
   - hintergrund-entfernen
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Generator?
 
 Der QR-Code Generator kodiert beliebigen Text in ein zweidimensionales Muster aus schwarzen und weissen Modulen. Scanner-Apps auf Smartphones oder Tablets lesen dieses Muster und geben den gespeicherten Inhalt wieder — typischerweise eine URL, die sich direkt im Browser oeffnet. Die Ausgabe erfolgt als SVG, das sich verlustfrei in jeder Groesse darstellen laesst. Die Kodierung nutzt den Byte-Modus mit UTF-8 und Error Correction Level M, sodass der Code auch bei leichter Beschaedigung lesbar bleibt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 QR-Codes basieren auf dem ISO/IEC-18004-Standard. Die Kodierung folgt einem mehrstufigen Prozess:
 
@@ -44,7 +56,7 @@ QR-Codes basieren auf dem ISO/IEC-18004-Standard. Die Kodierung folgt einem mehr
 
 Beispiel: Der Text `https://example.com` (20 Bytes) passt in Version 1 (Kapazitaet 14 Bytes wird ueberschritten) — der Generator waehlt automatisch Version 2 mit 25 x 25 Modulen.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Typische Eingaben und ihre Verwendung:
 
@@ -59,7 +71,7 @@ Typische Eingaben und ihre Verwendung:
 
 Je kuerzer der Text, desto kleiner und robuster der resultierende QR-Code.
 
-## Haeufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Marketing und Print** — QR-Codes auf Visitenkarten, Flyern, Plakaten und Produktverpackungen verlinken direkt auf Landingpages oder Kontaktformulare. Das SVG-Format stellt sicher, dass der Code auch im Grossformat gestochen scharf bleibt.
 
@@ -69,11 +81,11 @@ Je kuerzer der Text, desto kleiner und robuster der resultierende QR-Code.
 
 - **IT und Netzwerk** — WLAN-Zugangsdaten als QR-Code aushaengen, statt Passwoerter muendlich weiterzugeben. Gaeste scannen den Code und verbinden sich automatisch.
 
-## Haeufige Fragen
+## Häufige Fragen?
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) fuer Suchmaschinen ausgegeben.
 
-## Verwandte Bild-Tools
+## Welche Bild-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Oekosystem, die zum Thema passen:
 

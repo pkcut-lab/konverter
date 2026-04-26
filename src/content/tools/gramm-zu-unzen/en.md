@@ -28,13 +28,16 @@ relatedTools:
   - metric-tons-to-pounds
 category: weight
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter translates grams (g) to ounces (oz) and ounces back to grams, bidirectionally and in real time. Enter any value in either field and the result appears immediately. The conversion is based on the avoirdupois ounce, which is the standard unit of weight used in the United States for everyday purposes — food, postal, and general commerce.
 
-## Formula / How It Works
+## How Does It Work?
 
 The exact relationship between grams and the avoirdupois ounce is:
 
@@ -61,7 +64,7 @@ If you're working with precious metals (gold, silver, platinum), be aware that t
 
 Precious metals prices on exchanges like COMEX are quoted per troy ounce. This tool uses the standard avoirdupois ounce for general-purpose weight conversion.
 
-## Reference Table — Grams to Ounces
+## How Do You Convert Grams to Ounces?
 
 | Grams | Ounces |
 |-------|--------|
@@ -77,7 +80,7 @@ Precious metals prices on exchanges like COMEX are quoted per troy ounce. This t
 | 500 g | 17.637 oz |
 | 1,000 g | 35.274 oz |
 
-## Reference Table — Ounces to Grams
+## How Do You Convert Ounces to Grams?
 
 | Ounces | Grams |
 |--------|-------|
@@ -90,7 +93,7 @@ Precious metals prices on exchanges like COMEX are quoted per troy ounce. This t
 | 16 oz (1 lb) | 453.592 g |
 | 32 oz (2 lb) | 907.185 g |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Cooking and baking with European recipes.** Many recipes from the UK, France, Germany, and elsewhere list ingredients in grams. US cooks who prefer ounces (or cup-based volumes tied to ounce weights) need a quick conversion. For example, a recipe calling for 250 g of flour equals about 8.8 oz.
 

@@ -31,6 +31,9 @@ relatedTools:
   - webp-converter
 category: color
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ Poor color contrast makes text unreadable for the 253 million people worldwide w
 
 This tool calculates the WCAG-defined contrast ratio between any two colors and returns instant pass/fail verdicts for both Level AA and Level AAA. It also shows a live text preview so you can see the combination as your users will.
 
-## Formula or How It Works
+## How Does It Work?
 
 **Contrast Ratio = (L1 + 0.05) ÷ (L2 + 0.05)**
 
@@ -62,7 +65,7 @@ Where L1 is the relative luminance of the lighter color and L2 is the relative l
 - Normal text: below 18pt (24px) regular, or below 14pt (18.67px) bold
 - Large text: 18pt (24px) or larger regular, or 14pt (18.67px) or larger bold
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Design system setup:** Validate every color pair in your component library — primary button text, link colors, placeholder text, and error states.
 - **Dark mode review:** Dark themes often have subtle contrast failures (gray text on dark gray background). Check every token combination.

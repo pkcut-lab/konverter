@@ -30,13 +30,16 @@ relatedTools:
   - kg-to-lbs
 category: volume
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter handles milliliters ↔ US fluid ounces in both directions with full precision. It is particularly useful for recipe scaling, beverage sizing, pharmaceutical dosing, and cosmetics labeling — all contexts where the US requires dual-unit labeling (mL and fl oz) on packaging.
 
-## Formula: Milliliters to US Fluid Ounces
+## How Do You Convert Milliliters to US Fluid Ounces?
 
 **US fl oz = mL ÷ 29.5735295625**
 
@@ -50,7 +53,7 @@ The US fluid ounce is defined as exactly 1/128 of a US liquid gallon. Since a US
 
 The Imperial fluid ounce is 1/20 of a UK pint, which is 1/8 of an Imperial gallon (4.54609 L). It is slightly smaller than the US fluid ounce.
 
-## Common Sizes Reference Table
+## What Are Common Reference Sizes?
 
 | Volume | mL | US fl oz | US Kitchen Equivalent |
 |--------|-----|----------|----------------------|
@@ -65,7 +68,7 @@ The Imperial fluid ounce is 1/20 of a UK pint, which is 1/8 of an Imperial gallo
 | 1 liter | 1,000 mL | 33.81 fl oz | ~4.2 cups |
 | 1 gallon | 3,785 mL | 128 fl oz | 4 quarts |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Beverage Sizes in the US
 
@@ -116,7 +119,7 @@ TSA carry-on limits allow liquids in containers of 3.4 fl oz (100 mL) or less, a
 | Skincare serum | 15–30 mL (0.5–1.0 fl oz) |
 | Full-size shampoo | 355 mL (12 fl oz) |
 
-## US vs. Imperial: When the Difference Matters
+## When Does the US vs. Imperial Units Difference Matter?
 
 A 4% difference sounds small, but in large-batch cooking or pharmaceutical contexts it compounds. If a UK recipe calls for 10 Imperial fl oz and you use US fl oz:
 
@@ -125,7 +128,7 @@ A 4% difference sounds small, but in large-batch cooking or pharmaceutical conte
 
 Difference: 11.6 mL — about 2.5 teaspoons. For baking a single cake, negligible. For a 50-gallon batch production, it becomes a significant systematic error.
 
-## FAQ
+## Häufige Fragen?
 
 **Why does the US use fl oz instead of mL?**
 

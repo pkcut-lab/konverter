@@ -6,6 +6,8 @@ interface ToolContentForJsonLd {
   category?: string;
   faq: Array<{ q: string; a: string }>;
   steps: Array<{ title: string; description: string }>;
+  datePublished?: string;
+  dateModified?: string;
 }
 
 const APPLICATION_CATEGORY_BY_CATEGORY: Record<string, string> = {
@@ -43,6 +45,8 @@ export function buildToolJsonLd(
     operatingSystem: 'Web',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     inLanguage: content.lang,
+    ...(content.datePublished && { datePublished: content.datePublished }),
+    ...(content.dateModified && { dateModified: content.dateModified }),
   });
 
   const origin = new URL(url).origin;

@@ -30,6 +30,9 @@ relatedTools:
   - grams-to-ounces
 category: weight
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -48,7 +51,7 @@ All three ton types convert to pounds using fixed, exact ratios:
 
 The converter uses these ratios directly — no intermediate rounding. Results are displayed to 4 significant figures by default, with an option to show the full precision.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Shipping and freight.** A container shipment from Germany is quoted at 25 metric tons. US customs documentation uses short tons. 25 metric tons = 27.56 short tons = 55,116 lbs. Knowing the distinction prevents costly classification errors.
 
@@ -60,7 +63,7 @@ The converter uses these ratios directly — no intermediate rounding. Results a
 
 **HVAC and mechanical.** Air conditioner capacity is sometimes expressed in "tons of cooling" — this refers to neither a metric nor a short ton of weight, but to the heat absorption of 1 short ton of ice melting over 24 hours (12,000 BTU/hr). This is a separate usage and does not apply here.
 
-## Quick Reference Table
+## What Are the Quick Reference Values?
 
 | Metric Tons | Pounds | Short Tons | Long Tons |
 |---|---|---|---|
@@ -71,7 +74,7 @@ The converter uses these ratios directly — no intermediate rounding. Results a
 | 25 t | 55,116 lbs | 27.558 tn | 24.606 LT |
 | 100 t | 220,462 lbs | 110.231 tn | 98.421 LT |
 
-## FAQ
+## Häufige Fragen?
 
 **Is a metric ton the same as a tonne?**
 Yes. "Tonne" is the international spelling used in most countries; "metric ton" is the preferred US term for the same unit. Both equal exactly 1,000 kg.

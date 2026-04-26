@@ -30,6 +30,9 @@ relatedTools:
   - grams-to-ounces
 category: weight
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -66,7 +69,7 @@ The chain of exact definitions:
 To convert decimal stone to stone + pounds, take the whole number of stones and multiply the decimal remainder by 14.
 Example: 11.5 st = 11 st + (0.5 × 14) lbs = 11 st 7 lbs = 73.03 kg.
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Following British TV and media** — The stone unit appears constantly in UK health, fitness, and lifestyle content that American audiences watch. Understanding that a contestant weighing "12 stone 4" on a British show means 172 lbs or 78.0 kg makes the content more accessible.
 
@@ -80,7 +83,7 @@ Example: 11.5 st = 11 st + (0.5 × 14) lbs = 11 st 7 lbs = 73.03 kg.
 
 **Online shopping for UK-designed clothing** — Some UK brands size clothing by stone-based weight ranges. Understanding the stone scale helps when reading size guides from ASOS, Marks & Spencer, or other UK retailers shipping to the US.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Why does the UK use stone when the rest of the world uses kilograms?**
 The stone is a traditional British imperial unit that was never replaced during metrication for the specific context of body weight. The UK officially adopted metric in 1995 for most trade, but body weight remains culturally attached to stone — similar to how the US has retained Fahrenheit for everyday temperatures while using Celsius in science.

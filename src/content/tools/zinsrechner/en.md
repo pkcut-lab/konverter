@@ -30,7 +30,19 @@ relatedTools:
   - loan-calculator
   - vat-calculator
 category: finance
+stats:
+  - label: "Compounding"
+    value: "4"
+    unit: "intervals"
+  - label: "Precision"
+    value: "±0.01"
+    unit: "EUR"
+  - label: "Processing"
+    value: "real-time"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -52,7 +64,7 @@ Where:
 
 For a 6-month term, use t = 0.5. For 90 days, use t = 90/365 = 0.2466. The tool accepts months or days directly and converts internally.
 
-## Simple vs Compound Interest Comparison
+## How Does Simple Interest Compare to Compound Interest?
 
 Example: $15,000 principal at 7% for 5 years.
 
@@ -64,7 +76,7 @@ Example: $15,000 principal at 7% for 5 years.
 
 Over 5 years, the difference between simple and monthly compound interest is $938.93 on a $15,000 loan — significant enough to factor into loan comparisons.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Auto loan cost estimation.** Most US car loans (bank, credit union, and dealership financing) use simple interest. Knowing the total interest cost before signing helps you compare financing options. A $30,000 auto loan at 7% for 5 years costs $5,250 in total interest. The same loan at 9% costs $6,750 — a $1,500 difference worth negotiating over.
 
@@ -78,7 +90,7 @@ Over 5 years, the difference between simple and monthly compound interest is $93
 
 **Student loan interest estimation.** Federal student loans use simple interest that accrues daily. During a deferment or forbearance period, unpaid interest may capitalize (be added to the principal) — converting into compound interest after that point. Understanding daily accrual on a deferred loan helps borrowers decide whether to make interest-only payments during school to prevent capitalization.
 
-## FAQ
+## Häufige Fragen?
 
 **What is the difference between APR and interest rate?**
 The interest rate is the cost of borrowing expressed as a percentage. APR (Annual Percentage Rate) includes the interest rate plus other costs — origination fees, closing costs, mandatory insurance — expressed as a single annual percentage. For simple comparison, APR is more complete. This calculator uses the interest rate only; to account for fees, add them to the principal or subtract them from the loan proceeds.

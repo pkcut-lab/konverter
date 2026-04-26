@@ -29,14 +29,25 @@ relatedTools:
   - webp-converter
   - webcam-background-blur
 category: video
+stats:
+  - label: "Max file size"
+    value: "4"
+    unit: "GB"
+  - label: "Video API"
+    value: "WebCodecs"
+  - label: "Quality"
+    value: "configurable"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This tool converts HEVC (H.265) video files to H.264 MP4 — entirely in your browser. It uses FFmpeg compiled to WebAssembly (WASM), which means the encoding runs on your CPU locally, just like a native app, but without requiring any installation. Supported input formats include `.mov`, `.mp4`, and `.hevc` containers carrying H.265 video streams. The output is a standard H.264 MP4 that plays on virtually any device, platform, or video host.
 
-## Formula / How It Works
+## How Does It Work?
 
 The conversion pipeline inside the browser looks like this:
 
@@ -78,7 +89,7 @@ ffmpeg -i input.mov -c:v libx264 -crf 22 -preset medium -c:a aac -b:a 128k outpu
 | File size at same quality | Larger | Smaller |
 | Encoding speed | Fast | Slower |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Sharing iPhone videos with Windows users.** iPhones record in HEVC by default since iOS 11. When an iPhone user sends a `.mov` file to a Windows user who hasn't installed the HEVC codec pack, they get an error. Converting to H.264 MP4 solves this without any setup on the recipient's end.
 

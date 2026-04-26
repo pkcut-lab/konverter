@@ -28,6 +28,9 @@ relatedTools:
   - jwt-decoder
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -36,7 +39,7 @@ Base64 Encoder/Decoder converts arbitrary binary or text data into a safe, print
 
 Two modes are available: **Encode** takes raw text or a binary file and outputs a Base64 string. **Decode** takes a Base64 string and outputs the original text or lets you download the reconstructed binary file.
 
-## Formula / How It Works
+## How Does It Work?
 
 Base64 maps every 3 bytes of input to 4 printable characters drawn from a 64-character alphabet (A–Z, a–z, 0–9, +, /):
 
@@ -55,7 +58,7 @@ When the input length is not a multiple of 3, padding (`=`) is added:
 
 URL-safe variant replaces `+` → `-` and `/` → `_` and omits padding.
 
-## Character Set Reference
+## What Characters Are Supported?
 
 | Variant | Characters | Padding | Common Use |
 |---|---|---|---|
@@ -63,7 +66,7 @@ URL-safe variant replaces `+` → `-` and `/` → `_` and omits padding.
 | URL-safe | A–Z a–z 0–9 - _ | omitted | JWT, URL params |
 | MIME | Standard + line breaks every 76 chars | = | Email attachments |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Embedding images in HTML/CSS.** Instead of an external request, small icons and logos can be inlined as `data:image/png;base64,...` data URLs. Useful for single-file HTML exports and CSS background images.
 

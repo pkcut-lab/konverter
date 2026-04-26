@@ -26,14 +26,24 @@ relatedTools:
   - regex-tester
   - zeichenzaehler
 category: color
+stats:
+  - label: "Farbformate"
+    value: "5"
+  - label: "Konvertierung"
+    value: "Echtzeit"
+  - label: "Farbraum"
+    value: "sRGB"
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Konverter?
 
 Der Konverter wandelt einen HEX-Farbcode in RGB-Dezimalwerte um und zeigt zusätzlich die HSL- und OKLCH-Entsprechung. Er akzeptiert alle gängigen HEX-Formate: 3-Digit-Shorthand (#F0A), 6-Digit-Standard (#FF00AA) und 8-Digit mit Alpha-Kanal (#FF00AA88). Leerzeichen und Hash-Symbol werden automatisch bereinigt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein HEX-Farbcode codiert drei Farbkanäle (Rot, Grün, Blau) als jeweils zwei Hexadezimalziffern. Die Umrechnung zerlegt den Code in Byte-Paare und konvertiert jedes von Basis 16 in Basis 10:
 
@@ -47,7 +57,7 @@ Bei 3-Digit-Shorthand wird jede Ziffer verdoppelt: #F0A → #FF00AA. Bei 8-Digit
 
 Die Konvertierung ist mathematisch verlustfrei — HEX und RGB beschreiben denselben sRGB-Farbraum in unterschiedlicher Notation. Beide stammen aus der Frühzeit des Web: HEX aus HTML 2.0 (1995), rgb() aus CSS1 (1996).
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | HEX       | RGB              | HSL               |
 |-----------|------------------|-------------------|
@@ -61,7 +71,7 @@ Die Konvertierung ist mathematisch verlustfrei — HEX und RGB beschreiben dense
 
 Zusätzlich berechnet der Konverter für jede Eingabe den OKLCH-Wert — relevant für modernes CSS-Authoring und Farbpaletten-Generierung.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Figma-Export nach CSS:** Design-Tools exportieren Farben als HEX. Für Tailwind-Config, CSS-Custom-Properties oder OKLCH-basierte Paletten braucht man die Dezimalwerte.
 
@@ -93,7 +103,7 @@ Schwarz. Alle drei Farbkanäle stehen auf 0 (R=0, G=0, B=0). Das Gegenstück #FF
 
 OKLCH ist ein wahrnehmungsgleichmäßiger Farbraum — gleiche numerische Abstände erzeugen gleich empfundene Farbunterschiede. Seit 2024 unterstützen alle Browser oklch() in CSS, was präzisere Farbpaletten und Gradient-Definitionen ermöglicht.
 
-## Verwandte Farb-Tools
+## Welche Farb-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -28,6 +28,9 @@ relatedTools:
   - pdf-to-jpg
 category: document
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -55,7 +58,7 @@ The merger uses [PDF-lib](https://pdf-lib.js.org/), a pure-JavaScript PDF manipu
 
 The entire operation runs in memory on your device. No temporary files are created on any server.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Loan and mortgage applications.** Lenders typically require a bundled PDF of supporting documents: W-2s, pay stubs, bank statements, tax returns. Merge them into one file before uploading to the lender's portal.
 
@@ -71,7 +74,7 @@ The entire operation runs in memory on your device. No temporary files are creat
 
 **Medical record compilation.** Patients gathering records from multiple providers (primary care, specialist, lab) can merge individual report PDFs into one organized file before a referral appointment.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Can I set a specific page order within a single PDF?** The current version merges whole files in the order you arrange them. For rearranging individual pages from a single PDF, split it first using the PDF Splitter, then re-merge the extracted single-page PDFs in the desired sequence.
 

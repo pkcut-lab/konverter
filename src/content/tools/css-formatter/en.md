@@ -31,6 +31,9 @@ relatedTools:
   - xml-formatter
 category: dev
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -42,7 +45,7 @@ The CSS Formatter parses a stylesheet and outputs it in one of two modes:
 
 The tool handles standard CSS3, including media queries, custom properties (CSS variables), `@keyframes`, `@layer`, `@supports`, and `calc()` expressions.
 
-## Formula / How It Works
+## How Does It Work?
 
 The formatter uses a tokenizer-based parser — not a simple regex replacement — which means it correctly handles edge cases like strings containing braces or colons:
 
@@ -64,7 +67,7 @@ Input CSS
   → Output string
 ```
 
-## Beautify Output Format
+## What Does the Beautify Output Look Like?
 
 The default formatting style follows common CSS conventions:
 
@@ -81,7 +84,7 @@ The default formatting style follows common CSS conventions:
 }
 ```
 
-## Minify Comparison
+## How Does Minify Compare to Beautify?
 
 ```css
 /* Before (formatted, 412 bytes) */
@@ -102,7 +105,7 @@ The default formatting style follows common CSS conventions:
 .nav{display:flex;align-items:center;gap:1rem;padding:0 1.5rem}.nav__link{color:var(--color-text);text-decoration:none;font-size:.9rem}
 ```
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Debugging minified third-party CSS.** When inspecting a library's stylesheet in browser DevTools, the code is often minified. Paste it here to beautify it before reading or modifying it.
 

@@ -7,6 +7,15 @@ metaDescription: "JSON online formatieren, validieren und minifizieren. Syntaxfe
 tagline: "JSON lesbar machen — komplett im Browser, ohne Server-Kontakt."
 intro: "Der JSON Formatter nimmt rohen JSON-Code und gibt ihn mit sauberer Einrückung und Zeilenumbrüchen zurück. Syntaxfehler werden mit Position gemeldet, Copy-Button liefert das Ergebnis in die Zwischenablage. Kein Server sieht deine Daten — alles läuft lokal im Browser."
 category: "dev"
+stats:
+  - label: "Max. Eingabe"
+    value: "10"
+    unit: "MB"
+  - label: "Verarbeitung"
+    value: "<50"
+    unit: "ms"
+  - label: "Datenschutz"
+    value: "lokal"
 contentVersion: 1
 howToUse:
   - "Füge deinen JSON-Code in das Eingabefeld ein — per Paste oder Drag & Drop."
@@ -29,6 +38,9 @@ relatedTools:
   - regex-tester
   - text-diff
   - unix-timestamp
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Formatter?
@@ -46,7 +58,7 @@ Roher JSON-Code aus APIs, Logs oder Konfigurationsdateien ist oft auf eine einzi
 - **Dokumentation:** Beispiel-Payloads in Wikis und READMEs profitieren von lesbarer Einrückung.
 - **Validierung:** Syntaxfehler werden beim Formatieren automatisch erkannt. Kein separater Linter nötig.
 
-## JSON vs. JSON5 vs. JSONC
+## What Are the Differences Between JSON, JSON5, and JSONC?
 
 Entwickler stolpern regelmäßig über Varianten des JSON-Formats, die sich in Details unterscheiden:
 
@@ -61,7 +73,7 @@ Entwickler stolpern regelmäßig über Varianten des JSON-Formats, die sich in D
 
 **tsconfig.json**, **.eslintrc**, **renovate.json** — viele Config-Dateien nutzen JSONC-Syntax mit Kommentaren. Ein Standard-JSON-Parser wertet diese als Fehler. Wer regelmäßig mit Config-Dateien arbeitet, braucht ein Tool, das beide Varianten versteht.
 
-## Typische Stolperfallen
+## Welche typischen Stolperfallen gibt es?
 
 ### Trailing Commas
 
@@ -97,7 +109,7 @@ Der JSON Formatter verarbeitet alles lokal über `JSON.parse()` und `JSON.string
 
 Anders als viele Online-JSON-Formatter, die Google Analytics und Werbe-Tracking einsetzen, setzt dieses Tool auf vollständige Client-Verarbeitung ohne Kompromisse.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **API-Response debuggen** — Kopiere die kompakte Response aus curl oder Postman, formatiere sie und erkenne die Struktur sofort.
 - **Config-Dateien prüfen** — Validiere package.json, tsconfig.json oder Terraform-Variablen auf Syntaxfehler.
@@ -109,7 +121,7 @@ Anders als viele Online-JSON-Formatter, die Google Analytics und Werbe-Tracking 
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

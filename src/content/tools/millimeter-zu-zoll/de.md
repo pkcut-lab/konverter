@@ -27,13 +27,16 @@ relatedTools:
   - meter-zu-fuss
 category: length
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
 
 Der Konverter wandelt einen Wert in Millimetern (mm) in die entsprechende Angabe in Zoll (inch, in) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen metrischem und imperialem Kleinmaß pendelt — von der Schraubengröße bis zur Bildschirmdiagonale. Wer regelmäßig mit technischen Zeichnungen, Werkzeugen oder Elektronik-Bauteilen arbeitet, braucht diese Umrechnung fast täglich.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Millimeter entspricht exakt 0,0393701 Zoll. Die Gegenrichtung ist seit dem Internationalen Yard-und-Pfund-Abkommen von 1959 festgelegt: `1 Zoll = 25,4 mm exakt`. Vor dieser Einigung existierten leicht abweichende nationale Zoll-Definitionen — seit dem Abkommen gilt ein einziger Wert in Wissenschaft, Technik und Handwerk weltweit.
 
@@ -44,7 +47,7 @@ Formeln:
 
 Rechen-Beispiel: 50&nbsp;mm × 0,0393701 = 1,9685 in. Auf zwei Nachkommastellen gerundet ergibt das 1,97 in — präzise genug für Alltag und Handwerk, zu grob für Feinmechanik und CNC-Fertigung. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende der Rechenkette.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei bis vier Nachkommastellen.
 
@@ -59,7 +62,7 @@ Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwe
 
 Der Wert 25,4&nbsp;mm ergibt exakt 1 Zoll — ein nützlicher Ankerpunkt für Kopfrechnungen. Bei 304,8&nbsp;mm landet man bei 12 Zoll, also einem Fuß.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Werkzeuge und Schrauben:** Zollbasierte Werkzeuge und Schrauben (etwa Whitworth- oder UNC-Gewinde) sind in Heimwerkstätten und Industrie weit verbreitet. Die Umrechnung von Millimeter in Zoll hilft bei der Wahl des passenden Maulschlüssels oder der richtigen Gewindebohrung — ein falscher Bruch-Zoll-Wert führt schnell zu beschädigten Schraubenköpfen.
 
@@ -91,7 +94,7 @@ Für Alltagszwecke reichen zwei Nachkommastellen. In der Feinmechanik und bei CN
 
 Ein Zoll misst exakt 25,4&nbsp;mm. Diesen Wert kennen Handwerker und Techniker auswendig, weil er in Werkzeug-Normen, Rohrgewinden und Elektronik-Bauteilen ständig vorkommt.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

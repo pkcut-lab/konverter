@@ -31,6 +31,9 @@ relatedTools:
   - interest-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -41,7 +44,7 @@ The federal estate tax applies only to taxable estates above $13.61 million in 2
 
 This tool is for **estimation purposes only**. Estate tax law is complex, fact-specific, and changes regularly. Always consult a licensed estate planning attorney or CPA for actual tax planning.
 
-## Formula / How It Works
+## How Does It Work?
 
 ```
 Step 1: Gross Estate
@@ -82,7 +85,7 @@ Step 6: State Inheritance Tax
 Net Estate = Gross Estate − Federal Tax − State Tax(es)
 ```
 
-## 2024 State Estate Tax Reference
+## What Are the 2024 State Estate Tax Rates?
 
 | State | Exemption | Top Rate |
 |---|---|---|
@@ -101,7 +104,7 @@ Net Estate = Gross Estate − Federal Tax − State Tax(es)
 | DC | $4.528M | 16% |
 | All other states | No estate tax | — |
 
-## 2024 State Inheritance Tax Rates by Beneficiary
+## What Are the 2024 State Inheritance Tax Rates?
 
 | State | Spouse | Children | Siblings | Unrelated |
 |---|---|---|---|---|
@@ -112,7 +115,7 @@ Net Estate = Gross Estate − Federal Tax − State Tax(es)
 | New Jersey | 0% | 0% | 11–16% | 15–16% |
 | Pennsylvania | 0% | 4.5% | 12% | 15% |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Basic estate planning check.** A couple in Illinois with a combined estate of $6 million wants to know if they face estate tax. At $4 million per person, Illinois does not tax the surviving spouse's estate up to $4M — but without planning, the second-to-die estate at $6M would owe Illinois estate tax on the $2M excess.
 

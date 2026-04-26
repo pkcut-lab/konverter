@@ -27,6 +27,9 @@ relatedTools:
   - yard-zu-meter
 category: length
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ Kilometern (km) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede
 die zwischen nautischen Meilen und metrischen Distanzen pendelt — von der Schifffahrtsroute
 bis zum Flugplan.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Eine Seemeile (nautical mile, nmi) entspricht exakt 1,852 Kilometern. Diese Definition
 wurde 1929 auf der Ersten Internationalen Außerordentlichen Hydrographischen Konferenz
@@ -53,7 +56,7 @@ Formeln:
 Rechen-Beispiel: 5 nmi × 1,852 = 9,26&nbsp;km. Auf vier Nachkommastellen gerechnet
 ergibt das 9,2600&nbsp;km — präzise genug für Navigation und Routenplanung.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei
 bis vier Nachkommastellen.
@@ -70,7 +73,7 @@ bis vier Nachkommastellen.
 Eine typische Überfahrt von 200 Seemeilen entspricht 370,4&nbsp;km. Die Distanz zwischen
 Hamburg und Helgoland beträgt rund 35 Seemeilen, also gut 64,8&nbsp;km.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Seefahrt:** Seekarten verwenden weltweit Seemeilen als Distanzeinheit. Schiffsrouten,
 Hoheitsgewässer (12 Seemeilen), ausschließliche Wirtschaftszonen (200 Seemeilen) und
@@ -116,7 +119,7 @@ Leinen zur Geschwindigkeitsmessung dienten.
 Multipliziere die Seemeilen mit zwei und ziehe rund acht Prozent ab. Alternativ:
 Seemeilen mal 1,85 liefert ein Ergebnis mit unter einem Prozent Abweichung.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

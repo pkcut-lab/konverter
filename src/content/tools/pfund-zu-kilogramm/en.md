@@ -28,6 +28,9 @@ relatedTools:
   - stone-to-kg
 category: weight
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -61,7 +64,7 @@ For the reverse calculation (kg to lbs), the factor is:
 
 **lbs = kg ÷ 0.45359237 = kg × 2.20462262**
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Gym and fitness tracking.** Weight plates and dumbbells in US gyms are labeled in pounds. When using metric-based fitness apps like MyFitnessPal, Hevy, or international training programs, you need to convert PR numbers and body weight targets to kilograms.
 
@@ -77,7 +80,7 @@ For the reverse calculation (kg to lbs), the factor is:
 
 **Medical and clinical.** Drug dosing in pediatrics and many pharmacological contexts uses kg-based dosing (mg/kg). Nurses and caregivers working with US patients whose weights are charted in pounds need a quick conversion.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **What is the difference between a pound and a kilogram?** A kilogram is the base unit of mass in the International System (SI). A pound is a unit of mass in the US customary and imperial systems. One kilogram equals approximately 2.205 pounds.
 

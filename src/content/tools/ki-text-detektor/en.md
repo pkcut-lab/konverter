@@ -31,6 +31,9 @@ relatedTools:
   - audio-transcription
 category: text
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ AI writing assistants have made LLM-generated text ubiquitous in classrooms, new
 
 It is designed for teachers checking student submissions, editors reviewing freelance copy, journalists verifying sources, and anyone who needs a fast first-pass opinion on whether a piece of text was written by a human or an AI model.
 
-## Formula or How It Works
+## How Does It Work?
 
 AI text detectors use several statistical signals that differ between human and LLM writing:
 
@@ -52,7 +55,7 @@ AI text detectors use several statistical signals that differ between human and 
 
 The classifier combines these signals in a logistic regression or lightweight neural model, producing a probability between 0% (confidently human) and 100% (confidently AI).
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Education:** Teachers and professors screen essay submissions to flag potential AI assistance for further review.
 - **Publishing:** Book editors and magazine fact-checkers verify that freelance submissions are original human writing.

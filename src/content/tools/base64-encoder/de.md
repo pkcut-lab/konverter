@@ -27,6 +27,9 @@ relatedTools:
   - uuid-generator
   - json-formatter
   - regex-tester
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -35,7 +38,7 @@ Der Base64 Encoder nimmt einen beliebigen Text-String und wandelt ihn in eine Ba
 
 Der Encoder verarbeitet UTF-8-Text korrekt: Umlaute, Sonderzeichen und Emojis werden zuerst in ihre UTF-8-Byte-Sequenzen zerlegt, bevor die Base64-Kodierung greift. Leerer Input wird mit einer klaren Meldung abgewiesen — kein stilles Scheitern.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Base64 arbeitet auf Byte-Ebene, nicht auf Zeichen-Ebene. Der Algorithmus:
 
@@ -46,7 +49,7 @@ Base64 arbeitet auf Byte-Ebene, nicht auf Zeichen-Ebene. Der Algorithmus:
 
 Beispiel: `Hallo` (5 Bytes UTF-8) ergibt `SGFsbG8=` (8 Zeichen Base64). Die Ausgabe ist immer ca. 33&nbsp;% größer als der Input: `ceil(n / 3) * 4` Zeichen für `n` Eingabe-Bytes.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Input-Text | Base64-Ergebnis | Anwendung |
 |------------|-----------------|-----------|
@@ -58,7 +61,7 @@ Beispiel: `Hallo` (5 Bytes UTF-8) ergibt `SGFsbG8=` (8 Zeichen Base64). Die Ausg
 
 Base64-Kodierung ist keine Verschlüsselung. Jeder kann eine Base64-Zeichenkette trivial dekodieren. Für sensible Daten wie Passwörter ist zusätzliche Verschlüsselung Pflicht.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **E-Mail und MIME** — Der SMTP-Standard transportiert nur 7-Bit-ASCII. Binäre Anhänge (Bilder, PDFs, Archive) werden per Base64 in druckbare Zeichen kodiert, damit sie den Transportweg unbeschadet überstehen. Jeder E-Mail-Client dekodiert automatisch.
 
@@ -72,7 +75,7 @@ Base64-Kodierung ist keine Verschlüsselung. Jeder kann eine Base64-Zeichenkette
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

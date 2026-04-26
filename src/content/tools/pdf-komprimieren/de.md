@@ -28,6 +28,9 @@ faq:
 relatedTools:
   - pdf-zusammenfuehren
   - pdf-aufteilen
+datePublished: '2026-04-25'
+dateModified: '2026-04-26'
+
 ---
 
 ## Was macht dieses Tool?
@@ -141,7 +144,7 @@ Objekt-Streams und Metadaten oft schon optimiert. In diesem Fall zeigt
 das Tool die tatsächliche Ersparnis transparent an — auch wenn sie
 unter 5% liegt.
 
-## Verwandte Dokumenten-Tools
+## Welche Dokumenten-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

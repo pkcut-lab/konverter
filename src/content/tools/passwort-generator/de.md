@@ -7,6 +7,15 @@ metaDescription: "Passwort-Generator mit Web Crypto API: Zufallspasswort und Pas
 tagline: "Kryptographisch sichere Passwörter — direkt im Browser, ohne Server-Kontakt."
 intro: "Der Passwort-Generator erzeugt kryptographisch sichere Zufallspasswörter über die Web Crypto API deines Browsers. Kein Server sieht dein Passwort, kein Logging speichert es. Du wählst Länge, Zeichentypen und Modus — das Ergebnis erscheint sofort mit Live-Entropie-Anzeige in Bits."
 category: "dev"
+stats:
+  - label: "Zeichensatz"
+    value: "94"
+    unit: "Zeichen"
+  - label: "Max. Entropie"
+    value: "512"
+    unit: "bit"
+  - label: "Sicherheit"
+    value: "kryptografisch"
 contentVersion: 1
 howToUse:
   - "Stelle die gewünschte Passwort-Länge über den Slider oder das Eingabefeld ein."
@@ -27,6 +36,9 @@ relatedTools:
   - uuid-generator
   - zeichenzaehler
   - regex-tester
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Generator?
@@ -50,7 +62,7 @@ Entropie-Berechnung: `E = L × log₂(C)`, wobei L die Passwort-Länge und C die
 
 NIST SP 800-63B Rev. 4 (2024) empfiehlt mindestens 15 Zeichen. Die frühere Pflicht zur Zeichenklassen-Mischung wurde abgeschafft — Länge schlägt Komplexität.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **Online-Konten** — 16 Zeichen mit allen Zeichengruppen für E-Mail, Social Media, Shopping.
 - **WLAN-Passwörter** — 20+ Zeichen (WPA2/WPA3 erlaubt bis 63), Sonderzeichen optional für Gerätekompatibilität.
@@ -74,7 +86,7 @@ Das unterscheidet diesen Generator von Vault-Anbietern, die den Generator als Up
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

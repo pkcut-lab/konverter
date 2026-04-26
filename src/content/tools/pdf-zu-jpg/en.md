@@ -30,6 +30,9 @@ relatedTools:
   - pdf-splitter
 category: document
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -57,7 +60,7 @@ The tool uses [PDF.js](https://mozilla.github.io/pdf.js/), Mozilla's open-source
 
 No server is involved at any step. After the initial page load, the tool works offline.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Social media and marketing.** Sharing a document excerpt on LinkedIn, Twitter/X, or Instagram requires an image format. Convert the relevant PDF page to JPG for direct upload.
 
@@ -73,7 +76,7 @@ No server is involved at any step. After the initial page load, the tool works o
 
 **Print shops.** Some local and online print services (Vistaprint, FedEx Office) accept JPG but not PDF for certain products. Converting at 300 DPI provides print-ready output.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Do I get the full page or just a crop?** The full page is rendered, including margins, exactly as it appears in the PDF viewer.
 

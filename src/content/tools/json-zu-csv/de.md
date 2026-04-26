@@ -28,6 +28,9 @@ relatedTools:
   - json-formatter
   - json-diff
   - text-diff
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ Der JSON-zu-CSV-Konverter wandelt strukturierte JSON-Daten in tabellarisches CSV
 
 Verschachtelte Objekte werden dabei automatisch geflacht: Aus `{"user": {"name": "Alice", "address": {"city": "Berlin"}}}` werden die Spalten `user.name` und `user.address.city`. Ein einzelnes JSON-Objekt wird als einzeilige Tabelle behandelt.
 
-## Konvertierungsalgorithmus
+## Wie funktioniert der Konvertierungsalgorithmus?
 
 Die Umwandlung folgt einem dreistufigen Prozess:
 
@@ -46,7 +49,7 @@ Die Umwandlung folgt einem dreistufigen Prozess:
 
 3. **CSV-Erzeugung.** Alle Schlüssel aus allen Objekten bilden die Kopfzeile. Fehlende Schlüssel in einzelnen Zeilen werden als leere Felder ausgegeben. Felder mit Kommas, Anführungszeichen oder Zeilenumbrüchen werden nach RFC 4180 maskiert.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Szenario | JSON-Eingabe | CSV-Ergebnis |
 |----------|-------------|--------------|
@@ -56,7 +59,7 @@ Die Umwandlung folgt einem dreistufigen Prozess:
 | Array-Werte | `[{"tags": ["js","ts"]}]` | `tags` + `"[""js"",""ts""]"` |
 | Sonderzeichen | `[{"note": "Hallo, Welt"}]` | `note` + `"Hallo, Welt"` |
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **API-Daten in Tabellen überführen.** REST-APIs liefern Daten typischerweise als JSON-Array. Für die Weiterverarbeitung in Excel, Google Sheets oder Datenbank-Imports wird CSV benötigt. Der Konverter übernimmt die Transformation ohne manuelles Spalten-Mapping.
 
@@ -70,7 +73,7 @@ Die Umwandlung folgt einem dreistufigen Prozess:
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -28,6 +28,9 @@ relatedTools:
   - json-formatter
   - text-diff
   - xml-formatter
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der JSON-Diff?
@@ -46,7 +49,7 @@ Der Algorithmus durchläuft beide JSON-Bäume rekursiv. Auf jeder Ebene wird gep
 
 Vor dem Vergleich wird jedes Dokument mit `JSON.parse()` validiert. Syntaxfehler werden mit Zeilennummer gemeldet.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Szenario | Beschreibung |
 |----------|-------------|
@@ -57,7 +60,7 @@ Vor dem Vergleich wird jedes Dokument mit `JSON.parse()` validiert. Syntaxfehler
 | Feature-Flag-Audit | Zwei Versionen einer Feature-Flag-Konfiguration vergleichen, um aktivierte oder deaktivierte Flags zu erkennen. |
 | Lokalisierungs-Check | Zwei Sprach-JSON-Dateien vergleichen, um fehlende oder überschüssige Übersetzungsschlüssel zu finden. |
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **API-Entwicklung und Debugging.** Backend-Teams vergleichen API-Responses vor und nach einem Deployment. Der JSON-Path jeder Änderung erleichtert das Auffinden der betroffenen Stelle im Code. Typ-Wechsel (z. B. `"price": "9.99"` → `"price": 9.99`) werden explizit markiert — ein häufiger Fehler bei Serialisierungs-Änderungen.
 
@@ -71,7 +74,7 @@ Vor dem Vergleich wird jedes Dokument mit `JSON.parse()` validiert. Syntaxfehler
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

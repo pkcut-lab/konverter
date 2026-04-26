@@ -28,6 +28,9 @@ faq:
   - q: "Was bedeutet ein negativer ROI?"
     a: "Ein negativer ROI bedeutet Kapitalverlust: Der Ertrag liegt unter der Investition. Beispiel: ROI = −25&nbsp;% bedeutet, dass 25&nbsp;% des eingesetzten Kapitals verloren gegangen sind. Das ist mathematisch korrekt und muss angezeigt werden — der Rechner zeigt in diesem Fall den Status 'Verlust'. Ein ROI von −100&nbsp;% entspricht einem Totalverlust (Endwert = 0)."
 relatedTools: ['zinsrechner', 'kreditrechner', 'brutto-netto-rechner']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -41,7 +44,7 @@ Der ROI-Rechner berechnet den Return on Investment in drei Modi — von der schn
 
 Alle Berechnungen laufen ausschließlich im Browser. Kein Server-Upload, kein Tracking.
 
-## Umrechnungsformeln
+## Welche Umrechnungsformeln gibt es?
 
 **Basis-ROI:**
 
@@ -74,7 +77,7 @@ Kapitalumschlag = Nettoumsatz / Gesamtkapital
 ROI             = Umsatzrendite × Kapitalumschlag
 ```
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Beispiel 1 — Marketingkampagne (Einfach-Modus):**
 - Investition: 10.000&nbsp;€ Werbebudget
@@ -94,7 +97,7 @@ ROI             = Umsatzrendite × Kapitalumschlag
 - Gesamtkapital: 100.000&nbsp;€ → Kapitalumschlag: 2,00
 - ROI = 6,70&nbsp;% × 2,00 = **13,40&nbsp;%**
 
-## ROI-Benchmarks nach Investitionstyp (DE-Kontext)
+## Welche ROI-Benchmarks gibt es nach Investitionstyp?
 
 | Investitionstyp | Typischer ROI-Bereich | Hinweis |
 |---|---|---|
@@ -122,7 +125,7 @@ Für Langzeitprojekte und Investitionsvergleiche empfiehlt sich der annualisiert
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem:
 

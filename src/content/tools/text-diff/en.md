@@ -31,6 +31,9 @@ relatedTools:
   - regex-tester
 category: text
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -49,7 +52,7 @@ The tool applies a line-based LCS (Longest Common Subsequence) algorithm to find
 
 For character-level changes within a line, the tool optionally highlights the exact words or characters that changed — useful for spotting single-word edits in long paragraphs.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Contract and document review.** Legal teams and editors frequently receive "Track Changes" documents, but not all workflows support Word. Paste the old and new clause text to see exactly what changed — no formatting dependencies.
 
@@ -63,14 +66,14 @@ For character-level changes within a line, the tool optionally highlights the ex
 
 **Academic writing.** Students and researchers can compare draft versions of papers to ensure advisor feedback was fully incorporated.
 
-## Output Formats
+## What Output Formats Are Available?
 
 The diff output can be read in two views:
 
 - **Unified view:** A single scrollable list, additions and deletions interleaved. Mirrors the output of `git diff` — familiar to developers.
 - **Split view:** Two columns side-by-side, with original on the left and revised on the right. Easier for prose review and non-technical users.
 
-## FAQ
+## Häufige Fragen?
 
 **Can I diff more than two versions?**
 This tool compares exactly two inputs at a time. For multi-version history, use a version control system like Git, which stores every revision and lets you diff any two commits.

@@ -27,6 +27,9 @@ relatedTools:
   - stone-zu-kilogramm
 category: weight
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ um und zeigt gleichzeitig den Rückweg. Er eignet sich für Logistik-Gewichte,
 Rohstoffhandel, Frachtpapiere und jede Situation, in der große Masseangaben
 zwischen dem metrischen und dem imperialen System wechseln müssen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Eine metrische Tonne entspricht exakt 1000 Kilogramm. Da ein Kilogramm
 2,20462 Pfund wiegt, ergibt sich für die Tonne der Faktor 2204,62. Diese
@@ -56,7 +59,7 @@ Short Ton (2000&nbsp;lb = 907,185&nbsp;kg) oder der britischen Long Ton (2240&nb
 1016,047&nbsp;kg). Im internationalen Handel und in der Wissenschaft ist die
 metrische Tonne der Standard.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Tonnenwerte und ihre Entsprechung in Pfund,
 gerundet auf zwei Nachkommastellen.
@@ -73,7 +76,7 @@ gerundet auf zwei Nachkommastellen.
 Ein Standardcontainer mit 18 Tonnen Ladung wiegt 39683,16&nbsp;lb. Ein US-
 Sattelzug-Limit von 80000&nbsp;lb entspricht rund 36,29 Tonnen.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Logistik und Frachtverkehr:** Containerschiffe, Lkw-Gewichtslimits und
 Frachtbriefe verwenden je nach Land Tonnen oder Pfund. Spediteure rechnen
@@ -126,7 +129,7 @@ Teile den Pfund-Wert durch 2204,62 oder multipliziere ihn mit 0,000453592.
 Der Konverter bietet eine Richtungstausch-Funktion, die das automatisch
 erledigt.
 
-## Verwandte Gewichts-Tools
+## Welche Gewichts-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

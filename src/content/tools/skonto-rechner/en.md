@@ -29,6 +29,9 @@ relatedTools:
   - interest-calculator
 category: finance
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -55,7 +58,7 @@ Rate = (Discount% ÷ (100 − Discount%)) × (365 ÷ (Net days − Discount days
 | 3/10 net 30 | 3% | 20 days | 56.4% |
 | 2/15 net 45 | 2% | 30 days | 24.8% |
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Accounts payable optimization** — US companies with strong cash positions routinely review outstanding invoices for early payment discount opportunities. A company paying $5,000,000 in annual invoices under 2/10 net 30 terms could save $100,000 by consistently paying within the discount window.
 
@@ -67,7 +70,7 @@ Rate = (Discount% ÷ (100 − Discount%)) × (365 ÷ (Net days − Discount days
 
 **Treasury management** — Corporate treasury teams in the US use annualized discount costs as inputs to their dynamic cash deployment models. Any invoice with an implicit rate above the firm's cost of capital warrants early payment.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **What is "net 30" and why is it a US default?**
 Net 30 means the full invoice amount is due within 30 calendar days of the invoice date. It became the US B2B default in the mid-20th century and remains standard across manufacturing, distribution, and professional services. Europe more commonly uses net 60 or net 90, making cross-border AP/AR management more complex.

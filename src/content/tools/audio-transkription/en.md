@@ -31,6 +31,9 @@ relatedTools:
   - character-counter
 category: audio
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -39,7 +42,7 @@ This tool converts the spoken content of an audio file into a plain-text transcr
 
 Supported input formats include MP3, WAV, M4A (AAC), OGG Vorbis, and WebM Opus — the most common formats produced by phones, voice recorders, video editors, and meeting apps.
 
-## Formula / How It Works
+## How Does It Work?
 
 The engine is based on a Whisper-architecture model distilled for browser inference:
 
@@ -51,7 +54,7 @@ Audio file → decode to PCM → chunk into 30-second windows
 
 Each 30-second window is processed sequentially. Timestamps are computed relative to the chunk boundary, so the output order matches the original recording timeline. No cloud API is involved at any stage.
 
-## Language Detection
+## How Does Language Detection Work?
 
 The model auto-detects the spoken language from the first 30 seconds of audio. If detection is wrong — common with short clips or heavy accents — use the language dropdown to force a specific language before transcribing.
 
@@ -62,7 +65,7 @@ The model auto-detects the spoken language from the first 30 seconds of audio. I
 | English (US) | Podcasts, meetings, dictation |
 | English (UK/AU) | British/Australian accented content |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Meeting notes.** Drop in a recorded Zoom or Teams call and get a rough transcript to clean up into meeting minutes. Most 1-hour meetings produce a 5,000–8,000 word transcript.
 

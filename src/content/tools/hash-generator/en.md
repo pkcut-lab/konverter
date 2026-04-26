@@ -30,14 +30,24 @@ relatedTools:
   - uuid-generator
   - password-generator
 category: dev
+stats:
+  - label: "Algorithms"
+    value: "5"
+  - label: "Max input"
+    value: "unlimited"
+  - label: "Processing"
+    value: "local"
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This tool computes cryptographic hash digests from text input, supporting four algorithms: MD5, SHA-1, SHA-256, and SHA-512. All computation happens locally using the browser's built-in Web Crypto API — no server receives your input, ever. Results are displayed as lowercase hex strings and can be toggled to uppercase.
 
-## Formula / How It Works
+## How Does It Work?
 
 A cryptographic hash function H maps an input of arbitrary length to a fixed-length output:
 
@@ -75,7 +85,7 @@ SHA-256: 185f8db32921bd46d35abb6f5f5b8d57290a3b17cf8f9d9a9e20d949c5d00e3
 
 One character change produces an entirely different 64-character hash. This is the avalanche effect.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **Verifying file downloads.** Software distributors publish SHA-256 checksums alongside their downloads. After downloading, you hash the file and compare against the published checksum. If they match, the file is intact and unmodified. This is standard practice for Linux ISO files, developer SDK downloads, and security-sensitive packages.
 

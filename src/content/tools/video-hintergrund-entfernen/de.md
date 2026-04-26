@@ -31,6 +31,9 @@ relatedTools:
   - webcam-hintergrund-unschaerfe
 category: video
 contentVersion: 1
+datePublished: '2026-04-24'
+dateModified: '2026-04-25'
+
 ---
 
 ## Warum alle anderen dein Video hochladen müssen
@@ -78,7 +81,7 @@ Issue #377, Stand April 2026); dort wird automatisch ein MP4 mit
 Greenscreen-Farbe `#00FF00` ausgegeben, das du in deiner Schnitt-Software
 als Chroma-Key entfernen kannst.
 
-## Modell-Wahl: Qualität oder Schnell
+## Wie wähle ich das richtige Modell?
 
 Der Modus **Qualität** verwendet BiRefNet_lite (MIT-Lizenz, ca. 50&nbsp;MB).
 BiRefNet wurde auf dem ACCV 2024 als bestes Verfahren für dichotomische
@@ -109,7 +112,7 @@ Kennzeichnung beim Weiterveröffentlichen liegt bei dir.
 
 Technisch-Details stehen in der <a href="/de/datenschutz">Datenschutzerklärung</a>.
 
-## Grenzen des Tools
+## Welche Grenzen hat das Tool?
 
 Ehrliche Erwartungsführung statt Marketingversprechen:
 
@@ -182,7 +185,7 @@ ACCV 2024 Best-in-Class Dichotomous Segmentation —
 [GitHub](https://github.com/ZHKKKe/MODNet).
 **onnxruntime-web**: MIT, Microsoft. **Mediabunny**: MPL-2.0, Vanilagy.
 
-## Verwandte Video-Tools
+## Welche Video-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

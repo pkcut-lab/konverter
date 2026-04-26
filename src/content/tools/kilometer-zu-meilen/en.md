@@ -31,13 +31,16 @@ relatedTools:
   - yards-to-meters
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 The kilometer is the standard unit of distance in nearly every country outside the United States. American travelers, runners following global training plans, and anyone buying or renting a vehicle abroad routinely need to convert between kilometers and miles. This converter handles the calculation instantly and includes a reference table for the most common distances.
 
-## Formula or How It Works
+## How Does It Work?
 
 **Miles = Kilometers × 0.621371192**
 
@@ -55,7 +58,7 @@ The exact definition: 1 international mile = 1,609.344 meters (exact, since 1959
 | 100 km | 62.137 mi | Common European speed limit |
 | 500 km | 310.686 mi | LA to San Francisco (roughly) |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 - **Road trips in Canada or Mexico:** Canadian highways use km/h and km distance markers. Convert to miles to understand the distance from your US mental map.
 - **Running and cycling:** Most international races, Garmin/Strava workouts, and global training plans use kilometers. Convert to miles to compare your pace or race goal.

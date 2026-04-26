@@ -31,6 +31,9 @@ relatedTools:
   - base64-encoder
 category: time
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -51,7 +54,7 @@ The Unix epoch is defined as 00:00:00 Coordinated Universal Time (UTC) on Thursd
 
 The conversion is purely arithmetic. For millisecond timestamps, the tool divides by 1,000 first, then applies the same logic.
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 **API response debugging.** REST APIs often return dates as Unix timestamps in JSON. Seeing `"expires_at": 1740000000` is meaningless at a glance — convert it to `2025-02-19 21:20:00 UTC` to confirm the expiry is as expected.
 
@@ -65,7 +68,7 @@ The conversion is purely arithmetic. For millisecond timestamps, the tool divide
 
 **JavaScript Date debugging.** JavaScript's `Date` object operates in milliseconds. When `console.log(Date.now())` returns `1714000000000`, this tool converts it instantly without mental division.
 
-## Format Reference
+## What Formats Are Supported?
 
 The tool outputs the timestamp in multiple formats:
 
@@ -77,7 +80,7 @@ The tool outputs the timestamp in multiple formats:
 | RFC 2822 | Sat, 26 Apr 2025 14:30:00 +0000 |
 | Day of week | Saturday |
 
-## FAQ
+## Häufige Fragen?
 
 **What happens with negative Unix timestamps?**
 Negative values represent dates before January 1, 1970. For example, -86,400 = December 31, 1969, 00:00:00 UTC. Most systems support negative timestamps, though some older APIs may not.

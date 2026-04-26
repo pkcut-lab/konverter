@@ -28,6 +28,9 @@ relatedTools:
   - unix-timestamp-converter
 category: text
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
@@ -61,7 +64,7 @@ Numbers are built by combining symbols largest-to-smallest. When a smaller symbo
 
 Example: 1,994 = MCMXCIV → M (1,000) + CM (900) + XC (90) + IV (4).
 
-## Common Use Cases (US-Centric)
+## What Are Common Use Cases?
 
 **Super Bowl numbers** — The NFL uses Roman numerals for every Super Bowl. Quickly decode or encode any edition: Super Bowl L (50), Super Bowl LV (55), Super Bowl LX (60).
 
@@ -75,7 +78,7 @@ Example: 1,994 = MCMXCIV → M (1,000) + CM (900) + XC (90) + IV (4).
 
 **Chapter and volume numbering** — Books, encyclopedias, and academic journals use Roman numerals for front matter (pages i, ii, iii) and volume numbering. Convert for citation formatting.
 
-## FAQ Expansion
+## Häufige Fragen?
 
 **Why did the Romans not just use Arabic numerals?**
 Arabic numerals (and the zero they require) were not introduced to Europe until the 10th–13th centuries via Arabic-speaking scholars. Roman numerals predate that system by over a millennium.

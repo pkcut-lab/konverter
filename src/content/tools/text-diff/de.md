@@ -29,6 +29,9 @@ relatedTools:
   - json-formatter
   - regex-tester
   - zeichenzaehler
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Text-Diff?
@@ -43,7 +46,7 @@ Der Algorithmus basiert auf dem LCS-Verfahren (Longest Common Subsequence). Er f
 
 Vor dem Vergleich werden Zeilenumbrüche normalisiert: `\r\n` (Windows) wird automatisch zu `\n` (Unix) konvertiert. Dadurch entstehen keine Phantom-Differenzen zwischen Texten, die auf unterschiedlichen Betriebssystemen erstellt wurden.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **KI-Text mit Original vergleichen** — Entwurf links, ChatGPT-/Claude-/Gemini-Ausgabe rechts. Jede Umformulierung, jede Ergänzung wird sichtbar. Der wachsende Use-Case 2026: Redakteure und Content-Creator wollen exakt sehen, was die KI verändert hat.
 - **Code-Reviews ohne IDE** — Zwei Versionen einer Konfigurationsdatei oder eines Scripts nebeneinanderlegen. Der Leerzeichen-ignorieren-Toggle filtert dabei reine Formatierungsänderungen heraus.
@@ -61,7 +64,7 @@ Dieser Text-Diff arbeitet ausschließlich im Browser. Kein Server empfängt, spe
 - **DSGVO-konform** — Keine Datenverarbeitung auf externen Servern, kein Consent-Banner nötig.
 - **Kein Tracking** — Weder Google Analytics noch Mixpanel, weder Cookies noch Fingerprinting.
 
-## Zeilen-Diff vs. Wort-Diff vs. Zeichen-Diff
+## Was ist der Unterschied zwischen Zeilen-, Wort- und Zeichen-Diff?
 
 Diff-Tools unterscheiden sich in der Granularität:
 
@@ -83,7 +86,7 @@ Für die reine Diff-Berechnung ist ein Server nicht nötig. Der LCS-Algorithmus 
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Text-Tools
+## Welche Text-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

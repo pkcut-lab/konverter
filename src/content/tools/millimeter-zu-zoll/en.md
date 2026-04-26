@@ -30,13 +30,16 @@ relatedTools:
   - meter-to-feet
 category: length
 contentVersion: 1
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## What This Tool Does
 
 This converter handles millimeters ↔ inches in both directions using the exact conversion factor. It supports decimal inch output and fractional inch display (to the nearest 1/64"), making it useful for both engineering work (decimals) and carpentry or hardware (fractions).
 
-## Formula: Millimeters to Inches
+## How Do You Convert Millimeters to Inches?
 
 **Inches = Millimeters ÷ 25.4**
 
@@ -44,7 +47,7 @@ This converter handles millimeters ↔ inches in both directions using the exact
 
 The inch is defined as exactly 25.4 mm since the International Yard and Pound Agreement of 1959. This makes the conversion between mm and inches perfectly exact — no rounding in the base factor.
 
-## Common Screen Size Reference
+## What Are Common Screen Sizes?
 
 US monitors and TVs are sold by diagonal inches; manufacturing specs and panel measurements use millimeters.
 
@@ -60,7 +63,7 @@ US monitors and TVs are sold by diagonal inches; manufacturing specs and panel m
 | XL TV | 75 in | 1,905.0 mm | 1,661 mm (65.4") |
 | Projector screen | 100 in | 2,540.0 mm | 2,215 mm (87.2") |
 
-## Tire Width Reference
+## What Are Common Tire Width Values?
 
 US tires are measured in millimeters for width but inches for rim diameter — a hybrid metric/imperial system.
 
@@ -76,7 +79,7 @@ US tires are measured in millimeters for width but inches for rim diameter — a
 | 275 | 275 mm | 10.83" |
 | 305 | 305 mm | 12.01" |
 
-## Drill Bit Size Conversion
+## How Do You Convert Drill Bit Sizes?
 
 US workshops stock drill bits in both metric (mm) and imperial (fractional inches) sizes.
 
@@ -94,7 +97,7 @@ US workshops stock drill bits in both metric (mm) and imperial (fractional inche
 | 7/16" | 0.4375" | 11.113 mm |
 | 1/2" | 0.500" | 12.700 mm |
 
-## Common Use Cases
+## What Are Common Use Cases?
 
 ### Electronics and Screen Sizes
 
@@ -131,7 +134,7 @@ Lens filter thread sizes are in millimeters (e.g., 77 mm filter thread). Lens fo
 
 FDM printers work entirely in millimeters. Designing parts for US hardware (screws, standoffs, enclosures) requires constant mm ↔ inch conversion. A #6-32 screw has a 3.505 mm (0.138") major diameter and a 0.794 mm (0.03125") pitch.
 
-## Fractional Inch Reference
+## What Are Common Fractional Inch Values?
 
 When precision work requires expressing results as fractions of an inch:
 
@@ -148,7 +151,7 @@ When precision work requires expressing results as fractions of an inch:
 | 0.875" | 7/8" | 22.225 mm |
 | 1.0" | 1" | 25.400 mm |
 
-## FAQ
+## Häufige Fragen?
 
 **Why do car tires use millimeters for width but inches for rim diameter?**
 

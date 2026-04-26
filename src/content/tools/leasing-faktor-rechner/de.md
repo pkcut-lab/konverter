@@ -27,6 +27,9 @@ faq:
   - q: "Wie genau ist der Benchmark-Wert 0,63?"
     a: "Der Marktdurchschnitt 0,63 stammt von leasingmarkt.de (Stand 2024) und bezieht sich auf PKW-Leasing-Angebote in Deutschland. Er ist ein Richtwert — je nach Fahrzeugklasse variiert das Niveau."
 relatedTools: ['kreditrechner', 'zinsrechner', 'tilgungsplan-rechner']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -35,7 +38,7 @@ Der Leasingfaktor (auch Monatsfaktor oder Leasingrate-Faktor) ist die wichtigste
 
 Dieser Rechner berechnet den Faktor in Sekunden und ordnet ihn sofort ein: Mit Bewertungsskala nach leasingmarkt.de-Standard (5 Stufen) und Marktdurchschnitt 2024 (0,63) als Referenzpunkt. Der entscheidende Vorteil gegenüber Konkurrenz-Angeboten: Sonderzahlungen werden automatisch auf die Laufzeit verteilt — so vergleichst du auch Angebote mit unterschiedlichen Anzahlungen fair.
 
-## Leasingfaktor-Formel
+## Was ist die Leasingfaktor-Formel?
 
 Die Grundformel ist einfach:
 
@@ -49,7 +52,7 @@ Wenn eine **Sonderzahlung** (Anzahlung, Überführungskosten) anfällt, wird sie
 
 Beispiel: 250&nbsp;€ Rate + 3.600&nbsp;€ Sonderzahlung / 36&nbsp;Monate = 100&nbsp;€/Monat → bereinigte Rate 350&nbsp;€ → Faktor **1,03** statt 0,74 — das Angebot ist schlechter als es zunächst scheint.
 
-## Bewertungsskala
+## Welche Bewertungsskala wird verwendet?
 
 | Leasingfaktor | Bewertung |
 |---|---|
@@ -61,7 +64,7 @@ Beispiel: 250&nbsp;€ Rate + 3.600&nbsp;€ Sonderzahlung / 36&nbsp;Monate = 10
 
 Marktdurchschnitt 2024 (Quelle: leasingmarkt.de): **0,63**. Beste Angebote 2025 (EV): Renault Arkana **0,24**, Renault Master **0,25**, Hyundai Inster **0,25**.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **Kompakt-PKW, 300&nbsp;€ Rate, 35.000&nbsp;€ Listenpreis:** Faktor = 0,86 → gut, leicht über Durchschnitt.
 - **SUV, 450&nbsp;€ Rate, 52.000&nbsp;€ Listenpreis:** Faktor = 0,87 → gut.
@@ -69,7 +72,7 @@ Marktdurchschnitt 2024 (Quelle: leasingmarkt.de): **0,63**. Beste Angebote 2025 
 - **Premiumfahrzeug, 800&nbsp;€ Rate, 60.000&nbsp;€ Listenpreis:** Faktor = 1,33 → wenig attraktiv.
 - **Mit Sonderzahlung:** 250&nbsp;€ Rate, 33.850&nbsp;€ Listenpreis, 3.600&nbsp;€ SZ, 36&nbsp;Monate → bereinigter Faktor 1,03 statt scheinbarer 0,74.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Privat-Leasing-Vergleich:** Mehrere Angebote mit unterschiedlichen Fahrzeugpreisen auf eine einheitliche Kennzahl bringen.
 - **Sonderzahlungs-Analyse:** Prüfen, ob eine Anzahlung das Angebot tatsächlich verbessert oder nur die Rate optisch senkt.
@@ -81,7 +84,7 @@ Marktdurchschnitt 2024 (Quelle: leasingmarkt.de): **0,63**. Beste Angebote 2025 
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools für Finanzplanung und Kostenvergleich:
 

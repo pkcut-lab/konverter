@@ -7,6 +7,13 @@ metaDescription: "MD5-, SHA-1-, SHA-256-, SHA-384- und SHA-512-Hashes direkt im 
 tagline: "MD5, SHA-1, SHA-256, SHA-384 und SHA-512 auf einen Blick — komplett im Browser."
 intro: "Der Hash-Generator berechnet kryptographische Hash-Werte aus beliebigem Text. Du gibst einen String ein und erhältst sofort die Digests aller fünf gängigen Algorithmen. Die Berechnung läuft vollständig im Browser — kein Byte verlässt dein Gerät, kein Server loggt deine Eingabe."
 category: "dev"
+stats:
+  - label: "Algorithmen"
+    value: "5"
+  - label: "Max. Eingabe"
+    value: "unbegrenzt"
+  - label: "Verarbeitung"
+    value: "lokal"
 contentVersion: 1
 howToUse:
   - "Füge deinen Text in das Eingabefeld ein — per Paste oder Tippen."
@@ -27,6 +34,9 @@ relatedTools:
   - base64-encoder
   - uuid-generator
   - passwort-generator
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Generator?
@@ -35,7 +45,7 @@ Der Hash-Generator nimmt einen beliebigen Text-String und berechnet daraus fünf
 
 Der Generator verarbeitet UTF-8 korrekt: Umlaute, Sonderzeichen und Emojis werden in ihre Byte-Sequenzen zerlegt, bevor der Hash-Algorithmus greift. Leerer Input wird mit einer klaren Meldung abgewiesen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Hash-Funktionen sind keine Umrechnungen im klassischen Sinn, sondern Einweg-Transformationen. Der Algorithmus (am Beispiel SHA-256):
 
@@ -46,7 +56,7 @@ Hash-Funktionen sind keine Umrechnungen im klassischen Sinn, sondern Einweg-Tran
 
 Beispiel: `Hallo` ergibt den SHA-256-Hash `d3751d33f9cd5049c4af2b462735457e907ef1f17e8b4e3bfc5e319bce4b6543`. Ändert sich auch nur ein Zeichen, ändert sich der gesamte Hash (Lawineneffekt).
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Input-Text | Algorithmus | Hash-Digest (gekürzt) | Volle Länge |
 |------------|-------------|----------------------|-------------|
@@ -58,7 +68,7 @@ Beispiel: `Hallo` ergibt den SHA-256-Hash `d3751d33f9cd5049c4af2b462735457e907ef
 
 Hashes dienen der Integritätsprüfung, nicht der Verschlüsselung. Wer einen Hash kennt, kann den Originaltext nicht rekonstruieren — aber er kann prüfen, ob ein gegebener Text denselben Hash erzeugt.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Software-Integrität und Downloads** — Entwickler veröffentlichen SHA-256-Checksummen neben ihren Releases. Nach dem Download berechnest du den Hash der Datei und vergleichst ihn mit dem publizierten Wert. Stimmen beide überein, ist die Datei unverändert.
 
@@ -72,7 +82,7 @@ Hashes dienen der Integritätsprüfung, nicht der Verschlüsselung. Wer einen Ha
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

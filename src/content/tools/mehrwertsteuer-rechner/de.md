@@ -27,6 +27,9 @@ faq:
   - q: "Gilt dieser Rechner auch für Österreich oder die Schweiz?"
     a: "Nein. Dieser Rechner ist auf deutsche Steuersätze ausgelegt (19 %, 7 %, 0 %). Österreich verwendet 20 % und 10 % als Hauptsätze, die Schweiz 8,1 % und 2,6 %. Über das Individuell-Feld kannst du jeden anderen Steuersatz manuell eingeben."
 relatedTools: ['zeichenzaehler', 'base64-encoder', 'zeitzonen-rechner']
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -35,7 +38,7 @@ Der Mehrwertsteuer-Rechner arbeitet bidirektional: Du kannst jeden der drei Betr
 
 Alle Berechnungen laufen ausschließlich im Browser — kein Server-Upload, kein Tracking.
 
-## Umrechnungsformeln
+## Welche Umrechnungsformeln gibt es?
 
 Die deutschen Mehrwertsteuer-Formeln sind seit 2007 unverändert:
 
@@ -51,7 +54,7 @@ Die deutschen Mehrwertsteuer-Formeln sind seit 2007 unverändert:
 **Warum nicht Brutto × 0,19?**
 119&nbsp;€ × 0,19 = 22,61&nbsp;€ — das ist falsch. Die enthaltene Mehrwertsteuer in 119&nbsp;€ beträgt nur 19,00&nbsp;€. Der korrekte Weg: 119&nbsp;€ ÷ 1,19 = 100&nbsp;€ (Netto), dann 119&nbsp;€ − 100&nbsp;€ = 19&nbsp;€ (MwSt). Oder direkt: 119&nbsp;€ × (0,19 ÷ 1,19) = 19,00&nbsp;€.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Drei typische Rechnungen mit deutschen Standardsätzen:
 
@@ -64,7 +67,7 @@ Netto 50,00&nbsp;€ → MwSt 3,50&nbsp;€ → Brutto 53,50&nbsp;€
 **Beispiel 3 — Rückrechnung aus Brutto:**
 Brutto 238,00&nbsp;€ bei 19&nbsp;% → Netto 200,00&nbsp;€ → MwSt 38,00&nbsp;€
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Selbstständige und Freiberufler:** Rechnungsbeträge korrekt ausweisen; Netto-Angebote in Brutto-Preise für Verbraucher umrechnen.
 - **Buchhalter und Steuerberater:** Vorsteuerbeträge aus Eingangsrechnungen herausrechnen.
@@ -76,7 +79,7 @@ Brutto 238,00&nbsp;€ bei 19&nbsp;% → Netto 200,00&nbsp;€ → MwSt 38,00&nb
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
