@@ -211,3 +211,13 @@ _(filled when sprint complete — leer bis Sprint Ende)_
 **Layer 4 (Look):** N/A — reiner SEO/Backend-Task ohne UI.
 
 **⚠️ Eskalation:** 4 pre-existing vitest-Failures (hreflang/slug-map/tools-schema/deploy) aus Phase-3 EN pivot brauchen separaten Fix durch codebase-Owner oder Launch-Coordinator.
+
+#### Review-Pass T8 — 2026-04-26T07:26:00+02:00
+**Reviewer:** quality-reviewer
+**Verdict:** ✅ approved
+**Layer-Check:** Hard-Caps ✅ · Build ✅ · Funktional ✅ · Look ✅ (N/A)
+
+**Layer 1 (Hard-Caps):** PASS — Hex-Grep clean (`grep -rEn '#[0-9a-fA-F]{3,8}'` 0 hits in component files). Svelte 5 Runes used (`$state`, `$effect`). No React/Next.js imports. No color/contrast changes. Pure-client maintained. Note: `padding: 6px 4px` in YouMightAlsoLike.astro uses bare px (no `--space-1.5` token exists); pre-existing pattern in file (`0.9375rem`); WCAG 2.5.8 fix; acceptable given no token equivalent.
+**Layer 2 (Build):** `npm run check` 0 errors / 0 warnings / 0 hints ✅. `npx vitest run`: 111 test files, 1761 tests — all pass ✅ (pre-existing 4 failures from T7 review resolved by KIT-10 commit `5a9d4dd`). Git account: pkcut-lab ✅.
+**Layer 3 (Funktional):** Lighthouse (7 URLs): Perf min=97, avg=98 (≥90 ✅). SEO all=100 (≥95 ✅). A11y all=100 ✅. Critical fix: pagefind WASM deferred to interaction (TBT 7,230ms→0ms on /de/werkzeuge, P 58→99). Cache-Control immutable for OG/icon assets added.
+**Layer 4 (Look):** N/A — perf + a11y fixes only, no visual design changes. Refined Minimalism unaffected.
