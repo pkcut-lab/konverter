@@ -120,7 +120,7 @@ _(launch-coordinator updates this block each heartbeat)_
 | T12 | OG-Bilder + Brand-Assets | og-image-generator | ✅ approved [KIT-4 done, 72/72 WebP, aabc68d] | ✅ approved 2026-04-26T07:49 |
 | T13 | Email Routing @kittokit.com | cf-infra-engineer | ⚠️ partial [KIT-5 blocked] — user-input: token perm + email aliases | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
-| T15 | AdSense Prep Checklist | adsense-prep-checker | ⏳ in_review [KIT-9, 4e26d90] | — |
+| T15 | AdSense Prep Checklist | adsense-prep-checker | ✅ approved [KIT-9 done, 4e26d90] | ✅ approved 2026-04-26T08:01 |
 | — | Fix vitest failures (Phase-3) | quality-reviewer | ✅ done [KIT-10, 5a9d4dd] | ✅ fixed |
 
 ---
@@ -188,6 +188,37 @@ _(launch-coordinator updates this block each heartbeat)_
 - Unblocking: User bestätigt Ziel-Email + Option A (Token-Update) oder Option B (manuell im Dashboard)
 
 _(Workers append here as tasks complete — leer bis Sprint läuft)_
+
+---
+
+### T15 — AdSense-Approval-Vorbereitung Checklist (2026-04-26 adsense-prep-checker)
+
+**T-ID:** T15 | **Status:** approved
+
+**Was geändert:**
+- `audits/2026-04-26-adsense-readiness.md` — 15-Item AdSense-Readiness-Checkliste (6✅ 8⬜ 1❌)
+- `public/ads.txt` — Platzhalter bis AdSense-Approval
+- `src/pages/de/ueber.astro` — About-Page Deutsch (`/de/ueber`)
+- `src/pages/en/about.astro` — About-Page Englisch (`/en/about`)
+
+**Verifikation:**
+- `npm run check`: ✅ 0 errors, 0 warnings, 0 hints
+- `npx vitest run`: ✅ 1761/1761
+
+**Restschulden:**
+- User muss persönliche Daten in Legal-Pages einpflegen (T5 extern)
+- Site-Alter ≥ 6 Monate (zeitgebunden — AdSense-Application frühestens Oktober 2026)
+- ads.txt nach Approval mit Publisher-ID befüllen
+
+#### Review-Pass T15 — 2026-04-26T08:01:00+02:00
+**Reviewer:** quality-reviewer
+**Verdict:** ✅ approved
+**Layer-Check:** Hard-Caps ✅ · Build ✅ · Funktional ✅ · Look ✅
+**Notes:**
+- Layer 1: Tokens-only ✅ (keine Hex-Farben), Refined-Minimalism ✅ (eyebrow/h1/sections, kein rounded-full, kein Gradient), Astro 5 ✅, pure-client ✅, DSGVO ✅
+- Layer 2: `npm run check` 0/0/0 ✅, `npx vitest run` 1761/1761 ✅
+- Layer 3: 15-Item-Checkliste vollständig mit ✅/⬜/❌-Status, About-Pages existieren (`ueber.astro` + `about.astro`), ads.txt Platzhalter korrekt — pending Items klar als extern/zeitgebunden markiert
+- Layer 4: About-Pages folgen legal-page-Pattern (eyebrow, h1, lead, h2-sections), warm monochrom, tokens-only — Refined-Minimalism konform
 
 ---
 
