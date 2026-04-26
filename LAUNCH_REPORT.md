@@ -103,6 +103,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T07:45 UTC+2 (Heartbeat-13) — **T9 APPROVED (🟡 corrected). KIT-4 REVIEW LÄUFT.** KIT-2(T9) ✅ done — QR: 5 violations bei `/` durch Astro i18n `prefixDefaultLocale:true` Override; Fix: `redirectToDefaultLocale: false` in astro.config.mjs (commit 124dba2), axe-core 0 violations / 1761/1761 vitest. KIT-4(T12) in_progress — QR aktiv. KIT-8(T11)/KIT-9(T15) in_review queued. Sprint-Finale: noch KIT-4/8/9.
 >
 > 2026-04-26T07:55 UTC+2 (Heartbeat-14) — **T12 + T11 APPROVED. NUR NOCH T15.** KIT-4(T12) ✅ done — QR: 72/72 WebP OG-Cards, Dark-BG Refined-Minimalism, 4-Layer LGTM (07:49). KIT-8(T11) ✅ done — QR: Analytics consent-gated, fail-safe gegen leere Tokens, 1761/1761 vitest (07:55). KIT-9(T15) in_review — QR aktiv (run läuft). Nach KIT-9-Approval: SPRINT_DONE.md publizieren.
+>
+> 2026-04-26T08:01 UTC+2 (Heartbeat-15) — **SPRINT DONE. ALLE TASKS APPROVED.** KIT-9(T15) ✅ done — QR: About-Pages DE+EN, ads.txt, 15-Item AdSense-Checklist, 1761/1761 vitest, Refined-Minimalism konform. Alle Sprint-Ziele erreicht: T6/T7/T8/T9/T10/T11/T12/T15 ✅ approved. T13 ⚠️ partial (User-Input: Email-Aliases + CF-Token). T14 conditional (wartet auf Go-Live). SPRINT_DONE.md publiziert → inbox/to-user/. Heartbeat-Halt.
 
 ---
 
@@ -224,13 +226,45 @@ _(Workers append here as tasks complete — leer bis Sprint läuft)_
 
 ## Restschulden + Folgeaufgaben
 
-_(filled by launch-coordinator at sprint end — leer bis Sprint Ende)_
+### User-Action erforderlich
+
+| # | Was | Datei | Prio |
+|---|-----|-------|------|
+| 1 | `CF_RUM_TOKEN` + `PUBLIC_CLARITY_PROJECT_ID` in `.env` setzen (T11 Analytics aktivieren) | `inbox/to-user/REQUIRES-USER-INPUT-analytics-tokens.md` | Sofort |
+| 2 | Email-Aliases anlegen: hello/support/dmca/dpo/adsense/postmaster@kittokit.com (T13) | `inbox/to-user/REQUIRES-USER-INPUT-email-target.md` | Sofort |
+| 3 | T14 Search Console + Bing Webmaster nach Go-Live triggern | — | Bei Go-Live |
+| 4 | ads.txt mit Publisher-ID befüllen nach AdSense-Approval | `public/ads.txt` | Nach AdSense-Approval |
+| 5 | Existing kittokit-Company reaktivieren (falls gewünscht): `rm .paperclip/EMERGENCY_HALT` | — | Optional |
 
 ---
 
 ## Sprint-Ende
 
-_(filled when sprint complete — leer bis Sprint Ende)_
+**Abgeschlossen:** 2026-04-26T08:01 UTC+2
+**Dauer:** ~3h (Sprint-Start 05:05 UTC+2)
+**Alle Sprint-Ziele erreicht.**
+
+```
+Branch:         feature/en-i18n
+npm run check:  ✅ 0/0/0
+vitest:         ✅ 1761/1761
+Build:          ✅ 155+ Seiten, exit 0
+Git-Account:    pkcut-lab ✅
+```
+
+**Sprint-Commits (chronologisch):**
+- `944c1fb` — T6 Cookie-Banner (cookie-consent-builder)
+- `67f26b2` — T7 JSON-LD (pre-sprint, jsonld-enricher verifiziert)
+- `1f339cb` — T10 404/500 + Sitemap + robots (error-pages-builder)
+- `76d4c05` — T11 CF Analytics + Clarity (cf-infra-engineer)
+- `aabc68d` — T12 72 OG-Cards (og-image-generator)
+- `4e26d90` — T15 AdSense-Checklist + About-Pages (adsense-prep-checker)
+- `66e669f` — T8 Perf-Fix Lighthouse 87→98 (perf-auditor)
+- `130bec5` — T9 WCAG 2.2 AAA 29→0 violations (a11y-auditor)
+- `5a9d4dd` — KIT-10 vitest-Fixes Phase-3 EN pivot (quality-reviewer)
+- `124dba2` — T9 QR-Fix redirectToDefaultLocale:false (quality-reviewer)
+
+**Bestehende Restschuld:** T13 partial (Email-Aliases), T14 conditional (Go-Live), T11 Tokens (User).
 
 ---
 
