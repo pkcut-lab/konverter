@@ -339,3 +339,29 @@ Zuletzt shipped: `video-hintergrund-entfernen` + `pdf-zusammenfuehren` + `pdf-au
 
 - **CI/CD-Deploy:** CF-Secrets nicht gesetzt — kein Production-Deploy möglich (unverändert seit Session 11).
 - **Pipeline-Tools:** 3 Tools in Paperclip-Pipeline warten auf Critics-Ergebnisse (pdf-komprimieren, pdf-zu-jpg, pdf-passwort).
+
+---
+
+## Backlog — Geplante Tools (noch nicht in slug-map)
+
+> Status `📋` = Idee bestätigt, noch kein Build-Auftrag vergeben.
+> Alle Tools hier sind **AdSense-konform** und **pure-client** (Non-Negotiables #2+#7 eingehalten).
+
+### Video-Erweiterungen (`video`) — ffmpeg.wasm-Cluster
+
+Alle vier Tools teilen sich dieselbe Worker-Architektur (ffmpeg.wasm WASM-Core, kein Server-Upload, fällt unter 7a-ML-Worker-Ausnahme). Empfohlene Bau-Reihenfolge: Audio-Extraktion zuerst (einfachste ffmpeg.wasm-Integration), dann Format-Konverter, dann Trimmer/Cutter, dann Compressor.
+
+| Tool-ID (Kandidat) | DE-Slug (Kandidat) | Beschreibung | Architektur | Suchvolumen-Signal |
+|---|---|---|---|---|
+| `video-to-audio` | `video-zu-audio` | MP4/WebM/MKV → MP3/AAC/WAV (Audio-Extraktion, kein Re-Encode nötig) | ffmpeg.wasm Worker, `generic/FileTool` | „mp4 zu mp3" DE: sehr hoch |
+| `video-format-converter` | `video-format-konverter` | MP4 ↔ WebM ↔ GIF ↔ MKV · Codec-Auswahl (H.264/VP9/AV1) | ffmpeg.wasm Worker, `custom/VideoFormatKonverterTool` | „mp4 zu gif", „webm konverter" DE: hoch |
+| `video-trimmer` | `video-cutter` | Video auf Zeitbereich schneiden · Frame-genaue In/Out-Punkte · keine Neukodierung (copy-stream) | ffmpeg.wasm Worker `-c copy`, `custom/VideoCutterTool` | „video schneiden online" DE: sehr hoch |
+| `video-compressor` | `video-komprimierer` | Dateigröße reduzieren via CRF-Slider · Target-Filesize-Mode · Vorschau-Framerates | ffmpeg.wasm Worker CRF, `custom/VideoKomprimiererTool` | „video verkleinern" DE: hoch |
+
+### Text-/KI-Erweiterungen (`text`)
+
+| Tool-ID (Kandidat) | DE-Slug (Kandidat) | Beschreibung | Architektur | Suchvolumen-Signal |
+|---|---|---|---|---|
+| `youtube-transcript` | `youtube-transkript` | YouTube-URL → Untertitel via offizieller `timedtext`-API (kein Download, kein TPM-Eingriff) → SRT / TXT / JSON. Bonus: Sprach-Filter, Zeitstempel-Toggle. | Fetch `youtube.com/api/timedtext` (öffentlich, CORS-ok via Astro API-Route Server-Funktion), `custom/YoutubeTranskriptTool` | „youtube untertitel herunterladen" DE: sehr hoch |
+
+> **Hinweis `youtube-transcript`:** braucht eine schmale Astro Server-Route als CORS-Proxy für den timedtext-Endpoint (kein Video-Bytes-Transfer, nur XML-Text — Non-Negotiable #2 „kein Server-Upload" nicht verletzt). CF-Pages-Function reicht.
