@@ -4,6 +4,7 @@ import ThemeScript from '../components/ThemeScript.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.svelte';
+import WebVitals from '../components/WebVitals.svelte';
 import { buildHreflangLinks, DEFAULT_LANGUAGE, type ActiveLanguage } from '../lib/hreflang';
 import { t } from '../lib/i18n/strings';
 import type { Lang } from '../lib/tools/types';
@@ -181,6 +182,7 @@ const websiteJsonLd = {
     </main>
     <Footer lang={lang} />
     <CookieBanner client:idle />
+    <WebVitals client:idle />
 
     {/* Cloudflare Web Analytics — privacy-first, no consent required */}
     {cfRumToken && (
