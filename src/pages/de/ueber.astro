@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  lang="de"
+  title="Über kittokit – Schnelle Browser-Tools, kein Upload"
+  description="kittokit ist eine privacy-first Tool-Plattform mit über 70 schnellen Browser-Tools — keine Uploads, kein Tracking, kein Login."
+  pathWithoutLang="/ueber"
+>
+  <main class="about">
+    <header class="about-header">
+      <p class="about-eyebrow">Das Projekt</p>
+      <h1>Über kittokit</h1>
+      <p class="about-lead">kittokit ist eine privacy-first Tool-Plattform mit über 70 schnellen Browser-Tools — keine Uploads, kein Tracking, kein Login.</p>
+    </header>
+
+    <section class="about-section">
+      <h2>Mission</h2>
+      <p>Alltägliche Tool-Aufgaben — Konvertieren, Rechnen, Generieren, Datei-Bearbeitung — sollen einfach und schnell gehen, direkt im Browser, ohne Daten an Server zu schicken. Kein Konto erforderlich, kein Abo, kein Datenschutz-Kompromiss.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Wie es funktioniert</h2>
+      <p>Alle Berechnungen und Konvertierungen laufen vollständig in Ihrem Browser ab — via Web-APIs und WebAssembly. Ihre Dateien und Eingaben verlassen Ihr Gerät zu keinem Zeitpunkt. Es werden keine Daten an unsere Server übermittelt.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Wer dahinter steckt</h2>
+      <p>kittokit ist ein Indie-Projekt aus Berlin. Gegründet mit dem Ziel, das beste kostenlose Tool-Verzeichnis im deutschen Sprachraum zu werden — ohne Werbung-zuerst-Ansatz, ohne Dark Patterns.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Technik</h2>
+      <p>Gebaut mit <strong>Astro 5</strong> (SSG), <strong>Svelte 5</strong> (Runes) und <strong>Tailwind CSS</strong>. Hosting via Cloudflare Pages — globales CDN, keine Server-Logs mit personenbezogenen Daten. ML-Tools nutzen WebAssembly für lokale Inferenz direkt im Browser.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Kontakt</h2>
+      <p>Fragen, Feedback oder Kooperationsanfragen: <a href="/de/impressum" class="about-link">Kontaktdaten im Impressum</a>.</p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .about {
+    max-width: 38rem;
+    margin: var(--space-12) auto;
+    padding: 0 var(--space-4);
+  }
+
+  .about-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .about-eyebrow {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 0 0 0.5rem;
+  }
+
+  .about-header h1 {
+    margin: 0 0 var(--space-3);
+  }
+
+  .about-lead {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .about-section {
+    margin-top: var(--space-8);
+  }
+
+  .about-section h2 {
+    margin-bottom: var(--space-2);
+  }
+
+  .about-section p {
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .about-link {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .about-link:hover {
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .about {
+      margin: var(--space-8) auto;
+    }
+  }
+</style>
