@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — SEO Sprint 3 (T3.1-T3.6): hreflang-Fix (144 pages bidirectional) · INP client:visible · computeRelatedTools + article block · llms.txt auto-gen prebuild · sitemap priority/changefreq · Breadcrumbs.astro (BreadcrumbList JSON-LD, a11y) · 1824/1824 tests
+**Letztes Update:** 2026-04-26 — SEO Sprint 2 (T2.1-T2.5): ToolStats-Komponente · Question-Header-Lint+Migration (473→0 Violations, 141 Files) · @graph-Konsolidierung · WebApplication-Subtype+browserRequirements+featureList · ImageObject-Guard · 1837/1837 tests
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
