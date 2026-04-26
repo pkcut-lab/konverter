@@ -3,12 +3,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { listToolsForLang, type ToolListItem } from '../../lib/tools/list';
 import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
 import type { ToolCategory } from '../../lib/tools/categories';
+import { t } from '../../lib/i18n/strings';
 
 export async function getStaticPaths() {
   return ACTIVE_LANGUAGES.map((lang) => ({ params: { lang } }));
 }
 
 const { lang } = Astro.params as { lang: ActiveLanguage };
+const strings = t(lang);
 
 const categoryOrder: readonly ToolCategory[] = [
   'finance', 'construction',
@@ -19,34 +21,6 @@ const categoryOrder: readonly ToolCategory[] = [
   'image', 'video', 'audio', 'document',
   'text', 'color', 'time', 'dev',
 ] as const;
-
-const labelsDe: Record<ToolCategory, string> = {
-  finance: 'Finanzen',
-  construction: 'Bauen & Renovieren',
-  math: 'Mathematik',
-  science: 'Wissenschaft',
-  engineering: 'Technik & Ingenieur',
-  health: 'Gesundheit',
-  sport: 'Sport & Fitness',
-  automotive: 'Auto & Fahrzeug',
-  agriculture: 'Landwirtschaft',
-  education: 'Bildung & Schule',
-  length: 'Länge',
-  weight: 'Gewicht',
-  area: 'Fläche',
-  volume: 'Volumen',
-  distance: 'Distanz',
-  temperature: 'Temperatur',
-  image: 'Bild',
-  video: 'Video',
-  audio: 'Audio',
-  document: 'Dokument',
-  text: 'Text',
-  color: 'Farbe',
-  time: 'Zeit',
-  dev: 'Entwickler',
-};
-const uncategorizedLabel = 'Weitere';
 
 const all = await listToolsForLang(lang);
 
@@ -62,33 +36,35 @@ const groups: Group[] = [];
 for (const cat of categoryOrder) {
   const items = byCat.get(cat);
   if (items && items.length > 0) {
-    groups.push({ id: cat, label: labelsDe[cat] ?? cat, items });
+    groups.push({ id: cat, label: strings.categories[cat] ?? cat, items });
   }
 }
 const other = byCat.get('__other');
 if (other && other.length > 0) {
-  groups.push({ id: 'other', label: uncategorizedLabel, items: other });
+  groups.push({ id: 'other', label: strings.categoriesUncategorized, items: other });
 }
 
 const total = all.length;
 ---
 <BaseLayout
   lang={lang}
-  title="Alle Werkzeuge — kittokit"
-  description="Vollständige Übersicht aller kittokit-Werkzeuge, gruppiert nach Kategorie. Alles läuft im Browser, ohne Upload, ohne Tracking, ohne Anmeldung."
+  title={strings.toolsPageTitle}
+  description={strings.toolsPageDescription}
   pathWithoutLang="/werkzeuge"
 >
   <div class="index">
     <header class="index-hero">
-      <p class="index-eyebrow">Übersicht</p>
-      <h1>Alle Werkzeuge</h1>
+      <p class="index-eyebrow">{strings.toolsPageEyebrow}</p>
+      <h1>{strings.toolsPageH1}</h1>
       <p class="lede">
-        {total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser —
-        kein Upload, keine Anmeldung, kein Tracking.
+        {lang === 'de'
+          ? `${total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser — kein Upload, keine Anmeldung, kein Tracking.`
+          : `${total} tools, grouped by category. Everything runs directly in your browser — no uploads, no account, no tracking.`
+        }
       </p>
     </header>
 
-    <nav class="jump" aria-label="Kategorien">
+    <nav class="jump" aria-label={strings.toolsPageCategoriesNav}>
       {groups.map((g) => (
         <a href={`#cat-${g.id}`} class="jump-pill">
           <span>{g.label}</span>
@@ -105,7 +81,7 @@ const total = all.length;
               {String(idx + 1).padStart(2, '0')}
             </span>
             <h2 id={`h-${g.id}`}>{g.label}</h2>
-            <span class="group-count" aria-label={`${g.items.length} Werkzeuge`}>
+            <span class="group-count" aria-label={`${g.items.length} ${lang === 'de' ? 'Werkzeuge' : 'tools'}`}>
               {String(g.items.length).padStart(2, '0')}
             </span>
           </header>

@@ -41,7 +41,8 @@ import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
-import { asideDefaults } from '../../lib/content/aside-defaults';
+import { getAsideDefault } from '../../lib/content/aside-defaults';
+import { t } from '../../lib/i18n/strings';
 
 // Tool-ids that need a specialised formatter UI. Everything else with
 // `type: 'formatter'` falls through to the generic textarea Formatter.
@@ -146,6 +147,7 @@ export async function getStaticPaths() {
 type Props = { entry: CollectionEntry<'tools'>; slug: string };
 const { entry, slug } = Astro.props;
 const config = await getToolConfig(entry.data.toolId);
+const strings = t(entry.data.language);
 
 if (!config) {
   throw new Error(
@@ -177,7 +179,7 @@ const eyebrowText =
 
 // Merge: content-file aside wins over category default.
 // This means every tool gets the accordion — no per-tool content needed.
-const resolvedAside = entry.data.aside ?? asideDefaults[config.type] ?? null;
+const resolvedAside = entry.data.aside ?? getAsideDefault(config.type, entry.data.language) ?? null;
 
 const jsonLd = buildToolJsonLd(
   {
@@ -189,7 +191,7 @@ const jsonLd = buildToolJsonLd(
     faq: entry.data.faq ?? [],
     // Prefer aside.steps (titled steps) over howToUse (plain strings) for HowTo schema.
     steps: resolvedAside?.steps ?? (entry.data.howToUse ?? []).map((text: string, i: number) => ({
-      title: `Schritt ${i + 1}`,
+      title: `${strings.stepPrefix} ${i + 1}`,
       description: text,
     })),
   },
@@ -234,7 +236,7 @@ const jsonLd = buildToolJsonLd(
           {config.type === 'converter' && (
             <Converter
               config={config}
-              locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language}
+              locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language === 'en' ? 'en-US' : entry.data.language}
               client:load
             />
           )}
@@ -371,7 +373,7 @@ const jsonLd = buildToolJsonLd(
       {resolvedAside && (
         <details class="tool-aside" aria-labelledby="tool-aside-heading">
           <summary class="tool-aside__summary">
-            <h2 id="tool-aside-heading">So funktioniert es</h2>
+            <h2 id="tool-aside-heading">{strings.asideHeading}</h2>
             <svg class="tool-aside__chevron" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -419,10 +421,8 @@ const jsonLd = buildToolJsonLd(
       <p class="intro">{entry.data.intro}</p>
 
       <header class="section-head">
-        <span class="section-head__label">01 — Anleitung</span>
-        <h2 class="section-head__title">
-          Wie benutzt du <em>dieses Tool</em>?
-        </h2>
+        <span class="section-head__label">{strings.howToSectionLabel}</span>
+        <h2 class="section-head__title" set:html={strings.howToHeadingHtml} />
       </header>
       <ol class="how">
         {entry.data.howToUse.map((step: string) => <li>{step}</li>)}

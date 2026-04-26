@@ -5,7 +5,7 @@ import { SITE_URL } from './site';
  * Phase 0: de only. Phase 3: de, en, es, fr, pt-br.
  * Imported by astro.config.mjs so i18n.locales stays in sync.
  */
-export const ACTIVE_LANGUAGES = ['de'] as const;
+export const ACTIVE_LANGUAGES = ['de', 'en'] as const;
 
 export type ActiveLanguage = (typeof ACTIVE_LANGUAGES)[number];
 

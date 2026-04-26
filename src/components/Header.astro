@@ -4,11 +4,13 @@ import HeaderSearch from './HeaderSearch.svelte';
 import { POPULAR_TOOLS } from '../lib/popular-tools';
 import { getSlug } from '../lib/slug-map';
 import type { Lang } from '../lib/tools/types';
+import type { HreflangLink } from '../lib/hreflang';
 
 interface Props {
   lang: string;
+  langAlternates?: HreflangLink[];
 }
-const { lang } = Astro.props;
+const { lang, langAlternates } = Astro.props;
 
 const searchPlaceholder: Record<string, string> = {
   de: 'Tools durchsuchen',
@@ -21,15 +23,16 @@ const navByLang: Record<string, NavItem[]> = {
   de: [
     { label: 'Werkzeuge', href: `/${lang}/werkzeuge` },
     { label: 'Über', href: '#', disabled: true },
-    { label: 'Sprache', href: '#', disabled: true },
   ],
   en: [
     { label: 'Tools', href: `/${lang}/werkzeuge` },
     { label: 'About', href: '#', disabled: true },
-    { label: 'Language', href: '#', disabled: true },
   ],
 };
 const nav = navByLang[lang] ?? navByLang.en!;
+
+// Language switcher: filter out x-default, keep only real lang alternates.
+const langLinks = langAlternates?.filter((l) => l.hreflang !== 'x-default') ?? [];
 
 // Beliebt-Bar: resolve slug per current language, drop tools that lack a
 // translation for `lang` so links never 404.
@@ -88,6 +91,20 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
       <HeaderSearch client:idle lang={lang} placeholder={placeholder} />
     </div>
 
+    {langLinks.length > 1 && (
+      <div class="lang-slot">
+        {langLinks.map((l) => (
+          <a
+            class:list={['lang-link', l.hreflang === lang && 'lang-link--active']}
+            href={l.href}
+            hreflang={l.hreflang}
+            data-lang={l.hreflang}
+            aria-current={l.hreflang === lang ? 'true' : undefined}
+          >{l.hreflang.toUpperCase()}</a>
+        ))}
+      </div>
+    )}
+
     <div class="toggle-slot">
       <ThemeToggle client:idle />
     </div>
@@ -116,6 +133,17 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
   )}
 </header>
 
+<script is:inline>
+  document.querySelectorAll('.lang-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+      var lang = this.getAttribute('data-lang');
+      if (!lang) return;
+      try { localStorage.setItem('kittokit-lang', lang); } catch (_) {}
+      document.cookie = 'kittokit-lang=' + lang + '; path=/; max-age=31536000; SameSite=Lax';
+    });
+  });
+</script>
+
 <style>
   .site-header {
     position: sticky;
@@ -133,7 +161,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     margin: 0 auto;
     padding: var(--space-3) var(--space-6);
     display: grid;
-    grid-template-columns: auto auto 1fr auto;
+    grid-template-columns: auto auto 1fr auto auto;
     align-items: center;
     gap: var(--space-6);
   }
@@ -191,6 +219,43 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
   .search-slot {
     min-width: 0;
   }
+
+  .lang-slot {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex: 0 0 auto;
+  }
+  .lang-link {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-text-subtle);
+    text-decoration: none;
+    transition: border-color var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .lang-link:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-subtle);
+  }
+  .lang-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+  .lang-link--active {
+    color: var(--color-text);
+    border-color: var(--color-accent);
+    background: color-mix(in oklch, var(--color-accent) 8%, transparent);
+  }
+
   .toggle-slot {
     display: inline-flex;
   }
@@ -284,7 +349,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
 
   @media (max-width: 40rem) {
     .inner {
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       row-gap: var(--space-2);
     }
     .nav {

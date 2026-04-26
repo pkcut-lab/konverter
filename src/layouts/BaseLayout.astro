@@ -4,6 +4,8 @@ import ThemeScript from '../components/ThemeScript.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { buildHreflangLinks } from '../lib/hreflang';
+import { t } from '../lib/i18n/strings';
+import type { Lang } from '../lib/tools/types';
 
 interface Props {
   lang: string;
@@ -12,6 +14,7 @@ interface Props {
   pathWithoutLang: string;
 }
 const { lang, title, description, pathWithoutLang } = Astro.props;
+const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
 const canonical = new URL(`/${lang}${pathWithoutLang}`, Astro.site).toString();
 const ogImage = new URL('/og-image.png', Astro.site).toString();
@@ -33,8 +36,7 @@ const organizationJsonLd = {
   name: siteName,
   url: siteUrl,
   logo: `${siteUrl}/icon-512.png`,
-  description:
-    'kittokit — schnelle Browser-Tools: Konverter, Rechner, Datei-Werkzeuge. Pure-client, ohne Upload, ohne Tracking.',
+  description: strings.orgDescription,
   sameAs: [],
 };
 const websiteJsonLd = {
@@ -65,19 +67,19 @@ const websiteJsonLd = {
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="kittokit" />
-    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang} />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang === 'en' ? 'en_US' : lang} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="kittokit — Schnelle Tools. Kein Upload. Kein Tracking." />
+    <meta property="og:image:alt" content={strings.ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="kittokit — Schnelle Tools. Kein Upload. Kein Tracking." />
+    <meta name="twitter:image:alt" content={strings.ogImageAlt} />
 
     <ThemeScript />
 
@@ -126,7 +128,7 @@ const websiteJsonLd = {
     <script is:inline defer src="/registerSW.js"></script>
   </head>
   <body>
-    <Header lang={lang} />
+    <Header lang={lang} langAlternates={hreflangs} />
     <main class="site-main" data-pagefind-body>
       <slot />
     </main>

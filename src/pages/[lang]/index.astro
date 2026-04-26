@@ -2,12 +2,14 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { listToolsForLang } from '../../lib/tools/list';
 import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
+import { t } from '../../lib/i18n/strings';
 
 export async function getStaticPaths() {
   return ACTIVE_LANGUAGES.map((lang) => ({ params: { lang } }));
 }
 
 const { lang } = Astro.params as { lang: ActiveLanguage };
+const strings = t(lang);
 
 // Auto-index: every content entry in this language that has a registered
 // slug becomes a card. New tools show up without touching this file.
@@ -16,24 +18,21 @@ const tools = await listToolsForLang(lang);
 ---
 <BaseLayout
   lang={lang}
-  title="kittokit — Werkzeuge, die im Browser bleiben"
-  description="kittokit — Konverter, Rechner und Datei-Tools. Alle arbeiten direkt im Browser, ohne Upload, ohne Anmeldung, ohne Tracking."
+  title={strings.homeTitle}
+  description={strings.homeDescription}
   pathWithoutLang="/"
 >
   <div class="home">
     <header class="home-hero">
       <p class="home-eyebrow">kit<em>to</em>kit</p>
-      <h1>Werkzeuge, die im Browser bleiben.</h1>
-      <p class="lede">
-        Freisteller, Format-Umwandlung, Umrechnungen. Alles läuft auf deinem Gerät —
-        keine Uploads, keine Anmeldung, kein Tracking.
-      </p>
+      <h1>{strings.homeH1}</h1>
+      <p class="lede">{strings.homeLede}</p>
     </header>
 
     <section class="tools" aria-labelledby="tools-heading">
       <div class="tools-head">
-        <h2 id="tools-heading">Alle Werkzeuge</h2>
-        <span class="count" aria-label={`${tools.length} Werkzeuge verfügbar`}>
+        <h2 id="tools-heading">{strings.homeAllTools}</h2>
+        <span class="count" aria-label={`${tools.length} ${lang === 'de' ? 'Werkzeuge verfügbar' : 'tools available'}`}>
           {String(tools.length).padStart(2, '0')}
         </span>
       </div>

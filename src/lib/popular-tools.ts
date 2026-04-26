@@ -18,10 +18,10 @@ interface PopularTool {
 }
 
 export const POPULAR_TOOLS: PopularTool[] = [
-  { toolId: 'hevc-to-h264',          label: { de: 'iPhone-Video → MP4' } },
-  { toolId: 'remove-background',     label: { de: 'Hintergrund entfernen' } },
-  { toolId: 'png-jpg-to-webp',       label: { de: 'PNG/JPG → WebP' } },
-  { toolId: 'meter-to-feet',         label: { de: 'Meter → Fuß' } },
-  { toolId: 'celsius-to-fahrenheit', label: { de: 'Celsius → Fahrenheit' } },
-  { toolId: 'km-to-mile',            label: { de: 'km → Meilen' } },
+  { toolId: 'hevc-to-h264',          label: { de: 'iPhone-Video → MP4',    en: 'iPhone Video → MP4' } },
+  { toolId: 'remove-background',     label: { de: 'Hintergrund entfernen', en: 'Background Remover' } },
+  { toolId: 'png-jpg-to-webp',       label: { de: 'PNG/JPG → WebP',        en: 'PNG/JPG → WebP' } },
+  { toolId: 'meter-to-feet',         label: { de: 'Meter → Fuß',           en: 'Meters → Feet' } },
+  { toolId: 'celsius-to-fahrenheit', label: { de: 'Celsius → Fahrenheit',  en: 'Celsius → °F' } },
+  { toolId: 'km-to-mile',            label: { de: 'km → Meilen',           en: 'km → Miles' } },
 ];

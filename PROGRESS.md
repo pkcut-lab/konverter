@@ -1,7 +1,7 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — SEO/GEO-Audit: Organization+WebSite-JSON-LD global, robots.txt, llms.txt, llms-full.txt
-**Aktuelle Phase:** Phase 1 — Skalierung (läuft) · Sequential-Workflow-Pipeline aktiv (§0 v1.5)
+**Letztes Update:** 2026-04-26 — Phase-3 EN Pivot: AUFGABE A vollständig (slug-map, ACTIVE_LANGUAGES, i18n, Header, CF Function, 72 EN Content-Files)
+**Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect
 
 ---
 
@@ -16,7 +16,11 @@
 | ❌ Broken | **0** |
 | Dedizierte Vitest-Tests | 57 Tools |
 | Schema-only-Coverage | 15 Tools |
-| **Stage-A Browser-Smoke (2026-04-26)** | **✅ 72/72** — HTTP 200 + 0 Console/Page/Hydration-Errors (siehe `audits/2026-04-26-tool-functions.md`) |
+| **Stage-A Browser-Smoke (2026-04-26)** | **✅ 72/72** — HTTP 200 + 0 Console/Page/Hydration-Errors (Vor-F-1-Fix-Lauf, Re-Run blockiert durch parallele en-Migration P-1) |
+| **Vitest gesamt (2026-04-26)** | ⚠️ 1744/1748 pre-EN-Pivot; ACTIVE_LANGUAGES-Test-Asserts noch auf ['de'] hardcoded — Update ausstehend |
+| **Funktions-Smoke parametrisch (2026-04-26)** | **✅ 73/73 nach F-1-Fix** — siehe `audits/2026-04-26-tool-functions.md` |
+| **`astro check` + `tsc --noEmit`** | ✅ 0 errors, 0 warnings (2026-04-26 nach Phase-3 EN Pivot) |
+| **F-1 Code-Fix (2026-04-26)** | ✅ `json-to-csv` Self-ID-Konsistenz: `src/lib/tools/json-zu-csv.ts:114` + `src/lib/tools/formatter-runtime-registry.ts:37` |
 | Icons (`public/icons/tools/`) | ⬜ 0/72 — Verzeichnis existiert nicht |
 | Hero-Images (`public/heroes/tools/`) | ⬜ 0/72 — Verzeichnis existiert nicht |
 
