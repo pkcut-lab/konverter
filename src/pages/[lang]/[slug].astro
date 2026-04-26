@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
@@ -165,6 +167,14 @@ if (!(config.type in componentByType)) {
 
 const { Content } = await entry.render();
 
+// Per-tool OG card: cards are generated keyed by the DE slug.
+// For all languages, resolve the DE slug via toolId and check for the file.
+const deSlug = getSlug(entry.data.toolId, 'de');
+const ogCardExists =
+  deSlug !== undefined &&
+  existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.webp`));
+const ogImagePath = ogCardExists ? `/og/tools/${deSlug}.webp` : undefined;
+
 // Default privacy-eyebrow: every client-side tool gets a trust signal above
 // its H1 unless the content file explicitly overrides via frontmatter.eyebrow.
 // Because all tools on this site run fully in the browser (Spec §7, pure-client
@@ -203,6 +213,7 @@ const jsonLd = buildToolJsonLd(
   title={entry.data.title}
   description={entry.data.metaDescription}
   pathWithoutLang={`/${slug}`}
+  ogImagePath={ogImagePath}
 >
   {jsonLd.map((block) => (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />

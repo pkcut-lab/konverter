@@ -13,12 +13,15 @@ interface Props {
   title: string;
   description?: string;
   pathWithoutLang: string;
+  /** Per-tool OG image path (e.g. '/og/tools/meter-zu-fuss.webp').
+   *  Falls back to the site-wide '/og-image.png' when absent. */
+  ogImagePath?: string;
 }
-const { lang, title, description, pathWithoutLang } = Astro.props;
+const { lang, title, description, pathWithoutLang, ogImagePath } = Astro.props;
 const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
 const canonical = new URL(`/${lang}${pathWithoutLang}`, Astro.site).toString();
-const ogImage = new URL('/og-image.png', Astro.site).toString();
+const ogImage = new URL(ogImagePath ?? '/og-image.png', Astro.site).toString();
 
 // Site-wide entity signals — Organization + WebSite + SearchAction.
 // Emitted on every page (not just tool pages) so the brand-entity is

@@ -98,7 +98,7 @@ _(launch-coordinator updates this block each heartbeat)_
 |----|------|-------|--------|-------------------|
 | T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
 | T6 | Cookie-Banner | cookie-consent-builder | ⏳ awaiting-review [KIT-7 done, 944c1fb] | — |
-| T7 | JSON-LD per Tool | jsonld-enricher | ⏳ awaiting-review [KIT-6→quality-reviewer] | — |
+| T7 | JSON-LD per Tool | jsonld-enricher | ✅ approved [KIT-6] | ✅ approved 2026-04-26T06:25 |
 | T8 | Performance + CWV | perf-auditor | in_progress [KIT-1] | — |
 | T9 | WCAG 2.2 AAA a11y | a11y-auditor | in_progress [KIT-2] | — |
 | T10 | 404/500 + sitemap + robots | error-pages-builder | ⏳ awaiting-review [KIT-3 done, 1f339cb] | — |
@@ -163,3 +163,15 @@ _(filled when sprint complete — leer bis Sprint Ende)_
 - `.env`: `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` gesetzt
 - Cloudflare Pages Build wird via GitHub-Webhook auto-getriggert
 - kittokit-launch Agents nutzen `.env` für CF-Calls (T11, T13, T14)
+
+#### Review-Pass T7 — 2026-04-26T06:25:00+02:00
+**Reviewer:** quality-reviewer
+**Verdict:** ✅ approved
+**Layer-Check:** Hard-Caps ✅ · Build ✅ · Funktional ✅ · Look ✅ (N/A)
+
+**Layer 1 (Hard-Caps):** PASS — kein UI, keine Hex-Farben, pure-client SSG, Organization/WebSite-Blöcke nicht dupliziert.
+**Layer 2 (Build):** `npm run check` 0/0/0 ✅. `vitest`: 4 Failures — alle pre-existing aus Phase-3 EN pivot (commit 855c0b7), kein Bezug zu T7. 1757 Tests pass. ⚠️ Pre-existing failures eskaliert an Coordinator.
+**Layer 3 (Funktional):** meter-zu-fuss, webp-konverter, passwort-generator je 6 JSON-LD-Blöcke: Organization + WebSite (BaseLayout) + SoftwareApplication + BreadcrumbList + FAQPage + HowTo (tool-jsonld.ts) — alle Schema-Typen korrekt.
+**Layer 4 (Look):** N/A — reiner SEO/Backend-Task ohne UI.
+
+**⚠️ Eskalation:** 4 pre-existing vitest-Failures (hreflang/slug-map/tools-schema/deploy) aus Phase-3 EN pivot brauchen separaten Fix durch codebase-Owner oder Launch-Coordinator.
