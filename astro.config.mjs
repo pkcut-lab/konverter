@@ -70,6 +70,7 @@ export default defineConfig({
     locales: [...ACTIVE_LANGUAGES],
     routing: {
       prefixDefaultLocale: true,
+      redirectToDefaultLocale: false,
     },
   },
   build: {
