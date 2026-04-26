@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — SEO Sprint 2 (T2.1-T2.5): ToolStats-Komponente · Question-Header-Lint+Migration (473→0 Violations, 141 Files) · @graph-Konsolidierung · WebApplication-Subtype+browserRequirements+featureList · ImageObject-Guard · 1837/1837 tests
+**Letztes Update:** 2026-04-26 — SEO Sprint 1 (T1.1-T1.6) vollständig: dateModified/datePublished (144 Files migriert) · Answer-First DOM-Reorder · Organization.sameAs · security.txt Fallback · /de/ueber expanded (492 Wörter) + Person-Schema · SoftwareApplication.creator-Link · 1837/1837 tests · 0 errors
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
