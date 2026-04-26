@@ -1,18 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getStaticPagePathRecord } from '../../lib/static-page-slugs';
 ---
 <BaseLayout
   lang="de"
   title="Datenschutz – kittokit"
   description="Datenschutzerklärung von kittokit: Welche Daten wir verarbeiten, auf welcher Rechtsgrundlage und wie Sie Ihre Rechte wahrnehmen können."
-  pathWithoutLang="/datenschutz"
+  pathWithoutLang={getStaticPagePathRecord('privacy')}
 >
   <article class="legal">
 
     <header class="legal-header">
       <p class="legal-eyebrow">Rechtliches</p>
       <h1>Datenschutzerklärung</h1>
-      <p class="legal-meta">Letzte Aktualisierung: April 2026 · Verantwortlicher: <a href="/de/impressum" class="legal-link">[NEEDS USER INPUT: Vollständiger Name]</a></p>
+      <p class="legal-meta">Letzte Aktualisierung: April 2026 · <a href="/de/impressum" class="legal-link">Impressum</a></p>
     </header>
 
     <div class="legal-body">
@@ -33,14 +34,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <!-- 1. Verantwortlicher -->
       <section class="legal-section">
         <h2>1. Verantwortlicher</h2>
-        <p>Verantwortlicher für die Datenverarbeitung auf dieser Website im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p>
-        <address class="legal-address">
-          [NEEDS USER INPUT: Vollständiger Vor- und Nachname]<br>
-          [NEEDS USER INPUT: Straße + Hausnummer]<br>
-          [NEEDS USER INPUT: PLZ + Stadt]<br>
-          Deutschland<br>
-          E-Mail: <a href="mailto:[NEEDS USER INPUT: E-Mail-Adresse]" class="legal-link">[NEEDS USER INPUT: E-Mail-Adresse]</a>
-        </address>
+        <p>Verantwortlicher für die Datenverarbeitung auf dieser Website im Sinne der DSGVO ist die Privatperson, die kittokit als nicht-kommerzielles Hobby-Projekt betreibt.</p>
+        <dl class="legal-dl">
+          <div class="legal-dl__row">
+            <dt>Projekt</dt>
+            <dd>kittokit — nicht-kommerzielles Hobby-Projekt, keine Werbeeinnahmen</dd>
+          </div>
+          <div class="legal-dl__row">
+            <dt>Sitz</dt>
+            <dd>Deutschland</dd>
+          </div>
+          <div class="legal-dl__row">
+            <dt>Kontakt</dt>
+            <dd><a href="mailto:hello@kittokit.com" class="legal-link">hello@kittokit.com</a></dd>
+          </div>
+        </dl>
+        <p>kittokit ist ein nicht-kommerzielles Hobby-Projekt ohne Gewinnerzielungsabsicht. Für Datenschutzanfragen bitte per E-Mail kontaktieren.</p>
       </section>
 
       <!-- 2. Hosting — Cloudflare Pages -->
@@ -316,7 +325,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <dd>Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen — über den Consent-Banner oder per E-Mail an uns.</dd>
           </div>
         </dl>
-        <p>Zur Geltendmachung Ihrer Rechte wenden Sie sich per E-Mail an: <a href="mailto:[NEEDS USER INPUT: E-Mail-Adresse]" class="legal-link">[NEEDS USER INPUT: E-Mail-Adresse]</a></p>
+        <p>Zur Geltendmachung Ihrer Rechte wenden Sie sich per E-Mail an die im <a href="/de/impressum" class="legal-link">Impressum</a> genannte Adresse.</p>
       </section>
 
       <!-- 11. Beschwerderecht -->
@@ -325,9 +334,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <p>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten durch uns zu beschweren (Art. 77 DSGVO).</p>
         <p>Die zuständige Aufsichtsbehörde ist die Landesbehörde des Bundeslandes, in dem wir unseren Sitz haben:</p>
         <address class="legal-address">
-          [NEEDS USER INPUT: Name der zuständigen Datenschutz-Landesbehörde, z.B. „Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)"]<br>
-          [NEEDS USER INPUT: Anschrift der Aufsichtsbehörde]<br>
-          [NEEDS USER INPUT: Website der Aufsichtsbehörde]
+          Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW)<br>
+          Kavalleriestraße 2–4, 40213 Düsseldorf<br>
+          <a href="https://www.ldi.nrw.de" class="legal-link" rel="noopener noreferrer" target="_blank">www.ldi.nrw.de</a>
         </address>
         <p>Eine Liste aller deutschen Datenschutzbehörden finden Sie auf der Website des Bundesbeauftragten für den Datenschutz: <a href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html" class="legal-link" rel="noopener noreferrer" target="_blank">bfdi.bund.de</a></p>
       </section>

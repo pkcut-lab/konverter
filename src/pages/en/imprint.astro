@@ -3,16 +3,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getStaticPagePathRecord } from '../../lib/static-page-slugs';
 ---
 <BaseLayout
-  lang="de"
-  title="Impressum – kittokit"
-  description="Rechtliche Informationen zu kittokit: Betreiber, Kontakt und Haftungsausschluss."
+  lang="en"
+  title="Imprint – kittokit"
+  description="Legal information for kittokit: operator details, contact, and disclaimers."
   pathWithoutLang={getStaticPagePathRecord('imprint')}
 >
   <article class="legal">
 
     <header class="legal-header">
-      <p class="legal-eyebrow">Rechtliches</p>
-      <h1>Impressum</h1>
+      <p class="legal-eyebrow">Legal</p>
+      <h1>Imprint</h1>
     </header>
 
     <div class="legal-body">
@@ -20,51 +20,51 @@ import { getStaticPagePathRecord } from '../../lib/static-page-slugs';
       <!-- Non-commercial statement -->
       <section class="legal-section">
         <div class="legal-infobox">
-          <p class="infobox-lead">Privates, nicht-kommerzielles Hobby-Projekt</p>
-          <p class="infobox-text">kittokit wird von einer Privatperson aus Deutschland als Hobby-Projekt betrieben — ohne Gewinnerzielungsabsicht, ohne Werbeeinnahmen, ohne Gebühren und ohne jede kommerzielle Tätigkeit. Alle Tools laufen vollständig im Browser, ohne Server-Upload und ohne Tracking.</p>
-          <p class="infobox-text">Da kein „geschäftsmäßiges" Angebot im Sinne des §5 DDG (Digitale-Dienste-Gesetz) vorliegt, besteht keine gesetzliche Impressumspflicht. Die nachfolgenden Angaben werden freiwillig im Sinne von §18 Abs. 2 MStV (Medienstaatsvertrag) veröffentlicht.</p>
+          <p class="infobox-lead">Private, non-commercial hobby project</p>
+          <p class="infobox-text">kittokit is operated by a private individual based in Germany as a hobby project — with no profit-making intention, no advertising revenue, no fees, and no commercial activity of any kind. All tools run entirely in your browser, with no file uploads and no tracking.</p>
+          <p class="infobox-text">As this website does not constitute a "commercial" service within the meaning of §5 DDG (German Digital Services Act), there is no legal obligation to publish a full imprint. The details below are published voluntarily pursuant to §18(2) MStV (German Interstate Media Treaty).</p>
         </div>
       </section>
 
       <!-- Minimal contact info -->
       <section class="legal-section">
-        <h2>Betreiber</h2>
+        <h2>Operator</h2>
         <dl class="legal-dl">
           <div class="legal-dl__row">
             <dt>Name</dt>
             <dd>Carina</dd>
           </div>
           <div class="legal-dl__row">
-            <dt>Wohnort</dt>
-            <dd>Höxter, Deutschland</dd>
+            <dt>Location</dt>
+            <dd>Höxter, Germany</dd>
           </div>
           <div class="legal-dl__row">
-            <dt>E-Mail</dt>
+            <dt>Email</dt>
             <dd><a href="mailto:hello@kittokit.com" class="legal-link">hello@kittokit.com</a></dd>
           </div>
         </dl>
-        <p class="legal-note">Nach §18 Abs. 2 MStV sind Name und Wohnort ausreichend — eine Straßenanschrift ist bei nicht-kommerziellen Privatangeboten nicht erforderlich.</p>
+        <p class="legal-note">Under §18(2) MStV, name and city of residence are sufficient — a full street address is not required for non-commercial private offerings.</p>
       </section>
 
       <!-- Dispute resolution -->
       <section class="legal-section">
-        <h2>Streitschlichtung</h2>
-        <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung bereit: <a href="https://ec.europa.eu/consumers/odr/" class="legal-link" rel="noopener noreferrer" target="_blank">ec.europa.eu/consumers/odr</a></p>
-        <p>Eine Pflicht zur Teilnahme an einem Schlichtungsverfahren besteht nicht, da kittokit keine entgeltlichen Leistungen erbringt.</p>
+        <h2>Dispute Resolution</h2>
+        <p>The European Commission provides an online dispute resolution platform: <a href="https://ec.europa.eu/consumers/odr/" class="legal-link" rel="noopener noreferrer" target="_blank">ec.europa.eu/consumers/odr</a></p>
+        <p>There is no obligation to participate in dispute resolution proceedings, as kittokit does not provide paid services.</p>
       </section>
 
       <!-- Liability -->
       <section class="legal-section">
-        <h2>Haftungsausschluss</h2>
+        <h2>Disclaimer</h2>
 
-        <h3>Haftung für Inhalte</h3>
-        <p>Die Inhalte und Tool-Ergebnisse wurden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität wird keine Gewähr übernommen. Die Ergebnisse der Online-Tools dienen der allgemeinen Information und ersetzen keine fachkundige Beratung.</p>
+        <h3>Liability for content</h3>
+        <p>The content and tool results on this website have been prepared with the greatest possible care. No warranty is given for accuracy, completeness, or currency. Tool results are for general informational purposes only and do not substitute expert advice.</p>
 
-        <h3>Haftung für Links</h3>
-        <p>Für Inhalte verlinkter externer Seiten ist der jeweilige Betreiber verantwortlich. Bei Bekanntwerden von Rechtsverletzungen werden entsprechende Links umgehend entfernt.</p>
+        <h3>Liability for links</h3>
+        <p>The respective operator is responsible for the content of linked external websites. Links will be removed promptly if an infringement becomes known.</p>
 
-        <h3>Urheberrecht</h3>
-        <p>Die durch den Betreiber erstellten Inhalte unterliegen dem deutschen Urheberrecht. Vervielfältigung oder Verbreitung bedarf der schriftlichen Zustimmung.</p>
+        <h3>Copyright</h3>
+        <p>Content created by the operator is subject to German copyright law. Reproduction or distribution requires written consent.</p>
       </section>
 
     </div>
