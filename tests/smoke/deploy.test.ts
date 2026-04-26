@@ -71,7 +71,7 @@ describe('Deploy — Cloudflare Pages wiring', () => {
 
     // Deploy hands the dist artifact to wrangler and pins the project.
     expect(wf).toMatch(/cloudflare\/wrangler-action@v3/);
-    expect(wf).toMatch(/project-name=konverter-7qc/);
+    expect(wf).toMatch(/project-name=kittokit/);
     // Preview-URL pattern depends on the branch flag being dynamic —
     // head_ref (PRs) or ref_name (pushes).
     expect(wf).toMatch(/github\.head_ref\s*\|\|\s*github\.ref_name/);
@@ -88,6 +88,6 @@ describe('Deploy — Cloudflare Pages wiring', () => {
     expect(doc).toMatch(/CLOUDFLARE_ACCOUNT_ID/);
     // Project-name invariant referenced here too — keeps the three
     // places (workflow, dashboard, docs) aligned.
-    expect(doc).toMatch(/konverter-7qc/);
+    expect(doc).toMatch(/kittokit/);
   });
 });
