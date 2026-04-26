@@ -36,14 +36,14 @@ describe('buildToolJsonLd — @graph structure (Task 2.3)', () => {
     }
   });
 
-  it('@graph contains SoftwareApplication, BreadcrumbList, FAQPage, HowTo', () => {
+  it('@graph contains SoftwareApplication, FAQPage, HowTo (BreadcrumbList is in Breadcrumbs.astro)', () => {
     const result = buildToolJsonLd(content, url);
     const graph = result['@graph'] as Record<string, unknown>[];
     const types = graph.map((x) =>
       Array.isArray(x['@type']) ? (x['@type'] as string[]).join(',') : String(x['@type']),
     );
     expect(types.some((t) => t.includes('SoftwareApplication'))).toBe(true);
-    expect(types).toContain('BreadcrumbList');
+    expect(types).not.toContain('BreadcrumbList');
     expect(types).toContain('FAQPage');
     expect(types).toContain('HowTo');
   });
@@ -87,14 +87,10 @@ describe('buildToolJsonLd — @graph structure (Task 2.3)', () => {
     expect(graph.find((x) => x['@type'] === 'HowTo')).toBeUndefined();
   });
 
-  it('BreadcrumbList has Home + tool page items', () => {
+  it('BreadcrumbList is absent from @graph (owned by Breadcrumbs.astro component)', () => {
     const result = buildToolJsonLd(content, url);
     const graph = result['@graph'] as Record<string, unknown>[];
-    const crumb = graph.find((x) => x['@type'] === 'BreadcrumbList');
-    const items = crumb?.itemListElement as Array<Record<string, unknown>>;
-    expect(items.length).toBe(2);
-    expect(items[0]).toMatchObject({ position: 1, name: 'Home', item: 'https://example.com/de' });
-    expect(items[1]).toMatchObject({ position: 2, name: 'Hintergrund entfernen', item: url });
+    expect(graph.find((x) => x['@type'] === 'BreadcrumbList')).toBeUndefined();
   });
 
   it('maps applicationCategory: dev → DeveloperApplication', () => {

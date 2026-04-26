@@ -108,15 +108,6 @@ export function buildToolJsonLd(
     }
   }
 
-  const origin = new URL(url).origin;
-  graph.push({
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/${content.lang}` },
-      { '@type': 'ListItem', position: 2, name: content.title, item: url },
-    ],
-  });
-
   if (content.faq.length > 0) {
     graph.push({
       '@type': 'FAQPage',
