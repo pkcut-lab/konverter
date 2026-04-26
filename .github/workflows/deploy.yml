@@ -17,6 +17,9 @@ permissions:
   # Cloudflare Pages environment status back onto the commit/PR.
   deployments: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   verify:
     name: Verify (typecheck + tests + build)
@@ -82,9 +85,9 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # `--branch=main` → production deploy on konverter-7qc.pages.dev.
+          # `--branch=main` → production deploy on kittokit.com.
           # Any other branch name (PRs, feature branches) → preview URL
-          # on <branch>.konverter-7qc.pages.dev, which CF Pages mints
+          # on <branch>.kittokit.pages.dev, which CF Pages mints
           # automatically.
           command: >-
             pages deploy dist
