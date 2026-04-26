@@ -14,6 +14,12 @@ stats:
     value: "unbegrenzt"
   - label: "Verarbeitung"
     value: "lokal"
+featureList:
+  - "SHA-256, SHA-512, SHA-1, MD5, SHA-3 Algorithmen"
+  - "Echtzeit-Hashing während der Eingabe"
+  - "Große Eingaben bis zu mehreren MB unterstützt"
+  - "Hex- und Base64-Ausgabe"
+  - "Keine Übertragung — vollständig clientseitig"
 contentVersion: 1
 howToUse:
   - "Füge deinen Text in das Eingabefeld ein — per Paste oder Tippen."

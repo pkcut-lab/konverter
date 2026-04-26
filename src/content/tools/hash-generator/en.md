@@ -37,6 +37,12 @@ stats:
     value: "unlimited"
   - label: "Processing"
     value: "local"
+featureList:
+  - "SHA-256, SHA-512, SHA-1, MD5, SHA-3 algorithms"
+  - "Real-time hashing while typing"
+  - "Large inputs up to several MB supported"
+  - "Hex and Base64 output"
+  - "No upload — fully client-side"
 contentVersion: 1
 datePublished: '2026-04-26'
 dateModified: '2026-04-26'

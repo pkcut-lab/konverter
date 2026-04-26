@@ -16,6 +16,12 @@ stats:
     unit: "bit"
   - label: "Sicherheit"
     value: "kryptografisch"
+featureList:
+  - "Kryptografisch sicherer Zufallsgenerator"
+  - "Konfigurierbare Zeichensätze (Groß/Klein/Ziffern/Sonderzeichen)"
+  - "Passwortlänge 4–128 Zeichen"
+  - "Entropie-Anzeige in Bit"
+  - "Keine Übertragung — alles bleibt im Browser"
 contentVersion: 1
 howToUse:
   - "Stelle die gewünschte Passwort-Länge über den Slider oder das Eingabefeld ein."

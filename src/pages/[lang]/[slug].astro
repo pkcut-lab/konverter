@@ -238,6 +238,7 @@ const jsonLd = buildToolJsonLd(
     title: entry.data.title,
     description: entry.data.metaDescription,
     category: entry.data.category,
+    toolType: config.type,
     faq: entry.data.faq ?? [],
     // Prefer aside.steps (titled steps) over howToUse (plain strings) for HowTo schema.
     steps: resolvedAside?.steps ?? (entry.data.howToUse ?? []).map((text: string, i: number) => ({
@@ -246,6 +247,8 @@ const jsonLd = buildToolJsonLd(
     })),
     datePublished: entry.data.datePublished,
     dateModified: entry.data.dateModified,
+    featureList: entry.data.featureList,
+    heroSlug: deSlug ?? undefined,
   },
   Astro.url.href,
 );
@@ -265,9 +268,7 @@ const dateModifiedFormatted = entry.data.dateModified
   pathWithoutLang={pathByLang}
   ogImagePath={ogImagePath}
 >
-  {jsonLd.map((block) => (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
-  ))}
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="tool-page">
     <Breadcrumbs
       items={breadcrumbItems}

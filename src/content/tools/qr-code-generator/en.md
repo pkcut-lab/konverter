@@ -39,6 +39,12 @@ stats:
     unit: "chars"
   - label: "Output"
     value: "SVG + PNG"
+featureList:
+  - "Four error correction levels (L/M/Q/H)"
+  - "Output as SVG and PNG"
+  - "Customizable size and border width"
+  - "Supports URLs, text, email, Wi-Fi, vCard"
+  - "No server upload — generated client-side"
 contentVersion: 1
 datePublished: '2026-04-26'
 dateModified: '2026-04-26'

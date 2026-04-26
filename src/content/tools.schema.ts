@@ -80,6 +80,7 @@ export const toolContentFrontmatterSchema = z.object({
     .optional(),
   kbdHints: z.array(kbdHint).min(1).max(4).optional(),
   stats: z.array(statEntry).min(1).max(6).optional(),
+  featureList: z.array(z.string().min(1)).min(1).max(8).optional(),
   contentVersion: z.number().int().min(1),
   datePublished: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   dateModified: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),

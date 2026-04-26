@@ -39,6 +39,12 @@ stats:
     unit: "bit"
   - label: "Security"
     value: "cryptographic"
+featureList:
+  - "Cryptographically secure random generator"
+  - "Configurable character sets (upper/lower/digits/symbols)"
+  - "Password length 4–128 characters"
+  - "Entropy display in bits"
+  - "No transmission — everything stays in the browser"
 contentVersion: 1
 datePublished: '2026-04-26'
 dateModified: '2026-04-26'

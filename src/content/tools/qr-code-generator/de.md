@@ -16,6 +16,12 @@ stats:
     unit: "Zeichen"
   - label: "Ausgabe"
     value: "SVG + PNG"
+featureList:
+  - "Vier Fehlerkorrektur-Stufen (L/M/Q/H)"
+  - "Ausgabe als SVG und PNG"
+  - "Anpassbare Größe und Randbreite"
+  - "Unterstützt URLs, Text, E-Mail, WLAN, vCard"
+  - "Keine Server-Übertragung — clientseitig generiert"
 contentVersion: 1
 eyebrow: "GENERATOR"
 howToUse:
