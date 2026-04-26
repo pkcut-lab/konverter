@@ -19,10 +19,6 @@ function getAllMdFiles(dir) {
 }
 
 function extractIntro(content) {
-  // Extract intro: value from frontmatter (handles multi-line quoted strings)
-  const introMatch = content.match(/^intro:\s*["']?([\s\S]*?)["']?\n(?=[a-z]|\-\-\-)/m);
-  if (!introMatch) return null;
-  // Simple single-line extraction
   const simpleMatch = content.match(/^intro:\s*["'](.+?)["']\s*$/m);
   if (simpleMatch) return simpleMatch[1];
   const unquotedMatch = content.match(/^intro:\s*([^"'\n].+)\s*$/m);
