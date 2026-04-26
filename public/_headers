@@ -3,11 +3,17 @@
 # Files under public/ are copied to the deploy root verbatim — this file
 # lives next to manifest.webmanifest and gets applied at the edge.
 
-# Baseline security posture for every response. HSTS is safe because
-# *.pages.dev is HTTPS-only anyway; the preload list isn't relevant for
-# a subdomain we don't own the apex of.
+# Baseline security posture for every response.
 #
-# Content-Security-Policy (2026-04-21, Q2 Option 1):
+# HSTS (2026-04-26): upgraded to 2-year max-age + preload for HSTS preload
+# list submission on custom domains (kittokit.com/.de/.tools).
+# On *.pages.dev HTTPS is forced at CF edge regardless.
+#
+# X-Frame-Options: DENY (2026-04-26): defense-in-depth for legacy browsers
+# that don't honour CSP frame-ancestors. Modern browsers use frame-ancestors
+# 'none' from CSP below; both together cover the full browser matrix.
+#
+# Content-Security-Policy (2026-04-21 base, extended 2026-04-26):
 #   - 'unsafe-inline' für script-src: ThemeScript.astro emittiert einen
 #     inline Flash-Prevention-Block. Phase-2-Migration zu Nonce-basierter
 #     Policy (Q2 Option 3) wenn Zeit ist; jetzt ist die Gain-vs-Cost-Ratio
@@ -22,12 +28,18 @@
 #   - worker-src 'self' blob:: @vite-pwa/astro plus Worker-Boundary in
 #     File-Tools (blob:-URLs für dynamisch instantiierte Worker).
 #   - frame-ancestors 'none': Clickjacking-Hard-Stop.
+#   - script-src + connect-src (2026-04-26): added Cloudflare Insights
+#     (static.cloudflareinsights.com / cloudflareinsights.com) and
+#     Microsoft Clarity (www.clarity.ms / *.clarity.ms) for analytics.
+#   - img-src https: (2026-04-26): allows OG/CDN images in tool outputs.
+#   - font-src data: (2026-04-26): permits data-URI icon fonts if loaded.
 /*
-  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(self), microphone=(), geolocation=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 # Service Worker must never be cached by the browser itself — otherwise
 # users get stuck on an old build even after Workbox skipWaiting fires.

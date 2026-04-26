@@ -30,7 +30,7 @@ describe('Deploy — Cloudflare Pages wiring', () => {
     // Manifest short cache so icon/theme-color updates land fast.
     expect(headers).toMatch(/\/manifest\.webmanifest[\s\S]*?max-age=3600/);
     // Baseline security headers on every response.
-    expect(headers).toMatch(/Strict-Transport-Security:\s*max-age=31536000/);
+    expect(headers).toMatch(/Strict-Transport-Security:\s*max-age=63072000/);
     expect(headers).toMatch(/X-Content-Type-Options:\s*nosniff/);
     expect(headers).toMatch(/Referrer-Policy:\s*strict-origin-when-cross-origin/);
   });
