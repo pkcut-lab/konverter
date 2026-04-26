@@ -39,6 +39,9 @@ aside:
     - title: "Schnappschuss optional"
       description: "Den verarbeiteten Frame als PNG herunterladen oder einfach den Tab offen lassen und die Kamera für Videocalls nutzen."
   privacy: "Die Verarbeitung läuft ausschließlich lokal. Keine Kameradaten werden übertragen, gespeichert oder analysiert. Beim Schließen des Tabs wird der Kamerastrom automatisch beendet."
+datePublished: '2026-04-24'
+dateModified: '2026-04-25'
+
 ---
 
 ## Wie funktioniert das Tool?
@@ -60,7 +63,7 @@ Der gesamte Prozess läuft im Browser-Thread. Kein Frame, kein Pixel verlässt d
 Beim Schließen der Seite oder beim Klick auf „Kamera beenden" werden alle Kamera-Tracks
 sofort via `track.stop()` beendet.
 
-## Hintergrund unscharf machen — Schritt für Schritt
+## Wie macht man den Hintergrund unscharf?
 
 Öffne das Tool und klicke auf **Kamera starten**. Der Browser fragt einmalig nach der
 Kamera-Berechtigung — dieser Dialog kommt vom Betriebssystem und kann nicht umgangen werden.
@@ -88,7 +91,7 @@ den Browser verlässt:
   `track.stop()` auf allen Kamera-Tracks auf. Die Webcam-LED erlischt sofort.
 - **Keine Cookies, kein Tracking**: Das Tool legt keine Cookies für Kameradaten an.
 
-## Browser-Kompatibilität und Hardware
+## Welche Browser-Kompatibilität und Hardware wird benötigt?
 
 | Situation | Was passiert |
 |---|---|
@@ -130,7 +133,7 @@ nur im Browser-Tab. Für die Nutzung in Zoom oder Teams werden Tools wie OBS mit
 oder VCam-Softwarebenötigt. Das Tool eignet sich gut für Browser-basierte Videocalls
 (Google Meet, Jitsi) oder als Vorschau.
 
-## Verwandte Video-Tools
+## Welche Video-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

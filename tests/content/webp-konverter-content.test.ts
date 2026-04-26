@@ -32,10 +32,10 @@ describe('webp-konverter/de.md frontmatter', () => {
     expect(h2s).toEqual([
       '## Was ist WebP?',
       '## Warum PNG/JPG in WebP umwandeln?',
-      '## Anwendungsbeispiele',
+      '## Welche Anwendungsbeispiele gibt es?',
       '## Datenschutz — 100% im Browser',
       '## Häufige Fragen',
-      '## Verwandte Bild-Tools',
+      '## Welche Bild-Tools sind verwandt?',
     ]);
   });
 });

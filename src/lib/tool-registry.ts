@@ -130,6 +130,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/pdf-zu-jpg').then((m) => m.pdfZuJpg),
   'pdf-password': () =>
     import('./tools/pdf-passwort').then((m) => m.pdfPasswort),
+  'moon-phase': () =>
+    import('./tools/mondphasen-rechner').then((m) => m.mondphasenRechner),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

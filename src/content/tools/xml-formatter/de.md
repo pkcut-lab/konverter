@@ -27,6 +27,9 @@ relatedTools:
   - json-formatter
   - sql-formatter
   - base64-encoder
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Formatter?
@@ -35,7 +38,7 @@ Der XML Formatter nimmt beliebigen XML-Code und strukturiert ihn in ein lesbares
 
 Das Ergebnis ist konsistent eingerücktes XML, das sich in Code-Reviews, Konfigurationsdateien und API-Dokumentation direkt verwenden lässt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Der Formatter arbeitet regelbasiert in drei Schritten:
 
@@ -57,7 +60,7 @@ Beispiel: `<root><item id="1"><name>Test</name></item></root>` wird zu:
 </root>
 ```
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Typische Eingaben und ihr formatiertes Ergebnis:
 
@@ -71,7 +74,7 @@ Typische Eingaben und ihr formatiertes Ergebnis:
 
 Der Formatter eignet sich für XML-Dokumente jeder Größe — von einzeiligen Konfigurationsfragmenten bis zu mehrseitigen SOAP-Envelopes oder SVG-Dateien.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **API-Entwicklung und Debugging** — REST- und SOAP-APIs liefern XML-Antworten oft als kompakten Einzeiler. Ein formatierter Blick auf die Verschachtelung hilft, fehlende Elemente oder falsche Namespaces schnell zu finden. Besonders bei SOAP-Envelopes mit tiefer Verschachtelung spart die Strukturansicht Zeit.
 
@@ -85,7 +88,7 @@ Der Formatter eignet sich für XML-Dokumente jeder Größe — von einzeiligen K
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

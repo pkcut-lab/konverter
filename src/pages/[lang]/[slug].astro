@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Converter from '../../components/tools/Converter.svelte';
 import FileTool from '../../components/tools/FileTool.svelte';
@@ -36,12 +38,20 @@ import PdfZusammenfuehrenTool from '../../components/tools/PdfZusammenfuehrenToo
 import PdfAufteilenTool from '../../components/tools/PdfAufteilenTool.svelte';
 import PdfZuJpgTool from '../../components/tools/PdfZuJpgTool.svelte';
 import PdfPasswortTool from '../../components/tools/PdfPasswortTool.svelte';
+import MondphasenRechnerTool from '../../components/tools/MondphasenRechnerTool.svelte';
+import ToolStats from '../../components/ToolStats.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
 import { getSlug } from '../../lib/slug-map';
+import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
 import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
-import { asideDefaults } from '../../lib/content/aside-defaults';
+import { getAsideDefault } from '../../lib/content/aside-defaults';
+import { getStaticPagePath } from '../../lib/static-page-slugs';
+import { t } from '../../lib/i18n/strings';
+import { listToolsForLang } from '../../lib/tools/list';
+import { computeRelatedTools } from '../../lib/related-tools';
 
 // Tool-ids that need a specialised formatter UI. Everything else with
 // `type: 'formatter'` falls through to the generic textarea Formatter.
@@ -90,8 +100,10 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   'pdf-split',
   'pdf-to-jpg',
   'pdf-password',
+  'moon-phase',
 ]);
 
+const MOON_PHASE_TOOL_ID = 'moon-phase';
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
 const VIDEO_BG_REMOVE_TOOL_ID = 'video-bg-remove';
 
@@ -146,6 +158,7 @@ export async function getStaticPaths() {
 type Props = { entry: CollectionEntry<'tools'>; slug: string };
 const { entry, slug } = Astro.props;
 const config = await getToolConfig(entry.data.toolId);
+const strings = t(entry.data.language);
 
 if (!config) {
   throw new Error(
@@ -163,6 +176,69 @@ if (!(config.type in componentByType)) {
 
 const { Content } = await entry.render();
 
+// T3.1 hreflang fix: resolve per-language paths so EN page gets /en/meter-to-feet
+// not /en/meter-zu-fuss. Current language uses the routed slug directly; other
+// languages are looked up from slug-map. BaseLayout.buildHreflangLinks accepts
+// a lang→path record.
+const currentLang = entry.data.language as ActiveLanguage;
+const pathByLang: Partial<Record<ActiveLanguage, string>> = {
+  [currentLang]: `/${slug}`,
+  ...Object.fromEntries(
+    (ACTIVE_LANGUAGES
+      .filter((l) => l !== currentLang)
+      .map((l) => {
+        const s = getSlug(entry.data.toolId, l);
+        return s !== undefined ? ([l, `/${s}` as const] as [ActiveLanguage, string]) : null;
+      })
+      .filter(Boolean) as Array<[ActiveLanguage, string]>),
+  ),
+};
+
+// T3.6 breadcrumb items
+const breadcrumbItems = [
+  { label: strings.breadcrumbHome, href: `/${entry.data.language}` },
+  { label: strings.breadcrumbTools, href: getStaticPagePath('tools', entry.data.language as ActiveLanguage) },
+  { label: entry.data.title },
+];
+
+// T3.3 computed related tools for in-article block (category proximity)
+const allToolsForLang = await listToolsForLang(entry.data.language as 'de' | 'en');
+const computedRelated = computeRelatedTools(
+  entry.data.toolId,
+  entry.data.category,
+  allToolsForLang,
+  5,
+).filter((t) => !entry.data.relatedTools?.includes(t.href.split('/').pop()!));
+
+// Per-tool OG card: cards are generated keyed by the DE slug.
+// For all languages, resolve the DE slug via toolId and check for the file.
+const deSlug = getSlug(entry.data.toolId, 'de');
+const ogCardExists =
+  deSlug !== undefined &&
+  existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.webp`));
+const ogImagePath = ogCardExists ? `/og/tools/${deSlug}.webp` : undefined;
+const ogAvifExists =
+  deSlug !== undefined &&
+  existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.avif`));
+const ogAvifPath = ogAvifExists ? `/og/tools/${deSlug}.avif` : undefined;
+
+// X.7 — Pagefind: popular tool IDs get weight=5 on the article wrapper so
+// frequently-searched tools rank above alphabetical equals. List mirrors
+// POPULAR_TOOLS in popular-tools.ts (kept inline to avoid a runtime import
+// at SSG build — changes here should stay in sync with that file).
+const POPULAR_TOOL_IDS = new Set([
+  'hevc-to-h264', 'remove-background', 'png-jpg-to-webp',
+  'meter-to-feet', 'celsius-to-fahrenheit', 'km-to-mile',
+]);
+const pagefindArticleWeight = POPULAR_TOOL_IDS.has(entry.data.toolId) ? '5' : undefined;
+
+// X.4 — LCP hero preload. Heroes don't exist yet (0/72 public/heroes/tools/).
+// Code is wired so adding hero images automatically activates the preload.
+const heroExists =
+  deSlug !== undefined &&
+  existsSync(resolve(process.cwd(), 'public', 'heroes', 'tools', `${deSlug}.webp`));
+const heroImagePath = heroExists ? `/heroes/tools/${deSlug}.webp` : undefined;
+
 // Default privacy-eyebrow: every client-side tool gets a trust signal above
 // its H1 unless the content file explicitly overrides via frontmatter.eyebrow.
 // Because all tools on this site run fully in the browser (Spec §7, pure-client
@@ -177,7 +253,7 @@ const eyebrowText =
 
 // Merge: content-file aside wins over category default.
 // This means every tool gets the accordion — no per-tool content needed.
-const resolvedAside = entry.data.aside ?? asideDefaults[config.type] ?? null;
+const resolvedAside = entry.data.aside ?? getAsideDefault(config.type, entry.data.language) ?? null;
 
 const jsonLd = buildToolJsonLd(
   {
@@ -186,34 +262,52 @@ const jsonLd = buildToolJsonLd(
     title: entry.data.title,
     description: entry.data.metaDescription,
     category: entry.data.category,
+    toolType: config.type,
     faq: entry.data.faq ?? [],
     // Prefer aside.steps (titled steps) over howToUse (plain strings) for HowTo schema.
     steps: resolvedAside?.steps ?? (entry.data.howToUse ?? []).map((text: string, i: number) => ({
-      title: `Schritt ${i + 1}`,
+      title: `${strings.stepPrefix} ${i + 1}`,
       description: text,
     })),
+    datePublished: entry.data.datePublished,
+    dateModified: entry.data.dateModified,
+    ...(entry.data.featureList && { featureList: entry.data.featureList }),
+    ...(deSlug !== undefined && { heroSlug: deSlug }),
   },
   Astro.url.href,
 );
+
+// Format dateModified for UI stamp
+const dateModifiedFormatted = entry.data.dateModified
+  ? new Intl.DateTimeFormat(
+      entry.data.language === 'de' ? 'de-DE' : 'en-US',
+      { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' },
+    ).format(new Date(entry.data.dateModified + 'T00:00:00Z'))
+  : null;
 ---
 <BaseLayout
   lang={entry.data.language}
   title={entry.data.title}
   description={entry.data.metaDescription}
-  pathWithoutLang={`/${slug}`}
+  pathWithoutLang={pathByLang}
+  ogImagePath={ogImagePath}
+  ogAvifPath={ogAvifPath}
+  heroImagePath={heroImagePath}
 >
-  {jsonLd.map((block) => (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
-  ))}
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="tool-page">
+    <Breadcrumbs
+      items={breadcrumbItems}
+      ariaLabel={entry.data.language === 'de' ? 'Breadcrumb' : 'Breadcrumb navigation'}
+    />
     <header class="tool-hero">
       <span class="eyebrow">
         <span class="eyebrow__dot" aria-hidden="true"></span>
         {eyebrowText}
       </span>
       {entry.data.headingHtml
-        ? <h1 set:html={entry.data.headingHtml} />
-        : <h1>{entry.data.title}</h1>
+        ? <h1 data-pagefind-weight="3" set:html={entry.data.headingHtml} />
+        : <h1 data-pagefind-weight="3">{entry.data.title}</h1>
       }
       <p class="tagline">{entry.data.tagline}</p>
     </header>
@@ -231,10 +325,15 @@ const jsonLd = buildToolJsonLd(
           ]}
           aria-label="Tool"
         >
+          {/* TODO(phase-3): Converter locale prop below uses a de+en ternary
+              that falls back to the bare lang code for other languages.
+              Replace with INTL_LOCALE_MAP from src/lib/i18n/locale-maps.ts
+              so es, fr, pt-br get correct number formatting.
+              See CONVENTIONS.md section 11. */}
           {config.type === 'converter' && (
             <Converter
               config={config}
-              locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language}
+              locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language === 'en' ? 'en-US' : entry.data.language}
               client:load
             />
           )}
@@ -316,6 +415,9 @@ const jsonLd = buildToolJsonLd(
           {config.type === 'formatter' && config.id === 'pdf-password' && (
             <PdfPasswortTool config={config} client:load />
           )}
+          {config.type === 'formatter' && config.id === MOON_PHASE_TOOL_ID && (
+            <MondphasenRechnerTool config={config} lang={entry.data.language} client:load />
+          )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
               config={config}
@@ -371,7 +473,7 @@ const jsonLd = buildToolJsonLd(
       {resolvedAside && (
         <details class="tool-aside" aria-labelledby="tool-aside-heading">
           <summary class="tool-aside__summary">
-            <h2 id="tool-aside-heading">So funktioniert es</h2>
+            <h2 id="tool-aside-heading">{strings.asideHeading}</h2>
             <svg class="tool-aside__chevron" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -401,6 +503,12 @@ const jsonLd = buildToolJsonLd(
       )}
     </div>
 
+    <p class="tool-intro-answer">{entry.data.intro}</p>
+
+    {entry.data.stats && entry.data.stats.length > 0 && (
+      <ToolStats stats={entry.data.stats} />
+    )}
+
     <RelatedTools
       lang={entry.data.language}
       ownSlug={Astro.params.slug!}
@@ -415,14 +523,10 @@ const jsonLd = buildToolJsonLd(
         reader raus. Styles: src/styles/global.css → .ad-slot. */}
     <aside class="ad-slot ad-slot--in-content" aria-hidden="true" role="presentation"></aside>
 
-    <article class="tool-article">
-      <p class="intro">{entry.data.intro}</p>
-
+    <article class="tool-article" data-pagefind-weight={pagefindArticleWeight}>
       <header class="section-head">
-        <span class="section-head__label">01 — Anleitung</span>
-        <h2 class="section-head__title">
-          Wie benutzt du <em>dieses Tool</em>?
-        </h2>
+        <span class="section-head__label">{strings.howToSectionLabel}</span>
+        <h2 class="section-head__title" set:html={strings.howToHeadingHtml} />
       </header>
       <ol class="how">
         {entry.data.howToUse.map((step: string) => <li>{step}</li>)}
@@ -431,6 +535,26 @@ const jsonLd = buildToolJsonLd(
       <div class="prose tool-article__prose">
         <Content />
       </div>
+
+      {computedRelated.length > 0 && (
+        <aside class="tool-article__related" aria-label={strings.relatedToolsHeading}>
+          <h2 class="tool-article__related-heading">{strings.relatedToolsHeading}</h2>
+          <ul class="tool-article__related-list">
+            {computedRelated.map((t) => (
+              <li>
+                <a class="tool-article__related-link" href={t.href}>{t.shortTitle}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+
+      {dateModifiedFormatted && (
+        <p class="tool-updated">
+          {strings.lastUpdatedLabel}{' '}
+          <time datetime={entry.data.dateModified}>{dateModifiedFormatted}</time>
+        </p>
+      )}
     </article>
 
     <YouMightAlsoLike
@@ -450,7 +574,7 @@ const jsonLd = buildToolJsonLd(
 
   .tool-hero {
     max-width: 56rem;
-    margin: 0 auto var(--space-12);
+    margin: 0 auto var(--space-8);
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -662,11 +786,13 @@ const jsonLd = buildToolJsonLd(
        und einen border-top, der die visuelle Trennung übernimmt. */
     padding-bottom: var(--space-8);
   }
-  .tool-article .intro {
-    font-size: 1.125rem;
+  .tool-intro-answer {
+    max-width: 42rem;
+    width: 100%;
+    margin: var(--space-8) auto var(--space-4);
+    font-size: 1rem;
     line-height: 1.55;
-    color: var(--color-text);
-    margin: 0 0 var(--space-12) 0;
+    color: var(--color-text-muted);
   }
   .tool-article h2 {
     margin: 0 0 var(--space-6) 0;
@@ -703,6 +829,15 @@ const jsonLd = buildToolJsonLd(
     margin-top: var(--space-16);
   }
 
+  .tool-updated {
+    margin-top: var(--space-8);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-text-subtle);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
   @media (max-width: 40rem) {
     .tool-page {
       padding-top: var(--space-8);
@@ -718,9 +853,10 @@ const jsonLd = buildToolJsonLd(
       margin-bottom: var(--space-12);
       min-height: 4.5rem;
     }
-    .tool-article .intro {
-      margin-bottom: var(--space-8);
-      font-size: 1.0625rem;
+    .tool-intro-answer {
+      margin-top: var(--space-6);
+      margin-bottom: var(--space-4);
+      font-size: 0.9375rem;
     }
     .how {
       margin-bottom: var(--space-12);
@@ -739,5 +875,50 @@ const jsonLd = buildToolJsonLd(
       from { opacity: 1; transform: translateY(0); }
       to { opacity: 1; transform: translateY(0); }
     }
+  }
+
+  /* T3.3 Related tools block inside article */
+  .tool-article__related {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+  .tool-article__related-heading {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin: 0 0 var(--space-4) 0;
+  }
+  .tool-article__related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .tool-article__related-link {
+    display: inline-block;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .tool-article__related-link:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-subtle);
+  }
+  .tool-article__related-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-md);
   }
 </style>

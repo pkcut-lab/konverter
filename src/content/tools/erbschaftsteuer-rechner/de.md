@@ -27,6 +27,9 @@ faq:
   - q: "Sind meine Eingaben vertraulich?"
     a: "Ja. Alle Berechnungen laufen vollständig im Browser, keine Daten werden an Server übertragen. Es gibt keine Anmeldung, kein Tracking und keine Cookies für den Rechner. Hinweis: Dieser Rechner ersetzt keine Steuerberatung — verbindliche Auskünfte erteilt das Finanzamt."
 relatedTools: ['cashflow-rechner', 'leasing-faktor-rechner', 'kgv-rechner']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was berechnet der Erbschaftsteuer-Rechner?
@@ -35,7 +38,7 @@ Der Rechner ermittelt die Erbschaftsteuer 2026 nach aktueller Rechtslage und fol
 
 Erbfallkostenpauschale (15.000 Euro seit 2025), Hausratspauschale (41.000 Euro Steuerklasse I, 12.000 Euro Steuerklasse II/III) und der 10-Prozent-Abschlag für Mietwohngrundstücke nach §13d ErbStG werden automatisch berücksichtigt. Härteausgleich §24 ErbStG ist eingebaut — leichte Bandübertritte erzeugen keine sprunghafte Mehrbelastung.
 
-## Steuerklasse und persönlicher Freibetrag
+## Welche Steuerklassen und Freibeträge gibt es?
 
 Die Steuerklasse hängt direkt vom Verwandtschaftsverhältnis ab und treibt sowohl Freibetrag als auch Tarif. §16 ErbStG ordnet jeder Personengruppe einen festen persönlichen Freibetrag zu, §15 ErbStG die Steuerklasse, und §19 ErbStG den progressiven Tarif.
 
@@ -52,19 +55,19 @@ Die Steuerklasse hängt direkt vom Verwandtschaftsverhältnis ab und treibt sowo
 **Steuerklasse III (Tarif 30 oder 50 Prozent):**
 - Alle übrigen Erwerber, insbesondere nicht verwandte Personen — 20.000 Euro Freibetrag
 
-## Versorgungsfreibetrag und Härteausgleich
+## Was sind Versorgungsfreibetrag und Härteausgleich?
 
 Ehepartner erhalten zusätzlich zum persönlichen Freibetrag einen Versorgungsfreibetrag von 256.000 Euro nach §17 Abs. 1 ErbStG. Kinder unter 28 Jahren bekommen einen altersabhängigen Versorgungsfreibetrag von 10.300 Euro (21–27 Jahre) bis 52.000 Euro (0–5 Jahre). Beide Freibeträge mindern unmittelbar den steuerpflichtigen Erwerb.
 
 Der Härteausgleich §24 ErbStG verhindert disproportionale Steuersprünge an den Bandgrenzen. Beispiel: Bei 75.000 Euro Erwerb in Steuerklasse I greift Tarif 7 Prozent — die Steuer beträgt 5.250 Euro. Bei 80.000 Euro würde der nächste Tarif 11 Prozent regulär 8.800 Euro Steuer ergeben. Der Härteausgleich begrenzt sie auf 5.250 + 0,5 × 5.000 = 7.750 Euro.
 
-## Familienheim und Mietwohnimmobilien
+## Wie werden Familienheim und Mietwohnimmobilien behandelt?
 
 Das vom Erblasser zuletzt bewohnte Familienheim ist nach §13 Abs. 1 Nr. 4 ErbStG bei Übertragung auf Ehepartner oder Kinder steuerfrei, wenn der Erbe es mindestens zehn Jahre selbst bewohnt. Bei Kindern gilt eine Wohnflächengrenze von 200 Quadratmetern; darüber hinausgehende Fläche bleibt steuerpflichtig. Bei Ehepartnern besteht keine Flächengrenze.
 
 Für vermietete Wohnimmobilien gibt §13d ErbStG einen 10-Prozent-Abschlag auf den Verkehrswert — der Rechner berücksichtigt ihn als Checkbox plus Eingabefeld für den Mietwohnwert. Die 10-Jahres-Behaltensfrist gilt analog.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Beispiel 1 — Ehepartner, 1.000.000 Euro Nachlass:** Brutto-Erwerb 1.000.000, abzüglich Erbfallkostenpauschale 15.000 und Hausrat-Pauschale 41.000 ergibt steuerpflichtigen Brutto-Erwerb 944.000 Euro. Nach Abzug Freibetrag 500.000 und Versorgungsfreibetrag 256.000 verbleibt steuerpflichtiger Netto-Erwerb 188.000 Euro. Steuersatz Steuerklasse I, Band bis 300.000: 11 Prozent — Erbschaftsteuer 20.680 Euro.
 
@@ -72,7 +75,7 @@ Für vermietete Wohnimmobilien gibt §13d ErbStG einen 10-Prozent-Abschlag auf d
 
 **Beispiel 3 — Geschwister, 100.000 Euro Nachlass:** Brutto-Erwerb 44.000 nach Pauschalen 15.000 + 12.000. Freibetrag 20.000 lässt 24.000 Euro steuerpflichtigen Netto-Erwerb. Steuerklasse II Tarif 15 Prozent: 3.600 Euro Erbschaftsteuer.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - Vorbereitung des Steuerberater- oder Notar-Termins mit eigenen Zahlen
 - Schnelle Plausibilitätsprüfung des Steuerbescheids vom Finanzamt
@@ -84,7 +87,7 @@ Für vermietete Wohnimmobilien gibt §13d ErbStG einen 10-Prozent-Abschlag auf d
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Finanz-Ökosystem, die zum Thema passen:
 

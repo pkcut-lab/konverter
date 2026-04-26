@@ -30,6 +30,7 @@ export const TOOL_CATEGORIES = [
   'automotive',
   'education',
   'agriculture',
+  'nature',
 ] as const;
 
 export type ToolCategory = (typeof TOOL_CATEGORIES)[number];

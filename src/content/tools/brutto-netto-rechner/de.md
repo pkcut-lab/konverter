@@ -6,6 +6,14 @@ metaDescription: "Brutto-Netto-Rechner 2026: Lohnsteuer, SV-Beiträge und Kirche
 tagline: "Netto-Gehalt berechnen — mit Transparenz, warum jeder Euro abgezogen wird."
 intro: "Berechne dein monatliches Netto-Gehalt für 2026 — mit aktualisierten Beitragssätzen (Grundfreibetrag 12.348&nbsp;€, Minijob-Grenze 603&nbsp;€, Midijob-F-Faktor 0,6619) und allen sechs Steuerklassen. Der Rechner erklärt inline, warum jeder Abzugsposten in genau dieser Höhe anfällt — der meistgenannte Nutzer-Pain bei Gehaltsrechnern ist der Gap-Shock: 35–45&nbsp;% des Bruttolohns verschwinden, ohne dass dies beim Einstieg kommuniziert wird."
 category: "finance"
+stats:
+  - label: "Steuerklassen"
+    value: "6"
+  - label: "Bundesländer"
+    value: "16"
+  - label: "Genauigkeit"
+    value: "±0,01"
+    unit: "EUR"
 contentVersion: 1
 headingHtml: "Brutto-<em>Netto</em> berechnen"
 howToUse:
@@ -27,6 +35,9 @@ faq:
   - q: "Sind die Ergebnisse exakt wie der Gehaltszettel?"
     a: "Annähernd — systembedingte Abweichungen von ±10–20&nbsp;€ sind üblich und beruhen auf unterschiedlichen Rundungsmethoden nach Steuerrecht (§32a EStG). Gehaltszettel-Software nutzt den exakten PAP-Algorithmus des BMF; dieser Rechner verwendet den vereinfachten §32a-Tarif. Für verbindliche Zahlen empfehlen wir deinen Arbeitgeber oder einen Steuerberater."
 relatedTools: []
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -37,7 +48,7 @@ Das Differenzierungs-Merkmal gegenüber anderen Rechnern: Jeder Abzugsposten ist
 
 Alle Berechnungen laufen ausschließlich im Browser. Kein Cent deiner Gehaltsdaten verlässt dein Gerät — kein Server-Upload, kein Tracking, keine Werbecookies.
 
-## Berechnungsformeln
+## Welche Berechnungsformeln gibt es?
 
 Die monatlichen Abzüge setzen sich aus Lohnsteuer, Solidaritätszuschlag, Kirchensteuer (optional) und den vier Sozialversicherungszweigen zusammen.
 
@@ -72,7 +83,7 @@ Mit F&nbsp;= 0,6619. Am unteren Ende (603,01&nbsp;€) beträgt der Faktor ca. 0
 
 **Quellen 2026:** Beitragssätze und BBG: lohn-info.de; Steuerliche Größen (Grundfreibetrag, Soli-Freigrenze): Bundesfinanzministerium (BMF); Midijob-F-Faktor: §&nbsp;20 SGB IV / Deutsche Rentenversicherung.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Drei typische Berechnungen für 2026:
 
@@ -88,7 +99,7 @@ Lohnsteuer SK III: ca. 308&nbsp;€ (Splitting-Vorteil). **Netto: ca. 2.477&nbsp
 
 F-Faktor greift; SV-Basis ≈ 968&nbsp;€. Rentenversicherung: 90&nbsp;€ (Gleitzone reduziert von 112&nbsp;€ ohne F-Faktor). **Netto: ca. 993&nbsp;€** — ca. 8&nbsp;% weniger Abzüge als bei regulärer Vollzeitstelle.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Berufseinsteiger und Jobwechsler:** Gehaltsangebot realistisch einschätzen — 3.800&nbsp;€ Brutto in SK I ergeben ca. 2.450&nbsp;€ Netto, nicht 3.800&nbsp;€.
 - **Verheiratete Paare:** Steuerklasse III+V vs. zweimal IV vergleichen; der Rechner zeigt, welche Kombination monatlich günstiger ist.
@@ -99,7 +110,7 @@ F-Faktor greift; SV-Basis ≈ 968&nbsp;€. Rentenversicherung: 90&nbsp;€ (Gle
 
 ## Häufige Fragen
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

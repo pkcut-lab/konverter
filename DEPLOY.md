@@ -28,7 +28,7 @@ eine Preview-URL unter `<branch>.konverter-7qc.pages.dev`.
 
 ### 3. GitHub-Secrets setzen
 
-Im Repo https://github.com/pkcut-lab/konverter → **Settings → Secrets and variables → Actions → New repository secret:**
+Im Repo https://github.com/pkcut-lab/kittokit → **Settings → Secrets and variables → Actions → New repository secret:**
 
 | Name | Wert |
 |------|------|
@@ -98,6 +98,52 @@ npm run build
 # Lokal deployen (braucht wrangler-Install + CF-Login)
 npx wrangler pages deploy dist --project-name=konverter-7qc
 ```
+
+## After Go-Live
+
+### HSTS Preload List Submission
+
+The `_headers` file already sets:
+```
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+```
+This satisfies all requirements for the Chrome HSTS Preload List.
+
+**Steps (once kittokit.com has a live HTTPS response):**
+
+1. Visit https://hstspreload.org and enter `kittokit.com`
+2. All three requirements should be green (2-year max-age ✓, includeSubDomains ✓, preload ✓)
+3. Click **Submit** — the domain enters the submission queue
+4. Wait **~6–8 weeks** for inclusion in the Chromium source tree (Firefox + Edge pick it up shortly after)
+5. Verify inclusion: https://hstspreload.org/?domain=kittokit.com shows "Status: preloaded"
+
+Once preloaded, browsers enforce HTTPS for kittokit.com before any DNS lookup — the strongest HSTS protection available. **Do not submit until HTTPS is confirmed working site-wide** (including all subdomains, since `includeSubDomains` is set).
+
+---
+
+### Search Console + Bing Webmaster Setup (T14)
+
+#### Google Search Console
+
+1. Go to https://search.google.com/search-console
+2. Add property → **URL-Prefix** method → enter `https://kittokit.com`
+3. Verify via DNS TXT record (add to Cloudflare DNS):
+   - Type: `TXT`, Name: `@`, Value: `google-site-verification=<token>`
+4. Submit sitemap: **Sitemaps** → enter `https://kittokit.com/sitemap-index.xml`
+5. For API access (automated rank tracking, T14 future):
+   - Google Cloud Console → create service account → grant it `Search Console → Full`
+   - Download JSON key → store as `GOOG_SC_KEY` GitHub secret
+   - Reference: `googleapis` npm package with `webmasters` scope
+
+#### Bing Webmaster Tools
+
+1. Go to https://www.bing.com/webmasters
+2. Sign in with Microsoft account → Add site → `https://kittokit.com`
+3. Verify via XML file (upload `BingSiteAuth.xml` to `public/`) OR DNS TXT record
+4. Submit sitemap: **Sitemaps** → `https://kittokit.com/sitemap-index.xml`
+5. Bing auto-imports from Google Search Console if you grant access (fastest path)
+
+---
 
 ## Zukünftige Änderungen (nicht heute)
 

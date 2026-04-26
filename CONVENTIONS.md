@@ -565,6 +565,77 @@ Refactor auf Worker-Pattern wäre Scope-Creep:
 Diese bleiben Main-Thread bis ein konkreter UX-Pain auftritt
 (>5 unabhängige User-Reports zu „UI-Freeze" pro Tool).
 
+## 11. Phase-3 Prep — vor dem Hinzufügen einer dritten Sprache
+
+> **Wann lesen:** Bevor du `es`, `fr`, `pt-br` oder eine andere Sprache zu
+> `ACTIVE_LANGUAGES` hinzufügst. Diese Punkte sind heute (DE+EN) nicht
+> kritisch, brechen aber **stillschweigend** sobald eine dritte Sprache da
+> ist (kein Build-Fehler, sondern falsche Werte / fehlende Übersetzungen).
+> Quelle: i18n-Audit 2026-04-26 (Commits `ccd461b`..`55ce54e`).
+
+Aktueller Stand: an mehreren Stellen sind `de`/`en` als Ternaries oder
+Maps hartcodiert. Wenn Sprache 3 dazukommt, **muss** dieser Block VOR
+dem ersten Translation-PR abgearbeitet werden. Sonst: invalide og:locale-
+Strings, falsche Zahlen-Formatierung, englische Navigation auf spanischen
+Seiten — alles ohne Fehlermeldung.
+
+### 11.1 Pflicht-Refactors (in dieser Reihenfolge)
+
+1. **Locale-Maps zentralisieren** — neue Datei `src/lib/i18n/locale-maps.ts`:
+   ```ts
+   export const OG_LOCALE_MAP: Record<ActiveLanguage, string> = {
+     de: 'de_DE', en: 'en_US', /* es: 'es_ES', fr: 'fr_FR', 'pt-br': 'pt_BR' */
+   };
+   export const INTL_LOCALE_MAP: Record<ActiveLanguage, string> = {
+     de: 'de-DE', en: 'en-US', /* … */
+   };
+   ```
+   Anwendungs-Stellen ersetzen (siehe inline `// TODO(phase-3):` Marker):
+   - `src/layouts/BaseLayout.astro` — `og:locale`-Ternary
+   - `src/pages/[lang]/[slug].astro` — `Intl.NumberFormat`-Locale
+
+2. **Header-Strings nach `i18n/strings.ts` ziehen** — `src/components/Header.astro`
+   hat 5 hardcoded Maps (`searchPlaceholder`, `navByLang`, `popularLabelByLang`,
+   `brandAriaByLang`, `LANG_ENDONYMS`). Pro neuer Sprache muss man jede einzeln
+   ergänzen. Konsolidieren in `strings.ts`, dann `t(lang).headerSearchPlaceholder`
+   etc. nutzen. TypeScript wird dann fehlende Übersetzungen als Compile-Fehler
+   anzeigen.
+
+3. **Sitemap-Regex generisch machen** — `astro.config.mjs:25,29` hat
+   hartcodierten `/\/(de|en)\/?$/`-Regex für den Priority-Boost auf
+   Sprach-Roots / Tools-Index. Ersetzen durch Generierung aus
+   `ACTIVE_LANGUAGES.join('|')`.
+
+4. **Statische Seiten ergänzen** — pro neuer Sprache ein neues File pro
+   Legal-Page (`src/pages/<lang>/...`) erstellen UND den Slug in
+   `src/lib/static-page-slugs.ts` ergänzen. Das Audit hat das einmal
+   verpasst (Bug `55ce54e`); ohne Eintrag im Slug-Map zeigt der
+   Sprach-Switcher fabrizierte 404-URLs.
+
+### 11.2 Optional — empfohlen wenn Sprache 4 oder mehr ansteht
+
+- **`strings.ts` splitten** in `src/lib/i18n/de.ts`, `en.ts`, `es.ts` etc.
+  mit Barrel-Export. Übersetzer können dann parallel an separaten Files
+  arbeiten ohne Merge-Conflicts.
+- **Build-Test** der für jeden Eintrag in `slug-map.ts` prüft, dass alle
+  aktiven Sprachen einen Slug haben — fail-loud statt undefined.
+
+### 11.3 Wo sind die TODO-Marker im Code?
+
+Inline-TODOs sind mit `// TODO(phase-3):` markiert. Schnell finden:
+```bash
+grep -rn "TODO(phase-3)" src/ astro.config.mjs
+```
+
+### 11.4 Was NICHT proaktiv machen
+
+- Keine spekulative Generalisierung über das hinaus, was die nächste
+  Sprache braucht. Wenn `pt-br` als nächstes kommt, mappen wir `pt-br`
+  in den Locale-Maps — nicht alle 30 Phase-6-Sprachen vorab.
+- Refactor ohne konkreten Test-Case (= echte dritte Sprache) kann Bugs
+  einführen, die niemand bemerkt. Diese Liste arbeitest du im selben
+  PR ab, in dem du die neue Sprache hinzufügst.
+
 ## Build-Gates
 
 - `npm run build` muss grün sein vor Commit

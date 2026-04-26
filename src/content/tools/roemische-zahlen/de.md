@@ -28,6 +28,9 @@ relatedTools:
   - zeichenzaehler
   - text-diff
   - base64-encoder
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ Der Konverter rechnet bidirektional zwischen arabischen Dezimalzahlen und römis
 
 Bei der Umrechnung von Arabisch nach Römisch wird jeder Stellenwert einzeln aufgeschlüsselt. So siehst du nicht nur das Ergebnis, sondern verstehst die Zusammensetzung: 1984 zerfällt in M (1000) + CM (900) + LXXX (80) + IV (4) = MCMLXXXIV.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Römische Zahlen basieren auf sieben Grundzeichen mit festen Werten:
 
@@ -56,7 +59,7 @@ Die drei Kernregeln:
 2. **Subtraktionsregel:** Ein kleineres Zeichen vor einem größeren wird subtrahiert. IV = 5 − 1 = 4. Erlaubt sind nur: I vor V/X, X vor L/C, C vor D/M.
 3. **Wiederholungsregel:** Ein Zeichen darf maximal dreimal hintereinander stehen. 40 ist XL, nicht XXXX.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Häufig nachgefragte Umrechnungen auf einen Blick:
 
@@ -73,7 +76,7 @@ Häufig nachgefragte Umrechnungen auf einen Blick:
 
 Besonders bei Jahreszahlen und Geburtstagen in römischer Schreibweise — etwa für Tattoos, Gravuren oder Hochzeitseinladungen — hilft die Tabelle als Schnellreferenz.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Tattoos und Gravuren** — Geburtsdaten oder Jahreszahlen in römischen Ziffern sind ein beliebtes Motiv. Der Konverter liefert die korrekte Schreibweise, die Aufschlüsselung dient als Gegenprobe vor dem Stechen.
 - **Schulaufgaben und Prüfungen** — Die Subtraktionsregel ist ein häufiges Thema im Mathematikunterricht. Die Schritt-für-Schritt-Zerlegung hilft beim Verständnis.
@@ -84,7 +87,7 @@ Besonders bei Jahreszahlen und Geburtstagen in römischer Schreibweise — etwa 
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Text-Tools
+## Welche Text-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

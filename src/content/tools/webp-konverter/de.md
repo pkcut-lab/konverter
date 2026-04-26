@@ -26,7 +26,18 @@ relatedTools:
   - bild-komprimieren
   - bild-groesse-aendern
 category: image
+stats:
+  - label: "Max. Dateigröße"
+    value: "50"
+    unit: "MB"
+  - label: "Ausgabeformate"
+    value: "3"
+  - label: "Verarbeitung"
+    value: "im Browser"
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was ist WebP?
@@ -56,7 +67,7 @@ liegt im Schnitt 26 Prozent unter PNG, WebP-Lossy mit Alpha-Kanal sogar bei
 nur einem Bruchteil. Für Logos, Icons und UI-Grafiken ist WebP damit das
 modernere Format.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Blog-Artikel:** Headerbild und Inline-Grafiken von JPG auf WebP umstellen —
 typische Einsparung 30 bis 40 Prozent pro Seite.
@@ -120,7 +131,7 @@ Nein. Die Konvertierung läuft vollständig in deinem Browser über die
 Canvas-API. Es gibt weder Upload, noch Server-Verarbeitung, noch Tracking. Du
 kannst diese Seite sogar offline nutzen, sobald sie einmal geladen wurde.
 
-## Verwandte Bild-Tools
+## Welche Bild-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -30,6 +30,9 @@ relatedTools:
   - json-formatter
   - text-diff
   - zeichenzaehler
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Regex Tester?
@@ -38,7 +41,7 @@ Ein regulärer Ausdruck (Regex) beschreibt ein Suchmuster für Zeichenketten. De
 
 Die Ausführung nutzt das native JavaScript-`RegExp`-Objekt direkt im Browser. Kein Server empfängt dein Pattern oder deine Testdaten. Das ist besonders relevant, wenn du mit Produktionsdaten arbeitest: Log-Zeilen, Request-Paths, Auth-Tokens oder IP-Adressen gehören nicht auf fremde Server — auch nicht zum Regex-Testen.
 
-## Regex-Flags im Überblick
+## Welche Regex-Flags gibt es?
 
 JavaScript kennt sechs relevante Flags, die das Matching-Verhalten steuern:
 
@@ -53,7 +56,7 @@ JavaScript kennt sechs relevante Flags, die das Matching-Verhalten steuern:
 
 Wichtig: `/u` und `/v` zusammen sind ungültig — `/v` ist der Nachfolger von `/u` und schließt dessen Funktionalität ein. Der Tester zeigt einen Hinweis an, wenn beide gleichzeitig aktiviert werden.
 
-## Capture Groups und Backreferences
+## Wie funktionieren Capture Groups und Backreferences?
 
 Capture Groups erlauben dir, Teile eines Treffers einzeln zu extrahieren. Benannte Gruppen (`(?<name>...)`) verbessern die Lesbarkeit und machen Code robuster als nummerierte Referenzen:
 
@@ -65,7 +68,7 @@ Treffer:  jahr=2026, monat=04, tag=21
 
 Der Tester zeigt jede Gruppe mit Name und Position an — du siehst sofort, ob dein Pattern die richtigen Teile extrahiert.
 
-## Häufige Stolperfallen
+## Welche Stolperfallen gibt es?
 
 ### Vergessenes g-Flag
 
@@ -94,7 +97,7 @@ Das Pattern `(a+)+$` kann bei Input `aaaaaaaaaaaaaab` exponentiell viele Pfade d
 - Atomare Gruppen — in JS nicht nativ, aber durch Umschreiben mit Lookahead simulierbar.
 - Pattern-Vereinfachung: `a+$` statt `(a+)+$` liefert das gleiche Ergebnis ohne Backtracking-Risiko.
 
-## ES2024/2025-Features
+## Welche ES2024/2025-Features werden unterstützt?
 
 JavaScript-Regex entwickelt sich weiter. Drei Features sind 2026 besonders relevant:
 
@@ -112,7 +115,7 @@ regex101.com — der bekannteste Regex-Tester — sendet Pattern und Test-String
 
 Dieser Tester verarbeitet alles lokal über das native JavaScript-`RegExp`-Objekt. Kein Logging, kein Tracking, kein Server-Kontakt. DSGVO-konform, weil keine Verarbeitung auf externen Servern stattfindet.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **Log-Parsing:** Server-Logs nach IP-Adressen, Statuscodes oder Timestamps filtern — direkt im Browser, ohne Daten hochzuladen.
 - **Formular-Validierung:** E-Mail-, PLZ- oder IBAN-Patterns testen, bevor sie in den Produktivcode wandern.
@@ -124,7 +127,7 @@ Dieser Tester verarbeitet alles lokal über das native JavaScript-`RegExp`-Objek
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

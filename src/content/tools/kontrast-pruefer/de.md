@@ -25,13 +25,16 @@ relatedTools:
   - hex-rgb-konverter
 category: color
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Prüfer?
 
 Der Kontrast-Prüfer nimmt zwei Hex-Farbcodes entgegen und berechnet das Kontrastverhältnis nach der WCAG-2.1-Spezifikation. Er zeigt an, ob die Farbkombination die Konformitätsstufen AA und AAA für normalen Text und großen Text erfüllt. So lassen sich Barrierefreiheits-Probleme erkennen, bevor ein Design live geht.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Die Berechnung folgt zwei Schritten. Zuerst wird die relative Luminanz jeder Farbe ermittelt. Dazu werden die sRGB-Kanalwerte (0-255) in den linearen Farbraum transformiert und gewichtet summiert:
 
@@ -45,7 +48,7 @@ Im zweiten Schritt ergibt sich das Kontrastverhältnis aus den beiden Luminanzen
 
 Das Ergebnis liegt zwischen 1:1 (identische Farben) und 21:1 (Schwarz auf Weiß). WCAG AA verlangt mindestens 4,5:1 für normalen Text und 3:1 für großen Text. AAA erfordert 7:1 bzw. 4,5:1.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Vordergrund | Hintergrund | Verhältnis | AA Normal | AAA Normal |
 |-------------|-------------|------------|-----------|------------|
@@ -59,7 +62,7 @@ Das Ergebnis liegt zwischen 1:1 (identische Farben) und 21:1 (Schwarz auf Weiß)
 
 Die Farbe #767676 ist ein bekannter Grenzwert: Sie erreicht auf weißem Hintergrund gerade noch die AA-Schwelle für normalen Text.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Webdesign und UI-Entwicklung:** Vor jedem Release prüfen Designer und Entwickler, ob Textfarben auf ihren Hintergründen ausreichend Kontrast bieten. Der Prüfer liefert die Antwort in Sekunden, ohne externes Tool oder Browser-Extension.
 
@@ -91,7 +94,7 @@ AA ist die gängige Mindestanforderung für Webseiten und Apps. AAA bietet höhe
 
 Nein. Die gesamte Berechnung läuft lokal im Browser. Es werden keine Daten übertragen.
 
-## Verwandte Farb-Tools
+## Welche Farb-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

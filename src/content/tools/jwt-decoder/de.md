@@ -28,6 +28,9 @@ relatedTools:
   - base64-encoder
   - json-formatter
   - hash-generator
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Decoder?
@@ -36,7 +39,7 @@ Der JWT Decoder nimmt einen vollständigen JWT-String und zerlegt ihn in seine d
 
 Zusätzlich erkennt der Decoder Zeitstempel-Claims (iat, exp, nbf) und rechnet die Unix-Timestamps in lesbare UTC-Datumsangaben um. Ein Statusfeld zeigt auf einen Blick, ob der Token gültig, abgelaufen oder noch nicht aktiv ist.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 JWT-Dekodierung arbeitet auf String-Ebene, nicht auf kryptografischer Ebene. Der Algorithmus:
 
@@ -47,7 +50,7 @@ JWT-Dekodierung arbeitet auf String-Ebene, nicht auf kryptografischer Ebene. Der
 
 Beispiel: Das Segment `eyJhbGciOiJIUzI1NiJ9` dekodiert zu `{"alg":"HS256"}`. Die Formel `ceil(n / 3) * 4` beschreibt die Base64-Länge — beim Dekodieren läuft sie rückwärts.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Szenario | Was der Decoder zeigt |
 |----------|----------------------|
@@ -59,7 +62,7 @@ Beispiel: Das Segment `eyJhbGciOiJIUzI1NiJ9` dekodiert zu `{"alg":"HS256"}`. Die
 
 JWTs sind Base64url-kodiert, nicht verschlüsselt. Jeder kann den Inhalt lesen — sensible Daten gehören nie unverschlüsselt in den Payload.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **API-Authentifizierung und OAuth 2.0** — Die meisten REST-APIs nutzen JWTs als Bearer-Token im Authorization-Header. Entwickler dekodieren sie, um Claims wie sub (Subject), iss (Issuer) und aud (Audience) zu prüfen, bevor sie Fehlersuche am Server starten.
 
@@ -71,7 +74,7 @@ JWTs sind Base64url-kodiert, nicht verschlüsselt. Jeder kann den Inhalt lesen �
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

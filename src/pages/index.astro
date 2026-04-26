@@ -1,3 +1,25 @@
 ---
-return Astro.redirect('/de');
+// Root redirect — handled by CF Pages Function in production (Accept-Language
+// negotiation, see functions/index.js). This static fallback fires only when
+// CF Functions are unavailable (local astro preview, edge cases).
+// Default falls through to /en since that matches the CF function's
+// DEFAULT_LANG and serves the broader non-german audience.
+// WCAG: 0-second meta-refresh is exempt (immediate redirect).
 ---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="refresh" content="0;url=/en">
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href="https://kittokit.com/en">
+    <title>kittokit</title>
+  </head>
+  <body>
+    <main>
+      <h1>kittokit</h1>
+      <p><a href="/en">English version</a> · <a href="/de">Deutsche Version</a></p>
+    </main>
+  </body>
+</html>

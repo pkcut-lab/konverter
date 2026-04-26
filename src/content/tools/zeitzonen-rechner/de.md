@@ -27,6 +27,9 @@ relatedTools:
   - unix-timestamp
   - json-formatter
   - zeichenzaehler
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -35,7 +38,7 @@ Der Zeitzonen-Rechner konvertiert eine Uhrzeit aus einer beliebigen IANA-Zeitzon
 
 Das Problem klingt einfach, ist aber fehleranfällig: UTC-Offsets ändern sich durch Sommerzeit, manche Zonen haben halbe Stunden (Indien: UTC+5:30), und Abkürzungen wie CST stehen je nach Kontinent für unterschiedliche Offsets. Der Rechner löst das, indem er ausschließlich IANA-Zeitzonen verwendet — den internationalen Standard.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Die Umrechnung basiert auf UTC als Referenzpunkt:
 
@@ -45,7 +48,7 @@ Beispiel: 14:30 in Berlin (UTC+2 im Sommer) entspricht 08:30 in New York (UTC−
 
 Entscheidend ist, dass die Offsets nicht statisch sind. Berlin wechselt zwischen UTC+1 (MEZ) und UTC+2 (MESZ). New York wechselt zwischen UTC−5 (EST) und UTC−4 (EDT). Der Rechner bezieht die aktuellen Offsets über `Intl.DateTimeFormat` — das stellt sicher, dass Sommerzeit-Wechsel korrekt abgebildet werden.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Gängige Umrechnungen zwischen Zeitzonen:
 
@@ -59,7 +62,7 @@ Gängige Umrechnungen zwischen Zeitzonen:
 
 Die Werte gelten für die Sommerzeit-Periode (MESZ/EDT). Im Winter verschieben sich die Offsets. Das `+1` bzw. `−1` kennzeichnet den Folge- bzw. Vortag.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Remote-Team-Koordination:** Verteilte Teams über mehrere Zeitzonen planen Meetings, Standups und Deadlines. Statt manuell UTC-Offsets zu addieren, gibt ein Teammitglied die gewünschte Uhrzeit in seiner Zone ein und sieht sofort, ob der Termin für Kolleginnen und Kollegen in anderen Zeitzonen zumutbar ist.
 
@@ -73,7 +76,7 @@ Die Werte gelten für die Sommerzeit-Periode (MESZ/EDT). Im Winter verschieben s
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Zeit-Tools
+## Welche Zeit-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

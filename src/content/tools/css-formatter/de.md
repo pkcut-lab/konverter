@@ -27,6 +27,9 @@ relatedTools:
   - json-formatter
   - sql-formatter
   - xml-formatter
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Formatter?
@@ -35,7 +38,7 @@ Der CSS Formatter nimmt beliebigen CSS-Code und strukturiert ihn in ein lesbares
 
 Das Ergebnis ist konsistent formatierter CSS-Code, der sich in Code-Reviews, Dokumentation und Team-Kommunikation direkt verwenden lässt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Der Formatter arbeitet regelbasiert in drei Schritten:
 
@@ -58,7 +61,7 @@ body {
 }
 ```
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Typische Eingaben und ihr formatiertes Ergebnis:
 
@@ -72,7 +75,7 @@ Typische Eingaben und ihr formatiertes Ergebnis:
 
 Der Formatter eignet sich für Stylesheets jeder Größe — von einzelnen Regeln bis zu umfangreichen Design-Systemen mit verschachtelten Media Queries und Container Queries.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Code-Reviews und Pull-Requests** — minifiziertes oder uneinheitlich formatiertes CSS in Stylesheets erschwert das Review. Ein konsistentes Format macht Änderungen auf einen Blick erkennbar und reduziert Rückfragen im Team.
 
@@ -84,7 +87,7 @@ Der Formatter eignet sich für Stylesheets jeder Größe — von einzelnen Regel
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

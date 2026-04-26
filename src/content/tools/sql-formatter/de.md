@@ -27,6 +27,9 @@ relatedTools:
   - json-formatter
   - base64-encoder
   - regex-tester
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Formatter?
@@ -35,7 +38,7 @@ Der SQL Formatter nimmt beliebigen SQL-Code und strukturiert ihn in ein lesbares
 
 Das Ergebnis ist konsistent eingerückter SQL-Code, der sich in Code-Reviews, Dokumentation und Team-Kommunikation direkt verwenden lässt.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Der Formatter arbeitet regelbasiert in drei Schritten:
 
@@ -55,7 +58,7 @@ WHERE active = 1
 ORDER BY name
 ```
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Typische Eingaben und ihr formatiertes Ergebnis:
 
@@ -69,7 +72,7 @@ Typische Eingaben und ihr formatiertes Ergebnis:
 
 Der Formatter eignet sich für Queries jeder Länge — von einzeiligen Schnellabfragen bis zu mehrseitigen Reports mit Subqueries und Common Table Expressions.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Code-Reviews und Pull-Requests** — unformatiertes SQL in Migrations-Dateien oder gespeicherten Prozeduren erschwert das Review. Ein einheitliches Format macht Änderungen auf einen Blick erkennbar und reduziert Rückfragen im Team.
 
@@ -83,7 +86,7 @@ Der Formatter eignet sich für Queries jeder Länge — von einzeiligen Schnella
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

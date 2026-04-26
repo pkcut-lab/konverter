@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { buildPersonJsonLd } from '../../lib/seo/person-jsonld';
+
+const personJsonLd = buildPersonJsonLd('en');
+---
+<BaseLayout
+  lang="en"
+  title="About kittokit – Fast browser tools, no uploads"
+  description="kittokit is a privacy-first tool platform with 70+ fast browser tools — no uploads, no tracking, no login."
+  pathWithoutLang="/about"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+
+  <main class="about">
+    <header class="about-header">
+      <p class="about-eyebrow">The project</p>
+      <h1>About kittokit</h1>
+      <p class="about-lead">kittokit is a privacy-first tool platform with 70+ fast browser tools — no uploads, no tracking, no login.</p>
+    </header>
+
+    <section class="about-section">
+      <h2>Mission</h2>
+      <p>Everyday tool tasks — converting, calculating, generating, editing files — should be fast and simple, right in your browser, without sending data to a server. No account required, no subscription, no privacy compromise.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>How it works</h2>
+      <p>All calculations and conversions run entirely in your browser — via Web APIs and WebAssembly. Your files and inputs never leave your device. No data is transmitted to our servers.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Who's behind it</h2>
+      <p>kittokit is an indie project built with the goal of becoming the best free tool directory — without an ads-first approach, without dark patterns.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Tech</h2>
+      <p>Built with <strong>Astro 5</strong> (SSG), <strong>Svelte 5</strong> (Runes), and <strong>Tailwind CSS</strong>. Hosted on Cloudflare Pages — global CDN, no server-side logs with personal data. ML tools use WebAssembly for local inference directly in your browser.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Contact</h2>
+      <p>Questions, feedback, or partnership inquiries: <a href="/en/imprint" class="about-link">Contact details in the imprint</a>.</p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .about {
+    max-width: 38rem;
+    margin: var(--space-12) auto;
+    padding: 0 var(--space-4);
+  }
+
+  .about-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .about-eyebrow {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 0 0 0.5rem;
+  }
+
+  .about-header h1 {
+    margin: 0 0 var(--space-3);
+  }
+
+  .about-lead {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .about-section {
+    margin-top: var(--space-8);
+  }
+
+  .about-section h2 {
+    margin-bottom: var(--space-2);
+  }
+
+  .about-section p {
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .about-link {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .about-link:hover {
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .about {
+      margin: var(--space-8) auto;
+    }
+  }
+</style>

@@ -28,6 +28,9 @@ relatedTools:
   - webp-konverter
   - hintergrund-entfernen
   - qr-code-generator
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Vergleicher?
@@ -36,7 +39,7 @@ Der Bild-Diff nimmt zwei Bilder — als Base64-Data-URLs — und analysiert sie 
 
 Das Tool arbeitet ausschließlich im Browser. Kein Server empfängt, speichert oder verarbeitet deine Bilddaten. Damit eignet es sich auch für vertrauliche Screenshots, interne Design-Assets und personenbezogene Aufnahmen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Der Vergleich basiert auf einer Byte-für-Byte-Analyse der Base64-kodierten Bilddaten:
 
@@ -46,7 +49,7 @@ Beide Data-URLs werden nach dem Komma-Trennzeichen aufgesplittet. Der resultiere
 
 Aus der Base64-Länge lässt sich die ungefähre Dateigröße ableiten: `Bytes ≈ Base64-Zeichen × 3 / 4`. Der Bericht zeigt beide Werte.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 | Szenario | Beschreibung |
 |----------|-------------|
@@ -57,7 +60,7 @@ Aus der Base64-Länge lässt sich die ungefähre Dateigröße ableiten: `Bytes �
 | Wasserzeichen-Check | Original und potenziell markierte Version vergleichen, um versteckte Änderungen zu erkennen. |
 | Format-Konvertierung prüfen | Ein PNG und dessen WebP-Konvertierung vergleichen, um den Einfluss der Formatänderung zu messen. |
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Webentwicklung und QA.** Frontend-Teams vergleichen Screenshots vor und nach einem Release. Der Bild-Diff zeigt, ob sich an der visuellen Ausgabe etwas verändert hat — ohne dass ein Mensch jedes Pixel manuell prüfen muss. Die Byte-Abweichung dient als erster Indikator, bevor aufwendigere visuelle Regressionstests nötig werden.
 
@@ -71,7 +74,7 @@ Aus der Base64-Länge lässt sich die ungefähre Dateigröße ableiten: `Bytes �
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Bild-Tools
+## Welche Bild-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

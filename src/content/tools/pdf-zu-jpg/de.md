@@ -31,6 +31,9 @@ relatedTools:
   - jpg-zu-pdf
   - pdf-zusammenfuehren
   - pdf-aufteilen
+datePublished: '2026-04-25'
+dateModified: '2026-04-26'
+
 ---
 
 ## Was macht dieser Konverter?
@@ -39,7 +42,7 @@ Dieser PDF-zu-JPG-Konverter rasterisiert jede PDF-Seite direkt in deinem Browser
 
 Jede Seite wird auf ein Canvas-Element gerendert und als JPEG-Blob exportiert. Deine Dateien werden niemals an externe Server übertragen — ein klarer technischer Unterschied zu den 9&nbsp;anderen Anbietern, die alle auf Server-Upload angewiesen sind.
 
-## DPI-Einstellungen erklärt
+## Wie funktionieren DPI-Einstellungen?
 
 PDF verwendet intern 72 Punkte pro Zoll (pt/inch) als Basismaß. Der Render-Skalierungsfaktor wird aus deiner DPI-Wahl berechnet:
 
@@ -49,7 +52,7 @@ PDF verwendet intern 72 Punkte pro Zoll (pt/inch) als Basismaß. Der Render-Skal
 
 Wichtig: "Hochskalieren" verbessert nur Vektorgrafiken und eingebetteten Text. Bei reinen Scan-PDFs (eingebettete Bitmaps) bleibt die Bildschärfe ab einem gewissen Punkt konstant — die Quelldatei bestimmt die Auflösung.
 
-## Seiten-Auswahl per Vorschau-Grid
+## Wie wählst du Seiten per Vorschau-Grid aus?
 
 Statt das gesamte PDF zu konvertieren, kannst du präzise steuern, welche Seiten exportiert werden sollen. Nach dem Laden erscheinen alle Seiten als Thumbnail-Vorschauen. Wähle per Checkbox aus — etwa nur Seite&nbsp;1 für ein Angebot-Deckblatt oder Seiten 3–5 für eine Präsentation.
 
@@ -61,14 +64,14 @@ Gehaltsabrechnungen, Verträge, Ausweise: Diese Dokumente sollten nie auf fremde
 
 Dieser Konverter macht Server-Upload technisch unmöglich. PDF.js läuft als JavaScript-Modul direkt im Browser-Sandbox. Die einzige Netzwerkanfrage beim Besuch dieser Seite ist das Laden der Seite selbst — danach ist alles lokal.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **Bewerbungsunterlagen als JPG:** Deckblatt oder Zeugnisseite als hochaufgelöstes Bild für Online-Formulare exportieren.
 - **Präsentations-Slide extrahieren:** Einzelne Seite aus einer PDF-Präsentation als JPG für Thumbnails oder Social Media.
 - **Scan-Seite weiterverarbeiten:** Gescannte Dokumente seitenweise als JPG für OCR oder Bildbearbeitungs-Software aufbereiten.
 - **Vorschau-Thumbnails generieren:** Erste Seite eines Berichts als Vorschaubild für eine Dokumentenübersicht.
 
-## Technische Hinweise
+## Welche technischen Hinweise gibt es?
 
 **Passwortgeschützte PDFs:** PDF.js löst eine `PasswordException` und zeigt einen Eingabe-Dialog. Bei falschem Passwort folgt eine klare Fehlermeldung.
 
@@ -80,7 +83,7 @@ Dieser Konverter macht Server-Upload technisch unmöglich. PDF.js läuft als Jav
 
 Die häufigsten Fragen zur PDF-zu-JPG-Konvertierung sind oben in der FAQ-Sektion beantwortet.
 
-## Verwandte Dokumenten-Tools
+## Welche Dokumenten-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

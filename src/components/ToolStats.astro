@@ -1,0 +1,89 @@
+---
+interface Stat {
+  label: string;
+  value: string;
+  unit?: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+{stats.length > 0 && (
+  <dl class="tool-stats" aria-label="Tool-Kennzahlen">
+    {stats.map((s) => (
+      <div class="tool-stats__item">
+        <dt class="tool-stats__label">{s.label}</dt>
+        <dd class="tool-stats__value">
+          <span class="tool-stats__number">{s.value}</span>
+          {s.unit && <span class="tool-stats__unit">{s.unit}</span>}
+        </dd>
+      </div>
+    ))}
+  </dl>
+)}
+
+<style>
+  .tool-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    /* CLS-Reserve: avoids layout shift when stats load conditionally */
+    min-height: 3.5rem;
+  }
+
+  .tool-stats__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .tool-stats__label {
+    font-family: var(--font-family-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    white-space: nowrap;
+  }
+
+  .tool-stats__value {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    margin: 0;
+  }
+
+  .tool-stats__number {
+    font-family: var(--font-family-mono);
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .tool-stats__unit {
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 30rem) {
+    .tool-stats {
+      gap: var(--space-6);
+    }
+    .tool-stats__number {
+      font-size: 1.125rem;
+    }
+  }
+</style>

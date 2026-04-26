@@ -26,6 +26,9 @@ faq:
   - q: "Warum unterscheidet sich das KGV je nach Branche so stark?"
     a: "Branchen wachsen unterschiedlich schnell und haben verschiedene Risikoprofile, was zu strukturell verschiedenen KGV-Niveaus führt. Tech/Software: KGV 25–60+ (hohe Wachstumserwartungen eingepreist). Banken/Versicherungen: KGV 8–15 (reguliert, zinsabhängig). Automobil (VW, BMW): KGV 6–12 (zyklisch, kapitalintensiv). Versorger (E.ON, RWE): KGV 12–18 (stabile Gewinne, wenig Wachstum). Deshalb ist ein Branchenvergleich entscheidend: Ein KGV von 10 ist für eine Bank moderat, für ein Technologieunternehmen ein Warnsignal."
 relatedTools: ['zinsrechner', 'roi-rechner', 'cashflow-rechner']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -36,7 +39,7 @@ Dieser Rechner berechnet nicht nur das KGV, sondern liefert direkt drei Zusatz-I
 
 Bei negativem EPS erscheint ein klar verständlicher Hinweis anstelle einer irreführenden negativen Zahl — ein Edge-Case, den alle sieben analysierten deutschen Konkurrenten ignorieren.
 
-## Berechnungsformel
+## Was ist die Berechnungsformel?
 
 Das KGV berechnet sich nach der Formel:
 
@@ -64,7 +67,7 @@ Das KGV allein sagt wenig — der historische Kontext entscheidet. Als Referenzw
 
 Dieser Rechner zeigt einen nicht-blockierenden Hinweis-Badge bei Extremwerten (unter 5 oder über 60), damit du diese Interpretationsschritte direkt im Blick hast.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Beispiel 1 — Günstige DAX-Aktie:**
 Volkswagen-Kurs: 90&nbsp;€, EPS: 15&nbsp;€ → KGV = 6,00 (günstig, Value-Trap-Hinweis aktiv)
@@ -82,7 +85,7 @@ EPS = −2,50&nbsp;€ → Kein KGV möglich; Rechner zeigt einen erklärenden H
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Finanz-Ökosystem, die zum Thema passen:
 

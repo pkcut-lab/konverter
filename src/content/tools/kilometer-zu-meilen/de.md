@@ -27,6 +27,9 @@ relatedTools:
   - quadratmeter-zu-quadratfuss
 category: length
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -35,7 +38,7 @@ Der Konverter wandelt einen Wert in Kilometern (km) in Meilen (mi) um und zeigt
 gleichzeitig den Rückweg. Er eignet sich für Laufstrecken, Straßenangaben in
 US-Medien, Reisedistanzen und für Tachos in amerikanischen Fahrzeugen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Eine internationale Meile entspricht seit dem Yard-und-Pfund-Abkommen von 1959
 exakt 1,609344&nbsp;km. Die Gegenrichtung ist damit ebenfalls gelockt: `1&nbsp;km =
@@ -55,7 +58,7 @@ Faustregel ohne Taschenrechner: mal 0,6 plus 2 Prozent — Du bekommst Meilen mi
 unter 0,5 Prozent Abweichung. 100&nbsp;km × 0,6 = 60, plus 2&nbsp;% = 61,2 — tatsächlicher
 Wert 62,1 Meilen.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei
 bis vier Nachkommastellen.
@@ -72,7 +75,7 @@ bis vier Nachkommastellen.
 Ein Tempolimit von 65 mph entspricht 104,6&nbsp;km/h. Eine US-Straßenmarkierung mit
 „Exit in 2 miles" bedeutet 3,22&nbsp;km.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Laufsport:** Marathonstrecken und Trail-Races in den USA werden in Meilen
 angegeben, während europäische Distanzen in Kilometern stehen. Split-Zeiten,
@@ -117,7 +120,7 @@ Eine Meile entspricht 1.760 Yard oder 5.280 Fuß. Ein Yard misst 0,9144 m.
 Kurzstrecken-Leichtathletik in den USA wird oft in Yard gemessen
 (100-Yard-Dash = 91,44 m).
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

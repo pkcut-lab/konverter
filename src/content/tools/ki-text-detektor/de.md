@@ -40,6 +40,9 @@ kbdHints:
   - key: "⌘C"
     label: "Kopieren"
 contentVersion: 1
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 Da wir wissen, wie wichtig Vertraulichkeit bei Dokumenten, Hausarbeiten oder Geschäftstexten ist, haben wir dieses Tool so entwickelt, dass es **komplett offline in deinem Browser** läuft. Wir laden ein speziell quantisiertes KI-Modell (RoBERTa) direkt in deinen Browser Cache. Wenn du auf "Prüfen" klickst, analysiert dein Computer den Text selbst – ganz ohne Server-Anfragen.

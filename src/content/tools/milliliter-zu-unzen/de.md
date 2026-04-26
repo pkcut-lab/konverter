@@ -25,6 +25,9 @@ relatedTools:
   - liter-zu-gallonen
 category: volume
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -35,7 +38,7 @@ sich für Kochrezepte mit US-Volumenangaben, pharmazeutische Dosierungen,
 Kosmetikverpackungen und für jede Situation, in der angelsächsische
 Volumeneinheiten auf metrische treffen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Es gibt zwei verbreitete Varianten der Flüssigunze: die US-Flüssigunze
 (29,5735&nbsp;ml) und die Imperial-Flüssigunze (28,4131&nbsp;ml). Dieser Konverter
@@ -55,7 +58,7 @@ Faustregel ohne Taschenrechner: 30&nbsp;ml sind ungefähr eine Flüssigunze. Fü
 100&nbsp;ml teilst du durch 30 und erhältst etwa 3,4 fl oz — der exakte Wert ist
 3,3814 fl oz.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf
 zwei bis vier Nachkommastellen.
@@ -72,7 +75,7 @@ zwei bis vier Nachkommastellen.
 Ein Glas mit 250&nbsp;ml Saft entspricht 8,45 fl oz. Eine US-Rezeptangabe von
 „4 fl oz milk" meint 118,3&nbsp;ml Milch.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Kochen und Backen:** US-amerikanische Rezepte geben Flüssigkeiten in
 fl oz oder cups an — 4 fl oz Milch, 8 fl oz Wasser, 12 fl oz Brühe.
@@ -124,7 +127,7 @@ kommt typischerweise in 4-fl-oz- oder 8-fl-oz-Flaschen (118&nbsp;ml bzw. 237&nbs
 Bei medizinischen Dosierungen ist Präzision auf zwei Nachkommastellen
 empfehlenswert.
 
-## Verwandte Volumen-Tools
+## Welche Volumen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

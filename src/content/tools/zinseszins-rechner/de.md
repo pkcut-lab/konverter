@@ -28,6 +28,9 @@ faq:
   - q: "Warum unterscheidet sich dieses Ergebnis von anderen Rechnern?"
     a: "Viele Rechner zeigen nur den nominalen Bruttowert ohne Steuern und Inflation. Dieser Rechner bezieht standardmäßig Abgeltungssteuer (26,375&nbsp;%) mit Sparerpauschbetrag und Inflationsbereinigung ein. Zudem rechnet er monatlich (nicht jährlich), was die tatsächliche Dynamik eines Sparplans genauer abbildet. Alle Berechnungen laufen ausschließlich im Browser — kein Datentransfer."
 relatedTools: ['mehrwertsteuer-rechner', 'kreditrechner']
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -42,7 +45,7 @@ Dieser Ansatz adressiert den häufigsten Planungsfehler: wer nur den nominalen B
 
 Alle Berechnungen laufen ausschließlich im Browser. Kein Wert wird übertragen, kein Rechenlauf getrackt.
 
-## Berechnungsformel
+## Was ist die Berechnungsformel?
 
 **Monatlicher Zinsfaktor** aus dem Jahreszinssatz (exakte Umrechnung, nicht lineare Näherung):
 
@@ -64,7 +67,7 @@ Dabei ist `p_eff = p_zinssatz − TER` der Nettozinssatz nach Kosten.
 
 Ein Nominalzins von 5&nbsp;% bei 2&nbsp;% Inflation ergibt nach Fisher eine reale Rendite von ca. 2,94&nbsp;% — nicht 3&nbsp;%. Die naive Subtraktion überschätzt die Realrendite leicht.
 
-## Rechenbeispiele
+## Welche Rechenbeispiele gibt es?
 
 **Beispiel 1 — Klassischer ETF-Sparplan:**
 Anfangskapital 0&nbsp;€, Sparrate 200&nbsp;€/Monat, Zinssatz 7&nbsp;% p.&nbsp;a., Laufzeit 20&nbsp;Jahre, TER 0,2&nbsp;%, Inflation 2&nbsp;%:
@@ -78,7 +81,7 @@ Nominales Endkapital ca. 16.289&nbsp;€ — Reale Kaufkraft (2&nbsp;% Inflation
 Anfangskapital 50.000&nbsp;€, Sparrate 0&nbsp;€, Zinssatz −0,5&nbsp;% p.&nbsp;a., Laufzeit 3&nbsp;Jahre:
 Endkapital ca. 49.254&nbsp;€ — Verlust ca. 746&nbsp;€ durch den Strafzins.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **ETF-Sparplan-Planung:** Realistische Rentenplanung mit Kosten und Steuern vor Augen — nicht nur der Bruttowert zählt
 - **Altersvorsorge-Vergleich:** Festgeld vs. ETF-Sparplan — beide Szenarien mit denselben Parametern durchrechnen
@@ -90,7 +93,7 @@ Endkapital ca. 49.254&nbsp;€ — Verlust ca. 746&nbsp;€ durch den Strafzins.
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -3,36 +3,43 @@
 # Files under public/ are copied to the deploy root verbatim — this file
 # lives next to manifest.webmanifest and gets applied at the edge.
 
-# Baseline security posture for every response. HSTS is safe because
-# *.pages.dev is HTTPS-only anyway; the preload list isn't relevant for
-# a subdomain we don't own the apex of.
+# Baseline security posture for every response.
 #
-# Content-Security-Policy (2026-04-21, Q2 Option 1):
-#   - 'unsafe-inline' für script-src: ThemeScript.astro emittiert einen
-#     inline Flash-Prevention-Block. Phase-2-Migration zu Nonce-basierter
-#     Policy (Q2 Option 3) wenn Zeit ist; jetzt ist die Gain-vs-Cost-Ratio
-#     für unsafe-inline-ersatz schlecht (ein einziges Inline-Script, das
-#     kein Nutzer-Input annimmt).
+# HSTS (2026-04-26): upgraded to 2-year max-age + preload for HSTS preload
+# list submission on custom domains (kittokit.com/.de/.tools).
+# On *.pages.dev HTTPS is forced at CF edge regardless.
+#
+# X-Frame-Options: DENY (2026-04-26): defense-in-depth for legacy browsers
+# that don't honour CSP frame-ancestors. Modern browsers use frame-ancestors
+# 'none' from CSP below; both together cover the full browser matrix.
+#
+# Content-Security-Policy:
+#   - script-src hashes: replaced by scripts/patch-csp-hashes.mjs in
+#     dist/_headers after each build (NOT this source file). 'unsafe-
+#     inline' removed; hashes cover all inline <script> blocks
+#     (ThemeScript + Header lang-cookie + Clarity loader).
+#     public/_headers stays as a template — keep the placeholder token
+#     intact (single occurrence below) or the postbuild script hard-fails.
 #   - 'unsafe-inline' für style-src: Astro's scoped-style-Mechanismus +
 #     Svelte-Runtime-style-Injection erzeugen inline <style>-Blöcke.
-#   - connect-src 'self' + Huggingface-CDNs: `remove-background` (ONNX-
-#     Model-Download) und `hevc-zu-h264` (Transformers.js) brauchen
-#     https://huggingface.co + cdn-lfs.huggingface.co. Spec Section 7a
-#     ML-Worker-Exception.
-#   - worker-src 'self' blob:: @vite-pwa/astro plus Worker-Boundary in
-#     File-Tools (blob:-URLs für dynamisch instantiierte Worker).
+#   - connect-src 'self' + Huggingface-CDNs: remove-background (ONNX) +
+#     hevc-zu-h264 (Transformers.js). Spec Section 7a ML-Worker-Exception.
+#   - worker-src 'self' blob:: @vite-pwa/astro + File-Tool Worker-Boundary.
 #   - frame-ancestors 'none': Clickjacking-Hard-Stop.
+#   - COOP same-origin (2026-04-26): closes Spectre-class side-channels.
+#   - Permissions-Policy (2026-04-26): browsing-topics, interest-cohort,
+#     attribution-reporting, usb, serial, bluetooth explicitly blocked.
 /*
-  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(self), microphone=(), geolocation=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), browsing-topics=(), interest-cohort=(), attribution-reporting=(), usb=(), serial=(), bluetooth=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 # Service Worker must never be cached by the browser itself — otherwise
 # users get stuck on an old build even after Workbox skipWaiting fires.
-# The SW still caches the app shell internally; the HTML request for
-# /sw.js just needs to always hit the origin.
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
 
@@ -43,19 +50,24 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Self-hosted fonts are content-hashed-by-name (Inter-Variable.woff2 stays
-# the same file); long cache is fine because the filename changes when
-# we swap families.
+# Self-hosted fonts are content-hashed-by-name; long cache is fine.
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Pagefind index + UI chunks: the search can tolerate a few-minute stale
-# window; the SW also has StaleWhileRevalidate, so this is belt-and-
-# suspenders for non-SW (first-load) requests.
+# Pagefind: StaleWhileRevalidate for non-SW first-load requests.
 /pagefind/*
   Cache-Control: public, max-age=3600
 
-# Manifest + favicon: short cache so re-branding reaches users fast.
+# OG images: content-keyed by slug, long cache is safe.
+/og/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/icon*.png
+  Cache-Control: public, max-age=86400
+
+/icon*.svg
+  Cache-Control: public, max-age=86400
+
 /manifest.webmanifest
   Cache-Control: public, max-age=3600
 

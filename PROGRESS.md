@@ -1,7 +1,7 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — SEO/GEO-Audit: Organization+WebSite-JSON-LD global, robots.txt, llms.txt, llms-full.txt
-**Aktuelle Phase:** Phase 1 — Skalierung (läuft) · Sequential-Workflow-Pipeline aktiv (§0 v1.5)
+**Letztes Update:** 2026-04-26 — Mondphasen-Rechner (moon-phase): neues Tool + neue Kategorie `nature` · SVG-Mondvisualisierung · DE + EN Content · 1838/1838 Tests grün · 0 errors
+**Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
 
@@ -9,14 +9,19 @@
 
 | Metrik | Wert |
 |--------|------|
-| Tools gesamt (slug-map) | **72** |
+| Tools gesamt (slug-map) | **73** |
 | ✅ Shipped (live auf CF Pages) | **69** |
 | 🟡 In Pipeline (Paperclip, noch nicht shipped) | **3** |
+| 🆕 Neu (bereit, noch nicht deployed) | **1** (mondphasen-rechner) |
 | ⬜ Skelett / leer | **0** |
 | ❌ Broken | **0** |
 | Dedizierte Vitest-Tests | 57 Tools |
 | Schema-only-Coverage | 15 Tools |
-| **Stage-A Browser-Smoke (2026-04-26)** | **✅ 72/72** — HTTP 200 + 0 Console/Page/Hydration-Errors (siehe `audits/2026-04-26-tool-functions.md`) |
+| **Stage-A Browser-Smoke (2026-04-26)** | **✅ 72/72** — HTTP 200 + 0 Console/Page/Hydration-Errors (Vor-F-1-Fix-Lauf, Re-Run blockiert durch parallele en-Migration P-1) |
+| **Vitest gesamt (2026-04-26 nach i18n-Slug-Fix)** | ✅ **1778/1778** (113/113 files) inkl. 17 neue Tests in `static-page-slugs.test.ts` + `header-tools-link.test.ts` |
+| **Funktions-Smoke parametrisch (2026-04-26)** | **✅ 73/73 nach F-1-Fix** — siehe `audits/2026-04-26-tool-functions.md` |
+| **`astro check` + `tsc --noEmit`** | ✅ 0 errors, 0 warnings (2026-04-26 nach Phase-3 EN Pivot) |
+| **F-1 Code-Fix (2026-04-26)** | ✅ `json-to-csv` Self-ID-Konsistenz: `src/lib/tools/json-zu-csv.ts:114` + `src/lib/tools/formatter-runtime-registry.ts:37` |
 | Icons (`public/icons/tools/`) | ⬜ 0/72 — Verzeichnis existiert nicht |
 | Hero-Images (`public/heroes/tools/`) | ⬜ 0/72 — Verzeichnis existiert nicht |
 
@@ -168,6 +173,14 @@ Legende:
 
 ---
 
+### Natur & Astronomie (`nature`)
+
+| Tool-ID | DE-Slug | Status | Komp | Tests | Content | Icon | Hero |
+|---------|---------|--------|------|-------|---------|------|------|
+| moon-phase | mondphasen-rechner | 🟡 | custom/MondphasenRechnerTool | ✅ | ✅ | ⬜ | ⬜ |
+
+---
+
 ### Finanzen (`finance`)
 
 | Tool-ID | DE-Slug | Status | Komp | Tests | Content | Icon | Hero |
@@ -269,7 +282,7 @@ Diese Tools wurden durch das Sequential Pipeline Quality Gate (8 Critics + 3-Pas
 | A11y: `--color-text-muted` AAA Gap | 6.61:1 statt ≥7:1 — betrifft Muted-Text sitewide | hoch |
 | NBSP-Sweep (KON-918ed843) | Zahlen+Einheiten ohne geschütztes Leerzeichen in Content-Files | niedrig |
 | dossier_applied-Audit (KON-f213e279) | Veraltete `dossier_applied:`-Annotations in Content-Files | niedrig |
-| INP/Core-Web-Vitals-Audit (SEO-G11) | Lighthouse-Run + INP-Tuning. Schwelle 2026: <200 ms (Praxis-Target <150 ms). Forschung: `docs/superpowers/research/2026-04-26-seo-geo-deep-research.md` | hoch |
+| INP/Core-Web-Vitals-Audit (SEO-G11) | ⚡ Partial: client:visible für HeaderSearch+ThemeToggle (T3.2). Lighthouse-Messung deferred (braucht live Build). Ziel: INP <200ms p75. | mittel |
 | fallbackFormat try/catch (KON-31322868) | Hardening für Edge-Cases in Formatter-Runtime | niedrig |
 
 ---
@@ -302,6 +315,8 @@ Diese Tools wurden durch das Sequential Pipeline Quality Gate (8 Critics + 3-Pas
 | Finance-Cycle (8 Tools) | ✅ | brutto/kredit/rabatt/tilgungsplan/zinsrechner/stundenlohn/zinseszins/kgv shipped |
 | PDF-Cycle (4 Tools) | ✅ | jpg-zu-pdf/pdf-zusammenfuehren/pdf-aufteilen shipped; 3 noch in Pipeline |
 | ML-Tools (7 Tools) | ✅ | hintergrund-entfernen/webcam-blur/video-bg-remove/sprache-verbessern/bild-zu-text/ki-text-detektor/ki-bild-detektor |
+| SEO Sprint 1+2 | ✅ | dateModified+datePublished · AnswerFirst · ToolStats · Question-Headers · @graph · BreadcrumbList in [slug].astro |
+| SEO Sprint 3 | ✅ | T3.1 hreflang-Fix 144 pages · T3.2 INP client:visible · T3.3 computeRelatedTools · T3.4 llms.txt prebuild · T3.5 sitemap priority · T3.6 Breadcrumbs.astro |
 
 ---
 
@@ -324,3 +339,29 @@ Zuletzt shipped: `video-hintergrund-entfernen` + `pdf-zusammenfuehren` + `pdf-au
 
 - **CI/CD-Deploy:** CF-Secrets nicht gesetzt — kein Production-Deploy möglich (unverändert seit Session 11).
 - **Pipeline-Tools:** 3 Tools in Paperclip-Pipeline warten auf Critics-Ergebnisse (pdf-komprimieren, pdf-zu-jpg, pdf-passwort).
+
+---
+
+## Backlog — Geplante Tools (noch nicht in slug-map)
+
+> Status `📋` = Idee bestätigt, noch kein Build-Auftrag vergeben.
+> Alle Tools hier sind **AdSense-konform** und **pure-client** (Non-Negotiables #2+#7 eingehalten).
+
+### Video-Erweiterungen (`video`) — ffmpeg.wasm-Cluster
+
+Alle vier Tools teilen sich dieselbe Worker-Architektur (ffmpeg.wasm WASM-Core, kein Server-Upload, fällt unter 7a-ML-Worker-Ausnahme). Empfohlene Bau-Reihenfolge: Audio-Extraktion zuerst (einfachste ffmpeg.wasm-Integration), dann Format-Konverter, dann Trimmer/Cutter, dann Compressor.
+
+| Tool-ID (Kandidat) | DE-Slug (Kandidat) | Beschreibung | Architektur | Suchvolumen-Signal |
+|---|---|---|---|---|
+| `video-to-audio` | `video-zu-audio` | MP4/WebM/MKV → MP3/AAC/WAV (Audio-Extraktion, kein Re-Encode nötig) | ffmpeg.wasm Worker, `generic/FileTool` | „mp4 zu mp3" DE: sehr hoch |
+| `video-format-converter` | `video-format-konverter` | MP4 ↔ WebM ↔ GIF ↔ MKV · Codec-Auswahl (H.264/VP9/AV1) | ffmpeg.wasm Worker, `custom/VideoFormatKonverterTool` | „mp4 zu gif", „webm konverter" DE: hoch |
+| `video-trimmer` | `video-cutter` | Video auf Zeitbereich schneiden · Frame-genaue In/Out-Punkte · keine Neukodierung (copy-stream) | ffmpeg.wasm Worker `-c copy`, `custom/VideoCutterTool` | „video schneiden online" DE: sehr hoch |
+| `video-compressor` | `video-komprimierer` | Dateigröße reduzieren via CRF-Slider · Target-Filesize-Mode · Vorschau-Framerates | ffmpeg.wasm Worker CRF, `custom/VideoKomprimiererTool` | „video verkleinern" DE: hoch |
+
+### Text-/KI-Erweiterungen (`text`)
+
+| Tool-ID (Kandidat) | DE-Slug (Kandidat) | Beschreibung | Architektur | Suchvolumen-Signal |
+|---|---|---|---|---|
+| `youtube-transcript` | `youtube-transkript` | YouTube-URL → Untertitel via offizieller `timedtext`-API (kein Download, kein TPM-Eingriff) → SRT / TXT / JSON. Bonus: Sprach-Filter, Zeitstempel-Toggle. | Fetch `youtube.com/api/timedtext` (öffentlich, CORS-ok via Astro API-Route Server-Funktion), `custom/YoutubeTranskriptTool` | „youtube untertitel herunterladen" DE: sehr hoch |
+
+> **Hinweis `youtube-transcript`:** braucht eine schmale Astro Server-Route als CORS-Proxy für den timedtext-Endpoint (kein Video-Bytes-Transfer, nur XML-Text — Non-Negotiable #2 „kein Server-Upload" nicht verletzt). CF-Pages-Function reicht.

@@ -5,7 +5,7 @@ import { SITE_URL } from './site';
  * Phase 0: de only. Phase 3: de, en, es, fr, pt-br.
  * Imported by astro.config.mjs so i18n.locales stays in sync.
  */
-export const ACTIVE_LANGUAGES = ['de'] as const;
+export const ACTIVE_LANGUAGES = ['de', 'en'] as const;
 
 export type ActiveLanguage = (typeof ACTIVE_LANGUAGES)[number];
 
@@ -19,25 +19,50 @@ export interface HreflangLink {
 /**
  * Build hreflang + x-default alternate link entries for a page.
  *
- * @param pathWithoutLang - Path without language prefix, e.g. "/" or "/styleguide/".
- *                         Leading and trailing slashes are normalised.
+ * @param pathWithoutLang - Path without language prefix. Either a single string
+ *                         shared across all languages (e.g. "/" or "/styleguide")
+ *                         OR a per-language record like `{ de: '/werkzeuge', en: '/tools' }`
+ *                         when the slug differs per language. Leading and trailing
+ *                         slashes are normalised.
  */
 export function buildHreflangLinks(
-  { pathWithoutLang }: { pathWithoutLang: string },
+  { pathWithoutLang }: { pathWithoutLang: string | Partial<Record<ActiveLanguage, string>> },
 ): HreflangLink[] {
-  const normalised = normalisePath(pathWithoutLang);
+  // Omit langs whose translation does not exist (record case with missing slot).
+  // Fabricating a fallback URL like /en/<de-slug> creates broken hreflang links
+  // that point at 404s — Google penalises this and the visual switcher would
+  // render a dead button. The Header's switcher reads this same array, so
+  // omission cascades correctly into UI.
+  const perLanguage: HreflangLink[] = ACTIVE_LANGUAGES.flatMap((lang) => {
+    if (typeof pathWithoutLang === 'string') {
+      return [{
+        hreflang: lang,
+        href: `${SITE_URL}/${lang}${normalisePath(pathWithoutLang)}`,
+      }];
+    }
+    const langPath = pathWithoutLang[lang];
+    if (langPath === undefined) return [];
+    return [{
+      hreflang: lang,
+      href: `${SITE_URL}/${lang}${normalisePath(langPath)}`,
+    }];
+  });
 
-  const perLanguage: HreflangLink[] = ACTIVE_LANGUAGES.map((lang) => ({
-    hreflang: lang,
-    href: `${SITE_URL}/${lang}${normalised}`,
-  }));
+  // x-default points at the default language only when that translation exists.
+  const defaultPath: string | undefined =
+    typeof pathWithoutLang === 'string'
+      ? pathWithoutLang
+      : pathWithoutLang[DEFAULT_LANGUAGE];
 
-  const xDefault: HreflangLink = {
-    hreflang: 'x-default',
-    href: `${SITE_URL}/${DEFAULT_LANGUAGE}${normalised}`,
-  };
+  if (defaultPath === undefined) return perLanguage;
 
-  return [...perLanguage, xDefault];
+  return [
+    ...perLanguage,
+    {
+      hreflang: 'x-default',
+      href: `${SITE_URL}/${DEFAULT_LANGUAGE}${normalisePath(defaultPath)}`,
+    },
+  ];
 }
 
 /**

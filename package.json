@@ -5,17 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "prebuild": "node scripts/seo/generate-llms-txt.mjs",
+    "build": "astro build && pagefind --site dist && node scripts/patch-csp-hashes.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check && tsc --noEmit",
+    "check": "astro check && tsc --noEmit && node scripts/seo/lint-question-headers.mjs && npm run lint:intro && node scripts/seo/lint-trailing-slash.mjs",
+    "lint:question-headers": "node scripts/seo/lint-question-headers.mjs",
+    "lint:intro": "node scripts/seo/lint-intro-length.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "husky",
     "stitch:list": "node --env-file=.env scripts/stitch/list.mjs",
     "stitch:generate": "node --env-file=.env scripts/stitch/generate.mjs",
     "a11y:test": "npx playwright test tests/a11y/",
-    "a11y:audit": "node scripts/a11y-audit.mjs"
+    "a11y:audit": "node scripts/a11y-audit.mjs",
+    "lint:trailing-slash": "node scripts/seo/lint-trailing-slash.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.2.1",
@@ -48,8 +52,10 @@
     "jsdom": "25.0.1",
     "pagefind": "^1.5.2",
     "playwright": "^1.59.1",
+    "sharp": "^0.34.5",
     "vite-plugin-pwa": "^1.2.0",
-    "vitest": "2.1.8"
+    "vitest": "2.1.8",
+    "web-vitals": "^5.2.0"
   },
   "engines": {
     "node": "20.11.1",

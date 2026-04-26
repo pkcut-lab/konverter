@@ -28,6 +28,9 @@ faq:
   - q: "Zeigt dieser Rechner Nettolohn?"
     a: "Nein — alle Werte sind Bruttogehalt vor Steuern und Sozialabgaben. Die Höhe des Nettogehalts hängt von Steuerklasse, Kirchensteuer, Krankenversicherung und weiteren Faktoren ab, die sich für jeden Arbeitnehmer unterscheiden. Für die Nettoberechnung empfehlen wir einen separaten Brutto-Netto-Rechner."
 relatedTools: ['mehrwertsteuer-rechner', 'zinsrechner', 'kreditrechner']
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -38,7 +41,7 @@ Der Rechner erklärt transparent, welche Formel er verwendet. Das löst das meis
 
 Alle Berechnungen laufen lokal in deinem Browser. Kein Server-Upload, kein Tracking, keine Registrierung.
 
-## Umrechnungsformeln
+## Welche Umrechnungsformeln gibt es?
 
 Zwei Methoden — beide richtig, für unterschiedliche Anwendungsfälle:
 
@@ -68,7 +71,7 @@ Präziser für Gehaltsverhandlungen und Angebotsbewertungen. Berücksichtigt, da
 
 Die Differenz (4.800&nbsp;€) liegt daran, dass die Schnell-Methode Urlaub und Feiertage nicht abzieht.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Typische Rechnungen mit deutschen Arbeitszeitmodellen:
 
@@ -84,7 +87,7 @@ Typische Rechnungen mit deutschen Arbeitszeitmodellen:
 **Teilzeit — 20&nbsp;€/h, 20&nbsp;h/Woche:**
 20 × 20 × 52 = **20.800&nbsp;€/Jahr** ≈ **1.733,33&nbsp;€/Monat**
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Gehaltsverhandlungen:** Stundenbasierte Freelancer-Angebote mit Festgehalts-Positionen vergleichen — beide auf Jahresbasis normieren.
 - **Jobwechsel:** Angebote mit unterschiedlichen Wochenstunden (35&nbsp;h Tarif vs. 40&nbsp;h Vollzeit) auf einen gemeinsamen Stundensatz herunterbrechen.
@@ -97,7 +100,7 @@ Typische Rechnungen mit deutschen Arbeitszeitmodellen:
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

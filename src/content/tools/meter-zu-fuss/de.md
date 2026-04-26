@@ -26,7 +26,19 @@ relatedTools:
   - kilometer-zu-meilen
   - quadratmeter-zu-quadratfuss
 category: length
+stats:
+  - label: "Genauigkeit"
+    value: "5"
+    unit: "Dezimalstellen"
+  - label: "Verarbeitung"
+    value: "<1"
+    unit: "ms"
+  - label: "Datenschutz"
+    value: "lokal"
 contentVersion: 1
+datePublished: '2026-04-18'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +48,7 @@ Der Konverter wandelt einen Wert in Metern (m) in die entsprechende Angabe in Fu
 zwischen metrischem und imperialem Längenmaß pendelt — von der Körpergröße bis
 zur Flughöhe.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Meter entspricht exakt 3,28084 Fuß. Die Gegenrichtung ist seit dem
 Internationalen Yard-und-Pfund-Abkommen von 1959 gelockt: `1 Fuß = 0,3048 m
@@ -55,7 +67,7 @@ ergibt das 6,56&nbsp;ft — präzise genug für Alltag und Handwerk, zu grob fü
 und Vermessung. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende
 der Rechenkette.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei
 bis vier Nachkommastellen.
@@ -72,7 +84,7 @@ bis vier Nachkommastellen.
 Eine Körpergröße von 1,80 m ergibt knapp 5&nbsp;ft 11 in. Wolkenkratzer werden in den
 USA meist in Fuß angegeben — 100 m sind rund 328&nbsp;ft.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Bauwesen:** US-amerikanische und britische Baupläne verwenden Fuß und Zoll,
 während europäische Gewerke in Metern planen. Wer transatlantische Pläne liest,
@@ -120,7 +132,7 @@ Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder
 25,4&nbsp;mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
 bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -28,6 +28,9 @@ faq:
   - q: "Ist die Berechnung exakt wie bei meiner Bank?"
     a: "Der Rechner verwendet die standard-konforme Annuitätenformel (exakt wie in Banksoftware). Minimale Abweichungen können entstehen durch: unterschiedliche Rundungsregeln, den genauen Auszahlungstermin (Monatsanfang vs. -ende) oder bankspezifische Berechnungskonventionen. Der Rechner ist für Planungszwecke konzipiert — verbindliche Angaben liefert dein Kreditvertrag (Effektivzins gem. PAngV ist Pflichtangabe der Bank)."
 relatedTools: []
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -36,7 +39,7 @@ Der Tilgungsplan-Rechner berechnet Annuitätendarlehen — die in Deutschland be
 
 Drei Berechnungsmodi stehen zur Wahl: Die Monatsrate aus einem Tilgungssatz berechnen (Standardfall), die Laufzeit aus einer gewünschten Monatsrate ermitteln oder die Monatsrate für eine fixe Laufzeit berechnen. Alle Berechnungen laufen lokal im Browser — kein Server-Upload, kein Tracking, keine Finanzdaten verlassen dein Gerät.
 
-## Annuitäten-Formel
+## Was ist die Annuitäten-Formel?
 
 Die monatliche Rate (Annuität) A ergibt sich aus:
 
@@ -55,7 +58,7 @@ Restschuld\_m = K &times; q^m &minus; A &times; (q^m &minus; 1) &divide; i
 
 Diese Formel wird intern für jeden Monat des Tilgungsplans berechnet.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Beispiel 1 — Neubaufinanzierung (300.000&nbsp;€, 3,5&nbsp;% Zins, 2&nbsp;% Anfangstilgung):**
 Monatsrate: 1.375&nbsp;€ | Gesamtzinsen: ca. 178.000&nbsp;€ | Laufzeit: ca. 29&nbsp;Jahre | Restschuld nach 10&nbsp;Jahren: ca. 228.000&nbsp;€
@@ -66,7 +69,7 @@ Monatsrate: ca. 1.110&nbsp;€ | Gesamtzinsen: ca. 87.000&nbsp;€ | vollständi
 **Beispiel 3 — Mit Sondertilgung (300.000&nbsp;€, 3,5&nbsp;% Zins, 2&nbsp;% Anfangstilgung, 5.000&nbsp;€/Jahr Sondertilgung):**
 Einsparung: ca. 63.000&nbsp;€ Zinsen | Laufzeitverkürzung: ca. 115&nbsp;Monate (ca. 9,6&nbsp;Jahre) | Die Einsparung durch Sondertilgung ist besonders hoch in den ersten Jahren, wenn die Restschuld noch groß ist.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Baufinanzierungsplanung:** Monatsrate im Verhältnis zu verfügbarem Einkommen planen, Zinsbindungsdauer optimieren.
 - **Vergleich von Angeboten:** Unterschiedliche Zinssätze, Anfangstilgungen und Zinsbindungsfristen direkt nebeneinander rechnen.
@@ -78,7 +81,7 @@ Einsparung: ca. 63.000&nbsp;€ Zinsen | Laufzeitverkürzung: ca. 115&nbsp;Monat
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

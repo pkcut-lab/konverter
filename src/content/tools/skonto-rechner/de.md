@@ -27,6 +27,9 @@ faq:
   - q: "Welche Formel verwendet der Rechner für den Jahreszins?"
     a: "Die kaufmännische Formel (360-Tage-Basis): Effektiver Jahreszins = (Skontosatz / (100 − Skontosatz)) × (360 / (Zahlungsziel − Skontofrist)) × 100."
 relatedTools: ['mehrwertsteuer-rechner', 'rabatt-rechner', 'zinsrechner']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was ist Skonto und wie wird es berechnet?
@@ -40,7 +43,7 @@ Die Grundformel ist denkbar einfach:
 
 Bei einer Rechnung über 1.000&nbsp;€ und 2&nbsp;% Skonto ergibt sich: 1.000&nbsp;€ × 0,02 = 20&nbsp;€ Skontobetrag, Zahlbetrag 980&nbsp;€.
 
-## Effektiver Jahreszins — der versteckte Hochzins
+## Was ist der effektive Jahreszins?
 
 Was viele unterschätzen: Wer Skonto nicht zieht, nimmt faktisch einen Lieferantenkredit auf — und zahlt dafür einen Zinssatz, der jeden normalen Bankkredit übertrifft.
 
@@ -54,7 +57,7 @@ Beispielrechnung bei 2&nbsp;% / 10&nbsp;Tage / 30&nbsp;Tage:
 
 2&nbsp;% Skonto klingen nach wenig. Aber 36,7&nbsp;% Jahreszins sind mehr als das Zehnfache eines typischen Kontokorrentkredits. Wer liquide ist, sollte Skonto daher fast immer ziehen.
 
-## Brutto oder Netto — die häufigste Frage
+## Brutto oder Netto — die häufigste Frage?
 
 In der deutschen Buchhaltung gilt: Skonto wird vom **Bruttobetrag** berechnet. Das Ergebnis ist mathematisch identisch mit der Netto-Basis, aber der buchhalterische Standard ist eindeutig Brutto.
 
@@ -76,7 +79,7 @@ Die Ampel-Empfehlung in diesem Rechner hilft dabei:
 - **Gelb** (5–10&nbsp;% p.a.): Abhängig vom eigenen Finanzierungszins
 - **Rot** (< 5&nbsp;% p.a.): Selten — in diesem Fall kann Liquidität Vorrang haben
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Klassische B2B-Rechnung:**
 1.000&nbsp;€ Brutto, 2&nbsp;% Skonto, 10&nbsp;Tage Frist, 30&nbsp;Tage Ziel → 20&nbsp;€ Skonto, 980&nbsp;€ zahlen, 36,7&nbsp;% Jahreszins.
@@ -91,7 +94,7 @@ Die Ampel-Empfehlung in diesem Rechner hilft dabei:
 
 (Die FAQ-Einträge werden oben als strukturierte Daten für Suchmaschinen gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools für Buchhaltung und Unternehmensfinanzen:
 

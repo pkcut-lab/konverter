@@ -1,12 +1,14 @@
 # kittokit — full inventory
 
-> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. Phase 1 is German-only; English / Spanish / French / Brazilian-Portuguese arrive in Phase 3.
+> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. German and English are live; more languages in Phase 3+.
 
 ## Site
 
 - Home (German): https://kittokit.com/de
+- Home (English): https://kittokit.com/en
 - Sitemap index: https://kittokit.com/sitemap-index.xml
 - Brand spelling: kittokit (lowercase, one word).
+- Generated: 2026-04-26
 
 ## Privacy & licensing
 
@@ -14,114 +16,115 @@
 - No analytics in Phase 1. Phase 2 introduces consented, privacy-respecting analytics.
 - Tool descriptions and how-to articles: CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 
-## Tools — length & distance
+## Tools — area
 
-- [Meter zu Fuß](https://kittokit.com/de/meter-zu-fuss): 1 m = 3.28084 ft. Two-way converter with formula and table.
-- [Fuß zu Meter](https://kittokit.com/de/fuss-zu-meter): inverse direction with the same precision tier.
-- [Zentimeter zu Zoll](https://kittokit.com/de/zentimeter-zu-zoll): cm ↔ inch. Common screen and print sizes.
-- [Zoll zu Zentimeter](https://kittokit.com/de/zoll-zu-zentimeter): inverse.
-- [Kilometer zu Meilen](https://kittokit.com/de/kilometer-zu-meilen): km ↔ mi. International + US.
-- [Millimeter zu Zoll](https://kittokit.com/de/millimeter-zu-zoll): mm ↔ in.
-- [Yard zu Meter](https://kittokit.com/de/yard-zu-meter): yd ↔ m.
-- [Seemeile zu Kilometer](https://kittokit.com/de/seemeile-zu-kilometer): nautical mile ↔ km.
-
-## Tools — weight
-
-- [Kilogramm zu Pfund](https://kittokit.com/de/kilogramm-zu-pfund): kg ↔ lb.
-- [Pfund zu Kilogramm](https://kittokit.com/de/pfund-zu-kilogramm): inverse.
-- [Gramm zu Unzen](https://kittokit.com/de/gramm-zu-unzen): g ↔ oz.
-- [Stone zu Kilogramm](https://kittokit.com/de/stone-zu-kilogramm): st ↔ kg (UK body-weight unit).
-- [Tonne zu Pfund](https://kittokit.com/de/tonne-zu-pfund): metric ton ↔ lb.
-
-## Tools — area & volume
-
-- [Quadratmeter zu Quadratfuß](https://kittokit.com/de/quadratmeter-zu-quadratfuss): m² ↔ ft².
-- [Hektar zu Acre](https://kittokit.com/de/hektar-zu-acre): ha ↔ acre.
-- [Quadratkilometer zu Quadratmeile](https://kittokit.com/de/quadratkilometer-zu-quadratmeile): km² ↔ mi².
-- [Liter zu Gallonen](https://kittokit.com/de/liter-zu-gallonen): l ↔ US/UK gal.
-- [Milliliter zu Unzen](https://kittokit.com/de/milliliter-zu-unzen): ml ↔ fl oz.
-
-## Tools — temperature
-
-- [Celsius zu Fahrenheit](https://kittokit.com/de/celsius-zu-fahrenheit): °C ↔ °F with formula.
-
-## Tools — image
-
-- [WebP Konverter](https://kittokit.com/de/webp-konverter): PNG/JPG → WebP. Quality slider, batch.
-- [Hintergrund entfernen](https://kittokit.com/de/hintergrund-entfernen): subject-only background remover (transformers.js MODNet).
-- [Bild Diff](https://kittokit.com/de/bild-diff): per-pixel image diff with overlay.
-- [QR-Code Generator](https://kittokit.com/de/qr-code-generator): URLs, WLAN, vCard, plain text.
-- [Webcam Hintergrund-Unschärfe](https://kittokit.com/de/webcam-hintergrund-unschaerfe): live webcam blur for video calls.
-
-## Tools — video
-
-- [HEVC zu H.264](https://kittokit.com/de/hevc-zu-h264): WebCodecs-backed transcode (mediabunny).
-- [Video Hintergrund entfernen](https://kittokit.com/de/video-hintergrund-entfernen): per-frame BG removal in the browser.
-
-## Tools — text & ML
-
-- [Zeichenzähler](https://kittokit.com/de/zeichenzaehler): characters, words, sentences, reading time.
-- [Römische Zahlen](https://kittokit.com/de/roemische-zahlen): Arabic ↔ Roman.
-- [Lorem Ipsum Generator](https://kittokit.com/de/lorem-ipsum-generator): paragraphs, words, sentences.
-- [Text Diff](https://kittokit.com/de/text-diff): line-level diff with side-by-side view.
-- [Sprache verbessern](https://kittokit.com/de/sprache-verbessern): style/grammar suggestions.
-- [Audio-Transkription](https://kittokit.com/de/audio-transkription): Whisper-based local transcription.
-- [Bild zu Text](https://kittokit.com/de/bild-zu-text): client-side OCR.
-- [KI-Text-Detektor](https://kittokit.com/de/ki-text-detektor): is this text AI-generated?
-- [KI-Bild-Detektor](https://kittokit.com/de/ki-bild-detektor): is this image AI-generated?
-
-## Tools — developer
-
-- [Passwort Generator](https://kittokit.com/de/passwort-generator): cryptographically random.
-- [UUID Generator](https://kittokit.com/de/uuid-generator): v4, v7.
-- [JSON Formatter](https://kittokit.com/de/json-formatter): pretty-print, validate, minify.
-- [Regex Tester](https://kittokit.com/de/regex-tester): live match highlighting.
-- [Base64 Encoder](https://kittokit.com/de/base64-encoder): text + files.
-- [URL Encoder/Decoder](https://kittokit.com/de/url-encoder-decoder).
-- [Hash Generator](https://kittokit.com/de/hash-generator): MD5, SHA-1/256/512.
-- [SQL Formatter](https://kittokit.com/de/sql-formatter).
-- [XML Formatter](https://kittokit.com/de/xml-formatter).
-- [CSS Formatter](https://kittokit.com/de/css-formatter).
-- [JWT Decoder](https://kittokit.com/de/jwt-decoder).
-- [JSON Diff](https://kittokit.com/de/json-diff).
-- [JSON zu CSV](https://kittokit.com/de/json-zu-csv).
+- **Hektar in Acre umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/hektar-zu-acre) · [EN](https://kittokit.com/en/hectares-to-acres)): Hektar in Acre umrechnen: exakte Formel (1&nbsp;ha = 2,47105&nbsp;ac), Tabelle für Landwirtschaft, Grundstücke und Immobilien. Ohne Anmeldung, ohne Ads.
 
 ## Tools — color
 
-- [Hex/RGB Konverter](https://kittokit.com/de/hex-rgb-konverter): with HSL.
-- [Kontrast Prüfer](https://kittokit.com/de/kontrast-pruefer): WCAG AA/AAA.
+- **HEX in RGB umrechnen – Farbcode-Konverter** ([DE](https://kittokit.com/de/hex-rgb-konverter) · [EN](https://kittokit.com/en/hex-to-rgb)): HEX-Farbcode in RGB, HSL und OKLCH umrechnen: sofortige Konvertierung mit Farbvorschau, Contrast-Check und Copy-Buttons. Ohne Tracking, ohne Upload.
+- **Kontrast-Prüfer – WCAG-Kontrastverhältnis berechnen** ([DE](https://kittokit.com/de/kontrast-pruefer) · [EN](https://kittokit.com/en/contrast-checker)): WCAG-Kontrastverhältnis zweier Farben berechnen: AA- und AAA-Konformität für Normal- und Großtext sofort prüfen. Komplett im Browser, ohne Tracking.
 
-## Tools — time
+## Tools — dev
 
-- [Unix Timestamp](https://kittokit.com/de/unix-timestamp): ↔ ISO 8601.
-- [Zeitzonen-Rechner](https://kittokit.com/de/zeitzonen-rechner): IANA timezone conversion.
+- **Base64 Encoder — Text online kodieren** ([DE](https://kittokit.com/de/base64-encoder) · [EN](https://kittokit.com/en/base64-encoder)): Text in Base64 kodieren — direkt im Browser, ohne Server. Standard-Base64 und URL-safe Base64url, UTF-8-Support, Copy-Button. 100&nbsp;% client-side.
+- **CSS Formatter — CSS-Code verschönern** ([DE](https://kittokit.com/de/css-formatter) · [EN](https://kittokit.com/en/css-formatter)): CSS formatieren und verschönern — direkt im Browser. Einrückung, Zeilenumbrüche und Verschachtelung automatisch korrigiert. Ohne Server, ohne Tracking.
+- **Hash-Generator — Text-Hashes online erzeugen** ([DE](https://kittokit.com/de/hash-generator) · [EN](https://kittokit.com/en/hash-generator)): MD5-, SHA-1-, SHA-256-, SHA-384- und SHA-512-Hashes direkt im Browser erzeugen. Kein Server-Upload, kein Tracking. Alle Algorithmen auf einen Blick.
+- **JSON Formatter — Online formatieren und validieren** ([DE](https://kittokit.com/de/json-formatter) · [EN](https://kittokit.com/en/json-formatter)): JSON online formatieren, validieren und minifizieren. Syntaxfehler mit Zeilennummer, 2-Space-Einrückung, Copy-Button. 100&nbsp;% im Browser, ohne Tracking.
+- **JSON zu CSV konvertieren — Flattening mit Dot-Notation** ([DE](https://kittokit.com/de/json-zu-csv) · [EN](https://kittokit.com/en/json-to-csv)): JSON online in CSV umwandeln: automatisches Flattening verschachtelter Objekte mit Dot-Notation, RFC-4180-Escaping. 100&nbsp;% im Browser, DSGVO-konform.
+- **JWT Decoder — Token online auslesen** ([DE](https://kittokit.com/de/jwt-decoder) · [EN](https://kittokit.com/en/jwt-decoder)): JWT-Token dekodieren — Header, Payload und Zeitstempel im Browser auslesen. Ablaufstatus prüfen, keine Signaturverifizierung, 100&nbsp;% client-side.
+- **Passwort-Generator — Sichere Passwörter erstellen** ([DE](https://kittokit.com/de/passwort-generator) · [EN](https://kittokit.com/en/password-generator)): Passwort-Generator mit Web Crypto API: Zufallspasswort und Passphrase sofort erstellen. Entropie-Anzeige, DSGVO-konform, 100&nbsp;% client-seitig.
+- **PDF Passwort entfernen — PDF entsperren ohne Upload** ([DE](https://kittokit.com/de/pdf-passwort) · [EN](https://kittokit.com/en/pdf-password-remover)): PDF Passwort entfernen kostenlos im Browser — kein Upload, kein Server. PDF entsperren mit bekanntem Passwort direkt lokal. Kein Account nötig.
+- **Regex Tester — Reguläre Ausdrücke online testen** ([DE](https://kittokit.com/de/regex-tester) · [EN](https://kittokit.com/en/regex-tester)): Reguläre Ausdrücke im Browser testen. Live-Highlighting, Flags, Capture Groups, Fehleranzeige. 100&nbsp;% clientseitig, kein Server-Upload, kein Tracking.
+- **SQL Formatter — SQL-Code verschönern** ([DE](https://kittokit.com/de/sql-formatter) · [EN](https://kittokit.com/en/sql-formatter)): SQL formatieren und verschönern — direkt im Browser. Keywords automatisch großgeschrieben, Einrückung ergänzt, String-Literale bleiben erhalten.
+- **URL Encoder Decoder — Online kodieren und dekodieren** ([DE](https://kittokit.com/de/url-encoder-decoder) · [EN](https://kittokit.com/en/url-encoder-decoder)): URL online kodieren und dekodieren mit Percent-Encoding nach RFC 3986. Double-Encoding-Erkennung, UTF-8-Support, Copy-Button. 100&nbsp;% im Browser.
+- **UUID-Generator — Alle Versionen online erstellen** ([DE](https://kittokit.com/de/uuid-generator) · [EN](https://kittokit.com/en/uuid-generator)): UUID v4 und v7 online generieren. Kryptographisch sicher via Web Crypto API, komplett im Browser. Versionen-Vergleich, Entropie-Info, RFC 9562.
+- **XML Formatter — XML-Code einrücken und verschönern** ([DE](https://kittokit.com/de/xml-formatter) · [EN](https://kittokit.com/en/xml-formatter)): XML formatieren und einrücken — direkt im Browser. Tags, Attribute, CDATA-Sektionen und Kommentare werden sauber strukturiert. Kein Server, kein Tracking.
+
+## Tools — document
+
+- **JPG zu PDF — Bilder lokal in PDF konvertieren** ([DE](https://kittokit.com/de/jpg-zu-pdf) · [EN](https://kittokit.com/en/jpg-to-pdf)): JPG, PNG und WebP zu PDF konvertieren — vollständig im Browser, kein Upload, kein Tracking. DSGVO-konform durch Architektur, nicht durch Policy.
+- **PDF aufteilen — Seiten extrahieren ohne Upload** ([DE](https://kittokit.com/de/pdf-aufteilen) · [EN](https://kittokit.com/en/pdf-splitter)): PDF im Browser aufteilen — Seiten extrahieren ohne Upload, ohne Anmeldung. Bereiche wie 1-3, 5, 7-9 angeben und sofort als PDF herunterladen.
+- **PDF komprimieren — verlustlos optimieren ohne Upload** ([DE](https://kittokit.com/de/pdf-komprimieren) · [EN](https://kittokit.com/en/pdf-compressor)): PDF verlustlos komprimieren — direkt im Browser, ohne Upload, ohne Anmeldung. Metadata strip, Struktur-Optimierung, 5–25% typische Reduktion.
+- **PDF in JPG umwandeln — Kostenlos, ohne Upload, bis 300 DPI** ([DE](https://kittokit.com/de/pdf-zu-jpg) · [EN](https://kittokit.com/en/pdf-to-jpg)): PDF als JPG exportieren direkt im Browser — kein Upload, keine Registrierung. Einzelne Seiten auswählen, DPI frei wählen (72/150/300). 100% client-seitig.
+- **PDF zusammenführen — kostenlos & ohne Upload verbinden** ([DE](https://kittokit.com/de/pdf-zusammenfuehren) · [EN](https://kittokit.com/en/pdf-merger)): Mehrere PDFs kostenlos zusammenführen — direkt im Browser, ohne Upload, ohne Anmeldung. Reihenfolge per Drag & Drop festlegen, sofort herunterladen.
 
 ## Tools — finance
 
-- [Mehrwertsteuer-Rechner](https://kittokit.com/de/mehrwertsteuer-rechner): VAT (DE rates).
-- [Rabatt-Rechner](https://kittokit.com/de/rabatt-rechner): discount, save amount, final price.
-- [Zinsrechner](https://kittokit.com/de/zinsrechner): simple interest.
-- [Zinseszins-Rechner](https://kittokit.com/de/zinseszins-rechner): compound interest.
-- [Kreditrechner](https://kittokit.com/de/kreditrechner): loan rate.
-- [Tilgungsplan-Rechner](https://kittokit.com/de/tilgungsplan-rechner): amortisation table.
-- [Brutto-Netto-Rechner](https://kittokit.com/de/brutto-netto-rechner): gross→net (DE).
-- [Stundenlohn ↔ Jahresgehalt](https://kittokit.com/de/stundenlohn-jahresgehalt).
-- [Skonto-Rechner](https://kittokit.com/de/skonto-rechner): cash discount.
-- [ROI-Rechner](https://kittokit.com/de/roi-rechner).
-- [Cashflow-Rechner](https://kittokit.com/de/cashflow-rechner).
-- [KGV-Rechner](https://kittokit.com/de/kgv-rechner): P/E ratio.
-- [Leasing-Faktor-Rechner](https://kittokit.com/de/leasing-faktor-rechner).
-- [Erbschaftsteuer-Rechner](https://kittokit.com/de/erbschaftsteuer-rechner): inheritance tax (DE).
+- **Brutto-Netto-Rechner 2026 – Lohnsteuer & Sozialabzüge** ([DE](https://kittokit.com/de/brutto-netto-rechner) · [EN](https://kittokit.com/en/gross-to-net-calculator)): Brutto-Netto-Rechner 2026: Lohnsteuer, SV-Beiträge und Kirchensteuer berechnen. Alle Steuerklassen, Midijob, Minijob. Kein Tracking — nur im Browser.
+- **Cashflow Rechner — Direkte und Indirekte Methode** ([DE](https://kittokit.com/de/cashflow-rechner) · [EN](https://kittokit.com/en/cash-flow-calculator)): Cashflow online berechnen: direkte Methode, indirekte Methode (HGB/IFRS) und Free Cashflow in einem Tool. Kostenlos, ohne Registrierung, kein Upload.
+- **Erbschaftsteuer Rechner 2026 — Freibetrag und Tarif** ([DE](https://kittokit.com/de/erbschaftsteuer-rechner) · [EN](https://kittokit.com/en/inheritance-tax-calculator)): Erbschaftsteuer 2026 berechnen: Freibetrag, Steuerklasse, Härteausgleich, Familienheim und Vorschenkungen. Kostenlos, ohne Anmeldung, lokal im Browser.
+- **KGV Rechner — Kurs-Gewinn-Verhältnis mit Kontext berechnen** ([DE](https://kittokit.com/de/kgv-rechner) · [EN](https://kittokit.com/en/pe-ratio-calculator)): KGV berechnen: Aktienkurs ÷ Gewinn je Aktie, mit Gewinnrendite und historischer Einordnung (günstig/moderat/teuer). Kostenlos, lokal, kein Tracking.
+- **Kreditrechner – Monatsrate und Sondertilgung berechnen** ([DE](https://kittokit.com/de/kreditrechner) · [EN](https://kittokit.com/en/loan-calculator)): Kreditrate anonym berechnen: Monatsrate, Gesamtzinsen, Tilgungsplan und Sondertilgungs-Ersparnis — SCHUFA-neutral, ohne Anmeldung, ohne Tracking.
+- **Leasingfaktor Rechner — Leasing-Angebote objektiv bewerten** ([DE](https://kittokit.com/de/leasing-faktor-rechner) · [EN](https://kittokit.com/en/lease-factor-calculator)): Leasingfaktor berechnen und einordnen: mit oder ohne Sonderzahlung, Benchmark vs. Marktdurchschnitt 0,63, Skala. Kostenlos, lokal, kein Tracking.
+- **Mehrwertsteuer Rechner – Netto, MwSt und Brutto berechnen** ([DE](https://kittokit.com/de/mehrwertsteuer-rechner) · [EN](https://kittokit.com/en/vat-calculator)): Mehrwertsteuer sofort berechnen: Netto, MwSt-Betrag und Brutto — alle Felder editierbar. Formeln inline, Gastronomie-2026-Update, kein Tracking. Kostenlos.
+- **Mondphasen Rechner — Mondphase für jedes Datum berechnen** ([DE](https://kittokit.com/de/mondphasen-rechner) · [EN](https://kittokit.com/en/moon-phase-calculator)): Mondphase für jedes Datum berechnen: Neumond, Vollmond, Beleuchtungsgrad, Mondalter und nächste Mondphasen. Läuft komplett im Browser, kein Upload.
+- **Rabatt Rechner – Endpreis und Ursprungspreis berechnen** ([DE](https://kittokit.com/de/rabatt-rechner) · [EN](https://kittokit.com/en/discount-calculator)): Rabatt berechnen: Endpreis, Ursprungspreis oder Rabatt% — alle Richtungen. Kettenrabatt erklärt 10%+10%≠20%. Kein Tracking, 100% im Browser.
+- **ROI-Rechner — Return on Investment berechnen** ([DE](https://kittokit.com/de/roi-rechner) · [EN](https://kittokit.com/en/roi-calculator)): ROI berechnen mit annualisierter Rendite und DuPont-Schema. Formel-Aufschlüsselung live. Drei Modi: Einfach, Erweitert, DuPont. Kostenlos, kein Tracking.
+- **Skonto-Rechner — Skontobetrag & Jahreszins berechnen** ([DE](https://kittokit.com/de/skonto-rechner) · [EN](https://kittokit.com/en/cash-discount-calculator)): Skonto online berechnen: Skontobetrag, Zahlbetrag und effektiver Jahreszins. Brutto/Netto-Toggle, live on typing, kein Tracking. 2 % Skonto = ~37 % p.a.
+- **Stundenlohn zu Jahresgehalt umrechnen 2026** ([DE](https://kittokit.com/de/stundenlohn-jahresgehalt) · [EN](https://kittokit.com/en/hourly-to-annual-salary)): Stundenlohn zu Jahresgehalt — zwei Methoden, Bundesland-Feiertage, Mindestlohn 2026. Monatlich bis stündlich auf einen Blick. Kostenlos, kein Tracking.
+- **Tilgungsplan Rechner — Annuitätendarlehen berechnen** ([DE](https://kittokit.com/de/tilgungsplan-rechner) · [EN](https://kittokit.com/en/amortization-calculator)): Tilgungsplan für Annuitätendarlehen berechnen: Monatsrate, Gesamtzinsen, Restschuld nach Zinsbindung, Sondertilgung-Effekt. 100&nbsp;% lokal, kein Tracking.
+- **Zinseszinsrechner — Sparplan mit Steuer berechnen** ([DE](https://kittokit.com/de/zinseszins-rechner) · [EN](https://kittokit.com/en/compound-interest-calculator)): Zinseszinsrechner: Sparplan mit Abgeltungssteuer (26,375&nbsp;%), Sparerpauschbetrag, TER-Kosten und Inflation. 100 % clientseitig, kein Tracking. Kostenlos.
+- **Zinsrechner — Steuern und echte Rendite berechnen** ([DE](https://kittokit.com/de/zinsrechner) · [EN](https://kittokit.com/en/interest-calculator)): Zinsen berechnen mit Zinseszins, Abgeltungssteuer und Inflationsbereinigung. Brutto, netto und real in einem Schritt. Client-seitig, kein Tracking, kostenlos.
 
-## Tools — document / PDF
+## Tools — image
 
-- [JPG zu PDF](https://kittokit.com/de/jpg-zu-pdf).
-- [PDF zusammenführen](https://kittokit.com/de/pdf-zusammenfuehren).
-- [PDF aufteilen](https://kittokit.com/de/pdf-aufteilen).
-- [PDF komprimieren](https://kittokit.com/de/pdf-komprimieren).
-- [PDF zu JPG](https://kittokit.com/de/pdf-zu-jpg).
-- [PDF Passwort](https://kittokit.com/de/pdf-passwort): decrypt-only.
+- **Bilder vergleichen — Pixel-Diff mit Statistik** ([DE](https://kittokit.com/de/bild-diff) · [EN](https://kittokit.com/en/image-diff)): Zwei Bilder vergleichen: Pixel-Diff mit Kanal-Delta, Dimensionen, Dateigröße und optionaler Toleranz. Komplett im Browser, ohne Server-Upload, DSGVO-konform.
+- **Bild zu Text (OCR) — direkt im Browser** ([DE](https://kittokit.com/de/bild-zu-text) · [EN](https://kittokit.com/en/image-to-text)): Text aus Bildern extrahieren — komplett offline im Browser, ohne Upload, ohne Anmeldung. KI-basierte Texterkennung für Scans, Screenshots und Fotos.
+- **Hintergrund entfernen — direkt im Browser** ([DE](https://kittokit.com/de/hintergrund-entfernen) · [EN](https://kittokit.com/en/background-remover)): Hintergrund aus Fotos entfernen — komplett im Browser, ohne Upload, ohne Anmeldung, ohne Tracking. KI-basiert mit BEN2, WebGPU-beschleunigt.
+- **KI-Bild-Detektor: Prüfe Bilder auf KI-Generierung** ([DE](https://kittokit.com/de/ki-bild-detektor) · [EN](https://kittokit.com/en/ai-image-detector)): Analysiere Bilder auf KI-Muster von Midjourney und DALL-E. Unser Tool arbeitet 100 % lokal im Browser ohne Upload deiner Dateien – für maximale Privatsphäre.
+- **QR-Code Generator — QR-Code aus Text erstellen** ([DE](https://kittokit.com/de/qr-code-generator) · [EN](https://kittokit.com/en/qr-code-generator)): QR-Code Generator: Text oder URL in einen QR-Code umwandeln und als SVG herunterladen. 100&nbsp;% im Browser, kein Upload, DSGVO-konform und kostenlos.
+- **Video Hintergrund entfernen — KI, kein Upload** ([DE](https://kittokit.com/de/video-hintergrund-entfernen) · [EN](https://kittokit.com/en/video-background-remover)): Hintergrund aus Videos entfernen — KI-basiert, direkt im Browser, ohne Upload, ohne Anmeldung. Unscreen-Alternative kostenlos und DSGVO-konform.
+- **Webcam-Hintergrund unscharf machen — direkt im Browser** ([DE](https://kittokit.com/de/webcam-hintergrund-unschaerfe) · [EN](https://kittokit.com/en/webcam-background-blur)): Webcam-Hintergrund online unscharf machen — ohne Installation, ohne Upload, ohne Konto. Einstellbare Blur-Intensität, 100&nbsp;% lokal im Browser.
+- **PNG und JPG in WebP umwandeln – ohne Upload** ([DE](https://kittokit.com/de/webp-konverter) · [EN](https://kittokit.com/en/webp-converter)): PNG oder JPG in WebP umwandeln: deutlich kleinere Dateien bei gleicher Qualität. Läuft komplett im Browser, ohne Upload, Anmeldung oder Tracking.
 
-## Optional
+## Tools — length
 
-- [Sitemap Index](https://kittokit.com/sitemap-index.xml)
+- **Fuß in Meter umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/fuss-zu-meter) · [EN](https://kittokit.com/en/feet-to-meters)): Fuß in Meter umrechnen: exakte Formel (1&nbsp;ft = 0,3048 m), Tabelle gängiger Werte und FAQ zu internationalem Fuß und Kopfrechnung. Ohne Anmeldung, ohne Ads.
+- **Kilometer in Meilen umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/kilometer-zu-meilen) · [EN](https://kittokit.com/en/km-to-miles)): Kilometer in Meilen umrechnen: exakte Formel (1 mi = 1,609344&nbsp;km), Tabelle für Marathon-Distanzen, Reise und US-Tacho. Ohne Anmeldung, ohne Tracking.
+- **Meter in Fuß umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/meter-zu-fuss) · [EN](https://kittokit.com/en/meter-to-feet)): Meter in Fuß umrechnen: exakte Formel (1 m = 3,28084&nbsp;ft), Tabelle gängiger Werte und FAQ zu internationalem vs. US-Survey-Fuß. Ohne Anmeldung, ohne Ads.
+- **Millimeter in Zoll umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/millimeter-zu-zoll) · [EN](https://kittokit.com/en/mm-to-inches)): Millimeter in Zoll umrechnen: exakte Formel (1&nbsp;mm = 0,0393701 in), Tabelle gängiger Werte und FAQ zu Zoll-Brüchen und Technik-Maßen. Ohne Anmeldung.
+- **Quadratkilometer in Quadratmeile umrechnen – Rechner** ([DE](https://kittokit.com/de/quadratkilometer-zu-quadratmeile) · [EN](https://kittokit.com/en/square-km-to-square-miles)): Quadratkilometer in Quadratmeile umrechnen: exakte Formel (1 km² = 0,386102 mi²), Tabelle für Geografie, Landflächen und Statistik. Ohne Anmeldung, ohne Ads.
+- **Quadratmeter in Quadratfuß umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/quadratmeter-zu-quadratfuss) · [EN](https://kittokit.com/en/sqm-to-sqft)): Quadratmeter in Quadratfuß umrechnen: exakte Formel (1 m² = 10,7639 ft²), Tabelle für Wohnfläche, Immobilien und Grundrisse. Ohne Anmeldung, ohne Ads.
+- **Seemeilen in Kilometer umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/seemeile-zu-kilometer) · [EN](https://kittokit.com/en/nautical-miles-to-km)): Seemeilen in Kilometer umrechnen: exakte Formel (1 nmi = 1,852&nbsp;km), Tabelle gängiger Werte und FAQ zu nautischen Meilen. Ohne Anmeldung, im Browser.
+- **Yard in Meter umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/yard-zu-meter) · [EN](https://kittokit.com/en/yards-to-meters)): Yard in Meter umrechnen: exakte Formel (1&nbsp;yd = 0,9144 m), Tabelle gängiger Werte, kurze Geschichte des Yard und FAQ. Ohne Anmeldung, ohne Ads.
+- **Zentimeter in Zoll umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/zentimeter-zu-zoll) · [EN](https://kittokit.com/en/cm-to-inches)): Zentimeter in Zoll umrechnen: exakte Formel (1 in = 2,54&nbsp;cm), Tabelle gängiger Werte und FAQ zu Körpergröße und Bildschirmdiagonalen. Ohne Ads.
+- **Zoll in Zentimeter umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/zoll-zu-zentimeter) · [EN](https://kittokit.com/en/inches-to-cm)): Zoll in Zentimeter umrechnen: exakte Formel (1 in = 2,54&nbsp;cm), Tabelle gängiger Werte und FAQ zu Bildschirmen, Rohren und Reifengrößen. Ohne Ads.
+
+## Tools — temperature
+
+- **Celsius in Fahrenheit umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/celsius-zu-fahrenheit) · [EN](https://kittokit.com/en/celsius-to-fahrenheit)): Celsius in Fahrenheit umrechnen: affine Formel (°F = °C × 1,8 + 32), Tabelle für Wetter, Kochen und Fiebermessung. Ohne Anmeldung, ohne Tracking.
+
+## Tools — text
+
+- **Audio Transkription – Sprache zu Text im Browser** ([DE](https://kittokit.com/de/audio-transkription) · [EN](https://kittokit.com/en/audio-transcription)): Wandle Audioaufnahmen direkt im Browser in Text um. Whisper-KI Transkription 100 % lokal, privat und kostenlos. Unterstützt MP3, WAV und mehr ohne Upload.
+- **JSON vergleichen — Unterschiede mit Pfad-Anzeige finden** ([DE](https://kittokit.com/de/json-diff) · [EN](https://kittokit.com/en/json-diff)): Zwei JSON-Dokumente online vergleichen: JSON-Path pro Änderung, Typ-Erkennung und Array-Order-Option. 100&nbsp;% im Browser, ohne Upload, DSGVO-konform.
+- **KI-Text-Detektor: Prüfe kostenlos Texte auf KI-Muster** ([DE](https://kittokit.com/de/ki-text-detektor) · [EN](https://kittokit.com/en/ai-text-detector)): Nutze unseren kostenlosen KI Text Detektor, um herauszufinden, ob ein Text von einer künstlichen Intelligenz geschrieben wurde. Lokal und ohne Datenspeicherung.
+- **Lorem Ipsum Generator — Blindtext erzeugen** ([DE](https://kittokit.com/de/lorem-ipsum-generator) · [EN](https://kittokit.com/en/lorem-ipsum-generator)): Lorem Ipsum Generator: Blindtext in Latein oder Deutsch mit Umlauten erzeugen. Absätze, Sätze oder Wörter mit Live-Statistik — 100 % im Browser, DSGVO-konform.
+- **Römische Zahlen umrechnen — Arabisch und Römisch** ([DE](https://kittokit.com/de/roemische-zahlen) · [EN](https://kittokit.com/en/roman-numeral-converter)): Römische Zahlen umrechnen: bidirektionaler Konverter mit Schritt-für-Schritt-Aufschlüsselung. Arabisch zu Römisch und zurück — 100&nbsp;% im Browser.
+- **Sprache verbessern: KI-Tool ohne Upload** ([DE](https://kittokit.com/de/sprache-verbessern) · [EN](https://kittokit.com/en/speech-enhancer)): Entferne lästiges Audio-Rauschen und verbessere deine Sprachaufnahmen sofort. Das Tool läuft zu 100&nbsp;% lokal in deinem Browser — ohne Dateiupload.
+- **Text vergleichen — Unterschiede sofort erkennen** ([DE](https://kittokit.com/de/text-diff) · [EN](https://kittokit.com/en/text-diff)): Zwei Texte online vergleichen und Unterschiede auf Wort- und Zeilenebene finden. 100&nbsp;% im Browser, ohne Upload, ohne Tracking — DSGVO-konform.
+- **Zeichenzähler — Zeichen, Wörter und Lesezeit zählen** ([DE](https://kittokit.com/de/zeichenzaehler) · [EN](https://kittokit.com/en/character-counter)): Zeichen, Wörter und Lesezeit zählen — mit Plattform-Limits für Twitter, Instagram, LinkedIn und SMS. 100&nbsp;% lokal im Browser, ohne Server und ohne Tracking.
+
+## Tools — time
+
+- **Unix-Timestamp umrechnen — Sekunden und Millisekunden** ([DE](https://kittokit.com/de/unix-timestamp) · [EN](https://kittokit.com/en/unix-timestamp-converter)): Unix-Timestamp in Sekunden und Millisekunden umrechnen. Formel, Referenztabelle, Y2038-Erklärung und FAQ. 100&nbsp;% im Browser, kein Upload, kein Tracking.
+- **Zeitzonen umrechnen — Uhrzeit weltweit konvertieren** ([DE](https://kittokit.com/de/zeitzonen-rechner) · [EN](https://kittokit.com/en/timezone-converter)): Uhrzeit zwischen Zeitzonen umrechnen: Berlin, New York, Tokio und 7 weitere Zonen. Automatische Sommerzeit-Erkennung, kein Tracking, 100&nbsp;% im Browser.
+
+## Tools — video
+
+- **iPhone-Video in MP4 umwandeln — HEVC zu H.264 Konverter** ([DE](https://kittokit.com/de/hevc-zu-h264) · [EN](https://kittokit.com/en/hevc-to-h264)): Wandle iPhone-HEVC-Videos in H.264-MP4 um — direkt im Browser, ohne Upload, ohne Anmeldung, kostenlos. Dein Video verlässt deinen Rechner nicht.
+
+## Tools — volume
+
+- **Liter in Gallonen umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/liter-zu-gallonen) · [EN](https://kittokit.com/en/liters-to-gallons)): Liter in Gallonen umrechnen: exakte Formel (1 l = 0,264 gal), Tabelle für Kochen, Tanken und Industrie. Client-seitig, ohne Tracking, ohne Anmeldung.
+
+## Tools — weight
+
+- **Gramm in Unzen umrechnen – Formel, Tabelle & Beispiele** ([DE](https://kittokit.com/de/gramm-zu-unzen) · [EN](https://kittokit.com/en/grams-to-ounces)): Gramm in Unzen umrechnen: exakte Formel (1 g = 0,035274&nbsp;oz), Tabelle für Kochen, Schmuck und Versand. Ohne Anmeldung, ohne Ads, rein client-seitig.
+- **Kilogramm in Pfund umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/kilogramm-zu-pfund) · [EN](https://kittokit.com/en/kg-to-lbs)): Kilogramm in Pfund umrechnen: exakte Formel (1&nbsp;lb = 0,45359237&nbsp;kg), Tabelle für Körpergewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads.
+- **Milliliter in Unzen umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/milliliter-zu-unzen) · [EN](https://kittokit.com/en/ml-to-fluid-ounces)): Milliliter in Unzen umrechnen: exakte Formel (1&nbsp;ml = 0,0338 fl oz), Tabelle für Kochen, Pharma und Kosmetik. Ohne Anmeldung, rein client-seitig.
+- **Pfund in Kilogramm umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/pfund-zu-kilogramm) · [EN](https://kittokit.com/en/lbs-to-kg)): Pfund in Kilogramm umrechnen: exakte Formel (1&nbsp;lb = 0,45359237&nbsp;kg), Tabelle und Beispiele für Gewicht, Kochen und Fitness. Ohne Anmeldung, ohne Ads.
+- **Stone in Kilogramm umrechnen – Formel & Tabelle** ([DE](https://kittokit.com/de/stone-zu-kilogramm) · [EN](https://kittokit.com/en/stone-to-kg)): Stone in Kilogramm umrechnen: exakte Formel (1 st = 6,35029&nbsp;kg), Tabelle gängiger Werte und Rechner. Client-seitig, ohne Anmeldung, ohne Tracking.
+- **Tonne in Pfund umrechnen – Formel, Tabelle & Beispiele** ([DE](https://kittokit.com/de/tonne-zu-pfund) · [EN](https://kittokit.com/en/metric-tons-to-pounds)): Tonne in Pfund umrechnen: exakte Formel (1 t = 2204,62&nbsp;lb), Tabelle für Industrie, Logistik und Handel. Client-seitig, ohne Tracking, ohne Anmeldung.
+

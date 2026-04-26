@@ -26,6 +26,9 @@ relatedTools:
   - pfund-zu-kilogramm
 category: weight
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ Kochrezepte mit US-Angaben, Edelmetall- und Schmuckgewichte, Briefporto im
 internationalen Versand und für jede Situation, in der angelsächsische
 Gewichtseinheiten auf metrische treffen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Die avoirdupois-Unze ist seit dem internationalen Yard-und-Pfund-Abkommen von
 1959 exakt definiert: 1&nbsp;oz = 28,349523125 g. Daraus folgt der Umrechnungsfaktor
@@ -54,7 +57,7 @@ im US-Format.
 Faustregel ohne Taschenrechner: 30 g sind ungefähr eine Unze. Für 100 g teilst
 du durch 30 und erhältst etwa 3,3&nbsp;oz — der exakte Wert ist 3,5274&nbsp;oz.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf ein
 bis zwei Nachkommastellen.
@@ -71,7 +74,7 @@ bis zwei Nachkommastellen.
 Ein Päckchen Butter mit 250 g entspricht 8,82&nbsp;oz. Eine US-Rezeptangabe von
 „8&nbsp;oz flour" meint 226,8 g Mehl.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Kochen und Backen:** US-amerikanische Rezepte geben Zutaten in Unzen an —
 4&nbsp;oz Butter, 8&nbsp;oz Mehl, 12&nbsp;oz Schokolade. Wer mit einer metrischen
@@ -122,7 +125,7 @@ Gold wird in Troy-Unzen gehandelt: 1 ozt = 31,1035 g. Der Alltags-Unze-Wert
 (28,35 g) gilt hier nicht. Für Edelmetall-Umrechnungen sollte ein
 Troy-Unzen-Konverter verwendet werden.
 
-## Verwandte Gewichts-Tools
+## Welche Gewichts-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

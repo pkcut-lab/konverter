@@ -30,6 +30,9 @@ relatedTools:
   - text-diff
   - regex-tester
   - passwort-generator
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Zeichenzähler?
@@ -38,7 +41,7 @@ Der Zeichenzähler nimmt einen beliebigen Text und liefert sofort die wichtigste
 
 Zusätzlich schätzt das Tool die Lesezeit. Anders als englischsprachige Tools, die pauschal 200&nbsp;Wörter pro Minute ansetzen, nutzt dieser Zeichenzähler den für deutsche Texte realistischeren Wert von 250&nbsp;wpm. Das ergibt präzisere Angaben für deutschsprachige Inhalte.
 
-## Plattform-Limits auf einen Blick
+## Welche Plattform-Limits gibt es?
 
 Wer für Social Media oder SEO schreibt, braucht die Zeichenlimits der jeweiligen Plattform. Statt zwischen verschiedenen Tabs zu wechseln, zeigt der Zeichenzähler die relevanten Grenzen direkt an:
 
@@ -86,7 +89,7 @@ Der Zeichenzähler verarbeitet Text ausschließlich im Browser. Kein Server empf
 
 Im Vergleich: Die meisten Online-Zeichenzähler setzen Google Analytics oder nutzungsbasierte Werbung ein. Dieser Zeichenzähler verzichtet bewusst darauf.
 
-## Typische Einsatzgebiete
+## Welche typischen Einsatzgebiete gibt es?
 
 - **Social-Media-Texte** — Instagram-Captions, LinkedIn-Posts und Tweets auf Plattform-Limits prüfen, bevor sie veröffentlicht werden.
 - **SEO-Texte** — Meta-Titles und Meta-Descriptions auf die Google-Zeichengrenzen trimmen, ohne in der SERP abgeschnitten zu werden.
@@ -100,7 +103,7 @@ Unicode-Emojis liegen auf der sogenannten Astral Plane (ab U+10000). In der inte
 
 Dieser Zeichenzähler nutzt `[...text].length`, das korrekt nach Unicode-Codepoints aufteilt. Für die reine Zeichenzählung ergibt ein Emoji daher 1&nbsp;Zeichen. Twitter/X verwendet intern die `.length`-Methode und zählt Emojis als 2 — wer genau am 280-Zeichen-Limit arbeitet, sollte das einkalkulieren.
 
-## SMS: GSM-7 vs. Unicode
+## What Is the Difference Between GSM-7 and Unicode?
 
 Eine Standard-SMS fasst 160&nbsp;Zeichen im GSM-7-Encoding. Dieses Encoding deckt lateinische Buchstaben, Ziffern und gängige Satzzeichen ab — aber keine Umlaute.
 
@@ -110,7 +113,7 @@ Sobald ein Text ä, ö, ü, ß oder ein Emoji enthält, wechselt das Encoding au
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Text-Tools
+## Welche Text-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

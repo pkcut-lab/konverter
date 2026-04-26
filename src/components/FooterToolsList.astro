@@ -1,6 +1,8 @@
 ---
 // src/components/FooterToolsList.astro
 import { listToolsForLang } from '../lib/tools/list';
+import { getStaticPagePath } from '../lib/static-page-slugs';
+import type { ActiveLanguage } from '../lib/hreflang';
 import type { Lang } from '../lib/tools/types';
 
 interface Props {
@@ -12,9 +14,16 @@ const CAP = 8;
 const tools = await listToolsForLang(lang);
 const visible = tools.slice(0, CAP);
 const overflow = Math.max(0, tools.length - CAP);
+
+const heading = lang === 'de' ? 'Werkzeuge' : 'Tools';
+const overflowLabel =
+  lang === 'de'
+    ? `+ ${overflow} weitere Werkzeuge →`
+    : `+ ${overflow} more tools →`;
+const allToolsHref = getStaticPagePath('tools', lang as ActiveLanguage);
 ---
 <section>
-  <h2>Werkzeuge</h2>
+  <h2>{heading}</h2>
   <ul>
     {visible.map((t) => (
       <li>
@@ -27,7 +36,7 @@ const overflow = Math.max(0, tools.length - CAP);
     {overflow > 0 && (
       <li class="overflow">
         {/* NBSP zwischen `+` und Zahl damit es nicht umbricht */}
-        <a href={`/${lang}`}>{`+ ${overflow} weitere Werkzeuge →`}</a>
+        <a href={allToolsHref}>{overflowLabel}</a>
       </li>
     )}
   </ul>

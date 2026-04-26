@@ -27,6 +27,9 @@ faq:
   - q: "Sind meine Eingaben sicher?"
     a: "Ja. Alle Berechnungen laufen vollständig im Browser — keine Daten werden an Server übertragen. Es gibt kein Tracking, keine Registrierung, keine Cookies für den Rechner selbst."
 relatedTools: ['roi-rechner', 'skonto-rechner', 'zinsrechner']
+datePublished: '2026-04-25'
+dateModified: '2026-04-25'
+
 ---
 
 ## Was macht dieser Cashflow-Rechner?
@@ -35,7 +38,7 @@ Der Cashflow gibt an, wie viel Geld in einem Zeitraum tatsächlich in ein Untern
 
 Kein anderer kostenloser deutschsprachiger Online-Rechner kombiniert alle drei Methoden mit einer live Formel-Aufschlüsselung nebeneinander.
 
-## Die drei Berechnungsmethoden im Überblick
+## Welche drei Berechnungsmethoden gibt es?
 
 **Direkte Methode** ist die einfachste Form und eignet sich besonders für Selbstständige, Freiberufler und Kleinunternehmen. Die Formel lautet:
 
@@ -61,7 +64,7 @@ Einer der häufigsten und folgenreichsten Irrtümer in der Unternehmenssteuerung
 
 Mehr als 70&nbsp;% der Unternehmensinsolvenzen entstehen nicht durch Verluste, sondern durch Liquiditätsprobleme. Der Cashflow-Rechner macht diesen Unterschied sichtbar und erklärbar.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Beispiel direkte Methode:** Ein Einzelunternehmen hat im Quartal 85.000&nbsp;€ Einzahlungen und 72.000&nbsp;€ Auszahlungen — der Cashflow beträgt 13.000&nbsp;€.
 
@@ -69,7 +72,7 @@ Mehr als 70&nbsp;% der Unternehmensinsolvenzen entstehen nicht durch Verluste, s
 
 **Beispiel Free Cashflow:** Bei einem OCF von 30.000&nbsp;€ und Investitionsauszahlungen von 10.000&nbsp;€ verbleiben 20.000&nbsp;€ Free Cashflow für Tilgung, Dividenden oder Rücklagen.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - Jahresabschluss-Analyse nach HGB oder IFRS
 - Liquiditätsplanung für KMU und Selbstständige
@@ -81,7 +84,7 @@ Mehr als 70&nbsp;% der Unternehmensinsolvenzen entstehen nicht durch Verluste, s
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Finanz-Ökosystem, die zum Thema passen:
 

@@ -19,6 +19,12 @@ const kbdHint = z.object({
   label: z.string().min(1),
 });
 
+const statEntry = z.object({
+  label: z.string().min(1),
+  value: z.string().min(1),
+  unit: z.string().optional(),
+});
+
 /**
  * Frontmatter schema for tool content files.
  * Lives in its own module so it is unit-testable without importing astro:content.
@@ -73,7 +79,11 @@ export const toolContentFrontmatterSchema = z.object({
     })
     .optional(),
   kbdHints: z.array(kbdHint).min(1).max(4).optional(),
+  stats: z.array(statEntry).min(1).max(6).optional(),
+  featureList: z.array(z.string().min(1)).min(1).max(8).optional(),
   contentVersion: z.number().int().min(1),
+  datePublished: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  dateModified: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 
 export type ToolContentFrontmatter = z.infer<typeof toolContentFrontmatterSchema>;

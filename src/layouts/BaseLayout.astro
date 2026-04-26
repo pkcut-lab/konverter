@@ -3,18 +3,43 @@ import '../styles/global.css';
 import ThemeScript from '../components/ThemeScript.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { buildHreflangLinks } from '../lib/hreflang';
+import CookieBanner from '../components/CookieBanner.svelte';
+import WebVitals from '../components/WebVitals.svelte';
+import { buildHreflangLinks, DEFAULT_LANGUAGE, type ActiveLanguage } from '../lib/hreflang';
+import { t } from '../lib/i18n/strings';
+import type { Lang } from '../lib/tools/types';
 
 interface Props {
   lang: string;
   title: string;
   description?: string;
-  pathWithoutLang: string;
+  /** Either a single string (shared slug) OR a per-language record when slugs
+   *  differ per language, e.g. `{ de: '/werkzeuge', en: '/tools' }`. */
+  pathWithoutLang: string | Partial<Record<ActiveLanguage, string>>;
+  /** Per-tool OG image path (e.g. '/og/tools/meter-zu-fuss.webp').
+   *  Falls back to the site-wide '/og-image.png' when absent. */
+  ogImagePath?: string | undefined;
+  /** AVIF variant of the OG image (preferred by modern crawlers). When set,
+   *  emitted BEFORE the WebP og:image so crawlers that support AVIF pick it. */
+  ogAvifPath?: string | undefined;
+  /** LCP hero image path for above-the-fold preload (e.g. '/heroes/tools/slug.webp').
+   *  Injected as <link rel="preload" fetchpriority="high"> when present.
+   *  No-op today (0/72 heroes exist) — wired up for future hero rollout. */
+  heroImagePath?: string | undefined;
+  /** When true: emit `noindex,follow` and skip hreflang link tags + canonical.
+   *  Use for 404, 500, and any other page Google should not index. */
+  noindex?: boolean;
 }
-const { lang, title, description, pathWithoutLang } = Astro.props;
+const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath, heroImagePath, noindex = false } = Astro.props;
+const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
-const canonical = new URL(`/${lang}${pathWithoutLang}`, Astro.site).toString();
-const ogImage = new URL('/og-image.png', Astro.site).toString();
+
+const canonicalPath: string =
+  typeof pathWithoutLang === 'string'
+    ? pathWithoutLang
+    : (pathWithoutLang[lang as ActiveLanguage] ?? pathWithoutLang[DEFAULT_LANGUAGE] ?? '/');
+const canonical = new URL(`/${lang}${canonicalPath}`, Astro.site).toString();
+const ogImage = new URL(ogImagePath ?? '/og-image.png', Astro.site).toString();
 
 // Site-wide entity signals — Organization + WebSite + SearchAction.
 // Emitted on every page (not just tool pages) so the brand-entity is
@@ -25,6 +50,9 @@ const ogImage = new URL('/og-image.png', Astro.site).toString();
 // a `?q=` query string the home page can intercept (Phase 2 will wire
 // the actual search-results page; today it falls through to the
 // HeaderSearch component which reads `?q` if present).
+const cfRumToken = import.meta.env.CF_RUM_TOKEN;
+const clarityId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID;
+
 const siteUrl = Astro.site!.toString().replace(/\/$/, '');
 const siteName = 'kittokit';
 const organizationJsonLd = {
@@ -33,9 +61,10 @@ const organizationJsonLd = {
   name: siteName,
   url: siteUrl,
   logo: `${siteUrl}/icon-512.png`,
-  description:
-    'kittokit — schnelle Browser-Tools: Konverter, Rechner, Datei-Werkzeuge. Pure-client, ohne Upload, ohne Tracking.',
-  sameAs: [],
+  description: strings.orgDescription,
+  sameAs: [
+    'https://github.com/pkcut-lab',
+  ],
 };
 const websiteJsonLd = {
   '@context': 'https://schema.org',
@@ -60,28 +89,38 @@ const websiteJsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="kittokit" />
-    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang} />
+    {/* TODO(phase-3): replace ternary with OG_LOCALE_MAP from src/lib/i18n/locale-maps.ts.
+        Falls through to raw lang code for non-de/en, which is invalid for og:locale
+        (e.g. 'pt-br' → Facebook expects 'pt_BR'). See CONVENTIONS.md §11.1. */}
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang === 'en' ? 'en_US' : lang} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
+    {ogAvifPath && <meta property="og:image" content={new URL(ogAvifPath, Astro.site).toString()} />}
+    {ogAvifPath && <meta property="og:image:type" content="image/avif" />}
+    {ogAvifPath && <meta property="og:image:width" content="1200" />}
+    {ogAvifPath && <meta property="og:image:height" content="630" />}
+    {ogAvifPath && <meta property="og:image:alt" content={strings.ogImageAlt} />}
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="kittokit — Schnelle Tools. Kein Upload. Kein Tracking." />
+    <meta property="og:image:alt" content={strings.ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="kittokit — Schnelle Tools. Kein Upload. Kein Tracking." />
+    <meta name="twitter:image:alt" content={strings.ogImageAlt} />
 
     <ThemeScript />
 
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/icon-dark.svg" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -110,7 +149,13 @@ const websiteJsonLd = {
       crossorigin
     />
 
-    {hreflangs.map((l) => (
+    {/* LCP hero image preload — fetchpriority=high signals the browser to
+        fetch the above-the-fold image immediately (no-op when path absent). */}
+    {heroImagePath && (
+      <link rel="preload" as="image" href={heroImagePath} fetchpriority="high" />
+    )}
+
+    {!noindex && hreflangs.map((l) => (
       <link rel="alternate" hreflang={l.hreflang} href={l.href} />
     ))}
 
@@ -120,21 +165,89 @@ const websiteJsonLd = {
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
 
+    {/* Preconnect / dns-prefetch for third-party origins. CF Insights always
+        loads; Clarity only when consent-gated project ID is present; HF CDN
+        is background-only (ML workers) so dns-prefetch is enough. */}
+    <link rel="preconnect" href="https://static.cloudflareinsights.com" />
+    {clarityId && <link rel="preconnect" href="https://www.clarity.ms" crossorigin />}
+    {!clarityId && <link rel="dns-prefetch" href="https://www.clarity.ms" />}
+    <link rel="dns-prefetch" href="https://huggingface.co" />
+
     {/* Service Worker registration — generated by @vite-pwa/astro.
         `defer` keeps it off the critical path; the SW only claims control
         on the next navigation anyway. No-op during `astro dev`. */}
     <script is:inline defer src="/registerSW.js"></script>
   </head>
   <body>
-    <Header lang={lang} />
-    <main class="site-main" data-pagefind-body>
+    <a href="#main" class="skip-to-content">
+      {lang === 'de' ? 'Zum Inhalt springen' : 'Skip to content'}
+    </a>
+    <Header lang={lang} langAlternates={hreflangs} />
+    <main id="main" class="site-main" data-pagefind-body>
       <slot />
     </main>
     <Footer lang={lang} />
+    <CookieBanner client:idle />
+    <WebVitals client:idle />
+
+    {/* Cloudflare Web Analytics — privacy-first, no consent required */}
+    {cfRumToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token":"${cfRumToken}"}`}></script>
+    )}
+
+    {/* Microsoft Clarity — consent-gated, loads only when statistik=true */}
+    {clarityId && (
+      <script is:inline define:vars={{clarityId}}>
+        if (typeof window !== 'undefined') {
+          var _clarityLoad = function () {
+            try {
+              var c = JSON.parse(localStorage.getItem('kittokit-consent') || 'null');
+              if (c && c.statistik && !window.clarity) {
+                (function (c, l, a, r, i, t, y) {
+                  c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+                  t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+                  y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+                })(window, document, 'clarity', 'script', clarityId);
+              }
+            } catch (e) {}
+          };
+          _clarityLoad();
+          window.addEventListener('kittokit-consent-change', _clarityLoad);
+        }
+      </script>
+    )}
   </body>
 </html>
 
 <style>
+  .skip-to-content {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    z-index: 9999;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--r-md);
+    border: 2px solid var(--color-accent);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    text-decoration: none;
+    /* Hidden until keyboard focus via clip-path (accessible alternative to
+       display:none which removes from tab order) */
+    clip-path: inset(50%);
+    white-space: nowrap;
+    overflow: hidden;
+    transition: clip-path var(--dur-fast) var(--ease-out);
+  }
+  .skip-to-content:focus-visible {
+    clip-path: inset(0);
+    outline: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skip-to-content { transition: none; }
+  }
+
   .site-main {
     max-width: 72rem;
     margin: 0 auto;

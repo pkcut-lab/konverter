@@ -14,7 +14,36 @@ export default defineConfig({
   integrations: [
     svelte({ preprocess: vitePreprocess({ script: true, style: false }) }),
     tailwind({ applyBaseStyles: false }),
-    sitemap(),
+    sitemap({
+      // T3.5 — Sitemap-Refinement: priority + changefreq per URL type.
+      // lastmod wired from frontmatter.dateModified once Sprint-1 migration runs;
+      // until then the plugin default (build time) is used.
+      serialize(item) {
+        const url = item.url;
+
+        // TODO(phase-3): the (de|en) regex group below is hardcoded.
+        // Generate it from ACTIVE_LANGUAGES.join('|') so new languages
+        // get the priority boost automatically. Same for the
+        // (de/werkzeuge|en/tools) group — should derive from
+        // STATIC_PAGE_SLUGS in src/lib/static-page-slugs.ts.
+        // See CONVENTIONS.md section 11.
+
+        // Home pages: /de  /en
+        if (/\/(de|en)\/?$/.test(url)) {
+          return { ...item, priority: 1.0, changefreq: 'weekly' };
+        }
+        // Tools index: /de/werkzeuge  /en/tools
+        if (/\/(de\/werkzeuge|en\/tools)\/?$/.test(url)) {
+          return { ...item, priority: 0.9, changefreq: 'weekly' };
+        }
+        // Legal / static: datenschutz, impressum, privacy, imprint, ueber, about, security-policy
+        if (/datenschutz|impressum|privacy|imprint|ueber|about|security/.test(url)) {
+          return { ...item, priority: 0.5, changefreq: 'yearly' };
+        }
+        // Tool pages (all others under /de/* or /en/*)
+        return { ...item, priority: 0.8, changefreq: 'monthly' };
+      },
+    }),
     AstroPWA({
       registerType: 'autoUpdate',
       // We ship `manifest.webmanifest` manually so the build tests can pin
@@ -70,10 +99,16 @@ export default defineConfig({
     locales: [...ACTIVE_LANGUAGES],
     routing: {
       prefixDefaultLocale: true,
+      redirectToDefaultLocale: false,
     },
   },
   build: {
     format: 'directory',
+    // 'auto' (default) inlines CSS bundles under Astro's internal threshold
+    // (~4 KB). Keeps the default explicit so reviewers know it was evaluated.
+    // 'always' was tested but would inline ~15–20 KB of scoped tool-page CSS,
+    // increasing HTML size without meaningful FCP gain (single origin, H2).
+    inlineStylesheets: 'auto',
   },
   vite: {
     worker: {

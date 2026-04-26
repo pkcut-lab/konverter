@@ -39,6 +39,9 @@ aside:
     - title: "Entsperren & herunterladen"
       description: "Klicke auf „Entsperren“. Das Tool rendert alle Seiten lokal und erstellt eine neue passwortfreie PDF zum Herunterladen."
   privacy: "Deine PDF verlässt den Browser nicht. Das Passwort wird nicht gespeichert oder übertragen. Die Verarbeitung läuft vollständig lokal mit PDF.js (Mozilla, Apache-2.0) und pdf-lib (MIT-Lizenz)."
+datePublished: '2026-04-26'
+dateModified: '2026-04-26'
+
 ---
 
 ## Wie funktioniert das Tool?

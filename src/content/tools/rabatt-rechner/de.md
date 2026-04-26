@@ -27,6 +27,9 @@ faq:
   - q: "Warum addieren sich Kettenrabatte nicht?"
     a: "Weil jeder folgende Rabatt auf den bereits reduzierten Preis angewendet wird, nicht auf den Originalpreis. 20&nbsp;%&nbsp;+ 10&nbsp;% scheinen 30&nbsp;% zu sein, ergeben aber nur 28&nbsp;% Gesamtrabatt, weil der zweite Rabatt von 80&nbsp;€ (nicht 100&nbsp;€) berechnet wird."
 relatedTools: []
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -35,7 +38,7 @@ Der Rabatt-Rechner arbeitet in vier Modi: Standard-Berechnung (Ursprungspreis un
 
 Alle Berechnungen laufen ausschließlich im Browser — kein Server-Upload, kein Tracking by Default. Eingaben in Komma- und Punkt-Schreibweise werden beide akzeptiert (`5,48` und `5.48`).
 
-## Umrechnungsformeln
+## Welche Umrechnungsformeln gibt es?
 
 Die drei Grundformeln für Rabattberechnungen:
 
@@ -55,7 +58,7 @@ Gesamtrabatt: `R_gesamt = (1 − (1 − R1÷100) × (1 − R2÷100)) × 100`
 
 **Warum nicht R1&nbsp;+ R2?** Der zweite Rabatt bezieht sich auf den bereits reduzierten Preis. 20&nbsp;%&nbsp;+ 10&nbsp;% scheinen 30&nbsp;% zu sein, ergeben aber nur 28&nbsp;% — weil der zweite Abzug auf 80&nbsp;€ (nicht 100&nbsp;€) berechnet wird.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Vier typische Rechnungen aus dem Alltag:
 
@@ -71,7 +74,7 @@ Ursprungspreis 150&nbsp;€, jetzt 120&nbsp;€ → Rabatt = (1&nbsp;−&nbsp;12
 **Beispiel 4 — Kettenrabatt:**
 200&nbsp;€ mit 20&nbsp;% Grundrabatt, dann 10&nbsp;% Zusatzrabatt → 200&nbsp;× 0,80&nbsp;× 0,90 = 144&nbsp;€ (Gesamtrabatt 28&nbsp;%, nicht 30&nbsp;%)
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Einkauf und Verbraucher:** Schnell prüfen, wie viel ein Saisonschlussverkauf oder Black-Friday-Angebot tatsächlich spart. Rückrechnung zeigt, ob der genannte Originalpreis plausibel ist.
 - **Händler und Selbstständige:** Mengenrabatte staffeln, Angebotspreise aus Listenpreisen berechnen, Kettenrabatte für Großhandels- und Einzelhandelskonditionen kombinieren.
@@ -83,7 +86,7 @@ Ursprungspreis 150&nbsp;€, jetzt 120&nbsp;€ → Rabatt = (1&nbsp;−&nbsp;12
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

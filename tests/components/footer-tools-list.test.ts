@@ -85,8 +85,12 @@ describe('FooterToolsList', () => {
     );
   });
 
-  it('renders heading "Werkzeuge"', () => {
-    expect(componentSrc).toMatch(/<h2>Werkzeuge<\/h2>/);
+  it('renders lang-aware heading ("Werkzeuge" for DE, "Tools" for EN)', () => {
+    // Heading is now lang-aware via {heading}; the literal source is the
+    // ternary in the frontmatter. Phase-3 i18n fix replaced the hardcoded
+    // <h2>Werkzeuge</h2>.
+    expect(componentSrc).toMatch(/<h2>\{heading\}<\/h2>/);
+    expect(componentSrc).toMatch(/lang === 'de' \? 'Werkzeuge' : 'Tools'/);
   });
 
   it('does NOT render overflow link when count <= 8', async () => {

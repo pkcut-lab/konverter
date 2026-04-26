@@ -211,6 +211,30 @@ code, pre {
   padding: 0 var(--space-1);
   border-radius: var(--r-sm);
 }
+/* Fenced code blocks (Shiki output: <pre class="astro-code" style="...">).
+   Shiki's default github-dark theme writes light text inline; without these
+   overrides the text is unreadable on light-mode surface. We force token
+   colours so blocks are readable in both themes (no syntax highlighting,
+   which is fine for the short formula snippets used on tool pages). */
+.prose pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-4) 0;
+  font-size: 0.92em;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+.prose pre,
+.prose pre code,
+.prose pre span {
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+}
+.prose pre code {
+  padding: 0;
+}
 .prose strong {
   color: var(--color-text);
 }

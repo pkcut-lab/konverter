@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Detect language from URL path — Astro.currentLocale is unreliable for static
+// error pages served by Cloudflare Pages on arbitrary URLs.
+const path = Astro.url.pathname;
+const lang: 'de' | 'en' = path.startsWith('/en/') || path === '/en' ? 'en' : 'de';
+const t =
+  lang === 'en'
+    ? {
+        title: '500 — Server error',
+        heading: 'Something went wrong.',
+        body: 'An unexpected error occurred. Please try again or go back home.',
+        reload: 'Try again',
+        back: 'Back home',
+      }
+    : {
+        title: '500 — Serverfehler',
+        heading: 'Etwas ist schiefgelaufen.',
+        body: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut oder geh zur Startseite.',
+        reload: 'Erneut versuchen',
+        back: 'Zur Startseite',
+      };
+---
+
+<BaseLayout lang={lang} title={t.title} pathWithoutLang="/500" noindex>
+  <div class="error-page">
+    <p class="eyebrow">500</p>
+    <h1>{t.heading}</h1>
+    <p class="body">{t.body}</p>
+    <div class="actions">
+      <button class="primary" onclick="window.location.reload()">{t.reload}</button>
+      <a class="ghost" href={`/${lang}`}>{t.back}</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .error-page {
+    max-width: 32rem;
+    margin: var(--space-16) auto;
+    text-align: center;
+  }
+  .eyebrow {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    margin: 0 0 var(--space-4);
+  }
+  h1 {
+    font-size: var(--font-size-h1);
+    margin: 0 0 var(--space-4);
+    letter-spacing: var(--tracking-tighter);
+  }
+  .body {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-8);
+  }
+  .actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .primary {
+    background: var(--color-text);
+    color: var(--color-bg);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--r-sm);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    font-family: inherit;
+  }
+  .ghost {
+    color: var(--color-text-muted);
+    padding: var(--space-3) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    text-decoration: none;
+    font-size: var(--font-size-small);
+  }
+</style>

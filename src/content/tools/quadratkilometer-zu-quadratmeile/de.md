@@ -26,6 +26,9 @@ relatedTools:
   - hektar-zu-acre
 category: area
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-21'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ sich für geografische Vergleiche, Landflächen-Statistiken, Bevölkerungsdichte
 und jeden Kontext, in dem großflächige Angaben zwischen metrischem und
 imperialem System übersetzt werden.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Quadratkilometer umfasst 1.000.000 Quadratmeter (1.000 m × 1.000 m). Eine
 Quadratmeile entspricht exakt 2,589988 km² — abgeleitet von der Definition
@@ -55,7 +58,7 @@ behält man alle Nachkommastellen und rundet erst am Ende.
 Umkehrung: 100 mi² × 2,589988 = 258,9988 km². Ein US-County mit 100
 Quadratmeilen misst also knapp 259 Quadratkilometer.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf
 zwei bis vier Nachkommastellen.
@@ -72,7 +75,7 @@ zwei bis vier Nachkommastellen.
 Deutschland hat eine Landfläche von rund 357.588 km² — das sind etwa
 138.083 mi². Texas misst rund 268.596 mi², also circa 695.662 km².
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Geografie und Landflächen-Vergleiche:** Europäische Atlanten und Wikipedia
 geben Staats- und Regionsflächen in Quadratkilometern an, während
@@ -129,7 +132,7 @@ Für geografische Übersichten und Ländervergleiche reichen null bis zwei
 Nachkommastellen. Bei wissenschaftlichen Arbeiten und Umwelt-Monitoring werden
 vier Nachkommastellen oder mehr verwendet.
 
-## Verwandte Flächen-Tools
+## Welche Flächen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

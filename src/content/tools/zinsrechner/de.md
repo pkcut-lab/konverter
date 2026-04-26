@@ -6,6 +6,14 @@ metaDescription: "Zinsen berechnen mit Zinseszins, Abgeltungssteuer und Inflatio
 tagline: "Brutto, netto und real — Zinsen in einem Schritt berechnen."
 intro: "Berechne Zinsen mit Zinseszins-Formel, Abgeltungssteuer (26,375&nbsp;%) und Realrendite nach Fisher-Gleichung. Statt nur das Endkapital zu zeigen, liefert dieser Rechner drei Ergebniszeilen: was nominell drin ist, was nach Steuern übrig bleibt und was der Betrag kaufkraftbereinigt wert ist."
 category: "finance"
+stats:
+  - label: "Zinsintervalle"
+    value: "4"
+  - label: "Genauigkeit"
+    value: "±0,01"
+    unit: "EUR"
+  - label: "Verarbeitung"
+    value: "Echtzeit"
 contentVersion: 1
 headingHtml: "<em>Zinsen</em> berechnen"
 howToUse:
@@ -28,6 +36,9 @@ faq:
   - q: "Was bedeutet Sparerpauschbetrag und wie wirkt er sich aus?"
     a: "Der Sparerpauschbetrag ist ein Freibetrag auf Kapitalerträge. 2026 beträgt er 1.000&nbsp;€ für Einzelpersonen und 2.000&nbsp;€ für Ehepaare. Zinserträge bis zu diesem Betrag sind vollständig steuerfrei. Erst der darüberliegende Teil wird mit 26,375&nbsp;% (Abgeltungssteuer + SolZ) belastet. Mit einem Freistellungsauftrag bei der Bank wird dieser Betrag automatisch berücksichtigt."
 relatedTools: ['mehrwertsteuer-rechner', 'kreditrechner']
+datePublished: '2026-04-24'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Rechner?
@@ -42,7 +53,7 @@ Damit beantwortet er die drei Fragen, die beim privaten Sparen am häufigsten un
 
 Alle Berechnungen laufen ausschließlich im Browser. Kein Server-Upload, kein Tracking.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 **Zinseszins:**
 
@@ -68,7 +79,7 @@ r_real = (1 + r_nominal) / (1 + r_inflation) − 1
 
 Die naive Subtraktion (z.&nbsp;B. 7&nbsp;% − 2,5&nbsp;% = 4,5&nbsp;%) ist mathematisch falsch. Die Fisher-Gleichung liefert das korrekte Ergebnis: 4,39&nbsp;% — ein Unterschied, der über 20&nbsp;Jahre zu einem Planungsfehler von mehreren tausend Euro führen kann.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 **Beispiel 1 — Festgeld 10.000&nbsp;€, 3&nbsp;%, 10&nbsp;Jahre:**
 - Brutto-Endkapital: 13.439,16&nbsp;€ (Zinsertrag: 3.439,16&nbsp;€)
@@ -85,7 +96,7 @@ Die naive Subtraktion (z.&nbsp;B. 7&nbsp;% − 2,5&nbsp;% = 4,5&nbsp;%) ist math
 - Endkapital: 19.800,50&nbsp;€ (Kapitalverlust: 199,50&nbsp;€)
 - Realrendite bei 2,5&nbsp;% Inflation: noch stärker negativ
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 - **Tagesgeld- und Festgeld-Vergleiche:** Welches Angebot bringt netto mehr?
 - **ETF-Sparplan-Planung:** Wie viel bleibt nach 20&nbsp;Jahren tatsächlich übrig — nach Steuer und Inflation?
@@ -97,7 +108,7 @@ Die naive Subtraktion (z.&nbsp;B. 7&nbsp;% − 2,5&nbsp;% = 4,5&nbsp;%) ist math
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Finanz-Tools
+## Welche Finanz-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

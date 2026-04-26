@@ -31,11 +31,11 @@ describe('meter-zu-fuss/de.md frontmatter', () => {
     const h2s = parsed.content.match(/^## .+$/gm) ?? [];
     expect(h2s).toEqual([
       '## Was macht der Konverter?',
-      '## Umrechnungsformel',
-      '## Anwendungsbeispiele',
-      '## Häufige Einsatzgebiete',
+      '## Was ist die Umrechnungsformel?',
+      '## Welche Anwendungsbeispiele gibt es?',
+      '## Welche Einsatzgebiete gibt es?',
       '## Häufige Fragen',
-      '## Verwandte Längen-Tools',
+      '## Welche Längen-Tools sind verwandt?',
     ]);
   });
 });

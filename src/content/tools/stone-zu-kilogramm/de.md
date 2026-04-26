@@ -27,6 +27,9 @@ relatedTools:
   - gramm-zu-unzen
 category: weight
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -37,7 +40,7 @@ Körpergewicht aus britischen Quellen, Fitness-Statistiken in Stone, medizinisch
 Angaben aus dem Vereinigten Königreich und jeden Kontext, in dem die traditionelle
 britische Gewichtseinheit in metrische Werte übersetzt werden muss.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Stone entspricht exakt 6,35029 Kilogramm. Diese Definition basiert auf dem
 britischen Weights and Measures Act und ist international anerkannt. Historisch
@@ -56,7 +59,7 @@ Medienberichten.
 Faustregel ohne Taschenrechner: mal sechs und ein Drittel draufschlagen. 10 st
 × 6 = 60, plus ein Drittel von 10 (≈ 3,3) = 63,3 — tatsächlicher Wert 63,50&nbsp;kg.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf ein
 bis zwei Nachkommastellen.
@@ -73,7 +76,7 @@ bis zwei Nachkommastellen.
 Ein Körpergewicht von 11 Stone entspricht 69,85&nbsp;kg. In britischen Fitness-Foren
 liest man häufig Angaben wie „lost 2 stone" — das sind 12,70&nbsp;kg.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Körpergewicht in Großbritannien und Irland:** Ärzte, Waagen und Fitness-Apps
 zeigen Gewicht in Stone und Pfund an. Wer britische Gesundheitsratgeber oder
@@ -123,7 +126,7 @@ Der Faktor 6,35029&nbsp;kg je Stone ist die international anerkannte Definition.
 Konverter rechnet mit vier Nachkommastellen — präzise genug für jede
 Alltagsanwendung.
 
-## Verwandte Gewichts-Tools
+## Welche Gewichts-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

@@ -27,6 +27,9 @@ relatedTools:
   - zoll-zu-zentimeter
 category: length
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ Der Konverter wandelt einen Wert in Fuß (ft) in die entsprechende Angabe in Met
 zwischen imperialem und metrischem Längenmaß pendelt — von der Körpergröße bis
 zur Raumhöhe in europäischen Bauplänen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Fuß entspricht exakt 0,3048 Metern. Diese Definition stammt aus dem
 Internationalen Yard-und-Pfund-Abkommen von 1959, das die USA, Großbritannien,
@@ -54,7 +57,7 @@ ergibt das 1,83 m — präzise genug für Alltag und Handwerk, zu grob für Verm
 und Geodäsie. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende
 der Rechenkette.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei
 bis vier Nachkommastellen.
@@ -71,7 +74,7 @@ bis vier Nachkommastellen.
 Eine Körpergröße von 6&nbsp;ft entspricht 1,8288 m. Die Standardhöhe US-amerikanischer
 Wohnräume beträgt 8&nbsp;ft, also 2,4384 m — in Europa üblich als rund 2,44 m angegeben.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Bauwesen:** US-amerikanische und britische Baupläne verwenden Fuß und Zoll,
 während europäische Gewerke in Metern planen. Wer transatlantische Pläne liest,
@@ -123,7 +126,7 @@ Ein Fuß entspricht 12 Zoll (inch, in). Ein Zoll misst damit exakt 0,0254 m oder
 25,4&nbsp;mm. Für Körpergrößen in US-Format kombinieren sich Fuß und Zoll: `5'11"`
 bedeutet 5 Fuß und 11 Zoll, zusammen rund 1,80 m.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

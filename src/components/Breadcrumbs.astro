@@ -1,0 +1,101 @@
+---
+// src/components/Breadcrumbs.astro
+// Accessible BreadcrumbList navigation with BreadcrumbList JSON-LD.
+// Refined-Minimalism: mono-font, xs size, graphit tokens, "›" separator.
+// A11y: nav[aria-label], ol/li, aria-current="page" on last item.
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+  ariaLabel?: string;
+}
+
+const { items, ariaLabel = 'Breadcrumb' } = Astro.props;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: item.label,
+    ...(item.href ? { item: new URL(item.href, Astro.site).toString() } : {}),
+  })),
+};
+---
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<nav aria-label={ariaLabel} class="breadcrumbs">
+  <ol class="breadcrumbs__list">
+    {items.map((item, i) => (
+      <li class="breadcrumbs__item">
+        {item.href
+          ? <a class="breadcrumbs__link" href={item.href}>{item.label}</a>
+          : <span class="breadcrumbs__current" aria-current="page">{item.label}</span>
+        }
+        {i < items.length - 1 && (
+          <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    display: none;
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.02em;
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .breadcrumbs__link {
+    color: var(--color-text-subtle);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .breadcrumbs__link:hover {
+    color: var(--color-text-muted);
+    border-bottom-color: var(--color-border);
+  }
+
+  .breadcrumbs__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+
+  .breadcrumbs__current {
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumbs__sep {
+    color: var(--color-text-subtle);
+    opacity: 0.4;
+    user-select: none;
+  }
+</style>

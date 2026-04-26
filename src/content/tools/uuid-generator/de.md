@@ -27,6 +27,9 @@ relatedTools:
   - passwort-generator
   - unix-timestamp
   - hex-rgb-konverter
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht dieser Generator?
@@ -35,7 +38,7 @@ Der UUID-Generator erzeugt universell eindeutige Identifier (Universally Unique 
 
 Anders als serverseitige UUID-Generatoren verlässt hier kein Byte dein Gerät. Kein Logging, kein Tracking, kein Account.
 
-## UUID-Versionen im Vergleich
+## Welche UUID-Versionen gibt es im Vergleich?
 
 Nicht jede UUID-Version eignet sich für jeden Einsatzzweck. Die Wahl hängt von Sortierbarkeit, Privacy und Entropie ab.
 
@@ -48,7 +51,7 @@ Nicht jede UUID-Version eignet sich für jeden Einsatzzweck. Die Wahl hängt von
 
 **Empfehlung 2026:** UUID v7 für alles mit Datenbank-Bezug. Bei 100 Millionen Rows kann der Wechsel von v4 zu zeitgeordneten IDs die Insert-Performance um das Fünffache steigern und die Index-Größe um 30&nbsp;% senken.
 
-## Aufbau einer UUID
+## Wie ist eine UUID aufgebaut?
 
 Eine UUID besteht aus 128 Bit, dargestellt als 32 Hexadezimalzeichen mit vier Bindestrichen:
 
@@ -60,7 +63,7 @@ Eine UUID besteht aus 128 Bit, dargestellt als 32 Hexadezimalzeichen mit vier Bi
 
 Bei UUID v7 enthalten die ersten 48 Bit (Bytes 0–5) den Unix-Timestamp in Millisekunden. Dadurch sind v7-UUIDs chronologisch sortierbar — ein entscheidender Vorteil für B-Tree-Indizes in Datenbanken.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 - **Datenbank-Primary-Keys** — UUID v7 verhindert Index-Fragmentierung bei großen Tabellen und ermöglicht chronologisches Sortieren ohne zusätzliche Spalte.
 - **API-Tokens und Session-IDs** — UUID v4 liefert 122 Bit Zufall ohne Zeitbezug. Für Auth-Tokens ist eine UUID allein nicht ausreichend — kombiniere sie mit HMAC oder nutze dedizierte Token-Formate.
@@ -68,7 +71,7 @@ Bei UUID v7 enthalten die ersten 48 Bit (Bytes 0–5) den Unix-Timestamp in Mill
 - **Datei- und Ressourcen-Benennung** — Eindeutige Dateinamen ohne Konfliktrisiko bei parallelen Uploads.
 - **Event-Logs und Audit-Trails** — UUID v7 macht Einträge sortierbar und nachvollziehbar, ohne separate Timestamp-Spalte.
 
-## UUID vs. Alternativen
+## Was sind UUID-Alternativen?
 
 | Format | Länge | Sortierbar | Standard | Nativer DB-Typ |
 |--------|-------|------------|----------|----------------|
@@ -80,7 +83,7 @@ Bei UUID v7 enthalten die ersten 48 Bit (Bytes 0–5) den Unix-Timestamp in Mill
 
 UUID bleibt 2026 der Standard für die meisten Anwendungsfälle: breiteste DB-Unterstützung, RFC-standardisiert, native Typen in PostgreSQL und MySQL. ULID und NanoID sind kompakter, erfordern aber Custom-Handling in Datenbanken.
 
-## Sicherheitshinweise
+## Welche Sicherheitshinweise gibt es?
 
 - UUID v4 nutzt `crypto.getRandomValues()` (CSPRNG) — niemals `Math.random()` als Fallback.
 - UUIDs sind **keine Auth-Tokens**. 122 Bit Zufall machen sie eindeutig, aber nicht geheim genug für Authentifizierung. Nutze dedizierte Token-Formate (JWT, Opaque Tokens) für Zugangskontrollen.
@@ -91,7 +94,7 @@ UUID bleibt 2026 der Standard für die meisten Anwendungsfälle: breiteste DB-Un
 
 Die Antworten auf die wichtigsten Fragen findest du oben im FAQ-Block — sie werden als strukturiertes JSON-LD (FAQPage) für Suchmaschinen ausgegeben.
 
-## Verwandte Entwickler-Tools
+## Welche Entwickler-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

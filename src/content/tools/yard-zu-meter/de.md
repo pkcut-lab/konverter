@@ -27,13 +27,16 @@ relatedTools:
   - zentimeter-zu-zoll
 category: length
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
 
 Der Konverter wandelt einen Wert in Yard (yd) in die entsprechende Angabe in Metern (m) um und zeigt gleichzeitig den Rückweg. Er eignet sich für jede Rechnung, die zwischen imperialem und metrischem Längenmaß wechselt — von Stoffbahnen über Sportplätze bis zu Grundstücksmaßen.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Yard entspricht exakt 0,9144 Metern. Diese Definition wurde 1959 im Internationalen Yard-und-Pfund-Abkommen zwischen den USA, Großbritannien, Kanada, Australien, Neuseeland und Südafrika festgelegt. Vor dieser Einigung existierten leicht abweichende nationale Yard-Definitionen — seit dem Abkommen gilt ein einziger, weltweit verbindlicher Wert.
 
@@ -44,7 +47,7 @@ Formeln:
 
 Rechen-Beispiel: 50&nbsp;yd × 0,9144 = 45,72 m. Auf zwei Nachkommastellen gerundet ergibt das 45,72 m — präzise genug für Alltag und Handwerk. Wer exakt rechnet, behält alle Stellen und rundet erst am Ende der Rechenkette.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwei bis vier Nachkommastellen.
 
@@ -59,7 +62,7 @@ Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf zwe
 
 Ein Football-Feld misst 100 Yard, also exakt 91,44 m. Ein Golfplatz-Par-4 mit 400 Yard Länge entspricht rund 366 m.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Textilien und Schneiderei:** Stoffbahnen werden in den USA und Großbritannien in Yard verkauft. Schnittmuster aus dem angloamerikanischen Raum geben Stoffbedarf in Yard an — wer metrisch einkauft, multipliziert mit 0,9144 und rundet leicht auf, um genügend Zugabe zu haben.
 
@@ -91,7 +94,7 @@ Nimm den Yard-Wert und ziehe rund neun Prozent ab — das ergibt Meter mit unter
 
 Ein American-Football-Feld misst 100 Yard zwischen den Endzonen, also exakt 91,44 Meter. Mit beiden Endzonen (je 10 Yard) kommt das Spielfeld auf 120 Yard oder 109,73 Meter Gesamtlänge.
 
-## Verwandte Längen-Tools
+## Welche Längen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

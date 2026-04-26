@@ -95,3 +95,10 @@ docs/paperclip/research/2026-04-21-local-cli-destructive-symlink-removal.md.stit
 # Playwright test artifacts (per-run, large, regenerable)
 test-results/
 tests/a11y/results.json
+
+# Lighthouse CI output
+.lhci-output/
+
+# Raw audit JSON (committed as .md summaries instead)
+audits/*.json
+audits/playwright-results.json

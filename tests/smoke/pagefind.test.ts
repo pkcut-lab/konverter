@@ -31,7 +31,7 @@ describe('Pagefind — build-step + header wiring', () => {
 
   it('Header mounts HeaderSearch and excludes itself from indexing', () => {
     const header = readFileSync(join(root, 'src', 'components', 'Header.astro'), 'utf8');
-    expect(header).toMatch(/<HeaderSearch[^>]*client:(load|idle)/);
+    expect(header).toMatch(/<HeaderSearch[^>]*client:(load|idle|visible)/);
     expect(header).toMatch(/data-pagefind-ignore/);
     // The old disabled stub is gone — otherwise it competes with the
     // real input and confuses keyboard users.

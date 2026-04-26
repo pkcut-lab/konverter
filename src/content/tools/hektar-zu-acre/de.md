@@ -26,6 +26,9 @@ relatedTools:
   - quadratkilometer-zu-quadratmeile
 category: area
 contentVersion: 1
+datePublished: '2026-04-21'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -36,7 +39,7 @@ landwirtschaftliche Flächen, Grundstücksbewertungen, Immobilien-Angebote aus
 dem angloamerikanischen Raum und für jeden Kontext, in dem Flächenangaben
 zwischen metrischem und imperialem System übersetzt werden.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Ein Hektar umfasst 10.000 Quadratmeter (100 m × 100 m). Ein Acre entspricht
 exakt 4.046,8564224 m² — eine historisch gewachsene Einheit, die auf das
@@ -55,7 +58,7 @@ behält man alle Nachkommastellen und rundet erst am Ende.
 Umkehrung: 50&nbsp;ac × 0,404686 = 20,2343&nbsp;ha. Ein mittlerer US-Farmbetrieb
 mit 50 Acre bewirtschaftet damit gut 20 Hektar.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf
 zwei bis vier Nachkommastellen.
@@ -72,7 +75,7 @@ zwei bis vier Nachkommastellen.
 Ein Weinberg mit 10&nbsp;ha entspricht knapp 25 Acre. Eine Ranch mit 1.000 Acre
 misst rund 405 Hektar.
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Landwirtschaft und Agrar-Statistik:** Europäische Agrar-Berichte nutzen
 Hektar, US-amerikanische und britische Quellen Acre. Wer FAO-Daten mit
@@ -129,7 +132,7 @@ Für Immobilien-Angebote reichen zwei Nachkommastellen (z. B. 2,47&nbsp;ac). Bei
 Kataster-Vermessungen und amtlichen Flächenberechnungen werden vier
 Nachkommastellen oder mehr gefordert.
 
-## Verwandte Flächen-Tools
+## Welche Flächen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

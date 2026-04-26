@@ -27,6 +27,9 @@ relatedTools:
   - kilometer-zu-meilen
 category: area
 contentVersion: 1
+datePublished: '2026-04-19'
+dateModified: '2026-04-24'
+
 ---
 
 ## Was macht der Konverter?
@@ -38,7 +41,7 @@ englischsprachigen Architektur-Unterlagen, Büro-Mietverträge und für jeden
 Kontext, in dem Flächenangaben zwischen metrischem und imperialem System
 übersetzt werden.
 
-## Umrechnungsformel
+## Was ist die Umrechnungsformel?
 
 Der Umrechnungsfaktor ist das Quadrat des linearen Fuß-zu-Meter-Faktors. Ein
 Fuß entspricht exakt `0,3048 m` (seit dem Yard-und-Pfund-Abkommen von 1959).
@@ -60,7 +63,7 @@ erst am Ende.
 Umkehrung: 1.500 ft² × 0,0929 = 139,35 m². Ein mittelgroßes US-Einfamilienhaus
 landet damit bei rund 139 Quadratmetern.
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Die folgende Tabelle zeigt gängige Werte in beiden Richtungen, gerundet auf
 zwei bis vier Nachkommastellen.
@@ -77,7 +80,7 @@ zwei bis vier Nachkommastellen.
 Eine 80-m²-Wohnung entspricht 861 ft². Ein 2.500-ft²-US-Haus misst rund
 232 m².
 
-## Häufige Einsatzgebiete
+## Welche Einsatzgebiete gibt es?
 
 **Immobilien und Wohnungssuche:** US-Zillow, Realtor und britische Rightmove
 listen Flächen in Quadratfuß. Wer in Deutschland mit Quadratmetern plant,
@@ -131,7 +134,7 @@ akzeptieren Abweichungen bis 10&nbsp;% — größere Differenzen können Mietmin
 rechtfertigen. Für offizielle Angaben rechne mit vier Nachkommastellen und
 runde erst im letzten Schritt.
 
-## Verwandte Flächen-Tools
+## Welche Flächen-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 

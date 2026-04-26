@@ -6,8 +6,8 @@ import {
 } from '../../src/lib/hreflang';
 
 describe('ACTIVE_LANGUAGES', () => {
-  it('contains exactly de in Phase 0', () => {
-    expect(ACTIVE_LANGUAGES).toEqual(['de']);
+  it('contains de and en in Phase 3 (bilingual)', () => {
+    expect(ACTIVE_LANGUAGES).toEqual(['de', 'en']);
   });
 
   it('DEFAULT_LANGUAGE is de', () => {
@@ -50,5 +50,41 @@ describe('buildHreflangLinks', () => {
     const links = buildHreflangLinks({ pathWithoutLang: '/' });
     const de = links.find((l) => l.hreflang === 'de');
     expect(de?.href).toBe('https://kittokit.com/de');
+  });
+
+  it('per-lang record: emits one entry per language with that language\'s slug', () => {
+    const links = buildHreflangLinks({
+      pathWithoutLang: { de: '/meter-zu-fuss', en: '/meter-to-feet' },
+    });
+    const de = links.find((l) => l.hreflang === 'de');
+    const en = links.find((l) => l.hreflang === 'en');
+    expect(de?.href).toBe('https://kittokit.com/de/meter-zu-fuss');
+    expect(en?.href).toBe('https://kittokit.com/en/meter-to-feet');
+  });
+
+  it('per-lang record: OMITS langs without a translation (no fabricated URL)', () => {
+    const links = buildHreflangLinks({
+      pathWithoutLang: { de: '/de-only-tool' }, // no en slot
+    });
+    expect(links.find((l) => l.hreflang === 'en')).toBeUndefined();
+    expect(links.find((l) => l.hreflang === 'de')?.href).toBe(
+      'https://kittokit.com/de/de-only-tool',
+    );
+  });
+
+  it('per-lang record: x-default points at default lang slug when present', () => {
+    const links = buildHreflangLinks({
+      pathWithoutLang: { de: '/de-only-tool' },
+    });
+    expect(links.find((l) => l.hreflang === 'x-default')?.href).toBe(
+      'https://kittokit.com/de/de-only-tool',
+    );
+  });
+
+  it('per-lang record: x-default omitted when default lang slot missing', () => {
+    const links = buildHreflangLinks({
+      pathWithoutLang: { en: '/en-only-tool' }, // no de — no x-default
+    });
+    expect(links.find((l) => l.hreflang === 'x-default')).toBeUndefined();
   });
 });

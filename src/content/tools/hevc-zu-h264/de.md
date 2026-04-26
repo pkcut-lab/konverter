@@ -5,7 +5,7 @@ title: "iPhone-Video in MP4 umwandeln — HEVC zu H.264 Konverter"
 headingHtml: "iPhone-Video in <em>MP4</em> umwandeln"
 metaDescription: "Wandle iPhone-HEVC-Videos in H.264-MP4 um — direkt im Browser, ohne Upload, ohne Anmeldung, kostenlos. Dein Video verlässt deinen Rechner nicht."
 tagline: "Direkt im Browser — ohne Upload, ohne Wasserzeichen."
-intro: "iPhones nehmen Videos seit iOS 11 standardmäßig als HEVC (H.265) im MOV-Container auf. Das spart Speicherplatz, sorgt aber bei älteren Windows-Rechnern, Samsung-Fernsehern, Photoshop-Versionen vor 2023 oder WhatsApp-Web für schwarze Bildschirme und Fehlermeldungen. Dieser Konverter wandelt HEVC-MOV-Dateien in ein universell abspielbares H.264-MP4 um — vollständig in deinem Browser, ohne Server-Upload, ohne Anmeldung und ohne Wasserzeichen. Die eigentliche Konvertierung läuft über die native WebCodecs-API deines Browsers und nutzt die Hardware-Beschleunigung deiner GPU. Das macht die Umwandlung schnell genug, dass ein 1080p-Video in etwa Echtzeit-Geschwindigkeit durchläuft."
+intro: "iPhones nehmen Videos seit iOS 11 als HEVC (H.265) im MOV-Container auf — bei älteren Windows-PCs, Samsung-TVs oder WhatsApp-Web zeigt das schwarze Bilder. Dieser Konverter wandelt HEVC-MOV in universell abspielbares H.264-MP4 um, vollständig im Browser via WebCodecs-API + GPU-Beschleunigung — kein Upload, kein Login, in etwa Echtzeit-Geschwindigkeit."
 howToUse:
   - "HEVC- oder MOV-Datei per Drag-and-Drop ablegen oder über die Auswahl öffnen (bis 500&nbsp;MB)"
   - "Qualitäts-Preset wählen: Original-Qualität · Balanced · Klein"
@@ -29,7 +29,18 @@ relatedTools:
   - hintergrund-entfernen
   - meter-zu-fuss
 category: video
+stats:
+  - label: "Max. Dateigröße"
+    value: "4"
+    unit: "GB"
+  - label: "Video-API"
+    value: "WebCodecs"
+  - label: "Qualität"
+    value: "konfigurierbar"
 contentVersion: 1
+datePublished: '2026-04-20'
+dateModified: '2026-04-24'
+
 ---
 
 ## Warum spielt mein iPhone-Video nicht überall?
@@ -96,7 +107,7 @@ Dateigröße".
   </div>
 </div>
 
-## Anwendungsbeispiele
+## Welche Anwendungsbeispiele gibt es?
 
 Drei typische Situationen, in denen eine Umwandlung nötig wird:
 
@@ -136,7 +147,7 @@ Firmen-interne Dokumentationen — ist das der entscheidende Unterschied zu
 cloud-basierten Konvertern. Weitere Details stehen in der
 <a href="/de/datenschutz">Datenschutzerklärung</a>.
 
-## Grenzen dieses Tools
+## Welche Grenzen hat dieses Tool?
 
 Ehrliche Erwartungsführung ist uns wichtiger als Marketing-Versprechen:
 
@@ -228,7 +239,7 @@ vorhanden — die GPS-Koordinaten in die fertige MP4-Datei. Viele
 Konkurrenzdienste entfernen diese Metadaten stillschweigend, was
 Foto-Chronologien durcheinanderbringt.
 
-## Verwandte Video-Tools
+## Welche Video-Tools sind verwandt?
 
 Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
 
