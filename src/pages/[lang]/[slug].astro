@@ -312,12 +312,6 @@ const dateModifiedFormatted = entry.data.dateModified
       <p class="tagline">{entry.data.tagline}</p>
     </header>
 
-    <p class="tool-intro-answer">{entry.data.intro}</p>
-
-    {entry.data.stats && entry.data.stats.length > 0 && (
-      <ToolStats stats={entry.data.stats} />
-    )}
-
     <div class="tool-main">
       <div class="tool-main__primary">
         <section
@@ -504,6 +498,12 @@ const dateModifiedFormatted = entry.data.dateModified
       )}
     </div>
 
+    <p class="tool-intro-answer">{entry.data.intro}</p>
+
+    {entry.data.stats && entry.data.stats.length > 0 && (
+      <ToolStats stats={entry.data.stats} />
+    )}
+
     <RelatedTools
       lang={entry.data.language}
       ownSlug={Astro.params.slug!}
@@ -564,7 +564,7 @@ const dateModifiedFormatted = entry.data.dateModified
   .tool-page {
     display: flex;
     flex-direction: column;
-    padding-top: var(--space-12);
+    padding-top: var(--space-2);
   }
 
   .tool-hero {
@@ -784,7 +784,7 @@ const dateModifiedFormatted = entry.data.dateModified
   .tool-intro-answer {
     max-width: 42rem;
     width: 100%;
-    margin: 0 auto var(--space-8);
+    margin: var(--space-8) auto var(--space-4);
     font-size: 1rem;
     line-height: 1.55;
     color: var(--color-text-muted);
@@ -835,7 +835,7 @@ const dateModifiedFormatted = entry.data.dateModified
 
   @media (max-width: 40rem) {
     .tool-page {
-      padding-top: var(--space-8);
+      padding-top: var(--space-2);
     }
     .tool-hero {
       margin-bottom: var(--space-8);
@@ -849,7 +849,8 @@ const dateModifiedFormatted = entry.data.dateModified
       min-height: 4.5rem;
     }
     .tool-intro-answer {
-      margin-bottom: var(--space-6);
+      margin-top: var(--space-6);
+      margin-bottom: var(--space-4);
       font-size: 0.9375rem;
     }
     .how {
