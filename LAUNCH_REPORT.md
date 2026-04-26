@@ -250,3 +250,13 @@ _(filled when sprint complete — leer bis Sprint Ende)_
 **Layer 2 (Build):** `npm run check` 0 errors / 0 warnings / 0 hints ✅. `npx vitest run`: 111 test files, 1761 tests — all pass ✅. Git status: T12-scope files committed in `aabc68d` (pkcut-lab) ✅.
 **Layer 3 (Funktional):** 5 sample pages verified in built dist: `de/meter-zu-fuss` → `/og/tools/meter-zu-fuss.webp` ✅ · `en/meter-to-feet` → `/og/tools/meter-zu-fuss.webp` (DE-Card-Reuse) ✅ · `de/json-formatter` → `/og/tools/json-formatter.webp` ✅ · `de/passwort-generator` → `/og/tools/passwort-generator.webp` ✅ · `de/brutto-netto-rechner` → `/og/tools/brutto-netto-rechner.webp` ✅ · Homepage → `/og-image.png` (fallback) ✅. OG width=1200, height=630 on all pages ✅. 72/72 WebP cards present in `public/og/tools/` ✅.
 **Layer 4 (Look):** 3 cards visually reviewed (meter-zu-fuss, passwort-generator, brutto-netto-rechner). Dark graphite BG, white Inter semi-bold tool name, muted JetBrains Mono uppercase eyebrow, orange "o" accent on wordmark, left accent bar, horizontal divider, footer URL — all on-brand Refined Minimalism ✅. Word-wrap working correctly (1- and 2-line variants verified). No gradients, no pastels.
+
+#### Review-Pass T11 — 2026-04-26T07:55:00+02:00
+**Reviewer:** quality-reviewer
+**Verdict:** ✅ approved
+**Layer-Check:** Hard-Caps ✅ · Build ✅ · Funktional ✅ · Look ✅ (N/A)
+
+**Layer 1 (Hard-Caps):** PASS — kein UI, keine Hex-Farben in geänderten Dateien. Kein React/Next.js-Import. Pure-client: beide Snippets laden via CDN im Browser (no server upload). Clarity DSGVO-konform: consent-gated via `kittokit-consent.statistik` aus T6. CF Analytics: privacy-first (kein Cookie, kein Consent erforderlich per CF-Docs). AAA-Contrast N/A.
+**Layer 2 (Build):** `npm run check` 0 errors / 0 warnings / 0 hints ✅. `npx vitest run`: 111 test files, 1761 tests — all pass ✅. Git author: pkcut-lab ✅. Commit 76d4c05.
+**Layer 3 (Funktional):** CF beacon-Script rendert nur bei gesetztem `CF_RUM_TOKEN` (fail-safe gegen leerem token) ✅. Clarity-Script rendert nur bei gesetztem `PUBLIC_CLARITY_PROJECT_ID` ✅. Consent-Check korrekt: `localStorage.getItem('kittokit-consent')` + `c.statistik` — matcht T6-Implementierung in `consent.ts` (KEY + Typ). Event-Name `kittokit-consent-change` matcht T6 ✅. Double-load-Guard `!window.clarity` ✅. Try/catch fail-safe ✅. Restschuld dokumentiert: beide Tokens brauchen manuellen User-Input (inbox/to-user/REQUIRES-USER-INPUT-analytics-tokens.md) — akzeptabel, da fail-safe.
+**Layer 4 (Look):** N/A — reiner Analytics-Infrastruktur-Task ohne UI-Änderungen.
