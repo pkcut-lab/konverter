@@ -29,7 +29,7 @@
 </script>
 
 {#if mode === 'banner'}
-  <aside class="banner" role="dialog" aria-modal="true" aria-label="Cookie-Einstellungen">
+  <div class="banner" role="dialog" aria-modal="true" aria-label="Cookie-Einstellungen">
     <p class="eyebrow">Datenschutz</p>
     <p class="body">
       kittokit nutzt nur notwendige Cookies. Mit deiner Zustimmung helfen Statistik-Cookies
@@ -41,9 +41,9 @@
       <button class="ghost" onclick={openDrawer}>Auswählen</button>
       <button class="ghost" onclick={acceptNecessary}>Nur notwendige</button>
     </div>
-  </aside>
+  </div>
 {:else if mode === 'drawer'}
-  <aside class="banner" role="dialog" aria-modal="true" aria-label="Cookie-Auswahl">
+  <div class="banner" role="dialog" aria-modal="true" aria-label="Cookie-Auswahl">
     <p class="eyebrow">Auswahl</p>
     <ul class="toggles">
       <li>
@@ -68,7 +68,7 @@
     <div class="buttons">
       <button class="primary" onclick={saveDrawer}>Speichern</button>
     </div>
-  </aside>
+  </div>
 {/if}
 
 <style>

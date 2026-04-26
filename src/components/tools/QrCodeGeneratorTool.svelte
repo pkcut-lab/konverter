@@ -100,7 +100,7 @@
 
   <div class="qr__preview-panel">
     {#if result.ok === true}
-      <div class="qr__svg-wrap" aria-label="QR-Code-Vorschau">
+      <div class="qr__svg-wrap" role="img" aria-label="QR-Code-Vorschau">
         {@html result.svg}
       </div>
       <div class="qr__actions">

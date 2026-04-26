@@ -1,3 +1,22 @@
 ---
-return Astro.redirect('/de');
+// Root redirect to /de (handled by CF Pages Function in production).
+// This static fallback is served only when CF Functions are unavailable.
+// WCAG: 0-second meta-refresh is exempt (immediate redirect, no user perceives a delay).
 ---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="refresh" content="0;url=/de">
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href="https://kittokit.com/de">
+    <title>kittokit</title>
+  </head>
+  <body>
+    <main>
+      <h1>kittokit</h1>
+      <p><a href="/de">Zur deutschen Version</a></p>
+    </main>
+  </body>
+</html>

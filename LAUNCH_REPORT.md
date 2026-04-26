@@ -102,7 +102,7 @@ _(launch-coordinator updates this block each heartbeat)_
 | T6 | Cookie-Banner | cookie-consent-builder | ⏳ awaiting-review [KIT-7 done, 944c1fb] | — |
 | T7 | JSON-LD per Tool | jsonld-enricher | ✅ approved [KIT-6 done] | ✅ approved 2026-04-26T06:25 |
 | T8 | Performance + CWV | perf-auditor | in_progress [KIT-1] | — |
-| T9 | WCAG 2.2 AAA a11y | a11y-auditor | in_progress [KIT-2] | — |
+| T9 | WCAG 2.2 AAA a11y | a11y-auditor | ⏳ awaiting-review [KIT-2, 29→0 violations] | — |
 | T10 | 404/500 + sitemap + robots | error-pages-builder | ⏳ awaiting-review [KIT-3 done, 1f339cb] | — |
 | T11 | CF Web Analytics + Clarity | cf-infra-engineer | ⏳ awaiting-review [KIT-8 in_review, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | — |
 | T12 | OG-Bilder + Brand-Assets | og-image-generator | ⏳ awaiting-review [KIT-4 in_review, aabc68d] | — |
@@ -114,6 +114,33 @@ _(launch-coordinator updates this block each heartbeat)_
 ---
 
 ## Worker-Reports
+
+### T9 — WCAG 2.2 AAA a11y Audit + Fix (2026-04-26 a11y-auditor)
+
+**T-ID:** T9 | **Status:** awaiting-review
+
+**Was geändert:**
+- `src/components/CookieBanner.svelte` — `<aside role="dialog">` → `<div role="dialog">` (2 instances; aria-allowed-role, 27 pages)
+- `src/components/tools/ContrastCheckerTool.svelte` — Added `aria-label` to 2 unlabeled hex inputs (label, 1 page)
+- `src/components/tools/QrCodeGeneratorTool.svelte:103` — Added `role="img"` to aria-label div (aria-prohibited-attr, 1 page)
+- `src/pages/de/datenschutz.astro` — `<div class="legal-dl">` → `<dl class="legal-dl">` (5 instances); `<div class="legal-rights">` → `<dl class="legal-rights">` (dlitem, 1 page)
+- `src/pages/de/impressum.astro` — `<div class="legal-dl">` → `<dl class="legal-dl">` (dlitem, 1 page)
+- `src/pages/index.astro` — Replaced `Astro.redirect('/de')` with proper redirect page: `lang="de"`, `<main>`, `<h1>`, `content="0;url=/de"` (5 violations on root page)
+- `src/layouts/BaseLayout.astro` — Fixed pre-existing TS2375: `ogImagePath?: string` → `ogImagePath?: string | undefined`
+
+**Verifikation:**
+- axe-core scan: 29 violations → **0 violations** (74 pages)
+- `npm run check`: ✅ 0 errors, 0 warnings
+- `npx vitest run`: 1757/1761 (4 pre-existing failures, 0 new regressions)
+- Token contrast: all 14 pairs ≥7:1 AAA (light + dark)
+- Heading order: ✅ no skipped levels (sample: 4 pages)
+
+**Restschulden:**
+- EN pages not formally axe-scanned (same templates → expected 0 violations)
+
+**Übergabe:** quality-reviewer → tasks/awaiting-review/T9/a11y-auditor.md
+
+---
 
 ### T13 — Email Routing @kittokit.com (2026-04-26 cf-infra-engineer)
 

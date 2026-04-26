@@ -50,6 +50,7 @@
         <input
           type="text"
           class="contrast__hex-input"
+          aria-label="Vordergrundfarbe als Hex-Code"
           spellcheck="false"
           autocomplete="off"
           value={fgInput}
@@ -84,6 +85,7 @@
         <input
           type="text"
           class="contrast__hex-input"
+          aria-label="Hintergrundfarbe als Hex-Code"
           spellcheck="false"
           autocomplete="off"
           value={bgInput}
