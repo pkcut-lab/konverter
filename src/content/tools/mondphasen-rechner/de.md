@@ -66,7 +66,7 @@ Beleuchtung = 0,5 × (1 − cos(Mondalter × 2π / 29,53))
 
 Ergibt 0 bei Neumond (0 % beleuchtet) und 1 bei Vollmond (100 % beleuchtet).
 
-## Die 8 Mondphasen im Überblick
+## Welche 8 Mondphasen gibt es?
 
 | Phase | Mondalter | Beleuchtung |
 |-------|-----------|-------------|
@@ -90,7 +90,7 @@ Ergibt 0 bei Neumond (0 % beleuchtet) und 1 bei Vollmond (100 % beleuchtet).
 
 (FAQ wird aus Frontmatter als FAQPage-Schema gerendert.)
 
-## Verwandte Werkzeuge
+## Welche verwandten Werkzeuge gibt es?
 
 - **[Unix Timestamp Converter](/de/unix-timestamp)** — Datum und Uhrzeit in Unix-Timestamps umrechnen, z.&nbsp;B. für Datenbankabfragen zu bestimmten Mondphasen-Ereignissen.
 - **[Zeitzonen-Rechner](/de/zeitzonen-rechner)** — Uhrzeiten zwischen Zeitzonen umrechnen, hilfreich wenn du Mondphasen-Ereignisse für verschiedene Standorte planst.

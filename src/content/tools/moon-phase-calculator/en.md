@@ -68,7 +68,7 @@ Illumination = 0.5 × (1 − cos(lunar age × 2π / 29.53))
 
 This yields 0 at new moon (0% lit) and 1 at full moon (100% lit).
 
-## The 8 moon phases at a glance
+## What are the 8 moon phases?
 
 | Phase | Lunar age | Illumination |
 |-------|-----------|--------------|
@@ -81,18 +81,18 @@ This yields 0 at new moon (0% lit) and 1 at full moon (100% lit).
 | Last Quarter | 22.15–23.99 days | ~50% |
 | Waning Crescent | 23.99–29.53 days | 49–1% |
 
-## Common uses for moon phase data
+## What is moon phase data used for?
 
 - **Moon calendar gardening:** Many gardeners plant leafy vegetables during the waxing moon and harvest during the waning moon — a practice rooted in long-standing observation.
 - **Fishing:** Full moon and new moon are traditionally considered the best fishing times, as the tidal pull tends to make fish more active.
 - **Photography and night observation:** Astronomers and nature photographers plan shoots around new moon (darkest sky) or full moon (maximum moonlight).
 - **Calendar planning and festivals:** Many religious and cultural events — Easter, Ramadan, Chinese New Year — are tied to the lunar calendar.
 
-## Frequently asked questions
+## What are the most frequently asked questions about moon phases?
 
 (FAQ is rendered from frontmatter as FAQPage schema.)
 
-## Related tools
+## Which related tools are available?
 
 - **[Unix Timestamp Converter](/en/unix-timestamp-converter)** — Convert dates and times to Unix timestamps, useful for querying databases around specific lunar events.
 - **[Timezone Converter](/en/timezone-converter)** — Convert times between time zones, helpful when planning moon phase events across locations.
