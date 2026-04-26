@@ -46,51 +46,45 @@
   }
 
   /**
-   * Build an SVG path for the moon terminator.
-   * The moon disc is a circle of radius R centered at (cx, cy).
-   * We draw the lit portion: a semicircle on the correct side plus an ellipse arc.
+   * Build an SVG path for the lit portion of the moon.
    *
-   * illumination: 0–1
-   * waxing: true = lit on right, false = lit on left
+   * Geometry: the terminator is a great circle perpendicular to the
+   * Sun-Moon direction; projected onto the disc it appears as an ellipse
+   * with semi-axes R (vertical) and rx = R · |cos(phase angle)|.
+   * From illumination k = (1 + cos i)/2  →  cos i = 2k − 1  →  rx = R · |2k − 1|.
+   *
+   * Path: outer semicircle on the lit side (top → bottom), then terminator
+   * ellipse back to top. Sweep flags chosen so the enclosed region is
+   * exactly the lit area for both crescent (k<0.5) and gibbous (k>0.5).
    */
   function moonPath(illumination: number, waxing: boolean): string {
     const R = 80;
     const cx = 100;
     const cy = 100;
 
-    if (illumination <= 0.01) return ''; // new moon – no lit path
-    if (illumination >= 0.99) {
-      // full moon – complete circle
-      return `M ${cx} ${cy - R} A ${R} ${R} 0 1 1 ${cx} ${cy + R} A ${R} ${R} 0 1 1 ${cx} ${cy - R} Z`;
+    if (illumination <= 0.005) return '';
+    if (illumination >= 0.995) {
+      return `M ${cx - R} ${cy} A ${R} ${R} 0 1 0 ${cx + R} ${cy} A ${R} ${R} 0 1 0 ${cx - R} ${cy} Z`;
     }
 
-    // The terminator ellipse x-axis: positive = bulge toward lit side
-    // At 50% illumination, terminatorX = 0 (straight line / first quarter)
-    // At 25% illumination, terminatorX = R (full crescent)
-    // At 75% illumination, terminatorX = -R (full gibbous looks wide)
-    const terminatorX = R * Math.cos(illumination * Math.PI);
-
-    const litRight = waxing;
-    // Arc direction for outer semicircle:
-    // Lit right → draw right semicircle top→bottom sweep=1
-    // Lit left  → draw left semicircle top→bottom sweep=0
-    const outerSweep = litRight ? 1 : 0;
-    // The terminator ellipse closes the shape
-    // terminatorX positive → ellipse bulges away from lit side (crescent)
-    // terminatorX negative → ellipse bulges toward lit side (gibbous)
-    // For lit-right: terminator is on left half. If waxing crescent (illum<0.5),
-    // ellipse rx is positive and sweeps from bottom to top on lit side.
-    const ellipseSweep = litRight ? (illumination < 0.5 ? 1 : 0) : (illumination < 0.5 ? 0 : 1);
-    const absRx = Math.abs(terminatorX);
+    const rx = R * Math.abs(2 * illumination - 1);
+    const outerSweep = waxing ? 1 : 0;
+    const innerSweep = illumination > 0.5 ? outerSweep : 1 - outerSweep;
 
     return [
       `M ${cx} ${cy - R}`,
-      // Outer semicircle (always radius R, lit side)
       `A ${R} ${R} 0 0 ${outerSweep} ${cx} ${cy + R}`,
-      // Terminator ellipse back to top
-      `A ${absRx || 0.1} ${R} 0 0 ${ellipseSweep} ${cx} ${cy - R}`,
+      `A ${rx || 0.1} ${R} 0 0 ${innerSweep} ${cx} ${cy - R}`,
       'Z',
     ].join(' ');
+  }
+
+  /** Shift dateStr by delta days (negative = back, positive = forward). */
+  function shiftDate(delta: number) {
+    const d = new Date(dateStr + 'T12:00:00Z');
+    if (isNaN(d.getTime())) return;
+    d.setUTCDate(d.getUTCDate() + delta);
+    dateStr = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
   }
 
   const i18n = {
@@ -105,6 +99,8 @@
       nextFull: 'Nächster Vollmond',
       nextNew: 'Nächster Neumond',
       in: 'in',
+      prevDay: 'Vorheriger Tag',
+      nextDay: 'Nächster Tag',
       privacy: 'Kein Server-Upload · Berechnung lokal im Browser',
     },
     en: {
@@ -118,6 +114,8 @@
       nextFull: 'Next full moon',
       nextNew: 'Next new moon',
       in: 'in',
+      prevDay: 'Previous day',
+      nextDay: 'Next day',
       privacy: 'No server upload · Calculated locally in your browser',
     },
   } as const;
@@ -128,16 +126,40 @@
 
 <div class="moon-tool" aria-label={lang === 'en' ? 'Moon phase calculator' : 'Mondphasen-Rechner'}>
 
-  <!-- Date input -->
+  <!-- Date input with prev/next day arrows -->
   <div class="date-row">
     <label class="date-label" for="moon-date">{s.label}</label>
-    <input
-      id="moon-date"
-      type="date"
-      class="date-input"
-      bind:value={dateStr}
-      aria-label={s.label}
-    />
+    <div class="date-controls">
+      <button
+        type="button"
+        class="date-nav-btn"
+        onclick={() => shiftDate(-1)}
+        aria-label={s.prevDay}
+        title={s.prevDay}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M10 3 L5 8 L10 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <input
+        id="moon-date"
+        type="date"
+        class="date-input"
+        bind:value={dateStr}
+        aria-label={s.label}
+      />
+      <button
+        type="button"
+        class="date-nav-btn"
+        onclick={() => shiftDate(1)}
+        aria-label={s.nextDay}
+        title={s.nextDay}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M6 3 L11 8 L6 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
   </div>
 
   {#if result}
@@ -251,7 +273,15 @@
     letter-spacing: 0.02em;
   }
 
+  .date-controls {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-2);
+    max-width: 22rem;
+  }
+
   .date-input {
+    flex: 1;
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
     background: var(--color-bg);
@@ -260,13 +290,37 @@
     font-family: var(--font-family-mono);
     padding: var(--space-3) var(--space-3);
     min-height: 2.75rem;
-    max-width: 16rem;
     outline: none;
     transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
     cursor: pointer;
   }
 
   .date-input:focus {
+    border-color: var(--color-text);
+    box-shadow: 0 0 0 2px var(--color-focus-ring, var(--color-accent));
+  }
+
+  .date-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .date-nav-btn:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+  }
+
+  .date-nav-btn:focus-visible {
+    outline: none;
     border-color: var(--color-text);
     box-shadow: 0 0 0 2px var(--color-focus-ring, var(--color-accent));
   }
