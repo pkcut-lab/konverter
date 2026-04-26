@@ -171,8 +171,11 @@ const websiteJsonLd = {
     <script is:inline defer src="/registerSW.js"></script>
   </head>
   <body>
+    <a href="#main" class="skip-to-content">
+      {lang === 'de' ? 'Zum Inhalt springen' : 'Skip to content'}
+    </a>
     <Header lang={lang} langAlternates={hreflangs} />
-    <main class="site-main" data-pagefind-body>
+    <main id="main" class="site-main" data-pagefind-body>
       <slot />
     </main>
     <Footer lang={lang} />
@@ -208,6 +211,34 @@ const websiteJsonLd = {
 </html>
 
 <style>
+  .skip-to-content {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    z-index: 9999;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--r-md);
+    border: 2px solid var(--color-accent);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    text-decoration: none;
+    /* Hidden until keyboard focus via clip-path (accessible alternative to
+       display:none which removes from tab order) */
+    clip-path: inset(50%);
+    white-space: nowrap;
+    overflow: hidden;
+    transition: clip-path var(--dur-fast) var(--ease-out);
+  }
+  .skip-to-content:focus-visible {
+    clip-path: inset(0);
+    outline: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skip-to-content { transition: none; }
+  }
+
   .site-main {
     max-width: 72rem;
     margin: 0 auto;
