@@ -81,6 +81,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T05:21 UTC+2 (Heartbeat-2) — **BLOCKER ERKANNT.** tasks/awaiting-review/: leer. inbox/to-launch-coordinator/: leer. Alle 9 Worker-Agents: status=idle, lastHeartbeatAt=null, adapterConfig={}, runtimeConfig={}. Workers sind NICHT konfiguriert — kein cwd, kein model, kein heartbeat-interval im Paperclip-API-Record. Dispatch-Files (9x) liegen bereit in tasks/dispatch/, werden aber nicht gepickt weil Agents nicht laufen. Sprint ist GESTOPPT bis Worker-AdapterConfig via Paperclip-Dashboard oder API gesetzt wird. User-Benachrichtigung via inbox/to-user/BLOCKED-worker-config.md geschrieben.
 >
 > 2026-04-26T05:31 UTC+2 (Heartbeat-3) — **BLOCKER WEITERHIN AKTIV — cwd fehlt.** Teilfortschritt: User hat model/effort/heartbeat/instructionsFilePath für alle Worker gesetzt (✅). Workers haben nun lastHeartbeatAt ~03:28 UTC. ABER: adapterConfig enthält KEIN `cwd` → Worker-Workspaces sind leer, kein Zugriff auf Konverter-Webseite-Repo. JSON-LD-Enricher läuft gerade (status=running) aber in leerem Workspace. tasks/awaiting-review/: leer. Dispatch-Files (9x) noch unberührt. Einziger fehlender Schritt: `cwd` = `C:\Users\carin\.gemini\Konverter Webseite` für alle 9 Worker via Paperclip-Dashboard setzen. Follow-up in inbox/to-user/BLOCKED-cwd-missing.md.
+>
+> 2026-04-26T05:46 UTC+2 (Heartbeat-4) — **KORREKTUR + FORTSCHRITT.** cwd-Blocker war übervorsichtig: JSON-LD-Enricher lief ohne explizites `cwd` und lieferte vollständigen T7-Output (03:37 UTC). T7 war pre-sprint implementiert (commit 67f26b2), Worker hat verifiziert und Review-File geschrieben. tasks/awaiting-review/T7/jsonld-enricher.md vorhanden. Quality-Reviewer ran 03:44 UTC — keine Verdict-Datei gefunden (ran kurz nach T7-Commit, möglicherweise missed oder cwd-Problem). Andere Workers (T6/T8/T9/T10/T12/T13) haben 30min Interval, letzte Run 03:28 UTC, nächste ~03:58 UTC. Erwarte T8/T9/T10/T12/T13 Output in nächsten 30-60min. T6 (Cookie-Banner) hat Dep T5 — keine pre-sprint Impl gefunden. T12 (OG-Images): public/og/ leer, Worker nötig. Sprint läuft.
 
 ---
 
@@ -90,7 +92,7 @@ _(launch-coordinator updates this block each heartbeat)_
 |----|------|-------|--------|-------------------|
 | T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
 | T6 | Cookie-Banner | cookie-consent-builder | pending (dispatch ready) | — |
-| T7 | JSON-LD per Tool | jsonld-enricher | pending (dispatch ready) | — |
+| T7 | JSON-LD per Tool | jsonld-enricher | ⏳ awaiting-review | — |
 | T8 | Performance + CWV | perf-auditor | pending (dispatch ready) | — |
 | T9 | WCAG 2.2 AAA a11y | a11y-auditor | pending (dispatch ready) | — |
 | T10 | 404/500 + sitemap + robots | error-pages-builder | pending (dispatch ready) | — |
