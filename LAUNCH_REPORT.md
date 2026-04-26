@@ -7,18 +7,20 @@
 
 ---
 
-## ⚠️ EINMAL-AKTION ERFORDERLICH (1 Minute)
+## ✅ AKTIV — Sprint läuft autonom
 
-Beim Import hat Paperclip die 10 Agents als `status=pending_approval` mit `heartbeat.enabled=false` angelegt. Das ist die Default-Sicherheits-Richtlinie für neue Companies. Es gibt kein CLI-Command, der das in einem Schritt umstellt — du musst kurz im Dashboard:
+Stand 2026-04-26 ~05:05 UTC:
+- **Alle 10 Agents:** approved + heartbeat enabled via Paperclip-API
+- **Launch-Coordinator:** ersten Heartbeat gefeuert (status: running)
+- **Existing kittokit-Company:** runtime-paused — alle 34 Agents heartbeat:disabled
+- **Daemon:** Paperclip-Server läuft auf localhost:3101, picked nächste Heartbeats automatisch
 
-1. Öffne: **http://localhost:3101/dashboard** (Paperclip-Server läuft schon)
-2. Wähle Company **"kittokit-launch"** (ID: `a1d7d1ea-7e43-46aa-92a7-27640c113577`)
-3. Im Agents-Tab: alle **10 Agents approven** (Bulk-Action wenn UI das hat, sonst einzeln)
-4. Pro Agent: Heartbeat aktivieren (Toggle "Enable heartbeat")
-
-Danach läuft die Company autonom und arbeitet T6-T15 ab. Sprint-Ende-Signal kommt in `inbox/to-user/SPRINT_DONE.md`.
-
-**Alternativ:** wenn du mir später eine erweiterte Token-Berechtigung gibst (Board-Member-Approval API), kann ich es nachträglich aktivieren.
+**Reaktivieren der existing kittokit-Company nach Sprint-Ende:**
+```bash
+# Re-enable heartbeats (siehe scripts/paperclip-resume-kittokit.sh wenn vorhanden,
+# sonst über Dashboard http://localhost:3101)
+rm .paperclip/EMERGENCY_HALT
+```
 
 ---
 
@@ -70,9 +72,9 @@ Jeder Worker schreibt nach Fertigstellung nach `tasks/awaiting-review/T<N>/<agen
 
 ## Coordinator-Status (top, immer aktuell)
 
-_(launch-coordinator updates this block each heartbeat — leer bis Aktivierung)_
+_(launch-coordinator updates this block each heartbeat)_
 
-> Setup-Phase abgeschlossen. Warte auf Agent-Approval via Dashboard. Heartbeat noch nicht aktiv.
+> 2026-04-26 05:05 — Sprint started. Launch-Coordinator: status=running. Workers: alle idle, Heartbeats geplant. Erste Worker-Picks erwartet binnen 30min (T6/T7/T8/T9/T10/T12 parallel-fähig). Existing kittokit-Company runtime-paused. Sprint-Termine siehe Task-Tracker unten.
 
 ---
 
