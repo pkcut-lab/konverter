@@ -77,6 +77,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26 05:05 — Sprint started. Launch-Coordinator: status=running. Workers: alle idle, Heartbeats geplant. Erste Worker-Picks erwartet binnen 30min (T6/T7/T8/T9/T10/T12 parallel-fähig). Existing kittokit-Company runtime-paused. Sprint-Termine siehe Task-Tracker unten.
 >
 > 2026-04-26 (Heartbeat-1) — Erster Coordinator-Tick. State: 9 Dispatch-Files vorhanden (T6/T7/T8/T9/T10/T11/T12/T13/T15). tasks/awaiting-review/: leer. inbox/to-launch-coordinator/: leer. Phase-A-Workers (T7/T8/T9/T10/T12/T13) sollten Dispatch-Files via Heartbeat picken. T6 hat Dep T5 (extern, in progress) — Dispatch bereit, cookie-consent-builder entscheidet intern. T11 wartet auf T6, T15 wartet auf T5+T6+T8+T11. T14 conditional, kein Dispatch. Keine Eskalationen. Nächster Tick in 10min.
+>
+> 2026-04-26T05:21 UTC+2 (Heartbeat-2) — **BLOCKER ERKANNT.** tasks/awaiting-review/: leer. inbox/to-launch-coordinator/: leer. Alle 9 Worker-Agents: status=idle, lastHeartbeatAt=null, adapterConfig={}, runtimeConfig={}. Workers sind NICHT konfiguriert — kein cwd, kein model, kein heartbeat-interval im Paperclip-API-Record. Dispatch-Files (9x) liegen bereit in tasks/dispatch/, werden aber nicht gepickt weil Agents nicht laufen. Sprint ist GESTOPPT bis Worker-AdapterConfig via Paperclip-Dashboard oder API gesetzt wird. User-Benachrichtigung via inbox/to-user/BLOCKED-worker-config.md geschrieben.
 
 ---
 
