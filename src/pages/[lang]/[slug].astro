@@ -247,8 +247,8 @@ const jsonLd = buildToolJsonLd(
     })),
     datePublished: entry.data.datePublished,
     dateModified: entry.data.dateModified,
-    featureList: entry.data.featureList,
-    heroSlug: deSlug ?? undefined,
+    ...(entry.data.featureList && { featureList: entry.data.featureList }),
+    ...(deSlug !== undefined && { heroSlug: deSlug }),
   },
   Astro.url.href,
 );
