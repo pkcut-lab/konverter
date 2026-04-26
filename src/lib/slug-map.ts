@@ -86,6 +86,9 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'unix-timestamp':      { de: 'unix-timestamp',                   en: 'unix-timestamp-converter' },
   'timezone-converter':  { de: 'zeitzonen-rechner',                en: 'timezone-converter' },
 
+  // ── Nature ───────────────────────────────────────────────────────────────
+  'moon-phase':          { de: 'mondphasen-rechner',               en: 'moon-phase-calculator' },
+
   // ── Finance ──────────────────────────────────────────────────────────────
   'vat-calculator':              { de: 'mehrwertsteuer-rechner',   en: 'vat-calculator' },
   'discount-calculator':         { de: 'rabatt-rechner',           en: 'discount-calculator' },

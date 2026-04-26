@@ -80,6 +80,7 @@ const strings: Record<Lang, UiStrings> = {
       color: 'Farbe',
       time: 'Zeit',
       dev: 'Entwickler',
+      nature: 'Natur & Astronomie',
     },
     categoriesUncategorized: 'Weitere',
 
@@ -140,6 +141,7 @@ const strings: Record<Lang, UiStrings> = {
       color: 'Color',
       time: 'Time',
       dev: 'Developer',
+      nature: 'Nature & Astronomy',
     },
     categoriesUncategorized: 'Other',
 

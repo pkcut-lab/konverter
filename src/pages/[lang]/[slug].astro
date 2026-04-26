@@ -38,6 +38,7 @@ import PdfZusammenfuehrenTool from '../../components/tools/PdfZusammenfuehrenToo
 import PdfAufteilenTool from '../../components/tools/PdfAufteilenTool.svelte';
 import PdfZuJpgTool from '../../components/tools/PdfZuJpgTool.svelte';
 import PdfPasswortTool from '../../components/tools/PdfPasswortTool.svelte';
+import MondphasenRechnerTool from '../../components/tools/MondphasenRechnerTool.svelte';
 import ToolStats from '../../components/ToolStats.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
@@ -99,8 +100,10 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   'pdf-split',
   'pdf-to-jpg',
   'pdf-password',
+  'moon-phase',
 ]);
 
+const MOON_PHASE_TOOL_ID = 'moon-phase';
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
 const VIDEO_BG_REMOVE_TOOL_ID = 'video-bg-remove';
 
@@ -413,6 +416,9 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'formatter' && config.id === 'pdf-password' && (
             <PdfPasswortTool config={config} client:load />
           )}
+          {config.type === 'formatter' && config.id === MOON_PHASE_TOOL_ID && (
+            <MondphasenRechnerTool config={config} lang={entry.data.language} client:load />
+          )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
               config={config}
@@ -563,7 +569,7 @@ const dateModifiedFormatted = entry.data.dateModified
 
   .tool-hero {
     max-width: 56rem;
-    margin: 0 auto var(--space-12);
+    margin: 0 auto var(--space-8);
     text-align: center;
     display: flex;
     flex-direction: column;

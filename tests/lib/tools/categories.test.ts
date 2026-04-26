@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { TOOL_CATEGORIES } from '../../../src/lib/tools/categories';
 
 describe('TOOL_CATEGORIES taxonomy', () => {
-  it('contains exactly 24 categories', () => {
-    expect(TOOL_CATEGORIES).toHaveLength(24);
+  it('contains exactly 25 categories', () => {
+    expect(TOOL_CATEGORIES).toHaveLength(25);
   });
 
   it('all entries are unique', () => {

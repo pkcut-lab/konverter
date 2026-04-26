@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — SEO Sprint 1 (T1.1-T1.6) vollständig: dateModified/datePublished (144 Files migriert) · Answer-First DOM-Reorder · Organization.sameAs · security.txt Fallback · /de/ueber expanded (492 Wörter) + Person-Schema · SoftwareApplication.creator-Link · 1837/1837 tests · 0 errors
+**Letztes Update:** 2026-04-26 — Mondphasen-Rechner (moon-phase): neues Tool + neue Kategorie `nature` · SVG-Mondvisualisierung · DE + EN Content · 1838/1838 Tests grün · 0 errors
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
@@ -9,9 +9,10 @@
 
 | Metrik | Wert |
 |--------|------|
-| Tools gesamt (slug-map) | **72** |
+| Tools gesamt (slug-map) | **73** |
 | ✅ Shipped (live auf CF Pages) | **69** |
 | 🟡 In Pipeline (Paperclip, noch nicht shipped) | **3** |
+| 🆕 Neu (bereit, noch nicht deployed) | **1** (mondphasen-rechner) |
 | ⬜ Skelett / leer | **0** |
 | ❌ Broken | **0** |
 | Dedizierte Vitest-Tests | 57 Tools |
@@ -169,6 +170,14 @@ Legende:
 |---------|---------|--------|------|-------|---------|------|------|
 | unix-timestamp | unix-timestamp | ✅ | generic/Formatter | ✅ | ✅ | ⬜ | ⬜ |
 | timezone-converter | zeitzonen-rechner | ✅ | generic/Converter | ✅ | ✅ | ⬜ | ⬜ |
+
+---
+
+### Natur & Astronomie (`nature`)
+
+| Tool-ID | DE-Slug | Status | Komp | Tests | Content | Icon | Hero |
+|---------|---------|--------|------|-------|---------|------|------|
+| moon-phase | mondphasen-rechner | 🟡 | custom/MondphasenRechnerTool | ✅ | ✅ | ⬜ | ⬜ |
 
 ---
 
