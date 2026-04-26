@@ -92,7 +92,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     </nav>
 
     <div class="search-slot">
-      <HeaderSearch client:idle lang={lang} placeholder={placeholder} />
+      <HeaderSearch client:visible lang={lang} placeholder={placeholder} />
     </div>
 
     {langLinks.length > 1 && (
@@ -110,7 +110,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     )}
 
     <div class="toggle-slot">
-      <ThemeToggle client:idle />
+      <ThemeToggle client:visible />
     </div>
   </div>
 
