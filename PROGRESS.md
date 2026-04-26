@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — Phase-3 i18n-Slug-Bug-Fix: EN-Tools-Index live unter `/en/tools` (war fälschlich `/en/werkzeuge`) · CF Function defaultet jetzt zu EN für non-DE Browser
+**Letztes Update:** 2026-04-26 — SEO Sprint 3 (T3.1-T3.6): hreflang-Fix (144 pages bidirectional) · INP client:visible · computeRelatedTools + article block · llms.txt auto-gen prebuild · sitemap priority/changefreq · Breadcrumbs.astro (BreadcrumbList JSON-LD, a11y) · 1824/1824 tests
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
@@ -273,7 +273,7 @@ Diese Tools wurden durch das Sequential Pipeline Quality Gate (8 Critics + 3-Pas
 | A11y: `--color-text-muted` AAA Gap | 6.61:1 statt ≥7:1 — betrifft Muted-Text sitewide | hoch |
 | NBSP-Sweep (KON-918ed843) | Zahlen+Einheiten ohne geschütztes Leerzeichen in Content-Files | niedrig |
 | dossier_applied-Audit (KON-f213e279) | Veraltete `dossier_applied:`-Annotations in Content-Files | niedrig |
-| INP/Core-Web-Vitals-Audit (SEO-G11) | Lighthouse-Run + INP-Tuning. Schwelle 2026: <200 ms (Praxis-Target <150 ms). Forschung: `docs/superpowers/research/2026-04-26-seo-geo-deep-research.md` | hoch |
+| INP/Core-Web-Vitals-Audit (SEO-G11) | ⚡ Partial: client:visible für HeaderSearch+ThemeToggle (T3.2). Lighthouse-Messung deferred (braucht live Build). Ziel: INP <200ms p75. | mittel |
 | fallbackFormat try/catch (KON-31322868) | Hardening für Edge-Cases in Formatter-Runtime | niedrig |
 
 ---
@@ -306,6 +306,8 @@ Diese Tools wurden durch das Sequential Pipeline Quality Gate (8 Critics + 3-Pas
 | Finance-Cycle (8 Tools) | ✅ | brutto/kredit/rabatt/tilgungsplan/zinsrechner/stundenlohn/zinseszins/kgv shipped |
 | PDF-Cycle (4 Tools) | ✅ | jpg-zu-pdf/pdf-zusammenfuehren/pdf-aufteilen shipped; 3 noch in Pipeline |
 | ML-Tools (7 Tools) | ✅ | hintergrund-entfernen/webcam-blur/video-bg-remove/sprache-verbessern/bild-zu-text/ki-text-detektor/ki-bild-detektor |
+| SEO Sprint 1+2 | ✅ | dateModified+datePublished · AnswerFirst · ToolStats · Question-Headers · @graph · BreadcrumbList in [slug].astro |
+| SEO Sprint 3 | ✅ | T3.1 hreflang-Fix 144 pages · T3.2 INP client:visible · T3.3 computeRelatedTools · T3.4 llms.txt prebuild · T3.5 sitemap priority · T3.6 Breadcrumbs.astro |
 
 ---
 
