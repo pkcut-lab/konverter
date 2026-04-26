@@ -325,6 +325,11 @@ const dateModifiedFormatted = entry.data.dateModified
           ]}
           aria-label="Tool"
         >
+          {/* TODO(phase-3): Converter locale prop below uses a de+en ternary
+              that falls back to the bare lang code for other languages.
+              Replace with INTL_LOCALE_MAP from src/lib/i18n/locale-maps.ts
+              so es, fr, pt-br get correct number formatting.
+              See CONVENTIONS.md section 11. */}
           {config.type === 'converter' && (
             <Converter
               config={config}

@@ -94,6 +94,9 @@ const websiteJsonLd = {
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="kittokit" />
+    {/* TODO(phase-3): replace ternary with OG_LOCALE_MAP from src/lib/i18n/locale-maps.ts.
+        Falls through to raw lang code for non-de/en, which is invalid for og:locale
+        (e.g. 'pt-br' → Facebook expects 'pt_BR'). See CONVENTIONS.md §11.1. */}
     <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang === 'en' ? 'en_US' : lang} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}

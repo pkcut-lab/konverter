@@ -21,6 +21,13 @@ export default defineConfig({
       serialize(item) {
         const url = item.url;
 
+        // TODO(phase-3): the (de|en) regex group below is hardcoded.
+        // Generate it from ACTIVE_LANGUAGES.join('|') so new languages
+        // get the priority boost automatically. Same for the
+        // (de/werkzeuge|en/tools) group — should derive from
+        // STATIC_PAGE_SLUGS in src/lib/static-page-slugs.ts.
+        // See CONVENTIONS.md section 11.
+
         // Home pages: /de  /en
         if (/\/(de|en)\/?$/.test(url)) {
           return { ...item, priority: 1.0, changefreq: 'weekly' };

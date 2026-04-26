@@ -13,6 +13,11 @@ interface Props {
 }
 const { lang, langAlternates } = Astro.props;
 
+// TODO(phase-3): the 5 Record<string, string> maps in this file
+// (searchPlaceholder, navByLang, popularLabelByLang, brandAriaByLang,
+// LANG_ENDONYMS) need to be migrated into src/lib/i18n/strings.ts before
+// adding a third language. Each new lang otherwise requires editing all 5
+// in lockstep with no compile-time guard. See CONVENTIONS.md section 11.
 const searchPlaceholder: Record<string, string> = {
   de: 'Tools durchsuchen',
   en: 'Search tools',
