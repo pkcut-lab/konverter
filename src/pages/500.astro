@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const lang = (Astro.currentLocale ?? Astro.preferredLocale ?? 'de') as 'de' | 'en';
+// Detect language from URL path — Astro.currentLocale is unreliable for static
+// error pages served by Cloudflare Pages on arbitrary URLs.
+const path = Astro.url.pathname;
+const lang: 'de' | 'en' = path.startsWith('/en/') || path === '/en' ? 'en' : 'de';
 const t =
   lang === 'en'
     ? {
@@ -20,7 +23,7 @@ const t =
       };
 ---
 
-<BaseLayout lang={lang} title={t.title} pathWithoutLang="/500">
+<BaseLayout lang={lang} title={t.title} pathWithoutLang="/500" noindex>
   <div class="error-page">
     <p class="eyebrow">500</p>
     <h1>{t.heading}</h1>

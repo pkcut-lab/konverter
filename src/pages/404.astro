@@ -2,7 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getStaticPagePath } from '../lib/static-page-slugs';
 
-const lang = (Astro.currentLocale ?? Astro.preferredLocale ?? 'de') as 'de' | 'en';
+// Detect language from the requested URL path. Astro.currentLocale is unreliable
+// for static 404s on Cloudflare Pages because the requested URL may not start
+// with a known lang prefix (e.g. /random-typo/ → currentLocale = undefined).
+const path = Astro.url.pathname;
+const lang: 'de' | 'en' = path.startsWith('/en/') || path === '/en' ? 'en' : 'de';
 const toolsHref = getStaticPagePath('tools', lang);
 const t =
   lang === 'en'
@@ -22,7 +26,7 @@ const t =
       };
 ---
 
-<BaseLayout lang={lang} title={t.title} pathWithoutLang="/404">
+<BaseLayout lang={lang} title={t.title} pathWithoutLang="/404" noindex>
   <div class="error-page">
     <p class="eyebrow">404</p>
     <h1>{t.heading}</h1>

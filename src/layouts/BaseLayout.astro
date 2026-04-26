@@ -26,8 +26,11 @@ interface Props {
    *  Injected as <link rel="preload" fetchpriority="high"> when present.
    *  No-op today (0/72 heroes exist) — wired up for future hero rollout. */
   heroImagePath?: string | undefined;
+  /** When true: emit `noindex,follow` and skip hreflang link tags + canonical.
+   *  Use for 404, 500, and any other page Google should not index. */
+  noindex?: boolean;
 }
-const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath, heroImagePath } = Astro.props;
+const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath, heroImagePath, noindex = false } = Astro.props;
 const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
 
@@ -86,8 +89,8 @@ const websiteJsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="kittokit" />
@@ -149,7 +152,7 @@ const websiteJsonLd = {
       <link rel="preload" as="image" href={heroImagePath} fetchpriority="high" />
     )}
 
-    {hreflangs.map((l) => (
+    {!noindex && hreflangs.map((l) => (
       <link rel="alternate" hreflang={l.hreflang} href={l.href} />
     ))}
 
