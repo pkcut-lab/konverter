@@ -89,6 +89,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T06:08 UTC+2 (Heartbeat-6) — **SPRINT LIVE — 8/9 WORKERS RUNNING.** Alle KIT-Issues picked up: KIT-1..KIT-7 in_progress, KIT-8 blocked ✅, KIT-9 in_progress (worker wird selbst blocked-Exit machen). 8 Agents gleichzeitig running. Erwarte erste Commits/Outputs in dieser Runde.
 >
 > 2026-04-26T06:18 UTC+2 (Heartbeat-7) — **ERSTE OUTPUTS.** T6 ✅ committed (feat/consent, 944c1fb). T10 ✅ committed (feat/launch, 1f339cb). T13 ⚠️ partial-done: Email Routing enabled + DNS (5 records) — Aliases blockiert (API-Token-Permission fehlt), User-Input in inbox/to-user/REQUIRES-USER-INPUT-email-target.md. T11 unblocked (T6 done) → cf-infra-engineer running. T7/T10 in tasks/awaiting-review/ warten auf quality-reviewer (KIT-6 in_progress). T8/T9/T12 noch in_progress. KIT-9 (T15) self-blocked pending deps.
+>
+> 2026-04-26T06:29 UTC+2 (Heartbeat-8) — **SPRINT-ENDSPURT.** T7 ✅ approved (KIT-6 done). T11 ✅ committed (76d4c05, in_review KIT-8). T12 ✅ committed (aabc68d, in_review KIT-4). T15 ✅ committed (4e26d90, in_review KIT-9 — worker hat deps self-cleared). T8 running (KIT-1). T9 running (KIT-2). T13 ⚠️ partial (KIT-5 blocked, User-Input). Eskalation: 4 pre-existing vitest-Failures (Phase-3 EN pivot) — KIT-10 erstellt → quality-reviewer. Quality-reviewer idle → KIT-4/KIT-8/KIT-9/KIT-10 werden nächsten Tick gepickt.
 
 ---
 
@@ -98,15 +100,16 @@ _(launch-coordinator updates this block each heartbeat)_
 |----|------|-------|--------|-------------------|
 | T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
 | T6 | Cookie-Banner | cookie-consent-builder | ⏳ awaiting-review [KIT-7 done, 944c1fb] | — |
-| T7 | JSON-LD per Tool | jsonld-enricher | ✅ approved [KIT-6] | ✅ approved 2026-04-26T06:25 |
+| T7 | JSON-LD per Tool | jsonld-enricher | ✅ approved [KIT-6 done] | ✅ approved 2026-04-26T06:25 |
 | T8 | Performance + CWV | perf-auditor | in_progress [KIT-1] | — |
 | T9 | WCAG 2.2 AAA a11y | a11y-auditor | in_progress [KIT-2] | — |
 | T10 | 404/500 + sitemap + robots | error-pages-builder | ⏳ awaiting-review [KIT-3 done, 1f339cb] | — |
-| T11 | CF Web Analytics + Clarity | cf-infra-engineer | in_progress [KIT-8, unblocked by T6] | — |
-| T12 | OG-Bilder + Brand-Assets | og-image-generator | in_progress [KIT-4] | — |
-| T13 | Email Routing @kittokit.com | cf-infra-engineer | partial-done [KIT-5] (blocked: user-input email-target + token permission) | — |
+| T11 | CF Web Analytics + Clarity | cf-infra-engineer | ⏳ awaiting-review [KIT-8 in_review, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | — |
+| T12 | OG-Bilder + Brand-Assets | og-image-generator | ⏳ awaiting-review [KIT-4 in_review, aabc68d] | — |
+| T13 | Email Routing @kittokit.com | cf-infra-engineer | ⚠️ partial-done [KIT-5 blocked] — user-input: CF token permission + email aliases | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
-| T15 | AdSense Prep Checklist | adsense-prep-checker | blocked [KIT-9] on KIT-7+KIT-8 | — |
+| T15 | AdSense Prep Checklist | adsense-prep-checker | ⏳ awaiting-review [KIT-9 in_review, 4e26d90] | — |
+| — | Fix vitest failures (Phase-3) | quality-reviewer | todo [KIT-10] | — |
 
 ---
 
