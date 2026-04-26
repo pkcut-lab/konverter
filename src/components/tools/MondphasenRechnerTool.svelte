@@ -358,27 +358,26 @@
     transition: filter var(--dur-base) var(--ease-out);
   }
 
+  /* Moon colours are deliberately theme-agnostic: the moon should look the
+     same whether the page is light or dark — dark "shadow" side, warm
+     "lit" side. Otherwise the dark side disappears in light mode. */
   .moon-dark {
-    fill: var(--color-surface);
-    stroke: var(--color-border);
+    fill: #1c1d20;
+    stroke: #1c1d20;
     stroke-width: 1;
   }
 
   .moon-ring {
-    stroke: var(--color-border);
-    opacity: 0.35;
+    stroke: rgba(255, 255, 255, 0.08);
+    opacity: 1;
   }
 
   .moon-lit {
-    fill: #d4c89a;
-  }
-
-  :global([data-theme='dark']) .moon-lit {
     fill: #e8d9a0;
   }
 
   .moon-border {
-    stroke: var(--color-border);
+    stroke: rgba(0, 0, 0, 0.18);
     stroke-width: 1.5;
     opacity: 0.6;
   }
