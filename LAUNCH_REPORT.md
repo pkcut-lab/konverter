@@ -87,6 +87,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T05:57 UTC+2 (Heartbeat-5) — **PAPERCLIP ISSUES ERSTELLT.** Ursache für Worker-Inaktivität: Workers prüfen Paperclip-Inbox (leer) und exiten — Dispatch-Files auf Filesystem werden nicht gefunden. Fix: Sprint-Goal (KIT) + 9 Issues erstellt und Workers zugewiesen. KIT-1 T8→perf-auditor, KIT-2 T9→a11y-auditor, KIT-3 T10→error-pages-builder, KIT-4 T12→og-image-generator, KIT-5 T13→cf-infra-engineer, KIT-6 T7-Review→quality-reviewer, KIT-7 T6→cookie-consent-builder, KIT-8 T11→cf-infra-engineer (blocked KIT-7), KIT-9 T15→adsense-prep-checker (blocked KIT-7+KIT-8). Workers werden Issues beim nächsten Heartbeat (~04:28-04:30 UTC) in ihrer Inbox finden.
 >
 > 2026-04-26T06:08 UTC+2 (Heartbeat-6) — **SPRINT LIVE — 8/9 WORKERS RUNNING.** Alle KIT-Issues picked up: KIT-1..KIT-7 in_progress, KIT-8 blocked ✅, KIT-9 in_progress (worker wird selbst blocked-Exit machen). 8 Agents gleichzeitig running. Erwarte erste Commits/Outputs in dieser Runde.
+>
+> 2026-04-26T06:18 UTC+2 (Heartbeat-7) — **ERSTE OUTPUTS.** T6 ✅ committed (feat/consent, 944c1fb). T10 ✅ committed (feat/launch, 1f339cb). T13 ⚠️ partial-done: Email Routing enabled + DNS (5 records) — Aliases blockiert (API-Token-Permission fehlt), User-Input in inbox/to-user/REQUIRES-USER-INPUT-email-target.md. T11 unblocked (T6 done) → cf-infra-engineer running. T7/T10 in tasks/awaiting-review/ warten auf quality-reviewer (KIT-6 in_progress). T8/T9/T12 noch in_progress. KIT-9 (T15) self-blocked pending deps.
 
 ---
 
@@ -95,13 +97,13 @@ _(launch-coordinator updates this block each heartbeat)_
 | ID | Task | Owner | Status | Reviewer-Verdict |
 |----|------|-------|--------|-------------------|
 | T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
-| T6 | Cookie-Banner | cookie-consent-builder | todo [KIT-7] (dep T5 extern) | — |
+| T6 | Cookie-Banner | cookie-consent-builder | ⏳ awaiting-review [KIT-7 done, 944c1fb] | — |
 | T7 | JSON-LD per Tool | jsonld-enricher | ⏳ awaiting-review [KIT-6→quality-reviewer] | — |
-| T8 | Performance + CWV | perf-auditor | todo [KIT-1] | — |
-| T9 | WCAG 2.2 AAA a11y | a11y-auditor | todo [KIT-2] | — |
-| T10 | 404/500 + sitemap + robots | error-pages-builder | todo [KIT-3] | — |
-| T11 | CF Web Analytics + Clarity | cf-infra-engineer | blocked [KIT-8] on KIT-7 | — |
-| T12 | OG-Bilder + Brand-Assets | og-image-generator | todo [KIT-4] | — |
+| T8 | Performance + CWV | perf-auditor | in_progress [KIT-1] | — |
+| T9 | WCAG 2.2 AAA a11y | a11y-auditor | in_progress [KIT-2] | — |
+| T10 | 404/500 + sitemap + robots | error-pages-builder | ⏳ awaiting-review [KIT-3 done, 1f339cb] | — |
+| T11 | CF Web Analytics + Clarity | cf-infra-engineer | in_progress [KIT-8, unblocked by T6] | — |
+| T12 | OG-Bilder + Brand-Assets | og-image-generator | in_progress [KIT-4] | — |
 | T13 | Email Routing @kittokit.com | cf-infra-engineer | partial-done [KIT-5] (blocked: user-input email-target + token permission) | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
 | T15 | AdSense Prep Checklist | adsense-prep-checker | blocked [KIT-9] on KIT-7+KIT-8 | — |
