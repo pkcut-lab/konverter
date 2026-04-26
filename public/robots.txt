@@ -1,0 +1,72 @@
+# kittokit — robots.txt
+# Policy: ALLOW. kittokit is a public-utility tool platform (no premium
+# content, no user data). Maximum reach in classic search engines AND in
+# AI search/answer engines is the goal of Phase 1–2. Re-evaluate once
+# brand-entity is established (see docs/superpowers/research/2026-04-26-seo-geo-deep-research.md
+# §"Re-Evaluation-Trigger").
+
+User-agent: *
+Allow: /
+
+# --- Classic search crawlers (explicit allow, redundant with the wildcard
+# above but documents the choice) ---
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# --- AI search / citation crawlers (deliver attributed traffic) ---
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# --- AI training crawlers (no attribution) ---
+# kittokit allows these in Phase 1–2 to maximise corpus inclusion and
+# brand-entity formation in foundation models. Trade-off documented.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# --- Sitemap discovery ---
+Sitemap: https://kittokit.com/sitemap-index.xml

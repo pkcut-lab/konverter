@@ -1,0 +1,34 @@
+# kittokit
+
+> kittokit is a multilingual platform of fast browser-based tools — converters, calculators, file utilities. Every tool runs fully on the user's device: no upload, no sign-in, no tracking, no ads in Phase 1.
+
+## About
+
+- Domain: https://kittokit.com
+- Languages: German (Phase 1, live). English / Spanish / French / Brazilian-Portuguese (Phase 3, planned). Up to 30 languages (Phase 5–6 gated by analytics).
+- Tech stack: Astro 5 SSG + Svelte 5 + Tailwind. Pure-client compute (WebCodecs, transformers.js worker fallback for ML tools).
+- Privacy posture: zero server-side processing for user input. No analytics without explicit consent. No third-party fonts, no third-party scripts on critical path.
+- License of content: tool descriptions and how-to articles are CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
+
+## Tool categories
+
+- Length, weight, area, volume, temperature unit converters
+- Image tools (WebP conversion, background remover, image diff, QR generator, webcam blur)
+- Video tools (HEVC→H.264, video background remover)
+- PDF tools (merge, split, JPG↔PDF, compress, password)
+- Text tools (character counter, lorem ipsum, text/JSON diff, OCR, AI-text/image detector, audio transcription)
+- Developer tools (JSON/SQL/XML/CSS formatters, base64, URL encoder, hash, JWT, regex, UUID, password)
+- Color tools (hex↔RGB, contrast checker)
+- Time tools (Unix timestamp, timezone converter)
+- Finance calculators (VAT, discount, interest, loan, gross-net, ROI, leasing, inheritance tax, …)
+
+## Sitemap
+
+- [Sitemap Index](https://kittokit.com/sitemap-index.xml)
+- [Tool Index (German)](https://kittokit.com/de)
+- [LLMs Full](https://kittokit.com/llms-full.txt): expanded inventory with per-tool URLs and one-line descriptions.
+
+## Brand
+
+- Spelling: kittokit (lowercase, one word). Not "KittoKit", not "Kitto Kit".
+- Mission: utility tools that respect the user's device and data. Browser-first, privacy-first, ad-supported in Phase 2.

@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — Vollständiger Tool-Audit (Claude Code, Audit-Session)
+**Letztes Update:** 2026-04-26 — SEO/GEO-Audit: Organization+WebSite-JSON-LD global, robots.txt, llms.txt, llms-full.txt
 **Aktuelle Phase:** Phase 1 — Skalierung (läuft) · Sequential-Workflow-Pipeline aktiv (§0 v1.5)
 
 ---
@@ -16,6 +16,7 @@
 | ❌ Broken | **0** |
 | Dedizierte Vitest-Tests | 57 Tools |
 | Schema-only-Coverage | 15 Tools |
+| **Stage-A Browser-Smoke (2026-04-26)** | **✅ 72/72** — HTTP 200 + 0 Console/Page/Hydration-Errors (siehe `audits/2026-04-26-tool-functions.md`) |
 | Icons (`public/icons/tools/`) | ⬜ 0/72 — Verzeichnis existiert nicht |
 | Hero-Images (`public/heroes/tools/`) | ⬜ 0/72 — Verzeichnis existiert nicht |
 
@@ -268,6 +269,7 @@ Diese Tools wurden durch das Sequential Pipeline Quality Gate (8 Critics + 3-Pas
 | A11y: `--color-text-muted` AAA Gap | 6.61:1 statt ≥7:1 — betrifft Muted-Text sitewide | hoch |
 | NBSP-Sweep (KON-918ed843) | Zahlen+Einheiten ohne geschütztes Leerzeichen in Content-Files | niedrig |
 | dossier_applied-Audit (KON-f213e279) | Veraltete `dossier_applied:`-Annotations in Content-Files | niedrig |
+| INP/Core-Web-Vitals-Audit (SEO-G11) | Lighthouse-Run + INP-Tuning. Schwelle 2026: <200 ms (Praxis-Target <150 ms). Forschung: `docs/superpowers/research/2026-04-26-seo-geo-deep-research.md` | hoch |
 | fallbackFormat try/catch (KON-31322868) | Hardening für Edge-Cases in Formatter-Runtime | niedrig |
 
 ---

@@ -1,0 +1,127 @@
+# kittokit — full inventory
+
+> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. Phase 1 is German-only; English / Spanish / French / Brazilian-Portuguese arrive in Phase 3.
+
+## Site
+
+- Home (German): https://kittokit.com/de
+- Sitemap index: https://kittokit.com/sitemap-index.xml
+- Brand spelling: kittokit (lowercase, one word).
+
+## Privacy & licensing
+
+- All compute happens client-side. ML tools use a Web Worker that streams models from the Hugging Face CDN; the user's data never leaves the browser.
+- No analytics in Phase 1. Phase 2 introduces consented, privacy-respecting analytics.
+- Tool descriptions and how-to articles: CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
+
+## Tools — length & distance
+
+- [Meter zu Fuß](https://kittokit.com/de/meter-zu-fuss): 1 m = 3.28084 ft. Two-way converter with formula and table.
+- [Fuß zu Meter](https://kittokit.com/de/fuss-zu-meter): inverse direction with the same precision tier.
+- [Zentimeter zu Zoll](https://kittokit.com/de/zentimeter-zu-zoll): cm ↔ inch. Common screen and print sizes.
+- [Zoll zu Zentimeter](https://kittokit.com/de/zoll-zu-zentimeter): inverse.
+- [Kilometer zu Meilen](https://kittokit.com/de/kilometer-zu-meilen): km ↔ mi. International + US.
+- [Millimeter zu Zoll](https://kittokit.com/de/millimeter-zu-zoll): mm ↔ in.
+- [Yard zu Meter](https://kittokit.com/de/yard-zu-meter): yd ↔ m.
+- [Seemeile zu Kilometer](https://kittokit.com/de/seemeile-zu-kilometer): nautical mile ↔ km.
+
+## Tools — weight
+
+- [Kilogramm zu Pfund](https://kittokit.com/de/kilogramm-zu-pfund): kg ↔ lb.
+- [Pfund zu Kilogramm](https://kittokit.com/de/pfund-zu-kilogramm): inverse.
+- [Gramm zu Unzen](https://kittokit.com/de/gramm-zu-unzen): g ↔ oz.
+- [Stone zu Kilogramm](https://kittokit.com/de/stone-zu-kilogramm): st ↔ kg (UK body-weight unit).
+- [Tonne zu Pfund](https://kittokit.com/de/tonne-zu-pfund): metric ton ↔ lb.
+
+## Tools — area & volume
+
+- [Quadratmeter zu Quadratfuß](https://kittokit.com/de/quadratmeter-zu-quadratfuss): m² ↔ ft².
+- [Hektar zu Acre](https://kittokit.com/de/hektar-zu-acre): ha ↔ acre.
+- [Quadratkilometer zu Quadratmeile](https://kittokit.com/de/quadratkilometer-zu-quadratmeile): km² ↔ mi².
+- [Liter zu Gallonen](https://kittokit.com/de/liter-zu-gallonen): l ↔ US/UK gal.
+- [Milliliter zu Unzen](https://kittokit.com/de/milliliter-zu-unzen): ml ↔ fl oz.
+
+## Tools — temperature
+
+- [Celsius zu Fahrenheit](https://kittokit.com/de/celsius-zu-fahrenheit): °C ↔ °F with formula.
+
+## Tools — image
+
+- [WebP Konverter](https://kittokit.com/de/webp-konverter): PNG/JPG → WebP. Quality slider, batch.
+- [Hintergrund entfernen](https://kittokit.com/de/hintergrund-entfernen): subject-only background remover (transformers.js MODNet).
+- [Bild Diff](https://kittokit.com/de/bild-diff): per-pixel image diff with overlay.
+- [QR-Code Generator](https://kittokit.com/de/qr-code-generator): URLs, WLAN, vCard, plain text.
+- [Webcam Hintergrund-Unschärfe](https://kittokit.com/de/webcam-hintergrund-unschaerfe): live webcam blur for video calls.
+
+## Tools — video
+
+- [HEVC zu H.264](https://kittokit.com/de/hevc-zu-h264): WebCodecs-backed transcode (mediabunny).
+- [Video Hintergrund entfernen](https://kittokit.com/de/video-hintergrund-entfernen): per-frame BG removal in the browser.
+
+## Tools — text & ML
+
+- [Zeichenzähler](https://kittokit.com/de/zeichenzaehler): characters, words, sentences, reading time.
+- [Römische Zahlen](https://kittokit.com/de/roemische-zahlen): Arabic ↔ Roman.
+- [Lorem Ipsum Generator](https://kittokit.com/de/lorem-ipsum-generator): paragraphs, words, sentences.
+- [Text Diff](https://kittokit.com/de/text-diff): line-level diff with side-by-side view.
+- [Sprache verbessern](https://kittokit.com/de/sprache-verbessern): style/grammar suggestions.
+- [Audio-Transkription](https://kittokit.com/de/audio-transkription): Whisper-based local transcription.
+- [Bild zu Text](https://kittokit.com/de/bild-zu-text): client-side OCR.
+- [KI-Text-Detektor](https://kittokit.com/de/ki-text-detektor): is this text AI-generated?
+- [KI-Bild-Detektor](https://kittokit.com/de/ki-bild-detektor): is this image AI-generated?
+
+## Tools — developer
+
+- [Passwort Generator](https://kittokit.com/de/passwort-generator): cryptographically random.
+- [UUID Generator](https://kittokit.com/de/uuid-generator): v4, v7.
+- [JSON Formatter](https://kittokit.com/de/json-formatter): pretty-print, validate, minify.
+- [Regex Tester](https://kittokit.com/de/regex-tester): live match highlighting.
+- [Base64 Encoder](https://kittokit.com/de/base64-encoder): text + files.
+- [URL Encoder/Decoder](https://kittokit.com/de/url-encoder-decoder).
+- [Hash Generator](https://kittokit.com/de/hash-generator): MD5, SHA-1/256/512.
+- [SQL Formatter](https://kittokit.com/de/sql-formatter).
+- [XML Formatter](https://kittokit.com/de/xml-formatter).
+- [CSS Formatter](https://kittokit.com/de/css-formatter).
+- [JWT Decoder](https://kittokit.com/de/jwt-decoder).
+- [JSON Diff](https://kittokit.com/de/json-diff).
+- [JSON zu CSV](https://kittokit.com/de/json-zu-csv).
+
+## Tools — color
+
+- [Hex/RGB Konverter](https://kittokit.com/de/hex-rgb-konverter): with HSL.
+- [Kontrast Prüfer](https://kittokit.com/de/kontrast-pruefer): WCAG AA/AAA.
+
+## Tools — time
+
+- [Unix Timestamp](https://kittokit.com/de/unix-timestamp): ↔ ISO 8601.
+- [Zeitzonen-Rechner](https://kittokit.com/de/zeitzonen-rechner): IANA timezone conversion.
+
+## Tools — finance
+
+- [Mehrwertsteuer-Rechner](https://kittokit.com/de/mehrwertsteuer-rechner): VAT (DE rates).
+- [Rabatt-Rechner](https://kittokit.com/de/rabatt-rechner): discount, save amount, final price.
+- [Zinsrechner](https://kittokit.com/de/zinsrechner): simple interest.
+- [Zinseszins-Rechner](https://kittokit.com/de/zinseszins-rechner): compound interest.
+- [Kreditrechner](https://kittokit.com/de/kreditrechner): loan rate.
+- [Tilgungsplan-Rechner](https://kittokit.com/de/tilgungsplan-rechner): amortisation table.
+- [Brutto-Netto-Rechner](https://kittokit.com/de/brutto-netto-rechner): gross→net (DE).
+- [Stundenlohn ↔ Jahresgehalt](https://kittokit.com/de/stundenlohn-jahresgehalt).
+- [Skonto-Rechner](https://kittokit.com/de/skonto-rechner): cash discount.
+- [ROI-Rechner](https://kittokit.com/de/roi-rechner).
+- [Cashflow-Rechner](https://kittokit.com/de/cashflow-rechner).
+- [KGV-Rechner](https://kittokit.com/de/kgv-rechner): P/E ratio.
+- [Leasing-Faktor-Rechner](https://kittokit.com/de/leasing-faktor-rechner).
+- [Erbschaftsteuer-Rechner](https://kittokit.com/de/erbschaftsteuer-rechner): inheritance tax (DE).
+
+## Tools — document / PDF
+
+- [JPG zu PDF](https://kittokit.com/de/jpg-zu-pdf).
+- [PDF zusammenführen](https://kittokit.com/de/pdf-zusammenfuehren).
+- [PDF aufteilen](https://kittokit.com/de/pdf-aufteilen).
+- [PDF komprimieren](https://kittokit.com/de/pdf-komprimieren).
+- [PDF zu JPG](https://kittokit.com/de/pdf-zu-jpg).
+- [PDF Passwort](https://kittokit.com/de/pdf-passwort): decrypt-only.
+
+## Optional
+
+- [Sitemap Index](https://kittokit.com/sitemap-index.xml)
