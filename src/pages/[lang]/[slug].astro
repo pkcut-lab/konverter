@@ -219,6 +219,16 @@ const ogAvifExists =
   existsSync(resolve(process.cwd(), 'public', 'og', 'tools', `${deSlug}.avif`));
 const ogAvifPath = ogAvifExists ? `/og/tools/${deSlug}.avif` : undefined;
 
+// X.7 — Pagefind: popular tool IDs get weight=5 on the article wrapper so
+// frequently-searched tools rank above alphabetical equals. List mirrors
+// POPULAR_TOOLS in popular-tools.ts (kept inline to avoid a runtime import
+// at SSG build — changes here should stay in sync with that file).
+const POPULAR_TOOL_IDS = new Set([
+  'hevc-to-h264', 'remove-background', 'png-jpg-to-webp',
+  'meter-to-feet', 'celsius-to-fahrenheit', 'km-to-mile',
+]);
+const pagefindArticleWeight = POPULAR_TOOL_IDS.has(entry.data.toolId) ? '5' : undefined;
+
 // X.4 — LCP hero preload. Heroes don't exist yet (0/72 public/heroes/tools/).
 // Code is wired so adding hero images automatically activates the preload.
 const heroExists =
@@ -293,8 +303,8 @@ const dateModifiedFormatted = entry.data.dateModified
         {eyebrowText}
       </span>
       {entry.data.headingHtml
-        ? <h1 set:html={entry.data.headingHtml} />
-        : <h1>{entry.data.title}</h1>
+        ? <h1 data-pagefind-weight="3" set:html={entry.data.headingHtml} />
+        : <h1 data-pagefind-weight="3">{entry.data.title}</h1>
       }
       <p class="tagline">{entry.data.tagline}</p>
     </header>
@@ -502,7 +512,7 @@ const dateModifiedFormatted = entry.data.dateModified
         reader raus. Styles: src/styles/global.css → .ad-slot. */}
     <aside class="ad-slot ad-slot--in-content" aria-hidden="true" role="presentation"></aside>
 
-    <article class="tool-article">
+    <article class="tool-article" data-pagefind-weight={pagefindArticleWeight}>
       <header class="section-head">
         <span class="section-head__label">{strings.howToSectionLabel}</span>
         <h2 class="section-head__title" set:html={strings.howToHeadingHtml} />
