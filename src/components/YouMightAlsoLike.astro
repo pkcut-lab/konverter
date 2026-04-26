@@ -121,6 +121,8 @@ const picks = shuffled.slice(0, limit);
   .you-might__link {
     font-size: 0.9375rem;
     line-height: 1.5;
+    /* Minimum touch target: 24 px vertical (WCAG 2.5.8) */
+    padding: 6px 4px;
     color: var(--color-text-muted);
     text-decoration: none;
     transition: color var(--dur-fast) var(--ease-out);
