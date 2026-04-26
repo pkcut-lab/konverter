@@ -14,7 +14,29 @@ export default defineConfig({
   integrations: [
     svelte({ preprocess: vitePreprocess({ script: true, style: false }) }),
     tailwind({ applyBaseStyles: false }),
-    sitemap(),
+    sitemap({
+      // T3.5 — Sitemap-Refinement: priority + changefreq per URL type.
+      // lastmod wired from frontmatter.dateModified once Sprint-1 migration runs;
+      // until then the plugin default (build time) is used.
+      serialize(item) {
+        const url = item.url;
+
+        // Home pages: /de  /en
+        if (/\/(de|en)\/?$/.test(url)) {
+          return { ...item, priority: 1.0, changefreq: 'weekly' };
+        }
+        // Tools index: /de/werkzeuge  /en/tools
+        if (/\/(de\/werkzeuge|en\/tools)\/?$/.test(url)) {
+          return { ...item, priority: 0.9, changefreq: 'weekly' };
+        }
+        // Legal / static: datenschutz, impressum, privacy, imprint, ueber, about, security-policy
+        if (/datenschutz|impressum|privacy|imprint|ueber|about|security/.test(url)) {
+          return { ...item, priority: 0.5, changefreq: 'yearly' };
+        }
+        // Tool pages (all others under /de/* or /en/*)
+        return { ...item, priority: 0.8, changefreq: 'monthly' };
+      },
+    }),
     AstroPWA({
       registerType: 'autoUpdate',
       // We ship `manifest.webmanifest` manually so the build tests can pin
