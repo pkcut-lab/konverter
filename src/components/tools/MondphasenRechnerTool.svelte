@@ -263,6 +263,7 @@
   .date-row {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--space-2);
   }
 
@@ -271,12 +272,15 @@
     font-weight: 500;
     color: var(--color-text-muted);
     letter-spacing: 0.02em;
+    text-align: center;
   }
 
   .date-controls {
     display: flex;
     align-items: stretch;
+    justify-content: center;
     gap: var(--space-2);
+    width: 100%;
     max-width: 22rem;
   }
 
