@@ -36,13 +36,13 @@ jobs:
       - name: Type-check (astro + tsc)
         run: npm run check
 
-      - name: Unit + smoke tests (vitest)
-        run: npm test
-
       - name: Build (astro build && pagefind --site dist)
         run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Unit + smoke tests (vitest)
+        run: npm test
 
       - name: Install Playwright browsers (chromium only)
         run: npx playwright install chromium --with-deps
