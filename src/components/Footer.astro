@@ -15,15 +15,15 @@ const legalByLang: Record<string, LegalColumn> = {
   de: {
     heading: 'Rechtliches',
     links: [
-      { label: 'Datenschutz', href: '#', disabled: true },
-      { label: 'Impressum', href: '#', disabled: true },
+      { label: 'Datenschutz', href: `/${lang}/datenschutz` },
+      { label: 'Impressum', href: `/${lang}/impressum` },
     ],
   },
   en: {
     heading: 'Legal',
     links: [
-      { label: 'Privacy', href: '#', disabled: true },
-      { label: 'Imprint', href: '#', disabled: true },
+      { label: 'Privacy', href: `/${lang}/privacy` },
+      { label: 'Imprint', href: `/${lang}/imprint` },
     ],
   },
 };
@@ -70,10 +70,10 @@ const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
           {legal.links.map((link) => (
             <li>
               <a
-                class="col__link col__link--disabled"
+                class:list={['col__link', { 'col__link--disabled': link.disabled }]}
                 href={link.href}
-                aria-disabled="true"
-                tabindex="-1"
+                aria-disabled={link.disabled ? 'true' : undefined}
+                tabindex={link.disabled ? -1 : undefined}
               >{link.label}</a>
             </li>
           ))}

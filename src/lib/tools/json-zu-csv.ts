@@ -111,7 +111,7 @@ function formatJsonToCsv(input: string): string {
 }
 
 export const jsonZuCsv: FormatterConfig = {
-  id: 'json-zu-csv',
+  id: 'json-to-csv',
   type: 'formatter',
   categoryId: 'dev',
   mode: 'custom',

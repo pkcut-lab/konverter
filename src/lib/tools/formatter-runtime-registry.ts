@@ -34,7 +34,7 @@ const loaders: Record<string, () => Promise<FormatterEntry>> = {
   'hash-generator': () => import('./hash-generator').then((m) => m.hashGenerator),
   'hex-to-rgb': () => import('./hex-rgb-konverter').then((m) => m.hexRgbKonverter),
   'json-formatter': () => import('./json-formatter').then((m) => m.jsonFormatter),
-  'json-zu-csv': () => import('./json-zu-csv').then((m) => m.jsonZuCsv),
+  'json-to-csv': () => import('./json-zu-csv').then((m) => m.jsonZuCsv),
   'jwt-decoder': () => import('./jwt-decoder').then((m) => m.jwtDecoder),
   'contrast-checker': () => import('./kontrast-pruefer').then((m) => m.kontrastPruefer),
   'lorem-ipsum-generator': () =>
