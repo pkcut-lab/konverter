@@ -97,6 +97,11 @@ export default defineConfig({
   },
   build: {
     format: 'directory',
+    // 'auto' (default) inlines CSS bundles under Astro's internal threshold
+    // (~4 KB). Keeps the default explicit so reviewers know it was evaluated.
+    // 'always' was tested but would inline ~15–20 KB of scoped tool-page CSS,
+    // increasing HTML size without meaningful FCP gain (single origin, H2).
+    inlineStylesheets: 'auto',
   },
   vite: {
     worker: {
