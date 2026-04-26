@@ -5,7 +5,7 @@ title: "Character Counter — Live Count for Any Text"
 headingHtml: "Character Counter — <em>Real-Time</em> Word & Char Count"
 metaDescription: "Count characters, words, sentences, and paragraphs in real time. Optimized for Twitter/X, LinkedIn, meta descriptions, and SMS. Free, no login."
 tagline: "Paste or type text and instantly see character count, word count, sentence count, and paragraph count. Includes platform-specific limits for Twitter/X, LinkedIn, SMS, and meta descriptions."
-intro: "Every platform has a character limit, and exceeding it costs you — a truncated tweet, a rejected SMS, or a meta description cut off in search results. This character counter updates as you type, showing total characters, characters without spaces, word count, sentence count, and paragraph count side by side. Platform limit bars for Twitter/X, LinkedIn, Google meta description, and SMS make it immediately clear how close you are to the edge."
+intro: "Every platform has a character limit — exceeding it costs you a truncated tweet, a rejected SMS, or a clipped meta description. This counter updates as you type, showing total chars, chars without spaces, words, sentences, and paragraphs side by side. Platform bars for Twitter/X, LinkedIn, and SMS show your distance to the edge."
 howToUse:
   - "Paste or type your text into the input area. All counts update in real time — no need to click anything."
   - "Check the platform limit indicators at the top to see how your text compares to Twitter/X (280), LinkedIn posts (3,000), SMS (160), and meta descriptions (155)."

@@ -5,7 +5,7 @@ title: "AI Image Detector — Is It AI-Generated?"
 headingHtml: "AI Image Detector — <em>Real or Generated?</em>"
 metaDescription: "Upload an image and get an AI-generation probability score in seconds. Detects Stable Diffusion, Midjourney, and DALL-E — runs entirely in your browser."
 tagline: "Upload any image and find out if it was created by AI. The ML classifier runs in your browser — your image is never uploaded to a server."
-intro: "AI-generated images from Stable Diffusion, Midjourney, DALL-E, and similar models are increasingly difficult to distinguish from photographs. This tool runs a machine learning classifier directly in your browser to estimate the probability that an uploaded image was AI-generated. It analyzes pixel-level artifacts, frequency patterns, and texture inconsistencies that differ between camera sensors and generative model outputs. Results appear within seconds — no account required and no image is ever sent to a server."
+intro: "AI-generated images from Stable Diffusion, Midjourney, and DALL-E are increasingly hard to distinguish from photographs. This tool runs a machine-learning classifier in your browser to estimate the probability that an image is AI-generated — analyzing pixel artifacts, frequency patterns, and texture inconsistencies. Results in seconds, no account, no upload."
 howToUse:
   - "Click the upload area or drag and drop an image file (JPG, PNG, or WebP, up to 10 MB)."
   - "The tool loads the ML model on first use (one-time download, ~5 MB, cached locally)."

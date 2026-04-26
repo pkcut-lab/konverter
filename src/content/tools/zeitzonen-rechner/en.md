@@ -5,7 +5,7 @@ title: "Time Zone Converter — US & World Time Zones"
 headingHtml: "Time Zone Converter — <em>Instant</em> US & Global Time"
 metaDescription: "Convert time between any two time zones instantly. Covers all US zones (ET, CT, MT, PT) plus global cities. DST-aware. Free, no account needed."
 tagline: "Convert a time between any two time zones in seconds. Covers all US time zones plus hundreds of cities worldwide. Automatically accounts for Daylight Saving Time."
-intro: "Scheduling a meeting between New York and Los Angeles, a call with a team in London, or a product launch timed for multiple markets — getting the time right matters. This time zone converter takes a specific time and date in one zone and shows you the exact equivalent in any other zone. Daylight Saving Time transitions are handled automatically based on the selected date, so you never have to remember which zones are currently observing DST."
+intro: "Scheduling a meeting between New York and London, or a product launch for multiple markets — getting the time right matters. This converter takes a specific date and time in one zone and shows you the exact equivalent in any other. Daylight Saving Time is handled automatically based on the selected date."
 howToUse:
   - "Select your source time zone from the dropdown — start typing a city name or zone abbreviation to filter the list."
   - "Enter the date and time you want to convert using the date/time picker."

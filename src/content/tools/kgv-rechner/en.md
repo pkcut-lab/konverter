@@ -5,7 +5,7 @@ title: "P/E Ratio Calculator — Price-to-Earnings"
 headingHtml: "P/E Ratio <em>Calculator</em>"
 metaDescription: "Calculate the price-to-earnings ratio for any stock. Enter the share price and EPS to get the P/E ratio and see how it compares to S&P 500 averages."
 tagline: "Enter a stock price and EPS — get the P/E ratio instantly. Supports trailing and forward P/E with context for S&P 500 benchmarks."
-intro: "The price-to-earnings (P/E) ratio is one of the most widely used valuation metrics in US stock investing. It tells you how much investors are currently paying for each dollar of a company's earnings. Whether you're evaluating an S&P 500 giant like Apple or a small-cap growth stock, the P/E ratio is your first sanity check on valuation. Enter the current share price and the earnings per share (EPS) below to calculate it instantly."
+intro: "The price-to-earnings (P/E) ratio is the most widely used valuation metric in US stock investing — it tells you how much investors pay for each dollar of a company's earnings. Whether you're evaluating an S&P 500 giant or a small-cap growth stock, P/E is your first sanity check. Enter share price and EPS to calculate instantly."
 howToUse:
   - "Enter the current stock price in the Price field (in USD)."
   - "Enter the earnings per share (EPS) — use trailing EPS for the last 12 months, or forward EPS (analyst estimate) for the next 12 months."

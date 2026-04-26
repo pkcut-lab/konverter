@@ -5,7 +5,7 @@ title: "Inches to Centimeters Converter — Exact & Fast"
 headingHtml: "Inches to <em>Centimeters</em> — Instant Exact Conversion"
 metaDescription: "Convert inches to centimeters instantly. Exact: 1 inch = 2.54 cm. For clothing, screens, body measurements, and international shopping. Works both ways."
 tagline: "Convert inches to centimeters (and back) with exact precision. Built for US clothing sizes, screen dimensions, body measurements, and international shopping comparisons."
-intro: "One inch equals exactly 2.54 centimeters. That simple equivalence is all you need to convert between the US customary system and the metric world — but getting it right every time requires a reliable tool. Whether you are shopping for jeans on a European site, ordering a monitor from a Korean manufacturer, or filling out a health form that asks for height in centimeters, this converter gives you the exact number instantly. Enter inches and get centimeters; enter centimeters and get inches back."
+intro: "One inch equals exactly 2.54 centimeters — that's all you need to convert between US customary and metric, but getting it right every time requires a reliable tool. Whether you're shopping European clothing, ordering a Korean monitor, or filling out a metric health form, this converter gives you the exact number instantly, both directions."
 howToUse:
   - "Enter a value in inches in the top field. The centimeter equivalent updates instantly."
   - "To convert centimeters to inches, type in the lower field — conversion works in both directions."

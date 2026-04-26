@@ -5,7 +5,7 @@ title: "Kilometers to Miles Converter — km to mi"
 headingHtml: "Kilometers to <em>Miles</em> Converter"
 metaDescription: "Convert kilometers to miles instantly. Enter any km value and get the exact miles result — for road trips, running distances, and imported car speedometers."
 tagline: "Type a distance in kilometers and get the miles equivalent instantly. Covers road speeds, running races, and travel distances with a handy reference table."
-intro: "The United States uses miles for road distances, speed limits, and vehicle speedometers. But GPS apps, European maps, international road signs, and running race distances all use kilometers. This converter gives you the exact miles equivalent for any km value — instantly, as you type. Whether you're reading a Canadian road sign, following a marathon training plan, or trying to understand the speedometer on a recently imported vehicle, the answer is one input field away."
+intro: "The US uses miles for roads and speed limits, but GPS apps, European maps, and race distances all use kilometers. This converter gives you the exact miles equivalent for any km value — instantly as you type. Whether you're reading a Canadian road sign or following a marathon plan, the answer is one input away."
 howToUse:
   - "Type the distance in kilometers into the input field."
   - "The miles result appears immediately — no need to press Enter."

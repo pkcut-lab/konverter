@@ -5,7 +5,7 @@ title: "Kilograms to Pounds Converter — kg to lbs"
 headingHtml: "Kilograms to <em>Pounds</em> Converter"
 metaDescription: "Convert kilograms to pounds instantly. Enter any kg value and get the exact lbs result — useful for body weight, luggage limits, and gym workouts."
 tagline: "Type a weight in kilograms and get the pounds equivalent instantly. Includes a quick-reference table for common body weights and luggage limits."
-intro: "Whether you're checking your luggage weight before a flight, tracking your body weight from a metric scale, or reading a nutrition label imported from Europe, converting kilograms to pounds is a daily task for millions of Americans. This converter gives you the exact result in lbs immediately — just type the kg value and the pounds appear. The formula is simple and the result is precise to four decimal places, so you get the right number whether you're at the gym, the airport, or the grocery store."
+intro: "Whether you're checking luggage weight before a flight, tracking body weight from a metric scale, or reading a European nutrition label, converting kilograms to pounds is a daily task. Type the kg value and get the exact lbs result immediately — precise to four decimal places, accurate every time."
 howToUse:
   - "Type your weight in kilograms into the input field."
   - "The pounds result updates instantly as you type — no need to press Enter."

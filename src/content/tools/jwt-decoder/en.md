@@ -5,7 +5,7 @@ title: "JWT Decoder — Decode JSON Web Tokens"
 headingHtml: "JWT Decoder — <em>Instant Token Inspection</em>"
 metaDescription: "Paste any JWT and instantly decode the header, payload, and signature. Inspect claims like exp, iat, and sub — runs in your browser, no server required."
 tagline: "Decode any JSON Web Token in the browser. See the header, payload, and signature in a readable format — and check expiry at a glance."
-intro: "JWTs appear everywhere in modern web apps — as auth tokens in Authorization headers, session cookies, and OAuth flows. When something goes wrong with authentication, the fastest way to debug is to inspect the token's claims directly. Paste your JWT here and the tool immediately decodes all three parts: header (algorithm and type), payload (claims like `exp`, `iat`, `sub`, `roles`), and the raw signature bytes. Everything runs in your browser — the token never leaves your device."
+intro: "JWTs appear everywhere in modern web apps — auth headers, session cookies, OAuth flows. When auth breaks, the fastest debug is inspecting the token's claims directly. Paste your JWT and immediately see all three parts decoded: header, payload (exp, iat, sub, roles), and signature. Runs entirely in your browser — the token never leaves your device."
 howToUse:
   - "Paste the full JWT string (three base64url segments separated by dots) into the input field."
   - "The header and payload sections decode and display automatically as formatted JSON."

@@ -5,7 +5,7 @@ title: "Video Hintergrund entfernen — KI, kein Upload"
 headingHtml: "Video-<em>Hintergrund</em> entfernen"
 metaDescription: "Hintergrund aus Videos entfernen — KI-basiert, direkt im Browser, ohne Upload, ohne Anmeldung. Unscreen-Alternative kostenlos und DSGVO-konform."
 tagline: "Dein Video verlässt nie deinen Browser — kein Upload, kein Login."
-intro: "Alle bekannten Alternativen — Kapwing, VEED, Runway, CapCut — laden dein Video auf einen fremden Server. Das Tool hier macht es anders: der Hintergrund wird vollständig in deinem Browser entfernt, frame für frame, ohne dass eine einzige Sekunde deines Videos das Gerät verlässt. Basis ist das BiRefNet_lite-Modell (MIT-Lizenz, ACCV 2024 Best-in-Class für hochauflösende Segmentierung) — für feine Haar- und Fellkanten der aktuelle Stand der Technik. Als Unscreen seit Dezember 2025 offline ist, bleibt kaum eine kostenlose, loginfreie Option. Diese ist eine davon."
+intro: "Alle bekannten Alternativen — Kapwing, VEED, Runway, CapCut — laden dein Video auf einen fremden Server. Hier passiert alles im Browser: der Hintergrund wird frame für frame lokal entfernt, ohne dass eine Sekunde dein Gerät verlässt. Basis ist BiRefNet_lite (MIT, ACCV 2024 Best-in-Class für feine Haar- und Fellkanten — Unscreen-Alternative ohne Login)."
 howToUse:
   - "Video per Drag-and-Drop ablegen oder über den Datei-Dialog öffnen (MP4, MOV, WebM, bis FullHD 1920×1080, bis 500&nbsp;MB)"
   - "Modell wählen: Qualität (BiRefNet_lite — SOTA Haar) oder Schnell (MODNet — für lange Videos)"

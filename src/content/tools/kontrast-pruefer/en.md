@@ -5,7 +5,7 @@ title: "WCAG Contrast Checker — AA & AAA Tester"
 headingHtml: "WCAG Contrast Checker — <em>AA & AAA Tester</em>"
 metaDescription: "Enter two colors and get the WCAG 2.1 contrast ratio plus AA and AAA pass/fail results instantly. Supports hex, RGB, and HSL input — no login needed."
 tagline: "Enter a foreground and background color and see the WCAG 2.1 contrast ratio with instant AA and AAA pass/fail — essential for accessible web design."
-intro: "Color contrast is the single most common accessibility failure on the web. WCAG 2.1 (Web Content Accessibility Guidelines) defines minimum contrast ratios that ensure text is readable for people with low vision or color blindness. This tool calculates the contrast ratio between any two colors and tells you immediately whether the combination passes WCAG Level AA (minimum legal standard in many US contexts) or Level AAA (enhanced). Enter colors as hex codes, RGB values, or HSL — the result updates instantly."
+intro: "Color contrast is the most common accessibility failure on the web. WCAG 2.1 defines minimum ratios that ensure text remains readable for people with low vision or color blindness. This tool calculates the contrast between any two colors and tells you immediately whether the combination passes Level AA or AAA — hex, RGB, and HSL all supported."
 howToUse:
   - "Enter your foreground color (text color) in the first input field — hex, rgb(), or hsl() all work."
   - "Enter your background color in the second input field."
