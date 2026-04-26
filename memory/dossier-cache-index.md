@@ -37,3 +37,4 @@
 - pdf-aufteilen | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
 - pdf-zusammenfuehren | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool
 - kgv-rechner | 2026-04-25 | parent=dossiers/_categories/finance/2026-04-24.md | expires=2026-07-24
+- pdf-passwort | 2026-04-25 | parent=dossiers/_categories/document/2026-04-25.md | expires=2026-10-22 | scope=tool | citation_verify=true

@@ -35,6 +35,7 @@ import AudioTranskriptionTool from '../../components/tools/AudioTranskriptionToo
 import PdfZusammenfuehrenTool from '../../components/tools/PdfZusammenfuehrenTool.svelte';
 import PdfAufteilenTool from '../../components/tools/PdfAufteilenTool.svelte';
 import PdfZuJpgTool from '../../components/tools/PdfZuJpgTool.svelte';
+import PdfPasswortTool from '../../components/tools/PdfPasswortTool.svelte';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
 import { getToolConfig, hasTool } from '../../lib/tool-registry';
@@ -88,6 +89,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   'pdf-merge',
   'pdf-split',
   'pdf-to-jpg',
+  'pdf-password',
 ]);
 
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
@@ -310,6 +312,9 @@ const jsonLd = buildToolJsonLd(
           )}
           {config.type === 'formatter' && config.id === 'pdf-to-jpg' && (
             <PdfZuJpgTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === 'pdf-password' && (
+            <PdfPasswortTool config={config} client:load />
           )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter

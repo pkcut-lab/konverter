@@ -128,6 +128,8 @@ const loaders: Record<string, ToolLoader> = {
     import('./tools/pdf-komprimieren').then((m) => m.pdfKomprimieren),
   'pdf-to-jpg': () =>
     import('./tools/pdf-zu-jpg').then((m) => m.pdfZuJpg),
+  'pdf-password': () =>
+    import('./tools/pdf-passwort').then((m) => m.pdfPasswort),
 };
 
 /** Lightweight existence check — no module load. Use for filtering before

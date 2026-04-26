@@ -87,6 +87,7 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'pdf-split': { de: 'pdf-aufteilen' },
   'pdf-compress': { de: 'pdf-komprimieren' },
   'pdf-to-jpg': { de: 'pdf-zu-jpg' },
+  'pdf-password': { de: 'pdf-passwort' },
 };
 
 export function getSlug(toolId: string, lang: Lang): string | undefined {
