@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/seo/generate-llms-txt.mjs",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check && tsc --noEmit",
+    "check": "astro check && tsc --noEmit && node scripts/seo/lint-question-headers.mjs",
+    "lint:question-headers": "node scripts/seo/lint-question-headers.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "husky",

@@ -31,11 +31,11 @@ describe('kilogramm-zu-pfund/de.md frontmatter', () => {
     const h2s = parsed.content.match(/^## .+$/gm) ?? [];
     expect(h2s).toEqual([
       '## Was macht der Konverter?',
-      '## Umrechnungsformel',
-      '## Anwendungsbeispiele',
-      '## Häufige Einsatzgebiete',
+      '## Was ist die Umrechnungsformel?',
+      '## Welche Anwendungsbeispiele gibt es?',
+      '## Welche Einsatzgebiete gibt es?',
       '## Häufige Fragen',
-      '## Verwandte Gewichts-Tools',
+      '## Welche Gewichts-Tools sind verwandt?',
     ]);
   });
 });

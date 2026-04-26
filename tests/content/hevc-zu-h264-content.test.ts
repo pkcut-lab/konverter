@@ -50,11 +50,11 @@ describe('hevc-zu-h264 content (DE)', () => {
     const expected = [
       '## Warum spielt mein iPhone-Video nicht überall?',
       '## HEVC vs. H.264 — was ist der Unterschied?',
-      '## Anwendungsbeispiele',
+      '## Welche Anwendungsbeispiele gibt es?',
       '## Datenschutz — dein Video verlässt nie deinen Browser',
-      '## Grenzen dieses Tools',
+      '## Welche Grenzen hat dieses Tool?',
       '## Häufige Fragen',
-      '## Verwandte Video-Tools',
+      '## Welche Video-Tools sind verwandt?',
     ];
     let pos = 0;
     for (const h of expected) {
