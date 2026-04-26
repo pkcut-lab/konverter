@@ -93,6 +93,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T06:29 UTC+2 (Heartbeat-8) — **SPRINT-ENDSPURT.** T7 ✅ approved (KIT-6 done). T11 ✅ committed (76d4c05, in_review KIT-8). T12 ✅ committed (aabc68d, in_review KIT-4). T15 ✅ committed (4e26d90, in_review KIT-9 — worker hat deps self-cleared). T8 running (KIT-1). T9 running (KIT-2). T13 ⚠️ partial (KIT-5 blocked, User-Input). Eskalation: 4 pre-existing vitest-Failures (Phase-3 EN pivot) — KIT-10 erstellt → quality-reviewer. Quality-reviewer idle → KIT-4/KIT-8/KIT-9/KIT-10 werden nächsten Tick gepickt.
 >
 > 2026-04-26T06:40 UTC+2 (Heartbeat-9) — **ALLE TASKS COMMITTED. Quality-Review läuft.** T8 ✅ 87→98 Lighthouse (66e669f, KIT-1 in_review). T9 ✅ 29→0 axe-violations (130bec5, KIT-2 in_review). KIT-10 ✅ 4 vitest-Failures gefixt (5a9d4dd). Approved: T6(KIT-7✅), T7(KIT-6✅), T10(KIT-3✅). Pending review: T8(KIT-1), T9(KIT-2), T11(KIT-8), T12(KIT-4), T15(KIT-9). T13 bleibt partial/blocked auf User-Input. T14 conditional. Quality-reviewer aktiv — Sprint-Ende in Sicht sobald KIT-1/2/4/8/9 done.
+>
+> 2026-04-26T06:57 UTC+2 (Heartbeat-10) — **WARTE AUF QUALITY-REVIEWER.** Kein neuer Fortschritt. quality-reviewer lastHeartbeat 04:55 UTC (nach allen Worker-Commits) — hat T6+T10 reviewed (KIT-7/3 done). KIT-1/2/4/8/9 weiter in_review. Quality-reviewer nächster Tick ~05:10 UTC, danach Sprint-Ende prüfbar.
 
 ---
 
