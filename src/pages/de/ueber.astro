@@ -1,13 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { buildPersonJsonLd } from '../../lib/seo/person-jsonld';
+
+const personJsonLd = buildPersonJsonLd('de');
 ---
 <BaseLayout
   lang="de"
   title="Über kittokit – Schnelle Browser-Tools, kein Upload"
-  description="kittokit ist eine privacy-first Tool-Plattform mit über 70 schnellen Browser-Tools — keine Uploads, kein Tracking, kein Login."
+  description="kittokit ist eine privacy-first Tool-Plattform mit über 70 schnellen Browser-Tools — keine Uploads, kein Tracking, kein Login. Gegründet von Paul Kuhn."
   pathWithoutLang="/ueber"
 >
-  <main class="about">
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+
+  <main id="person" class="about">
     <header class="about-header">
       <p class="about-eyebrow">Das Projekt</p>
       <h1>Über kittokit</h1>
@@ -16,27 +21,40 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     <section class="about-section">
       <h2>Mission</h2>
-      <p>Alltägliche Tool-Aufgaben — Konvertieren, Rechnen, Generieren, Datei-Bearbeitung — sollen einfach und schnell gehen, direkt im Browser, ohne Daten an Server zu schicken. Kein Konto erforderlich, kein Abo, kein Datenschutz-Kompromiss.</p>
+      <p>Alltägliche Tool-Aufgaben — Konvertieren, Rechnen, Generieren, Datei-Bearbeitung — sollen einfach und schnell gehen, direkt im Browser, ohne Daten an Server zu schicken. Kein Konto erforderlich, kein Abo, kein Datenschutz-Kompromiss. Wer mit Zahlen, Dateien oder Code arbeitet, soll ein verlässliches Werkzeug haben, das einfach funktioniert — ohne Registrierungshürde, ohne monatliche Gebühr.</p>
     </section>
 
     <section class="about-section">
       <h2>Wie es funktioniert</h2>
-      <p>Alle Berechnungen und Konvertierungen laufen vollständig in Ihrem Browser ab — via Web-APIs und WebAssembly. Ihre Dateien und Eingaben verlassen Ihr Gerät zu keinem Zeitpunkt. Es werden keine Daten an unsere Server übermittelt.</p>
+      <p>Alle Berechnungen und Konvertierungen laufen vollständig in Ihrem Browser ab — via Web-APIs und WebAssembly. Ihre Dateien und Eingaben verlassen Ihr Gerät zu keinem Zeitpunkt. Es werden keine Daten an unsere Server übermittelt. Das ist kein Marketing-Versprechen, sondern technische Realität: Der Server liefert nur die HTML-, CSS- und JavaScript-Dateien aus. Alles Weitere — von der Längenumrechnung bis zur ML-gestützten Hintergrundentfernung — geschieht lokal auf Ihrem Gerät.</p>
     </section>
 
     <section class="about-section">
       <h2>Wer dahinter steckt</h2>
-      <p>kittokit ist ein Indie-Projekt aus Berlin. Gegründet mit dem Ziel, das beste kostenlose Tool-Verzeichnis im deutschen Sprachraum zu werden — ohne Werbung-zuerst-Ansatz, ohne Dark Patterns.</p>
+      <p>Mein Name ist <strong>Paul Kuhn</strong>. Ich bin Indie-Entwickler aus Berlin und habe kittokit mit dem Ziel gegründet, das beste kostenlose Tool-Verzeichnis im deutschen Sprachraum zu werden — ohne Werbung-zuerst-Ansatz, ohne Dark Patterns. Ich arbeite seit mehreren Jahren als Softwareentwickler und habe in dieser Zeit immer wieder erfahren, wie frustrierend es ist, für einfache Alltagsaufgaben entweder kostenpflichtige Software oder datenschutzmäßig fragwürdige Web-Tools nutzen zu müssen. kittokit ist meine Antwort darauf.</p>
+      <p>Das Projekt ist bootstrapped — kein Risikokapital, kein externes Investment. Die Plattform finanziert sich über kontextsensitive Werbung (ab Phase 2), die stets klar als Werbung gekennzeichnet ist und nie personenbezogene Daten ohne explizite Einwilligung nutzt.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Differenzierung: Was kittokit anders macht</h2>
+      <p>Viele Tool-Websites versprechen Privacy, liefern sie aber nicht. kittokit ist von Grund auf so gebaut, dass serverseitige Verarbeitung von Nutzerdaten technisch unmöglich ist — nicht nur policy-mäßig ausgeschlossen. Das bedeutet: Selbst wenn jemand unsere Server kompromittieren würde, gäbe es keine Nutzerdaten zu stehlen, weil diese nie bei uns landen.</p>
+      <p>Weitere Differenzierungsmerkmale: mehrsprachiger Betrieb von Anfang an (Deutsch und Englisch, mit Spanisch, Französisch und weiteren Sprachen in Vorbereitung), konsequente Barrierefreiheit nach WCAG AAA, keine Registrierungspflicht für ein einziges Tool, und ein schlankes, ablenkungsfreies Interface — kein Tool-Spam, keine Push-Notification-Popups, kein Cookie-Banner-Theater.</p>
     </section>
 
     <section class="about-section">
       <h2>Technik</h2>
-      <p>Gebaut mit <strong>Astro 5</strong> (SSG), <strong>Svelte 5</strong> (Runes) und <strong>Tailwind CSS</strong>. Hosting via Cloudflare Pages — globales CDN, keine Server-Logs mit personenbezogenen Daten. ML-Tools nutzen WebAssembly für lokale Inferenz direkt im Browser.</p>
+      <p>Gebaut mit <strong>Astro 5</strong> (Static Site Generation), <strong>Svelte 5</strong> (Runes-Komponenten) und <strong>Tailwind CSS</strong>. Hosting via Cloudflare Pages — globales CDN, keine Server-Logs mit personenbezogenen Daten. ML-Tools nutzen WebAssembly für lokale Inferenz direkt im Browser: Hintergrundentfernung, Sprach-Enhancer, Audio-Transkription und Bild-Textextraktion laufen komplett offline nach dem ersten Laden der Modell-Dateien.</p>
+      <p>Der Quellcode ist öffentlich auf <a href="https://github.com/pkcut-lab" class="about-link">GitHub (pkcut-lab)</a> einsehbar. Wer Fehler findet oder Verbesserungsvorschläge hat, ist herzlich eingeladen, ein Issue zu eröffnen.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Roadmap</h2>
+      <p>kittokit befindet sich in aktiver Entwicklung. Die erste Phase umfasst die deutschsprachige Plattform mit über 70 Tools. Phase 2 bringt AdSense-Integration und weitere Optimierungen. Phase 3 — die englischsprachige Erweiterung — ist bereits in Arbeit. Langfristig sind bis zu 1.000 Tools in bis zu 13 Sprachen geplant, darunter Spanisch, Französisch, Portugiesisch (Brasilien) und weitere europäische Sprachen.</p>
     </section>
 
     <section class="about-section">
       <h2>Kontakt</h2>
-      <p>Fragen, Feedback oder Kooperationsanfragen: <a href="/de/impressum" class="about-link">Kontaktdaten im Impressum</a>.</p>
+      <p>Fragen, Feedback oder Kooperationsanfragen: <a href="/de/impressum" class="about-link">Kontaktdaten im Impressum</a>. Sicherheitslücken bitte an <a href="mailto:security@kittokit.com" class="about-link">security@kittokit.com</a> melden — wir praktizieren Coordinated Vulnerability Disclosure.</p>
     </section>
   </main>
 </BaseLayout>
@@ -57,7 +75,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    margin: 0 0 0.5rem;
+    margin: 0 0 var(--space-2) 0;
   }
 
   .about-header h1 {
@@ -80,8 +98,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 
   .about-section p {
-    margin: 0;
+    margin: 0 0 var(--space-4) 0;
     line-height: 1.7;
+  }
+
+  .about-section p:last-child {
+    margin-bottom: 0;
   }
 
   .about-link {

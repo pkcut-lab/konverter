@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { buildPersonJsonLd } from '../../lib/seo/person-jsonld';
+
+const personJsonLd = buildPersonJsonLd('en');
 ---
 <BaseLayout
   lang="en"
@@ -7,6 +10,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   description="kittokit is a privacy-first tool platform with 70+ fast browser tools — no uploads, no tracking, no login."
   pathWithoutLang="/about"
 >
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+
   <main class="about">
     <header class="about-header">
       <p class="about-eyebrow">The project</p>
