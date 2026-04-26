@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
+  import { dispatchToolUsed } from '../../lib/tracking';
   import {
     deriveJpgFilename,
     deriveZipFilename,
@@ -16,8 +17,7 @@
   interface Props {
     config: FormatterConfig;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let { config: _config }: Props = $props();
+  let { config }: Props = $props();
 
   const PDF_MAGIC = [0x25, 0x50, 0x44, 0x46, 0x2d]; // %PDF-
 
@@ -60,10 +60,12 @@
   let password = $state<string>('');
   let showPasswordPrompt = $state<boolean>(false);
   let pendingBytes = $state.raw<Uint8Array | null>(null);
+  let returnFocus = $state.raw<HTMLElement | null>(null);
 
-  // Focus password input when dialog opens (a11y B5)
+  // Focus password input when dialog opens; store return-focus target (a11y B5 + N2)
   $effect(() => {
     if (showPasswordPrompt) {
+      returnFocus = document.activeElement as HTMLElement | null;
       Promise.resolve().then(() => {
         (document.getElementById('pzj-password-input') as HTMLInputElement | null)?.focus();
       });
@@ -112,6 +114,9 @@
     showPasswordPrompt = false;
     pendingBytes = null;
     password = '';
+    const target = returnFocus;
+    returnFocus = null;
+    target?.focus();
   }
 
   async function loadPdf(bytes: Uint8Array, passwordAttempt?: string) {
@@ -317,6 +322,7 @@
     outputs = newOutputs;
     phase = 'done';
     statusMessage = `Fertig — ${newOutputs.length} Bild${newOutputs.length === 1 ? '' : 'er'} bereit.`;
+    dispatchToolUsed({ slug: config.id, category: config.categoryId ?? 'document', locale: 'de' });
   }
 
   async function downloadAll() {
@@ -393,7 +399,14 @@
   {/if}
 
   {#if showPasswordPrompt}
-    <div class="pzj__password" role="dialog" aria-modal="true" aria-label="Passwort eingeben" data-testid="pzj-password-prompt">
+    <div
+      class="pzj__password"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Passwort eingeben"
+      onkeydown={(e) => { if (e.key === 'Escape') reset(); }}
+      data-testid="pzj-password-prompt"
+    >
       <p class="pzj__password-hint">Diese PDF ist passwortgeschützt.</p>
       {#if loadError}
         <p class="pzj__password-error" role="alert">{loadError}</p>
@@ -409,14 +422,19 @@
           data-testid="pzj-password-input"
         />
       </label>
-      <button
-        type="button"
-        class="pzj__primary-btn"
-        onclick={submitPassword}
-        data-testid="pzj-password-submit"
-      >
-        Entsperren
-      </button>
+      <div class="pzj__password-actions">
+        <button
+          type="button"
+          class="pzj__primary-btn"
+          onclick={submitPassword}
+          data-testid="pzj-password-submit"
+        >
+          Entsperren
+        </button>
+        <button type="button" class="pzj__ghost-btn" onclick={reset} data-testid="pzj-password-cancel">
+          Abbrechen
+        </button>
+      </div>
     </div>
   {/if}
 
@@ -563,7 +581,7 @@
           <li class="pzj__dl-item">
             <span class="pzj__dl-label">Seite&nbsp;{out.pageNum}</span>
             <span class="pzj__dl-size">{formatFileSize(out.sizeBytes)}</span>
-            <a class="pzj__dl-link" href={out.url} download={out.filename}>
+            <a class="pzj__dl-link" href={out.url} download={out.filename} aria-label={`Seite ${out.pageNum} herunterladen`}>
               Herunterladen
             </a>
           </li>
@@ -673,6 +691,11 @@
     outline-offset: 2px;
     border-color: var(--color-accent);
   }
+  .pzj__password-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
 
   /* Error */
   .pzj__error {
@@ -709,7 +732,7 @@
   .pzj__file-meta {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-half);
     min-width: 0;
   }
   .pzj__file-name {
@@ -844,7 +867,7 @@
     width: 100%;
     aspect-ratio: 1 / 1.414; /* A4 ratio */
     object-fit: cover;
-    border-radius: 2px;
+    border-radius: var(--r-xs);
     display: block;
   }
   .pzj__thumb-num {
@@ -950,16 +973,16 @@
 
   /* Progress bar */
   .pzj__progress {
-    height: 4px;
+    height: var(--space-1);
     background: var(--color-surface);
-    border-radius: 2px;
+    border-radius: var(--r-xs);
     overflow: hidden;
     border: 1px solid var(--color-border);
   }
   .pzj__progress-bar {
     height: 100%;
     background: var(--color-accent);
-    border-radius: 2px;
+    border-radius: var(--r-xs);
     transition: width var(--dur-fast) var(--ease-out);
   }
 

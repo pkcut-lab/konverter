@@ -24,7 +24,7 @@ faq:
   - q: "Was passiert bei passwortgeschützten PDFs?"
     a: "PDF.js zeigt einen Passwort-Dialog. Gib das korrekte Passwort ein und die Konvertierung läuft wie gewohnt ab."
   - q: "Warum ist JPG und nicht PNG sinnvoll?"
-    a: "JPG ist kompakter und optimal für farbige Dokumente, Fotos und Präsentationen. PNG wäre besser für reine Texte oder Screenshots mit scharfen Kanten. Für den typischen Dokumenten-Export ist JPG bei 300 DPI die bessere Wahl."
+    a: "JPG ist kompakter und geeignet für farbige Dokumente, Fotos und Präsentationen. PNG wäre besser für reine Texte oder Screenshots mit scharfen Kanten. Für den typischen Dokumenten-Export ist JPG bei 300 DPI die bessere Wahl."
   - q: "Gibt es ein Datei-Limit?"
     a: "Kein künstliches Limit. Die Grenze ist der Arbeitsspeicher deines Geräts. Bei sehr großen PDFs (30+ Seiten, 300 DPI) empfehlen wir seitenweise Verarbeitung."
 relatedTools:

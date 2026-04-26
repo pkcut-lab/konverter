@@ -70,6 +70,7 @@
   --tracking-label-wide: 0.12em; /* wider mono labels (nav bars) */
 
   /* Spacing scale */
+  --space-half: 0.125rem; /* 2px at 16px base — sub-pixel gap between tightly stacked elements */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -82,6 +83,7 @@
   --space-24: 6rem;
 
   /* Radii */
+  --r-xs: 2px; /* subtle rounding for image corners and thin progress bars */
   --r-sm: 4px;
   --r-md: 8px;
   --r-lg: 12px;
