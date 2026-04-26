@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getStaticPagePath } from '../lib/static-page-slugs';
 
 const lang = (Astro.currentLocale ?? Astro.preferredLocale ?? 'de') as 'de' | 'en';
+const toolsHref = getStaticPagePath('tools', lang);
 const t =
   lang === 'en'
     ? {
@@ -26,7 +28,7 @@ const t =
     <h1>{t.heading}</h1>
     <p class="body">{t.body}</p>
     <div class="actions">
-      <a class="primary" href={`/${lang}/werkzeuge`}>{t.cta}</a>
+      <a class="primary" href={toolsHref}>{t.cta}</a>
       <a class="ghost" href={`/${lang}`}>{t.back}</a>
     </div>
   </div>

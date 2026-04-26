@@ -19,22 +19,31 @@ export interface HreflangLink {
 /**
  * Build hreflang + x-default alternate link entries for a page.
  *
- * @param pathWithoutLang - Path without language prefix, e.g. "/" or "/styleguide/".
- *                         Leading and trailing slashes are normalised.
+ * @param pathWithoutLang - Path without language prefix. Either a single string
+ *                         shared across all languages (e.g. "/" or "/styleguide")
+ *                         OR a per-language record like `{ de: '/werkzeuge', en: '/tools' }`
+ *                         when the slug differs per language. Leading and trailing
+ *                         slashes are normalised.
  */
 export function buildHreflangLinks(
-  { pathWithoutLang }: { pathWithoutLang: string },
+  { pathWithoutLang }: { pathWithoutLang: string | Partial<Record<ActiveLanguage, string>> },
 ): HreflangLink[] {
-  const normalised = normalisePath(pathWithoutLang);
+  const pathFor = (lang: ActiveLanguage): string => {
+    if (typeof pathWithoutLang === 'string') return normalisePath(pathWithoutLang);
+    const langPath = pathWithoutLang[lang];
+    // Fall back to default-language path so a missing per-lang slot never crashes.
+    const fallback = pathWithoutLang[DEFAULT_LANGUAGE] ?? '/';
+    return normalisePath(langPath ?? fallback);
+  };
 
   const perLanguage: HreflangLink[] = ACTIVE_LANGUAGES.map((lang) => ({
     hreflang: lang,
-    href: `${SITE_URL}/${lang}${normalised}`,
+    href: `${SITE_URL}/${lang}${pathFor(lang)}`,
   }));
 
   const xDefault: HreflangLink = {
     hreflang: 'x-default',
-    href: `${SITE_URL}/${DEFAULT_LANGUAGE}${normalised}`,
+    href: `${SITE_URL}/${DEFAULT_LANGUAGE}${pathFor(DEFAULT_LANGUAGE)}`,
   };
 
   return [...perLanguage, xDefault];

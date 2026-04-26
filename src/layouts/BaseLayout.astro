@@ -4,7 +4,7 @@ import ThemeScript from '../components/ThemeScript.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.svelte';
-import { buildHreflangLinks } from '../lib/hreflang';
+import { buildHreflangLinks, DEFAULT_LANGUAGE, type ActiveLanguage } from '../lib/hreflang';
 import { t } from '../lib/i18n/strings';
 import type { Lang } from '../lib/tools/types';
 
@@ -12,7 +12,9 @@ interface Props {
   lang: string;
   title: string;
   description?: string;
-  pathWithoutLang: string;
+  /** Either a single string (shared slug) OR a per-language record when slugs
+   *  differ per language, e.g. `{ de: '/werkzeuge', en: '/tools' }`. */
+  pathWithoutLang: string | Partial<Record<ActiveLanguage, string>>;
   /** Per-tool OG image path (e.g. '/og/tools/meter-zu-fuss.webp').
    *  Falls back to the site-wide '/og-image.png' when absent. */
   ogImagePath?: string | undefined;
@@ -20,7 +22,12 @@ interface Props {
 const { lang, title, description, pathWithoutLang, ogImagePath } = Astro.props;
 const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
-const canonical = new URL(`/${lang}${pathWithoutLang}`, Astro.site).toString();
+
+const canonicalPath: string =
+  typeof pathWithoutLang === 'string'
+    ? pathWithoutLang
+    : (pathWithoutLang[lang as ActiveLanguage] ?? pathWithoutLang[DEFAULT_LANGUAGE] ?? '/');
+const canonical = new URL(`/${lang}${canonicalPath}`, Astro.site).toString();
 const ogImage = new URL(ogImagePath ?? '/og-image.png', Astro.site).toString();
 
 // Site-wide entity signals — Organization + WebSite + SearchAction.

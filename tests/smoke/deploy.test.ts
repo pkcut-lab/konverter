@@ -41,7 +41,10 @@ describe('Deploy — Cloudflare Pages wiring', () => {
     expect(existsSync(fnPath)).toBe(true);
     const fn = readFileSync(fnPath, 'utf8');
     // Function must intercept root and redirect to a language-prefixed path.
-    expect(fn).toMatch(/pathname.*!==.*\//);
+    // Accept either `url.pathname !== '/'` or a `path = url.pathname` alias check.
+    expect(fn).toMatch(/(?:pathname|\bpath\b).*!==\s*['"`]\/['"`]/);
+    // Function must call Response.redirect to a /<lang>/ destination.
+    expect(fn).toMatch(/Response\.redirect/);
     // _redirects must document that the static fallback is intentionally disabled.
     const redirects = readFileSync(join(root, 'public', '_redirects'), 'utf8');
     expect(redirects).toMatch(/functions\/index\.js/);

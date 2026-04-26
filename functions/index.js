@@ -1,26 +1,49 @@
 /**
  * CF Pages Function — root language redirect.
- * Priority: cookie > Accept-Language header > default (de).
- * Supported languages must stay in sync with ACTIVE_LANGUAGES in hreflang.ts.
+ *
+ * Behaviour:
+ *   - Only intercepts the bare "/" root. Any path that already starts with a
+ *     known language prefix (`/de/...`, `/en/...`) is passed through untouched
+ *     so a user's explicit URL choice is always respected.
+ *   - Priority for /  → cookie > Accept-Language > DEFAULT_LANG.
+ *   - DEFAULT_LANG is `'en'` (changed from `'de'` 2026-04-26): EN is the broader
+ *     audience for non-german browsers; DE-speakers get DE via the de;q=… token
+ *     in their Accept-Language header anyway.
+ *
+ * Cookie name `kittokit-lang` is also written to localStorage by the header
+ * language switcher (src/components/Header.astro inline script) so the choice
+ * survives even if the cookie is cleared by a privacy extension.
+ *
+ * SUPPORTED must stay in sync with ACTIVE_LANGUAGES in src/lib/hreflang.ts.
  */
 const SUPPORTED = ['de', 'en'];
-const DEFAULT_LANG = 'de';
+const DEFAULT_LANG = 'en';
 const COOKIE_NAME = 'kittokit-lang';
 
 export async function onRequest({ request, next }) {
   const url = new URL(request.url);
+  const path = url.pathname;
 
-  // Only intercept the bare root — everything else passes through.
-  if (url.pathname !== '/') return next();
+  // Bypass: explicit language choice in path → respect it.
+  for (const lang of SUPPORTED) {
+    if (path === `/${lang}` || path.startsWith(`/${lang}/`)) {
+      return next();
+    }
+  }
 
-  // 1. Cookie takes highest priority (explicit user choice).
+  // Only redirect from the bare root — every other unknown path falls through
+  // to the static asset handler (which renders the localised 404 page).
+  if (path !== '/') return next();
+
+  // 1. Cookie takes highest priority (explicit user choice from the lang switcher).
   const cookieHeader = request.headers.get('Cookie') ?? '';
   const cookieLang = parseCookie(cookieHeader, COOKIE_NAME);
   if (cookieLang && SUPPORTED.includes(cookieLang)) {
     return redirect(url, cookieLang);
   }
 
-  // 2. Accept-Language header negotiation.
+  // 2. Accept-Language header negotiation. Falls back to DEFAULT_LANG (EN) when
+  //    the browser sends no `Accept-Language` or only unsupported languages.
   const acceptLang = request.headers.get('Accept-Language') ?? '';
   const negotiated = negotiate(acceptLang, SUPPORTED);
   return redirect(url, negotiated ?? DEFAULT_LANG);

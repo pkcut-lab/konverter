@@ -1,15 +1,21 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { listToolsForLang, type ToolListItem } from '../../lib/tools/list';
-import { ACTIVE_LANGUAGES, type ActiveLanguage } from '../../lib/hreflang';
-import type { ToolCategory } from '../../lib/tools/categories';
-import { t } from '../../lib/i18n/strings';
+/**
+ * Shared renderer for the tools-index page.
+ *
+ * Used by `src/pages/de/werkzeuge.astro` and `src/pages/en/tools.astro` so the
+ * URL slug differs per language (DE: /de/werkzeuge, EN: /en/tools) while the
+ * markup, data fetch, and styling stay identical. Lang-aware copy comes from
+ * `src/lib/i18n/strings.ts`.
+ */
+import { listToolsForLang, type ToolListItem } from '../lib/tools/list';
+import type { ActiveLanguage } from '../lib/hreflang';
+import type { ToolCategory } from '../lib/tools/categories';
+import { t } from '../lib/i18n/strings';
 
-export async function getStaticPaths() {
-  return ACTIVE_LANGUAGES.map((lang) => ({ params: { lang } }));
+interface Props {
+  lang: ActiveLanguage;
 }
-
-const { lang } = Astro.params as { lang: ActiveLanguage };
+const { lang } = Astro.props;
 const strings = t(lang);
 
 const categoryOrder: readonly ToolCategory[] = [
@@ -26,10 +32,10 @@ const all = await listToolsForLang(lang);
 
 type Group = { id: string; label: string; items: ToolListItem[] };
 const byCat = new Map<string, ToolListItem[]>();
-for (const t of all) {
-  const key = t.category ?? '__other';
+for (const tool of all) {
+  const key = tool.category ?? '__other';
   if (!byCat.has(key)) byCat.set(key, []);
-  byCat.get(key)!.push(t);
+  byCat.get(key)!.push(tool);
 }
 
 const groups: Group[] = [];
@@ -45,62 +51,56 @@ if (other && other.length > 0) {
 }
 
 const total = all.length;
+const toolsWord = lang === 'de' ? 'Werkzeuge' : 'tools';
 ---
-<BaseLayout
-  lang={lang}
-  title={strings.toolsPageTitle}
-  description={strings.toolsPageDescription}
-  pathWithoutLang="/werkzeuge"
->
-  <div class="index">
-    <header class="index-hero">
-      <p class="index-eyebrow">{strings.toolsPageEyebrow}</p>
-      <h1>{strings.toolsPageH1}</h1>
-      <p class="lede">
-        {lang === 'de'
-          ? `${total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser — kein Upload, keine Anmeldung, kein Tracking.`
-          : `${total} tools, grouped by category. Everything runs directly in your browser — no uploads, no account, no tracking.`
-        }
-      </p>
-    </header>
+<div class="index">
+  <header class="index-hero">
+    <p class="index-eyebrow">{strings.toolsPageEyebrow}</p>
+    <h1>{strings.toolsPageH1}</h1>
+    <p class="lede">
+      {lang === 'de'
+        ? `${total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser — kein Upload, keine Anmeldung, kein Tracking.`
+        : `${total} tools, grouped by category. Everything runs directly in your browser — no uploads, no account, no tracking.`
+      }
+    </p>
+  </header>
 
-    <nav class="jump" aria-label={strings.toolsPageCategoriesNav}>
-      {groups.map((g) => (
-        <a href={`#cat-${g.id}`} class="jump-pill">
-          <span>{g.label}</span>
-          <span class="jump-count">{g.items.length}</span>
-        </a>
-      ))}
-    </nav>
+  <nav class="jump" aria-label={strings.toolsPageCategoriesNav}>
+    {groups.map((g) => (
+      <a href={`#cat-${g.id}`} class="jump-pill">
+        <span>{g.label}</span>
+        <span class="jump-count">{g.items.length}</span>
+      </a>
+    ))}
+  </nav>
 
-    <div class="groups">
-      {groups.map((g, idx) => (
-        <section id={`cat-${g.id}`} class="group" aria-labelledby={`h-${g.id}`}>
-          <header class="group-head">
-            <span class="group-head__num" aria-hidden="true">
-              {String(idx + 1).padStart(2, '0')}
-            </span>
-            <h2 id={`h-${g.id}`}>{g.label}</h2>
-            <span class="group-count" aria-label={`${g.items.length} ${lang === 'de' ? 'Werkzeuge' : 'tools'}`}>
-              {String(g.items.length).padStart(2, '0')}
-            </span>
-          </header>
+  <div class="groups">
+    {groups.map((g, idx) => (
+      <section id={`cat-${g.id}`} class="group" aria-labelledby={`h-${g.id}`}>
+        <header class="group-head">
+          <span class="group-head__num" aria-hidden="true">
+            {String(idx + 1).padStart(2, '0')}
+          </span>
+          <h2 id={`h-${g.id}`}>{g.label}</h2>
+          <span class="group-count" aria-label={`${g.items.length} ${toolsWord}`}>
+            {String(g.items.length).padStart(2, '0')}
+          </span>
+        </header>
 
-          <ul class="group-list" role="list">
-            {g.items.map((t) => (
-              <li class="tool-row">
-                <a class="tool-row__link" href={t.href}>
-                  <span class="tool-row__title">{t.shortTitle}</span>
-                  <span class="tool-row__tagline">{t.tagline}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
-    </div>
+        <ul class="group-list" role="list">
+          {g.items.map((tool) => (
+            <li class="tool-row">
+              <a class="tool-row__link" href={tool.href}>
+                <span class="tool-row__title">{tool.shortTitle}</span>
+                <span class="tool-row__tagline">{tool.tagline}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
   </div>
-</BaseLayout>
+</div>
 
 <style>
   .index {

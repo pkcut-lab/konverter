@@ -3,8 +3,9 @@ import ThemeToggle from './ThemeToggle.svelte';
 import HeaderSearch from './HeaderSearch.svelte';
 import { POPULAR_TOOLS } from '../lib/popular-tools';
 import { getSlug } from '../lib/slug-map';
+import { getStaticPagePath } from '../lib/static-page-slugs';
 import type { Lang } from '../lib/tools/types';
-import type { HreflangLink } from '../lib/hreflang';
+import type { ActiveLanguage, HreflangLink } from '../lib/hreflang';
 
 interface Props {
   lang: string;
@@ -19,13 +20,16 @@ const searchPlaceholder: Record<string, string> = {
 const placeholder = searchPlaceholder[lang] ?? searchPlaceholder.en;
 
 type NavItem = { label: string; href: string; disabled?: boolean };
+// Tools-page slug is lang-aware via static-page-slugs:
+//   DE → /de/werkzeuge   EN → /en/tools
+const toolsHref = getStaticPagePath('tools', lang as ActiveLanguage);
 const navByLang: Record<string, NavItem[]> = {
   de: [
-    { label: 'Werkzeuge', href: `/${lang}/werkzeuge` },
+    { label: 'Werkzeuge', href: toolsHref },
     { label: 'Über', href: '#', disabled: true },
   ],
   en: [
-    { label: 'Tools', href: `/${lang}/werkzeuge` },
+    { label: 'Tools', href: toolsHref },
     { label: 'About', href: '#', disabled: true },
   ],
 };
