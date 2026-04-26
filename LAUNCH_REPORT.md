@@ -91,6 +91,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T06:18 UTC+2 (Heartbeat-7) — **ERSTE OUTPUTS.** T6 ✅ committed (feat/consent, 944c1fb). T10 ✅ committed (feat/launch, 1f339cb). T13 ⚠️ partial-done: Email Routing enabled + DNS (5 records) — Aliases blockiert (API-Token-Permission fehlt), User-Input in inbox/to-user/REQUIRES-USER-INPUT-email-target.md. T11 unblocked (T6 done) → cf-infra-engineer running. T7/T10 in tasks/awaiting-review/ warten auf quality-reviewer (KIT-6 in_progress). T8/T9/T12 noch in_progress. KIT-9 (T15) self-blocked pending deps.
 >
 > 2026-04-26T06:29 UTC+2 (Heartbeat-8) — **SPRINT-ENDSPURT.** T7 ✅ approved (KIT-6 done). T11 ✅ committed (76d4c05, in_review KIT-8). T12 ✅ committed (aabc68d, in_review KIT-4). T15 ✅ committed (4e26d90, in_review KIT-9 — worker hat deps self-cleared). T8 running (KIT-1). T9 running (KIT-2). T13 ⚠️ partial (KIT-5 blocked, User-Input). Eskalation: 4 pre-existing vitest-Failures (Phase-3 EN pivot) — KIT-10 erstellt → quality-reviewer. Quality-reviewer idle → KIT-4/KIT-8/KIT-9/KIT-10 werden nächsten Tick gepickt.
+>
+> 2026-04-26T06:40 UTC+2 (Heartbeat-9) — **ALLE TASKS COMMITTED. Quality-Review läuft.** T8 ✅ 87→98 Lighthouse (66e669f, KIT-1 in_review). T9 ✅ 29→0 axe-violations (130bec5, KIT-2 in_review). KIT-10 ✅ 4 vitest-Failures gefixt (5a9d4dd). Approved: T6(KIT-7✅), T7(KIT-6✅), T10(KIT-3✅). Pending review: T8(KIT-1), T9(KIT-2), T11(KIT-8), T12(KIT-4), T15(KIT-9). T13 bleibt partial/blocked auf User-Input. T14 conditional. Quality-reviewer aktiv — Sprint-Ende in Sicht sobald KIT-1/2/4/8/9 done.
 
 ---
 
@@ -99,17 +101,17 @@ _(launch-coordinator updates this block each heartbeat)_
 | ID | Task | Owner | Status | Reviewer-Verdict |
 |----|------|-------|--------|-------------------|
 | T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
-| T6 | Cookie-Banner | cookie-consent-builder | ⏳ awaiting-review [KIT-7 done, 944c1fb] | — |
+| T6 | Cookie-Banner | cookie-consent-builder | ✅ approved [KIT-7 done] | ✅ approved |
 | T7 | JSON-LD per Tool | jsonld-enricher | ✅ approved [KIT-6 done] | ✅ approved 2026-04-26T06:25 |
-| T8 | Performance + CWV | perf-auditor | in_progress [KIT-1] | — |
-| T9 | WCAG 2.2 AAA a11y | a11y-auditor | ⏳ awaiting-review [KIT-2, 29→0 violations] | — |
-| T10 | 404/500 + sitemap + robots | error-pages-builder | ⏳ awaiting-review [KIT-3 done, 1f339cb] | — |
-| T11 | CF Web Analytics + Clarity | cf-infra-engineer | ⏳ awaiting-review [KIT-8 in_review, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | — |
-| T12 | OG-Bilder + Brand-Assets | og-image-generator | ⏳ awaiting-review [KIT-4 in_review, aabc68d] | — |
-| T13 | Email Routing @kittokit.com | cf-infra-engineer | ⚠️ partial-done [KIT-5 blocked] — user-input: CF token permission + email aliases | — |
+| T8 | Performance + CWV | perf-auditor | ⏳ in_review [KIT-1, 87→98 Lighthouse, 66e669f] | — |
+| T9 | WCAG 2.2 AAA a11y | a11y-auditor | ⏳ in_review [KIT-2, 29→0 violations, 130bec5] | — |
+| T10 | 404/500 + sitemap + robots | error-pages-builder | ✅ approved [KIT-3 done] | ✅ approved |
+| T11 | CF Web Analytics + Clarity | cf-infra-engineer | ⏳ in_review [KIT-8, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | — |
+| T12 | OG-Bilder + Brand-Assets | og-image-generator | ⏳ in_review [KIT-4, aabc68d] | — |
+| T13 | Email Routing @kittokit.com | cf-infra-engineer | ⚠️ partial [KIT-5 blocked] — user-input: token perm + email aliases | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
-| T15 | AdSense Prep Checklist | adsense-prep-checker | ⏳ awaiting-review [KIT-9 in_review, 4e26d90] | — |
-| — | Fix vitest failures (Phase-3) | quality-reviewer | todo [KIT-10] | — |
+| T15 | AdSense Prep Checklist | adsense-prep-checker | ⏳ in_review [KIT-9, 4e26d90] | — |
+| — | Fix vitest failures (Phase-3) | quality-reviewer | ✅ done [KIT-10, 5a9d4dd] | ✅ fixed |
 
 ---
 
