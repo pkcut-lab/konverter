@@ -12,6 +12,12 @@ sichtbar sein müssen. Format: neue Einträge **oben**, ältere wandern nach
 unten. Jede Entscheidung verweist auf die betroffenen Tools/Tickets, sodass
 der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 
+## 2026-04-26 · pdf-zu-jpg §0.7 Meta-Review-R2 Dead-Run + Rework-R3 · KON-518/519
+**Decision:** KON-518 (Meta-Review-R2) adapter dead-run — output verified at `tasks/meta-review-pdf-zu-jpg-r2-2026-04-26.md`. Verdict: `hard-divergence` (a11y-A1 BLOCKER: identical "Herunterladen" aria-name on N download-links, WCAG 2.4.9 AAA). Builder-R2 8/8 hit-rate confirmed clean. KON-518 PATCHed to done §0.7. KON-519 Rework-R3 dispatched (5 edits N1–N5, rework_counter 2/2 last-allowed).
+**Affected Tools/Tickets:** KON-518 done, KON-519 todo (tool-builder).
+**Reversibility:** standard — R3 surgical (aria-label, dialog escape/cancel/focus-return, 1-word content, analytics wire-up, 5 token-px fixes).
+**Confirmed by User:** ausstehend.
+
 ## 2026-04-26 · pdf-passwort §0.7 Architecture Pivot — Decrypt-Only Phase 1 · KON-509
 **Decision:** `qpdf.wasm` existiert nicht als npm-Paket (Dossier-Fehler). Phase-1-Scope auf Decrypt-Only reduziert — pdf-lib@1.17.1 (bereits installiert) lädt passwortgeschützte PDFs via `PDFDocument.load(bytes, { password })` und speichert ohne Passwort. Encrypt-Mode auf Phase 2 verschoben (Kandidaten: @cantoo/pdf-lib@2.6.5 für AES-256 oder qpdf-wasm@0.1.0 wenn ausgereift). Kein neues npm-Paket benötigt.
 **Affected Tools/Tickets:** KON-509 (pdf-passwort Tool-Build, re-dispatched todo).
@@ -37,6 +43,79 @@ der User in Sekunden erfassen kann, was der CEO selbst gewählt hat.
 ---
 
 <!-- CEO-DECISION-APPEND -->
+
+## 2026-04-26 · pdf-zu-jpg R2 Meta-Review (KON-518) — §0 HARD-DIVERGENCE, route-to-builder-R3 (last-allowed)
+
+**Decision:** Meta-Reviewer Verdict für pdf-zu-jpg R2: `divergent_require_resolution`,
+**`divergence_flagged=true / divergence_type=hard`**. Builder-R2 (commit `5062cf3`)
+hat alle 8 R1-Atomic-Edits B1-B8 chirurgisch und vollständig umgesetzt
+(**8/8 Hit-Rate**). merged-critic verdict ist `pass` (17/19 Checks PASS,
+2 soft-warnings). Sieben individual-critics: 3 pass (perf, sec, PE), 3 partial
+(content C2 minor fail; conversion C8 high fail; design 3 minor warns),
+**1 fail (a11y-auditor — A1 BLOCKER)**.
+
+**§0 Hard-Divergence-Trigger:** a11y-auditor verdict=fail, rework_required=true,
+severity=blocker. **A1 = WCAG 2.4.9 AAA / axe-rule identical-links-same-purpose:**
+bei n>1 Seiten haben die N Download-Anchors identischen Linktext "Herunterladen"
+mit unterschiedlichen `href={out.url}`-Zielen. Sibling-Span "Seite N" ist nicht
+Teil des accessible-name. **Code-verifiziert** in `PdfZuJpgTool.svelte:566-568`.
+
+merged-critic Check #10 (axe-core) ist nur "warn" (Playwright nicht ausführbar
+in env), erkennt den Static-Code-Befund nicht — Coverage-Gap (6. Recurrence).
+A1 war in R1-Meta als W1 (minor warning) gelistet — Eskalations-Lehre:
+n>1 Output-Items mit identischem Linktext = blocker, nicht warning.
+
+**Empfehlung:** route-to-builder-R3 (rework_counter 1/2 → 2/2, last-allowed)
+mit **5 surgical Atomic-Edits** in 1 Component + 1 Content-Datei:
+1. A1-Fix: `aria-label={\`Seite ${out.pageNum} herunterladen\`}` (1 Zeile)
+2. A4-Fix: Password-Dialog Escape-Handler + Abbrechen-Button + focus-return Trio
+3. C2-Fix: "optimal" → "geeignet" in faq[4].a (1 Wort)
+4. C8-Fix: dispatchToolUsed Per-Tool-Wire-Up (Spinoff S1 fiel bei Migration durch — 11/12 Tools verkabelt, pdf-zu-jpg fehlte)
+5. D2-Fix: 5 raw px → Tokens (border-radius:2px ×3, gap:2px, height:4px)
+
+**Affected Tools/Tickets:**
+- pdf-zu-jpg (R2, audited commit `5062cf3`, build KON-494, rework KON-508, predecessor-meta KON-505, rework_counter 1/2 → 2/2)
+- Critic-Tickets R2: KON-510 (sec) + KON-511 (perf) + KON-512 (merged) + KON-513 (PE) + KON-514 (content) + KON-515 (a11y) + KON-516 (conv) + KON-517 (design)
+
+**Recurrences (Rulebook-/Process-Patterns):**
+- merged-critic-axe-coverage-only-spec-existence: 6. Recurrence
+- conversion-C8-tool-usage-instrumentation-systemic-spinoff-fall-through: 6. Recurrence
+- design-D7-accent-on-selection-state-rubric-ambiguity: 4. Recurrence (Rulebook-Patch nach AGENTS.md §5 fällig)
+- perf-P9-font-budget: 9. Recurrence (Subsetting/Budget-Anpassung pending)
+
+**Reversibility:** trivial (R3 = 1 Component-File + 1 Content-Datei, alle Edits surgical;
+worst-case Rollback via git revert; CEO §7.15-Override falls R3 nicht Closing-Run).
+
+**Confirmed by User:** post-hoc (autonomous CEO-Decision per §0.7 NO-ESCALATION-LOCK,
+2026-04-25 USER-LOCK). Pipeline läuft autonom weiter, kein Blockieren.
+
+---
+
+## 2026-04-26 · pdf-zu-jpg Coverage-Gap Recurrence (Pattern, Rulebook-Patch erwogen)
+
+**Decision:** Coverage-Gap-Pattern in merged-critic-Rubrik wiederholt sich
+zum 6. Mal — Check #10 (axe-core) flaggt nur Spec-Existenz und nicht den
+Static-Code-axe-Befund. 4 Coverage-Gaps in pdf-zu-jpg-R2 identifiziert:
+1. full-axe-static-review-when-Playwright-missing (a11y-A1 BLOCKER nicht erfasst)
+2. dialog-pattern-completeness-Escape-Cancel-focus-return (a11y-A4)
+3. tool-usage-analytics-instrumentation-check (conversion-C8)
+4. token-only-raw-css-property-grep (design-D2)
+
+CEO entscheidet autonom: bei 6. Recurrence ist Rulebook-Patch in nächstem
+Maintenance-Window fällig — entweder erweiterte merged-Rubrik (4 neue Checks)
+oder rigid-Application der bestehenden Severity-Aggregation-Regel
+(CEO-Decisions-Log 2026-04-25). Empfehlung: Severity-Aggregation rigid-aktivieren,
+Rubrik-Erweiterung nur bei weiteren Recurrences. Bei warning_rate >0.20 für
+einzelne Check-IDs → expliziter Rulebook-Patch.
+
+**Affected:** pdf-zu-jpg, sprache-verbessern, webcam-hintergrund-unschaerfe,
+pdf-komprimieren, alle künftigen Tools mit a11y-static-Findings.
+
+**Reversibility:** trivial (Rulebook-Edit, kein Code-Impact).
+
+**Confirmed by User:** post-hoc.
+
+---
 
 ## 2026-04-26 · pdf-zu-jpg R1 Meta-Review (KON-505) — Severity-Coverage-Drift, route-to-builder-R2
 
