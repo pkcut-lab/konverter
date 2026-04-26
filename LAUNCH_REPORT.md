@@ -101,6 +101,8 @@ _(launch-coordinator updates this block each heartbeat)_
 > 2026-04-26T07:26 UTC+2 (Heartbeat-12) — **T8 APPROVED. REVIEW-PIPELINE LÄUFT.** KIT-1(T8) ✅ done — QR hat Review-Pass T8 geschrieben (Lighthouse avg 98, 1761/1761 vitest, LGTM). KIT-2(T9) in_progress — QR aktiv runnend (run c9fbb3eb, Checkout 05:30 UTC). KIT-4(T12)/KIT-8(T11)/KIT-9(T15) in_review queued, kein aktiver Run — werden nach KIT-2 gepickt. KIT-5(T13) bleibt blocked (User-Input nötig). Sprint-Ende prüfbar sobald KIT-2/4/8/9 alle done.
 >
 > 2026-04-26T07:45 UTC+2 (Heartbeat-13) — **T9 APPROVED (🟡 corrected). KIT-4 REVIEW LÄUFT.** KIT-2(T9) ✅ done — QR: 5 violations bei `/` durch Astro i18n `prefixDefaultLocale:true` Override; Fix: `redirectToDefaultLocale: false` in astro.config.mjs (commit 124dba2), axe-core 0 violations / 1761/1761 vitest. KIT-4(T12) in_progress — QR aktiv. KIT-8(T11)/KIT-9(T15) in_review queued. Sprint-Finale: noch KIT-4/8/9.
+>
+> 2026-04-26T07:55 UTC+2 (Heartbeat-14) — **T12 + T11 APPROVED. NUR NOCH T15.** KIT-4(T12) ✅ done — QR: 72/72 WebP OG-Cards, Dark-BG Refined-Minimalism, 4-Layer LGTM (07:49). KIT-8(T11) ✅ done — QR: Analytics consent-gated, fail-safe gegen leere Tokens, 1761/1761 vitest (07:55). KIT-9(T15) in_review — QR aktiv (run läuft). Nach KIT-9-Approval: SPRINT_DONE.md publizieren.
 
 ---
 
@@ -114,8 +116,8 @@ _(launch-coordinator updates this block each heartbeat)_
 | T8 | Performance + CWV | perf-auditor | ✅ approved [KIT-1 done, 87→98 Lighthouse, 66e669f] | ✅ approved 2026-04-26T07:26 |
 | T9 | WCAG 2.2 AAA a11y | a11y-auditor | ✅ approved [KIT-2 done, 29→0 violations, fix 124dba2] | 🟡 corrected+approved 2026-04-26T07:45 |
 | T10 | 404/500 + sitemap + robots | error-pages-builder | ✅ approved [KIT-3 done] | ✅ approved |
-| T11 | CF Web Analytics + Clarity | cf-infra-engineer | ⏳ in_review [KIT-8, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | — |
-| T12 | OG-Bilder + Brand-Assets | og-image-generator | ⏳ in_review [KIT-4, aabc68d] | — |
+| T11 | CF Web Analytics + Clarity | cf-infra-engineer | ✅ approved [KIT-8 done, 76d4c05] ⚠️ user-input: CF_RUM_TOKEN + CLARITY_ID | ✅ approved 2026-04-26T07:55 |
+| T12 | OG-Bilder + Brand-Assets | og-image-generator | ✅ approved [KIT-4 done, 72/72 WebP, aabc68d] | ✅ approved 2026-04-26T07:49 |
 | T13 | Email Routing @kittokit.com | cf-infra-engineer | ⚠️ partial [KIT-5 blocked] — user-input: token perm + email aliases | — |
 | T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
 | T15 | AdSense Prep Checklist | adsense-prep-checker | ⏳ in_review [KIT-9, 4e26d90] | — |
