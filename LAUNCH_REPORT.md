@@ -1,0 +1,131 @@
+# LAUNCH_REPORT — kittokit-launch Sprint
+
+**Sprint-Setup completed:** 2026-04-26 ~05:00 UTC
+**Setup-Owner:** Claude (Sonnet 4.6)
+**Sprint-Coordinator (sobald aktiviert):** launch-coordinator (kittokit-launch Paperclip company)
+**Existing kittokit-Company:** PAUSIERT via `.paperclip/EMERGENCY_HALT`
+
+---
+
+## ⚠️ EINMAL-AKTION ERFORDERLICH (1 Minute)
+
+Beim Import hat Paperclip die 10 Agents als `status=pending_approval` mit `heartbeat.enabled=false` angelegt. Das ist die Default-Sicherheits-Richtlinie für neue Companies. Es gibt kein CLI-Command, der das in einem Schritt umstellt — du musst kurz im Dashboard:
+
+1. Öffne: **http://localhost:3101/dashboard** (Paperclip-Server läuft schon)
+2. Wähle Company **"kittokit-launch"** (ID: `a1d7d1ea-7e43-46aa-92a7-27640c113577`)
+3. Im Agents-Tab: alle **10 Agents approven** (Bulk-Action wenn UI das hat, sonst einzeln)
+4. Pro Agent: Heartbeat aktivieren (Toggle "Enable heartbeat")
+
+Danach läuft die Company autonom und arbeitet T6-T15 ab. Sprint-Ende-Signal kommt in `inbox/to-user/SPRINT_DONE.md`.
+
+**Alternativ:** wenn du mir später eine erweiterte Token-Berechtigung gibst (Board-Member-Approval API), kann ich es nachträglich aktivieren.
+
+---
+
+## Was wurde aufgesetzt
+
+### Company-Infrastruktur
+
+| Datei | Zweck |
+|-------|-------|
+| `docs/paperclip-launch/bundle/COMPANY.md` | Company-Definition (agentcompanies/v1) |
+| `docs/paperclip-launch/bundle/.paperclip.yaml` | Per-Agent Runtime-Config (alle Sonnet 4.6 + effort:max) |
+| `docs/paperclip-launch/bundle/MISSION.md` | T5-T15 Brief mit Owner/Reviewer/Dependencies |
+| `docs/paperclip-launch/bundle/agents/<10>/AGENTS.md` | Pro-Agent Procedure-Markdown |
+
+### 10 Agents (Sonnet 4.6 / effort:max alle)
+
+| Slug | Role | Zweck | Heartbeat |
+|------|------|-------|-----------|
+| `launch-coordinator` | coordinator | Orchestriert T5-T15, dispatched Worker, schreibt LAUNCH_REPORT.md Top-Block | 10min |
+| `quality-reviewer` | qa | 4-Layer-Review jeder Worker-Output, Auto-Fix ≤50 Zeilen oder ❌-Rework | 15min |
+| `cookie-consent-builder` | worker | T6 Cookie-Banner | 30min |
+| `jsonld-enricher` | worker | T7 SoftwareApp/Breadcrumb/HowTo/FAQ Schema | 30min |
+| `perf-auditor` | qa | T8 Lighthouse 7 URLs + Fix CWV-Findings | 30min |
+| `a11y-auditor` | qa | T9 axe-core + WCAG 2.2 AAA | 30min |
+| `error-pages-builder` | worker | T10 404/500 + Sitemap/robots/llms.txt-Sanity | 30min |
+| `cf-infra-engineer` | worker | T11 CF Web Analytics + Clarity, T13 Email, T14 Search Console (conditional) | 30min |
+| `og-image-generator` | worker | T12 72 OG-Cards + Brand-Audit | 30min |
+| `adsense-prep-checker` | qa | T15 AdSense-Readiness + About-Page + ads.txt | 60min |
+
+### Seed-Dispatches
+
+`tasks/dispatch/` enthält bereits 9 Work-Order-Files (eine pro T6-T15). Sobald die Agents aktiv sind und der Heartbeat feuert, picken sie diese auf.
+
+### Quality-Reviewer-Workflow
+
+Jeder Worker schreibt nach Fertigstellung nach `tasks/awaiting-review/T<N>/<agent-slug>.md`. Der Quality-Reviewer:
+1. Pickt oldest awaiting-review-File
+2. Prüft 4 Layer:
+   - **Layer 1 — Hard-Caps:** Tokens-only, Refined-Minimalism, Astro/Svelte 5, AAA-Contrast, pure-client, DSGVO
+   - **Layer 2 — Build-Gates:** `npm run check` 0/0/0 + `npx vitest run` alle pass
+   - **Layer 3 — Funktional:** task-spezifischer Real-World-Check (validator.schema.org, Lighthouse-Score, axe-Violations, etc.)
+   - **Layer 4 — Look:** Refined-Minimalism Visual-Diff
+3. Verdict:
+   - ✅ approved → markiert in LAUNCH_REPORT.md, notifiziert coordinator
+   - 🟡 corrected → Fix selbst (≤50 Zeilen Diff), re-verify, dokumentiert
+   - ❌ rework → eskaliert zurück an Worker via inbox/
+
+---
+
+## Coordinator-Status (top, immer aktuell)
+
+_(launch-coordinator updates this block each heartbeat — leer bis Aktivierung)_
+
+> Setup-Phase abgeschlossen. Warte auf Agent-Approval via Dashboard. Heartbeat noch nicht aktiv.
+
+---
+
+## Task-Tracker
+
+| ID | Task | Owner | Status | Reviewer-Verdict |
+|----|------|-------|--------|-------------------|
+| T5 | Datenschutz/Impressum | external (kittokit-legal) | external (in progress) | — |
+| T6 | Cookie-Banner | cookie-consent-builder | pending (dispatch ready) | — |
+| T7 | JSON-LD per Tool | jsonld-enricher | pending (dispatch ready) | — |
+| T8 | Performance + CWV | perf-auditor | pending (dispatch ready) | — |
+| T9 | WCAG 2.2 AAA a11y | a11y-auditor | pending (dispatch ready) | — |
+| T10 | 404/500 + sitemap + robots | error-pages-builder | pending (dispatch ready) | — |
+| T11 | CF Web Analytics + Clarity | cf-infra-engineer | pending (dispatch ready) | — |
+| T12 | OG-Bilder + Brand-Assets | og-image-generator | pending (dispatch ready) | — |
+| T13 | Email Routing @kittokit.com | cf-infra-engineer | pending (dispatch ready) | — |
+| T14 | Search Console + Bing | cf-infra-engineer | conditional (wartet auf kittokit.com live) | — |
+| T15 | AdSense Prep Checklist | adsense-prep-checker | pending (dispatch ready) | — |
+
+---
+
+## Worker-Reports
+
+_(Workers append here as tasks complete — leer bis Sprint läuft)_
+
+---
+
+## Restschulden + Folgeaufgaben
+
+_(filled by launch-coordinator at sprint end — leer bis Sprint Ende)_
+
+---
+
+## Sprint-Ende
+
+_(filled when sprint complete — leer bis Sprint Ende)_
+
+---
+
+## Anhang — Setup-Logs
+
+**Paperclip Companies (Stand 2026-04-26):**
+- `f8ea7e27-8d40-438c-967b-fe958a45026b` — Konverter Webseite (kittokit Tool-Building, **paused via EMERGENCY_HALT**)
+- `a1d7d1ea-7e43-46aa-92a7-27640c113577` — kittokit-launch (Launch-Sprint, **needs approval**)
+
+**Existing kittokit-Pause-Mechanismus:**
+- File `.paperclip/EMERGENCY_HALT` existiert
+- Existing CEO-Procedure liest dieses File und exit-early bei jedem Heartbeat
+- Reaktivieren via: `rm .paperclip/EMERGENCY_HALT`
+
+**Daemon-Start:** der Paperclip-Server läuft bereits als Background-Daemon auf localhost:3101. Heartbeats werden vom Scheduler gefeuert sobald ein Agent active+enabled ist.
+
+**Token-Setup:**
+- `.env`: `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` gesetzt
+- Cloudflare Pages Build wird via GitHub-Webhook auto-getriggert
+- kittokit-launch Agents nutzen `.env` für CF-Calls (T11, T13, T14)

@@ -1,0 +1,112 @@
+schema: "paperclip/v1"
+agents:
+  launch-coordinator:
+    role: "coordinator"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 600
+        maxConcurrentRuns: 1
+  quality-reviewer:
+    role: "qa"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 900
+        maxConcurrentRuns: 1
+  cookie-consent-builder:
+    role: "worker"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  jsonld-enricher:
+    role: "worker"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  perf-auditor:
+    role: "qa"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  a11y-auditor:
+    role: "qa"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  error-pages-builder:
+    role: "worker"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  cf-infra-engineer:
+    role: "worker"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  og-image-generator:
+    role: "worker"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 1800
+        maxConcurrentRuns: 1
+  adsense-prep-checker:
+    role: "qa"
+    adapter:
+      config:
+        model: "claude-sonnet-4-6"
+        effort: "max"
+      type: "claude_local"
+    runtime:
+      heartbeat:
+        intervalSec: 3600
+        maxConcurrentRuns: 1
