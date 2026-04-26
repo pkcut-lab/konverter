@@ -28,25 +28,41 @@ export interface HreflangLink {
 export function buildHreflangLinks(
   { pathWithoutLang }: { pathWithoutLang: string | Partial<Record<ActiveLanguage, string>> },
 ): HreflangLink[] {
-  const pathFor = (lang: ActiveLanguage): string => {
-    if (typeof pathWithoutLang === 'string') return normalisePath(pathWithoutLang);
+  // Omit langs whose translation does not exist (record case with missing slot).
+  // Fabricating a fallback URL like /en/<de-slug> creates broken hreflang links
+  // that point at 404s — Google penalises this and the visual switcher would
+  // render a dead button. The Header's switcher reads this same array, so
+  // omission cascades correctly into UI.
+  const perLanguage: HreflangLink[] = ACTIVE_LANGUAGES.flatMap((lang) => {
+    if (typeof pathWithoutLang === 'string') {
+      return [{
+        hreflang: lang,
+        href: `${SITE_URL}/${lang}${normalisePath(pathWithoutLang)}`,
+      }];
+    }
     const langPath = pathWithoutLang[lang];
-    // Fall back to default-language path so a missing per-lang slot never crashes.
-    const fallback = pathWithoutLang[DEFAULT_LANGUAGE] ?? '/';
-    return normalisePath(langPath ?? fallback);
-  };
+    if (langPath === undefined) return [];
+    return [{
+      hreflang: lang,
+      href: `${SITE_URL}/${lang}${normalisePath(langPath)}`,
+    }];
+  });
 
-  const perLanguage: HreflangLink[] = ACTIVE_LANGUAGES.map((lang) => ({
-    hreflang: lang,
-    href: `${SITE_URL}/${lang}${pathFor(lang)}`,
-  }));
+  // x-default points at the default language only when that translation exists.
+  const defaultPath: string | undefined =
+    typeof pathWithoutLang === 'string'
+      ? pathWithoutLang
+      : pathWithoutLang[DEFAULT_LANGUAGE];
 
-  const xDefault: HreflangLink = {
-    hreflang: 'x-default',
-    href: `${SITE_URL}/${DEFAULT_LANGUAGE}${pathFor(DEFAULT_LANGUAGE)}`,
-  };
+  if (defaultPath === undefined) return perLanguage;
 
-  return [...perLanguage, xDefault];
+  return [
+    ...perLanguage,
+    {
+      hreflang: 'x-default',
+      href: `${SITE_URL}/${DEFAULT_LANGUAGE}${normalisePath(defaultPath)}`,
+    },
+  ];
 }
 
 /**
