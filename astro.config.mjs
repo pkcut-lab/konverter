@@ -18,6 +18,9 @@ export default defineConfig({
       // T3.5 — Sitemap-Refinement: priority + changefreq per URL type.
       // lastmod wired from frontmatter.dateModified once Sprint-1 migration runs;
       // until then the plugin default (build time) is used.
+      // 2026-04-27: filter raised to drop dev-only routes (styleguide) so they
+      // never leak into the public sitemap. Page itself is also `noindex={true}`.
+      filter: (page) => !/\/styleguide(?:\/|$)/.test(page),
       serialize(item) {
         const url = item.url;
 
