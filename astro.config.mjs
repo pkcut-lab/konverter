@@ -1,4 +1,6 @@
 import { defineConfig } from 'astro/config';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
 import svelte from '@astrojs/svelte';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import tailwind from '@astrojs/tailwind';
@@ -19,6 +21,48 @@ for (const [toolId, perLang] of Object.entries(slugMap)) {
   }
 }
 const SITE_URL = 'https://kittokit.com';
+
+// Build a URL → frontmatter.dateModified map by scanning every content file
+// at config-load. Sync I/O is fine here — config runs once at build start
+// and there are <500 markdown files. Audit P1-C (2026-04-27): without this
+// the sitemap emitted a single build-time lastmod for every page, which
+// Google interprets as constant churn and distrusts.
+const URL_TO_DATE_MODIFIED = new Map();
+const CONTENT_TOOLS = join(process.cwd(), 'src', 'content', 'tools');
+function readDateModified(filePath) {
+  try {
+    const txt = readFileSync(filePath, 'utf-8');
+    const m = txt.match(/^---\s*([\s\S]*?)\s*---/);
+    if (!m) return null;
+    const fm = m[1] ?? '';
+    const dm = fm.match(/^dateModified:\s*['"]?([0-9]{4}-[0-9]{2}-[0-9]{2})['"]?/m);
+    return dm ? dm[1] : null;
+  } catch {
+    return null;
+  }
+}
+if (existsSync(CONTENT_TOOLS)) {
+  for (const tool of readdirSync(CONTENT_TOOLS)) {
+    for (const lang of ACTIVE_LANGUAGES) {
+      const f = join(CONTENT_TOOLS, tool, `${lang}.md`);
+      if (!existsSync(f)) continue;
+      const date = readDateModified(f);
+      if (!date) continue;
+      // Resolve to URL via slug-map: tool dir name === DE slug for legacy
+      // tools, but EN slug differs. Walk slug-map to find toolId for this
+      // dir (matches DE slug in most cases) and resolve.
+      let toolId;
+      for (const [tid, perLang] of Object.entries(slugMap)) {
+        if (perLang.de === tool || perLang.en === tool) { toolId = tid; break; }
+      }
+      if (!toolId) continue;
+      const slug = slugMap[toolId][lang];
+      if (typeof slug === 'string') {
+        URL_TO_DATE_MODIFIED.set(`/${lang}/${slug}`, date);
+      }
+    }
+  }
+}
 function buildToolAlternates(toolId) {
   const entries = [];
   const perLang = slugMap[toolId];
@@ -66,6 +110,9 @@ export default defineConfig({
         const path = url.replace(SITE_URL, '').replace(/\/$/, '');
         const toolId = URL_TO_TOOL_ID.get(path);
         const alternates = toolId ? buildToolAlternates(toolId) : [];
+        // lastmod from frontmatter.dateModified — preserves Google's freshness
+        // signal so unchanged pages aren't constantly re-flagged. Audit P1-C.
+        const lastmod = URL_TO_DATE_MODIFIED.get(path);
         // Sitemap plugin shape: each link is { url, lang } and gets emitted
         // as <xhtml:link rel="alternate" hreflang="<lang>" href="<url>">.
         // Plus an x-default mirror of the default-language entry.
@@ -104,6 +151,7 @@ export default defineConfig({
           priority: 0.8,
           changefreq: 'monthly',
           ...(links && { links }),
+          ...(lastmod && { lastmod: new Date(`${lastmod}T00:00:00Z`) }),
         };
       },
     }),
