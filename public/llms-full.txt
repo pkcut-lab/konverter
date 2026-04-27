@@ -1,6 +1,6 @@
 # kittokit — full inventory
 
-> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. German and English are live; more languages in Phase 3+.
+> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. German and English are live; more languages in development.
 
 ## Site
 
@@ -13,7 +13,7 @@
 ## Privacy & licensing
 
 - All compute happens client-side. ML tools load model weights from a public model CDN once and cache them in the browser; the user's data never leaves the device.
-- No analytics in Phase 1. Phase 2 introduces consented, privacy-respecting analytics.
+- No analytics without explicit consent. When consent is given, analytics are privacy-respecting (no cross-site tracking, no PII).
 - Tool descriptions and how-to articles: CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 
 ## Tools — area
