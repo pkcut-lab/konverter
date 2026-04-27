@@ -1,135 +1,126 @@
 ---
 toolId: gross-net-calculator
 language: en
-title: "Gross to Net Salary Calculator (US)"
-headingHtml: "Gross to <em>Net</em> Salary Calculator"
-metaDescription: "Calculate your US take-home pay from gross salary. Accounts for federal income tax, FICA (Social Security & Medicare), and optional state tax. Free and private."
-tagline: "Enter your annual or hourly gross pay and instantly see your estimated take-home pay after federal taxes, Social Security, Medicare, and state income tax."
-intro: "This calculator estimates your net (take-home) pay from a gross salary or hourly wage. It applies 2024 US federal income tax brackets, FICA payroll taxes, and optional state income tax. All calculations happen in your browser — no data is stored or transmitted."
+title: "Paycheck Calculator — US Federal & UK Take-Home"
+headingHtml: "Calculate your <em>take-home pay</em> in the US or UK"
+metaDescription: "Free paycheck calculator. US: federal income tax + FICA across all 4 filing statuses. UK: PAYE + Class-1 NI + Personal Allowance taper. 2025 rates."
+tagline: "Enter your gross annual salary, pick your filing status (US) or just your salary (UK), and see federal/income tax, FICA or NI, and your take-home pay broken down by line."
+intro: "This calculator runs two side-by-side paycheck systems — US federal income tax plus FICA across all four filing statuses, and UK income tax plus Class-1 employee National Insurance with the Personal Allowance taper. The math uses 2025 federal brackets and 2025/26 UK tax-year rates. Pick your region with the toggle at the top of the tool."
 howToUse:
-  - "Enter your gross annual salary, or switch to hourly mode and enter your hourly rate plus weekly hours."
-  - "Select your federal filing status: Single, Married Filing Jointly, Married Filing Separately, or Head of Household."
-  - "Enter your state (or select 'No state income tax') to apply the correct state tax rate."
-  - "Optionally add pre-tax deductions such as 401(k) contributions or health insurance premiums."
-  - "View the results breakdown: federal tax, FICA, state tax, deductions, and final take-home pay — monthly and annual."
+  - "Pick your region — United States or United Kingdom. The choice persists in your browser."
+  - "Enter your gross annual salary in USD (US) or GBP (UK)."
+  - "US only: choose your IRS filing status — Single, Married filing jointly, Head of household, or Married filing separately."
+  - "Read the take-home (annual + monthly) and the line-by-line tax breakdown below."
+  - "Numbers update live as you type. Calculation runs entirely in your browser."
 faq:
-  - q: "What is the difference between gross pay and net pay?"
-    a: "Gross pay is your salary before any taxes or deductions. Net pay — commonly called take-home pay — is what actually lands in your bank account after federal income tax, Social Security (6.2%), Medicare (1.45%), and any applicable state taxes are withheld."
-  - q: "Does this calculator include state income tax?"
-    a: "Yes. Select your state from the dropdown to apply a simplified state income tax estimate. Note that state tax calculations are simplified — they use a representative marginal rate rather than the full state bracket schedule. For precise state tax liability, consult your state's official tax agency or a CPA."
-  - q: "What is FICA and how much is it?"
-    a: "FICA stands for Federal Insurance Contributions Act. It consists of Social Security tax (6.2% on wages up to $168,600 in 2024) and Medicare tax (1.45% with no wage cap). Your employer matches these amounts, but those amounts don't come out of your paycheck."
-  - q: "Are health insurance and 401(k) included?"
-    a: "You can enter pre-tax deductions manually. Common pre-tax items include 401(k) and 403(b) contributions, traditional IRA contributions via payroll, health insurance premiums (employer-sponsored), HSA contributions, and FSA contributions. These reduce your taxable federal income."
-  - q: "Does this calculator cover self-employed income?"
-    a: "No. Self-employed individuals pay both the employee and employer halves of FICA (total 15.3% self-employment tax), and the calculation method differs significantly. Use a dedicated self-employment tax calculator for freelance or 1099 income."
-  - q: "How accurate is this estimate?"
-    a: "This tool provides a reasonable estimate for W-2 employees with straightforward tax situations. It does not account for itemized deductions beyond the standard deduction, investment income, the additional 0.9% Medicare surtax on high earners, or tax credits. For tax planning purposes, consult a CPA or use the IRS Tax Withholding Estimator."
+  - q: "What's the difference between US gross-to-net and UK gross-to-net?"
+    a: "The US system stacks federal income tax (a 7-bracket marginal schedule from 10% to 37%) on top of FICA — Social Security (6.2% up to a wage base) plus Medicare (1.45% on all wages, plus 0.9% on high earners). State and local income tax sit on top of the federal layer. The UK system uses one tax-free Personal Allowance (£12,570) followed by a 3-band income-tax schedule (20%/40%/45%) plus Class-1 employee National Insurance (8% / 2%). UK includes everything in one PAYE deduction; the US splits it into multiple line items on a W-2."
+  - q: "Why doesn't the US calculator include state income tax?"
+    a: "Forty-three states have their own income tax with their own brackets, deductions, and credits — California, New York, and Hawaii alone have 9+ brackets each. Modeling all of them in a single calculator would obscure the federal math without adding much accuracy, and the rates change each January. The result here is your federal take-home; subtract your state's effective rate from the breakdown if you need state-specific math. States with no income tax (FL, TX, WA, NV, TN, SD, WY, NH, AK) need no adjustment."
+  - q: "Why does the UK Personal Allowance disappear at high incomes?"
+    a: "The Personal Allowance tapers off at £1 for every £2 of gross income above £100,000, fully phased out at £125,140. This creates an effective marginal rate of about 60% in that band — you pay 40% income tax on the next £1, plus you lose 50p of allowance which adds another 40p of tax. The calculator handles this correctly: at £110,000 your PA shows £7,570 (£12,570 minus £5,000)."
+  - q: "Which UK tax year does the calculator use?"
+    a: "2025/26, running 6 April 2025 to 5 April 2026. Personal Allowance £12,570, basic rate 20% on £37,700 of taxable income, higher rate 40%, additional rate 45% above £125,140. Class-1 employee NI is 8% between the Primary Threshold and the Upper Earnings Limit, then 2% above. Scotland uses a different 6-band income-tax structure not modeled here."
+  - q: "What is FICA exactly?"
+    a: "FICA (Federal Insurance Contributions Act) is the umbrella term for two payroll taxes that fund Social Security and Medicare. Social Security is 6.2% on wages up to the annual wage base ($176,100 in 2025), then 0% above. Medicare is 1.45% on all wages with no cap, plus an Additional Medicare Tax of 0.9% on wages above $200,000 single / $250,000 married filing jointly / $125,000 married filing separately. Employers match the SS and base Medicare portions but not the Additional Medicare — that one is employee-only."
+  - q: "What is the Personal Allowance taper and when does it apply?"
+    a: "Above £100,000 of adjusted net income, the £12,570 Personal Allowance reduces by £1 for every £2 of additional income. By £125,140 the allowance is gone completely. The effective marginal rate in this £25,140 band is around 60%, which is why salary-sacrifice pension contributions and other PA-recovery strategies are common at this income level."
 relatedTools:
-  - hourly-to-annual-salary
   - vat-calculator
+  - hourly-to-annual
   - interest-calculator
 category: finance
-stats:
-  - label: "Tax classes"
-    value: "6"
-  - label: "Federal states"
-    value: "16"
-  - label: "Precision"
-    value: "±0.01"
-    unit: "EUR"
-contentVersion: 1
+contentVersion: 2
 datePublished: '2026-04-26'
-dateModified: '2026-04-26'
+dateModified: '2026-04-27'
 
 ---
 
 ## What This Tool Does
 
-The Gross-to-Net Salary Calculator shows how much of your paycheck you actually keep after US payroll taxes and deductions. It handles the most common W-2 employee scenario: a regular salary or hourly wage with federal income tax withholding, FICA payroll taxes, and state income tax.
+The calculator is two systems behind one URL. The region toggle at the top of the page picks which one is active and remembers your choice for the next visit.
 
-The results display as an annual and monthly breakdown, making it easy to compare job offers, plan a budget, or understand why your paycheck doesn't match your quoted salary.
+- **United States** — federal income tax across all four IRS filing statuses (Single, MFJ, HoH, MFS) plus the full FICA stack (Social Security, Medicare, Additional Medicare). Standard deduction is auto-applied per filing status. State, city, and local income tax are not included — they vary too widely to model in one calculator.
+- **United Kingdom** — income tax across the three official bands (basic 20%, higher 40%, additional 45%) with the £12,570 Personal Allowance, the £100,000–£125,140 PA taper, and Class-1 employee National Insurance at the Spring 2024 rates (8% PT-to-UEL, 2% above UEL).
 
-## How Does It Work?
+Both regions display the same outputs: take-home (annual and monthly), the effective tax rate, and a full line-by-line breakdown.
 
-The calculation follows standard US payroll withholding rules for 2024:
+## How Does the Math Work?
 
-```
-Step 1: Gross Annual Salary (or Hourly Rate × Hours/Week × 52)
+### United States (2025 tax year)
 
-Step 2: Pre-tax Deductions
-  Adjusted Gross = Gross − 401(k) − Health Insurance − HSA − other pre-tax
+1. Subtract the standard deduction from gross to get taxable income.
+2. Apply the 7-band federal income-tax schedule (10/12/22/24/32/35/37%) marginally on the taxable income — each slice taxed at its own rate.
+3. Add Social Security: 6.2% on gross up to $176,100, then 0%.
+4. Add Medicare: 1.45% on all gross.
+5. Add Additional Medicare: 0.9% on gross above the filing-status threshold ($200,000 single, $250,000 MFJ, $125,000 MFS).
+6. Subtract the sum from gross — that's your annual take-home. Divide by 12 for monthly.
 
-Step 3: Federal Taxable Income
-  Taxable Income = Adjusted Gross − Standard Deduction
-    Standard Deduction 2024:
-      Single / MFS         → $14,600
-      Married Filing Joint → $29,200
-      Head of Household    → $21,900
+The marginal-bracket display shows the highest rate that any of your income hits — useful for understanding what an extra $1,000 of salary would cost in tax.
 
-Step 4: Federal Income Tax (marginal brackets 2024, Single example)
-  10%  on $0 – $11,600
-  12%  on $11,601 – $47,150
-  22%  on $47,151 – $100,525
-  24%  on $100,526 – $191,950
-  32%  on $191,951 – $243,725
-  35%  on $243,726 – $609,350
-  37%  on $609,351+
+### United Kingdom (2025/26 tax year)
 
-Step 5: FICA Taxes (applied to gross wages)
-  Social Security: 6.2% × min(Gross, $168,600)
-  Medicare:        1.45% × Gross
-  (Additional Medicare 0.9% on Gross > $200,000 — not included)
+1. Compute your effective Personal Allowance: full £12,570 if gross ≤ £100,000, taper to £0 between £100,000 and £125,140.
+2. Subtract PA from gross to get taxable income.
+3. Apply income tax: 20% on the first £37,700 of taxable, 40% from there to the additional-rate threshold, 45% above £125,140 of gross.
+4. Compute Class-1 employee NI: 0% below £12,570, 8% between £12,570 and £50,270, 2% above £50,270.
+5. Subtract income tax + NI from gross — that's your annual take-home.
 
-Step 6: State Income Tax (simplified representative rate)
+## Which Filing Status Should You Pick (US)?
 
-Step 7: Net Pay = Gross − Federal Tax − FICA − State Tax − Pre-tax Deductions
-```
+- **Single** — unmarried, not head of a household, no qualifying dependents. The default for most W-2 earners.
+- **Married filing jointly (MFJ)** — combined return for spouses. Bracket thresholds and standard deduction are roughly double the single values, but the deduction-to-bracket ratio is the same so it's not always advantageous.
+- **Head of household (HoH)** — unmarried with a qualifying dependent. Wider brackets than single but tighter than MFJ. Standard deduction is $22,500 (2025).
+- **Married filing separately (MFS)** — same brackets as single but the additional-Medicare threshold is half ($125,000 instead of $200,000). Rarely beneficial except for specific tax-strategy reasons.
 
-## What Are the 2024 Federal Tax Brackets?
+## What Are the 2025 US Federal Brackets?
 
-| Tax Rate | Single | Married Filing Jointly |
-|---|---|---|
-| 10% | $0 – $11,600 | $0 – $23,200 |
-| 12% | $11,601 – $47,150 | $23,201 – $94,300 |
-| 22% | $47,151 – $100,525 | $94,301 – $201,050 |
-| 24% | $100,526 – $191,950 | $201,051 – $383,900 |
-| 32% | $191,951 – $243,725 | $383,901 – $487,450 |
-| 35% | $243,726 – $609,350 | $487,451 – $731,200 |
-| 37% | $609,351+ | $731,201+ |
+For taxable income (gross minus standard deduction), single filer:
 
-## Which States Have No Income Tax?
+| Bracket | Rate | Income range |
+| ------- | ---- | ------------ |
+| 1 | 10% | $0 – $11,925 |
+| 2 | 12% | $11,925 – $48,475 |
+| 3 | 22% | $48,475 – $103,350 |
+| 4 | 24% | $103,350 – $197,300 |
+| 5 | 32% | $197,300 – $250,525 |
+| 6 | 35% | $250,525 – $626,350 |
+| 7 | 37% | $626,350+ |
 
-Alaska, Florida, Nevada, New Hampshire (wages only), South Dakota, Tennessee (wages only), Texas, Washington (wages only), Wyoming.
+Married-filing-jointly thresholds are roughly double, head-of-household sits between single and MFJ.
 
-## What Are Common Use Cases?
+## What Are the 2025/26 UK Bands?
 
-**Comparing job offers.** Two offers — $95,000 in Texas vs. $105,000 in California — look very different once state taxes are applied. Enter each scenario to compare net pay side by side.
+For taxable income (gross minus Personal Allowance), England/Wales/N.Ireland:
 
-**Budgeting a new hire.** HR professionals can estimate an employee's expected net pay to help them understand their offer letter and plan their personal finances.
+| Band | Rate | Taxable range | Gross equivalent |
+| ---- | ---- | ------------- | ---------------- |
+| Basic | 20% | £0 – £37,700 | £12,570 – £50,270 |
+| Higher | 40% | £37,700 – £112,570 | £50,270 – £125,140 |
+| Additional | 45% | £112,570+ | £125,140+ |
 
-**Evaluating a 401(k) contribution increase.** Increasing your 401(k) contribution from 6% to 10% reduces your taxable income. Use the calculator to see how much your paycheck actually decreases — usually much less than the full contribution amount because the tax savings partially offset it.
+Scottish income tax uses a 6-band structure (19/20/21/42/45/48%) — that's a separate calculator and out of scope here.
 
-**Negotiating salary.** When negotiating, knowing your exact net figure for each gross salary level makes it easier to identify the minimum acceptable offer.
+## Where Do the Rates Come From and What About Privacy?
 
-**Estimating quarterly estimated taxes.** If you have additional income (freelance work, rental income), knowing your W-2 net pay is the starting point for calculating whether you need to make quarterly estimated tax payments.
+US numbers come from IRS Revenue Procedure 2024-40 (annual brackets) and the Social Security Administration's 2025 wage-base announcement. UK numbers come from HMRC's published rates for the 2025/26 tax year, including the Spring 2024 NI cuts (12% → 10% → 8%).
+
+The calculator runs entirely client-side. Your salary, filing status, and region pick never leave your browser — no analytics, no signup, no server. The region you choose (US or UK) is the only thing stored, and it's stored only in your own browser's `localStorage` so you don't have to pick again next visit.
 
 ## Frequently Asked Questions
 
-**What is the difference between gross pay and net pay?**
-Gross pay is your full salary as agreed — the number on your offer letter. Net pay is what your employer actually deposits in your bank account. The difference is withheld for federal income tax, Social Security (6.2%), Medicare (1.45%), and any applicable state taxes. On a $75,000 salary in Texas (no state tax), a single filer might take home roughly $57,000–$59,000 depending on their deductions.
+**Does this include 401(k), IRA, or pension contributions?**
+No. Pre-tax retirement contributions reduce taxable income but not Social Security / Medicare wages, and they vary by employer plan. Subtract your annual 401(k) contribution from gross before entering it if you want to model their effect on federal income tax — but be aware that the FICA line items will be slightly understated.
 
-**Does this calculator include state income tax?**
-Yes, using simplified representative rates by state. For example, California applies a 9.3% representative marginal rate, while Texas and Florida apply 0%. Full state tax accuracy requires running the state's complete bracket schedule, which varies by filing status and locality — for precise figures, use your state's official withholding calculator.
+**Does this include health-insurance premiums or HSA contributions?**
+Not directly. Section-125 cafeteria-plan deductions (employer-paid health, HSA, FSA) reduce both federal taxable income and FICA wages. If you want to model them precisely, subtract your annual cafeteria deduction from gross before entering it — the calculator will then represent your post-cafeteria position.
 
-**What is FICA and how much is it?**
-FICA (Federal Insurance Contributions Act) funds Social Security and Medicare. As an employee, you pay 6.2% of your wages to Social Security (capped at $168,600 in 2024) and 1.45% to Medicare (no cap). Your employer pays an equal match — so the total contribution is 15.3% of your wages, but only half comes from your paycheck.
+**Why does my actual paycheck stub differ from this number?**
+Several common reasons: state and local income tax (US), pre-tax deductions (401(k), HSA, premiums), post-tax deductions (Roth 401(k), garnishments), itemized vs standard deduction, marriage-bracket interactions, and rounding differences in the IRS withholding tables (Pub 15-T) versus the marginal-rate calculation we run here. This tool gives you the *math* of federal tax — actual paycheck withholding is an estimate that trues up at year-end.
 
-**Are health insurance and 401(k) included?**
-Enter these as pre-tax deductions. A $500/month health insurance premium reduces your federal taxable income by $6,000/year, which at the 22% bracket saves you about $1,320 in federal taxes. The calculator applies this reduction before computing federal income tax.
+**Are the 2025 brackets adjusted for inflation?**
+Yes. The IRS publishes annual bracket-threshold adjustments tied to chained CPI-U. The 2025 figures here reflect Rev. Proc. 2024-40, published October 2024. Each January the IRS releases the next year's set; we update this tool when they do.
 
-**Does this calculator cover self-employed income?**
-No. Freelancers and sole proprietors on 1099 income pay self-employment tax of 15.3% (both halves of FICA) on net self-employment income, and the calculation is fundamentally different. Use a dedicated self-employment tax tool for 1099 scenarios.
+## Which Related Tools Pair Well With This One?
 
-**How accurate is this estimate?**
-Accurate enough for budgeting and offer comparisons — typically within a few hundred dollars of your actual withholding. It does not model itemized deductions, tax credits (Child Tax Credit, Earned Income Credit), investment income, the 0.9% additional Medicare surtax, or alternative minimum tax. For tax planning or filing, consult a CPA.
+If you're working through compensation math, you might also need an [hourly-to-annual converter](/en/hourly-to-annual-salary), a [VAT/sales-tax calculator](/en/vat-calculator) for after-tax pricing, or an [interest calculator](/en/interest-calculator) for savings or loan totals.
