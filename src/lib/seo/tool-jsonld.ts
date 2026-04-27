@@ -52,6 +52,21 @@ function getApplicationType(toolType?: string): string | string[] {
 }
 
 /**
+ * Currency for the (free) `Offer.priceCurrency` field. The price itself is
+ * always 0, so currency is informational only — but Google still expects a
+ * value matching the page's locale. Hardcoding 'EUR' on EN pages was an
+ * audit P1 (2026-04-27).
+ *
+ * Phase 3 maps 'de' → EUR, 'en' → USD (default English region; UK GBP and
+ * future region-aware variants are emitted by the per-tool JSON-LD when the
+ * tool is region-adaptive). New languages: extend this map.
+ */
+const PRICE_CURRENCY_BY_LANG: Record<string, string> = {
+  de: 'EUR',
+  en: 'USD',
+};
+
+/**
  * Builds a single JSON-LD @graph block for a tool page.
  * Returns { '@context': 'https://schema.org', '@graph': [...] } — one script tag,
  * easier for validators and avoids repeated @context in the DOM.
@@ -68,6 +83,8 @@ export function buildToolJsonLd(
 
   const graph: Record<string, unknown>[] = [];
 
+  const priceCurrency = PRICE_CURRENCY_BY_LANG[content.lang] ?? 'EUR';
+
   const softwareApp: Record<string, unknown> = {
     '@type': appType,
     name: content.title,
@@ -76,11 +93,14 @@ export function buildToolJsonLd(
     applicationCategory,
     operatingSystem: 'Web',
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    offers: { '@type': 'Offer', price: '0', priceCurrency },
     inLanguage: content.lang,
     creator: {
       '@type': 'Person',
-      '@id': 'https://kittokit.com/de/ueber#person',
+      // Site-root fragment-id, lang-agnostic — same person across all locales.
+      // Earlier the @id pointed at /de/ueber#person which leaked DE on every
+      // EN page (audit P1-G).
+      '@id': 'https://kittokit.com/#person',
     },
   };
 

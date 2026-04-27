@@ -16,7 +16,10 @@ export function buildPersonJsonLd(lang: string): PersonJsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    '@id': `${base}/de/ueber#person`,
+    // Lang-agnostic fragment-id — same identity across DE/EN/future locales.
+    // Earlier this hardcoded /de/ueber#person which leaked DE on every EN
+    // page (audit P1-G, 2026-04-27).
+    '@id': `${base}/#person`,
     name: 'Paul Kuhn',
     url: `${base}/${lang}/${aboutSlug}`,
     sameAs: [

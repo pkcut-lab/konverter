@@ -178,12 +178,26 @@ describe('buildToolJsonLd — Task 2.4: WebApplication + browserRequirements + f
     expect(formats).toContain('image/webp');
   });
 
-  it('creator links to /de/ueber#person', () => {
+  it('creator links to lang-agnostic /#person fragment (audit P1-G)', () => {
     const result = buildToolJsonLd(base, 'https://example.com/x');
     const graph = result['@graph'] as Record<string, unknown>[];
     const creator = graph[0].creator as Record<string, unknown>;
-    expect(creator['@id']).toBe('https://kittokit.com/de/ueber#person');
+    expect(creator['@id']).toBe('https://kittokit.com/#person');
     expect(creator['@type']).toBe('Person');
+  });
+
+  it('priceCurrency is EUR for de pages', () => {
+    const result = buildToolJsonLd({ ...base, lang: 'de' }, 'https://example.com/x');
+    const graph = result['@graph'] as Record<string, unknown>[];
+    const offers = graph[0].offers as Record<string, unknown>;
+    expect(offers.priceCurrency).toBe('EUR');
+  });
+
+  it('priceCurrency is USD for en pages (default English region)', () => {
+    const result = buildToolJsonLd({ ...base, lang: 'en' }, 'https://example.com/x');
+    const graph = result['@graph'] as Record<string, unknown>[];
+    const offers = graph[0].offers as Record<string, unknown>;
+    expect(offers.priceCurrency).toBe('USD');
   });
 });
 
