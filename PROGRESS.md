@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-26 — Mondphasen-Rechner (moon-phase): neues Tool + neue Kategorie `nature` · SVG-Mondvisualisierung · DE + EN Content · 1838/1838 Tests grün · 0 errors
+**Letztes Update:** 2026-04-27 — i18n-Migration Phase A + B1 + B2 + B3 vollständig · 48 Files · 1853/1853 Tests grün · 0 errors · Commit `0d00bd9`
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
@@ -317,6 +317,16 @@ Diese Tools wurden durch das Sequential Pipeline Quality Gate (8 Critics + 3-Pas
 | ML-Tools (7 Tools) | ✅ | hintergrund-entfernen/webcam-blur/video-bg-remove/sprache-verbessern/bild-zu-text/ki-text-detektor/ki-bild-detektor |
 | SEO Sprint 1+2 | ✅ | dateModified+datePublished · AnswerFirst · ToolStats · Question-Headers · @graph · BreadcrumbList in [slug].astro |
 | SEO Sprint 3 | ✅ | T3.1 hreflang-Fix 144 pages · T3.2 INP client:visible · T3.3 computeRelatedTools · T3.4 llms.txt prebuild · T3.5 sitemap priority · T3.6 Breadcrumbs.astro |
+| i18n Phase A+B (2026-04-27) | ✅ | Foundation (lang/types/locale-maps/units/strings/schemas/label/lint) + alle 8 shared Komps + 22 Tool-Komps migriert |
+
+## Nächste Session — Phase B4 (i18n Config-Labels)
+
+**Offen:** 73 Tool-Configs in `src/lib/tools/*.ts` haben noch hardcodierte DE-Labels.
+Muster-Migration:
+- Unit-Converter: `label: 'Meter'` → `label: unit('m')` (LocalizedString via units.ts)
+- Calculator/Custom: `label: 'Brutto'` → `label: { de: 'Brutto', en: 'Gross' }` (manuelle LocalizedString)
+- Dann `resolveLabel(config.units.from.label, lang)` in Converter.svelte + generic tools nutzen
+- Abschluss: lint-no-de-in-ui.mjs Scope auf `src/lib/tools/**` erweitern (aktuell nur components/layouts)
 
 ---
 
