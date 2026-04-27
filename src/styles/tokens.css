@@ -27,7 +27,10 @@
   --icon-filter: none;
 
   /* Typography */
-  --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  /* 'Inter Fallback' is the metric-overridden Arial face declared in
+     fonts.css — keeps the fallback paint dimensionally identical to Inter
+     so the swap doesn't shift layout (audit P1-J, 2026-04-27). */
+  --font-family-sans: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
   /* Accent-Font für <em>-Highlights in H1/H2 — edle Editorial-Italic.
      Playfair Display Italic inszeniert das warme Orange mit High-Contrast-Serif-

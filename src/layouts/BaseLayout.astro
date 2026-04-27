@@ -133,22 +133,18 @@ const websiteJsonLd = {
     <meta name="apple-mobile-web-app-title" content="kittokit" />
     <meta name="application-name" content="kittokit" />
 
-    {/* Preload ONLY the fonts on the critical path. Inter carries body copy,
-        JetBrains Mono carries meta labels + numerics visible on first paint.
-        Playfair Display is decorative (<em> inside H1/H2 only) — `font-display:
-        swap` renders the fallback italic immediately and swaps when ready.
-        Preloading Playfair burns ~38 KB for a glyph the user barely sees above
-        the fold on most tool pages. */}
+    {/* Preload ONLY the fonts truly on the critical path. Inter carries
+        body copy + headings — that's the actual LCP font on every page.
+        JetBrains Mono is rarely above-the-fold (used for breadcrumb chips,
+        meta-labels, code samples in the article body) — preloading it cost
+        ~40 KB on every cold paint without a meaningful FCP gain (audit
+        P1-K, 2026-04-27). It now loads on-demand via `font-display: swap`
+        when the page actually paints monospaced text.
+        Playfair Display is decorative (<em> inside H1/H2 only) — same
+        rationale: swap from Georgia/Iowan-Old-Style fallback when ready. */}
     <link
       rel="preload"
       href="/fonts/Inter-Variable.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/JetBrainsMono-Variable.woff2"
       as="font"
       type="font/woff2"
       crossorigin
