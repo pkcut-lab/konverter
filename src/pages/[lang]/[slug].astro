@@ -39,6 +39,13 @@ import PdfAufteilenTool from '../../components/tools/PdfAufteilenTool.svelte';
 import PdfZuJpgTool from '../../components/tools/PdfZuJpgTool.svelte';
 import PdfPasswortTool from '../../components/tools/PdfPasswortTool.svelte';
 import MondphasenRechnerTool from '../../components/tools/MondphasenRechnerTool.svelte';
+// EN region-aware variants (Wave 2 / 2026-04-27 audit fix). Mounted on the
+// EN side of the 3 tools where DE↔EN deliver fundamentally different math —
+// US sales tax matrix vs DE 19/7/0% MwSt, US FICA+federal vs DE Lohnsteuer,
+// US/UK simple+compound vs DE Zinseszins+Abgeltungssteuer.
+import VatCalculatorEnTool from '../../components/tools/VatCalculatorEnTool.svelte';
+import GrossNetEnTool from '../../components/tools/GrossNetEnTool.svelte';
+import InterestCalculatorEnTool from '../../components/tools/InterestCalculatorEnTool.svelte';
 import ToolStats from '../../components/ToolStats.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
@@ -353,7 +360,10 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'formatter' && config.id === CONTRAST_CHECKER_TOOL_ID && (
             <ContrastCheckerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
-          {config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID && entry.data.language === 'en' && (
+            <VatCalculatorEnTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID && entry.data.language !== 'en' && (
             <MehrwertsteuerRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID && (
@@ -362,7 +372,10 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID && (
             <TilgungsplanRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
-          {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && (
+          {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && entry.data.language === 'en' && (
+            <GrossNetEnTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && entry.data.language !== 'en' && (
             <BruttoNettoRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID && (
@@ -371,7 +384,10 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID && (
             <RabattRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
-          {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && (
+          {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && entry.data.language === 'en' && (
+            <InterestCalculatorEnTool config={config} client:load />
+          )}
+          {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && entry.data.language !== 'en' && (
             <ZinsrechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && (

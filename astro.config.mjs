@@ -5,6 +5,32 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 import AstroPWA from '@vite-pwa/astro';
 import { ACTIVE_LANGUAGES } from './src/lib/hreflang.ts';
+import { slugMap } from './src/lib/slug-map.ts';
+
+// Build a reverse lookup: { '/de/<slug>': toolId, '/en/<slug>': toolId } so
+// the sitemap serialize() callback can resolve a URL back to its toolId in
+// O(1) and emit hreflang alternates for every active language. Doing this
+// once at config-load time avoids re-walking slug-map per item.
+// Audit P0-4: per-tool xhtml:link emission (2026-04-27).
+const URL_TO_TOOL_ID = new Map();
+for (const [toolId, perLang] of Object.entries(slugMap)) {
+  for (const [lang, slug] of Object.entries(perLang)) {
+    if (typeof slug === 'string') URL_TO_TOOL_ID.set(`/${lang}/${slug}`, toolId);
+  }
+}
+const SITE_URL = 'https://kittokit.com';
+function buildToolAlternates(toolId) {
+  const entries = [];
+  const perLang = slugMap[toolId];
+  if (!perLang) return entries;
+  for (const lang of ACTIVE_LANGUAGES) {
+    const slug = perLang[lang];
+    if (typeof slug === 'string') {
+      entries.push({ lang, url: `${SITE_URL}/${lang}/${slug}` });
+    }
+  }
+  return entries;
+}
 
 export default defineConfig({
   // Production domain. Flip to https://kittokit.com once Cloudflare DNS is live.
@@ -21,8 +47,37 @@ export default defineConfig({
       // 2026-04-27: filter raised to drop dev-only routes (styleguide) so they
       // never leak into the public sitemap. Page itself is also `noindex={true}`.
       filter: (page) => !/\/styleguide(?:\/|$)/.test(page),
+      // i18n alternates per item — emits <xhtml:link rel="alternate"> entries
+      // for every active language inside each <url>. The plugin's built-in
+      // i18n option needs identical slugs across locales, but our per-tool
+      // slug-map is allowed to differ per language (e.g. meter-zu-fuss vs
+      // meter-to-feet). So we compute alternates manually inside `serialize`.
+      // Audit P0-4 (2026-04-27).
+      i18n: {
+        defaultLocale: 'en',
+        locales: { de: 'de', en: 'en' },
+      },
       serialize(item) {
         const url = item.url;
+
+        // Resolve URL back to toolId so we can emit hreflang alternates that
+        // correctly map per-language slugs (meter-zu-fuss ↔ meter-to-feet).
+        // The leading site-origin needs stripping first.
+        const path = url.replace(SITE_URL, '').replace(/\/$/, '');
+        const toolId = URL_TO_TOOL_ID.get(path);
+        const alternates = toolId ? buildToolAlternates(toolId) : [];
+        // Sitemap plugin shape: each link is { url, lang } and gets emitted
+        // as <xhtml:link rel="alternate" hreflang="<lang>" href="<url>">.
+        // Plus an x-default mirror of the default-language entry.
+        const defaultLangEntry = alternates.find((a) => a.lang === 'en');
+        const links = alternates.length
+          ? [
+              ...alternates,
+              ...(defaultLangEntry
+                ? [{ lang: 'x-default', url: defaultLangEntry.url }]
+                : []),
+            ]
+          : undefined;
 
         // TODO(phase-3): the (de|en) regex group below is hardcoded.
         // Generate it from ACTIVE_LANGUAGES.join('|') so new languages
@@ -44,7 +99,12 @@ export default defineConfig({
           return { ...item, priority: 0.5, changefreq: 'yearly' };
         }
         // Tool pages (all others under /de/* or /en/*)
-        return { ...item, priority: 0.8, changefreq: 'monthly' };
+        return {
+          ...item,
+          priority: 0.8,
+          changefreq: 'monthly',
+          ...(links && { links }),
+        };
       },
     }),
     AstroPWA({
