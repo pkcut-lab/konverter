@@ -1,54 +1,55 @@
 /**
- * Svelte 5 reactive wrapper around the region store. Components import
- * `useRegion()` and read `.current` inside `$derived` / `$effect` blocks;
- * calling `.set('uk')` updates every consumer at once via the
- * `kittokit-region-change` window event.
+ * Reactive subscription helpers around the region store. Plain TS so
+ * `tsc --noEmit` typechecks without Svelte's preprocessor — Svelte
+ * components import these and wire them into a local `$state` rune.
  *
- * Why a tiny module instead of context:
- *   - Astro hydrates each Svelte island independently. Context across
- *     islands would require a shared root, which Astro deliberately
- *     does not provide. A module-level rune + a window event is the
- *     idiomatic cross-island pattern.
- *   - The 3 region-adaptive tools each mount one Svelte island; the
- *     RegionSelector inside each island shares state with the
- *     calculator inside the SAME island via `$state` reactivity, and
- *     across islands (rare — only matters if multiple tools are on
- *     one page) via the window event.
+ * Why not a `.svelte.ts` rune-module:
+ *   tsc cannot resolve the global `$state`/`$effect` runes during
+ *   `astro check && tsc --noEmit` (svelte-check would, but the project
+ *   uses tsc as the gating typechecker). Keeping the cross-island store
+ *   as a plain pub-sub avoids a dependency on rune-aware tooling and
+ *   matches the pattern Astro recommends for shared state.
  */
 import { detectRegion, setRegion, type Region, REGION_CHANGE_EVENT } from './region';
 
-let _region = $state<Region>('us');
+let _current: Region = 'us';
 let _initialized = false;
+const subscribers = new Set<(r: Region) => void>();
 
-function ensureInitialized() {
+function ensureInitialized(): void {
   if (_initialized) return;
   _initialized = true;
   if (typeof window === 'undefined') return;
 
-  _region = detectRegion();
+  _current = detectRegion();
 
   window.addEventListener(REGION_CHANGE_EVENT, (e: Event) => {
     const detail = (e as CustomEvent<{ region: Region }>).detail;
     if (detail?.region === 'us' || detail?.region === 'uk') {
-      _region = detail.region;
+      _current = detail.region;
+      for (const fn of subscribers) fn(_current);
     }
   });
 }
 
-export interface RegionStore {
-  readonly current: Region;
-  set(region: Region): void;
+/** Read the current region (initialises detection on first call). */
+export function getRegion(): Region {
+  ensureInitialized();
+  return _current;
 }
 
-export function useRegion(): RegionStore {
+/** Persist a new region and broadcast to every subscriber. */
+export function setRegionPersisted(region: Region): void {
+  _current = region;
+  setRegion(region); // localStorage + window event — subscribers fire from listener.
+}
+
+/**
+ * Subscribe to region changes. Returns an unsubscribe function — pair with
+ * `$effect` in a Svelte component to clean up on unmount.
+ */
+export function subscribeRegion(fn: (r: Region) => void): () => void {
   ensureInitialized();
-  return {
-    get current(): Region {
-      return _region;
-    },
-    set(region: Region) {
-      _region = region;
-      setRegion(region);
-    },
-  };
+  subscribers.add(fn);
+  return () => subscribers.delete(fn);
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useRegion } from '../../lib/i18n/region.svelte';
+  import { getRegion, setRegionPersisted, subscribeRegion } from '../../lib/i18n/region.svelte';
   import { REGIONS, regionLabel, type Region } from '../../lib/i18n/region';
 
   /**
@@ -7,14 +7,22 @@
    * (vat-calculator, gross-net-calculator, interest-calculator on EN
    * pages). Renders as a refined-minimalism radio-pair: graphite border,
    * orange-accent only on focus + active. Emits the choice through the
-   * shared region store, so the parent calculator reacts via $derived.
+   * shared region store, so every region-aware island reacts together.
    */
 
-  const region = useRegion();
+  let current = $state<Region>(getRegion());
+
+  $effect(() => {
+    const off = subscribeRegion((r) => {
+      current = r;
+    });
+    return off;
+  });
 
   function pick(r: Region) {
-    if (region.current === r) return;
-    region.set(r);
+    if (current === r) return;
+    current = r;
+    setRegionPersisted(r);
   }
 
   function onKey(e: KeyboardEvent, r: Region) {
@@ -23,7 +31,6 @@
       const idx = REGIONS.indexOf(r);
       const next = REGIONS[(idx + (e.key === 'ArrowRight' ? 1 : REGIONS.length - 1)) % REGIONS.length]!;
       pick(next);
-      // Move focus to the newly active button so screen readers announce.
       const target = document.querySelector(
         `[data-region-pill="${next}"]`,
       ) as HTMLButtonElement | null;
@@ -39,11 +46,11 @@
       <button
         type="button"
         role="radio"
-        aria-checked={region.current === r}
+        aria-checked={current === r}
         data-region-pill={r}
         class="region__pill"
-        class:is-active={region.current === r}
-        tabindex={region.current === r ? 0 : -1}
+        class:is-active={current === r}
+        tabindex={current === r ? 0 : -1}
         onclick={() => pick(r)}
         onkeydown={(e) => onKey(e, r)}
       >
