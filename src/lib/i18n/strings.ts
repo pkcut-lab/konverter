@@ -341,6 +341,61 @@ export interface UiStrings {
       /** {years} {months} */
       clipboardTerm: string;
     };
+    loanCalculator: {
+      // Region / aria
+      regionAria: string;
+      resultsAria: string;
+      // Inputs
+      loanAmountLabel: string;
+      loanAmountPlaceholder: string;
+      loanAmountAria: string;
+      interestRateLabel: string;
+      interestRatePlaceholder: string;
+      interestRateAria: string;
+      termLabel: string;
+      termPlaceholder: string;
+      termAria: string;
+      extraPayoffLabel: string;
+      extraPayoffPlaceholder: string;
+      extraPayoffAria: string;
+      optionalBadge: string;
+      unitMonths: string;
+      unitEuroPerYear: string;
+      // Validation
+      errAmountRequired: string;
+      errAmountMin: string;
+      errAmountMax: string;
+      errInterestRequired: string;
+      errInterestMin: string;
+      errInterestMax: string;
+      errTermRequired: string;
+      errTermMin: string;
+      errTermMax: string;
+      errExtraAmountInvalid: string;
+      errExtraNegative: string;
+      errExtraTooLarge: string;
+      // Result cards
+      cardMonthlyRate: string;
+      cardTotalInterest: string;
+      cardTotalCost: string;
+      // Extra-effect
+      extraEffectAria: string;
+      /** {amount} {savings} {months} — rendered with `{@html}` because of inline `<strong>`. */
+      extraEffectBodyHtml: string;
+      // Table
+      tableTitle: string;
+      tableAria: string;
+      colYear: string;
+      colInterest: string;
+      colPrincipal: string;
+      colExtra: string;
+      colBalance: string;
+      // Empty / disclaimer / privacy
+      emptyStateCheckFields: string;
+      emptyStateFillFields: string;
+      disclaimer: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -663,6 +718,55 @@ const strings: Record<Lang, UiStrings> = {
         clipboardBalanceAfter: 'Restschuld nach Zinsbindung: {amount} €',
         clipboardTerm: 'Gesamtlaufzeit: {years} Jahre ({months} Monate)',
       },
+      loanCalculator: {
+        regionAria: 'Kreditrechner',
+        resultsAria: 'Berechnungsergebnis',
+        loanAmountLabel: 'Kreditbetrag',
+        loanAmountPlaceholder: 'z.B. 200.000',
+        loanAmountAria: 'Kreditbetrag in Euro',
+        interestRateLabel: 'Sollzins p.a.',
+        interestRatePlaceholder: 'z.B. 3,80',
+        interestRateAria: 'Sollzinssatz pro Jahr in Prozent',
+        termLabel: 'Laufzeit',
+        termPlaceholder: 'z.B. 240',
+        termAria: 'Laufzeit in Monaten',
+        extraPayoffLabel: 'Sondertilgung p.a.',
+        extraPayoffPlaceholder: 'z.B. 5.000',
+        extraPayoffAria: 'Jährliche Sondertilgung in Euro',
+        optionalBadge: 'optional',
+        unitMonths: 'Monate',
+        unitEuroPerYear: '€/Jahr',
+        errAmountRequired: 'Bitte einen Betrag eingeben.',
+        errAmountMin: 'Kreditbetrag muss > 0 € sein.',
+        errAmountMax: 'Maximalbetrag: 10.000.000 €',
+        errInterestRequired: 'Bitte einen Zinssatz eingeben.',
+        errInterestMin: 'Sollzins muss > 0 % sein.',
+        errInterestMax: 'Sollzins darf maximal 20 % betragen.',
+        errTermRequired: 'Bitte eine Laufzeit eingeben.',
+        errTermMin: 'Laufzeit muss mindestens 1 Monat betragen.',
+        errTermMax: 'Laufzeit maximal 600 Monate (50 Jahre).',
+        errExtraAmountInvalid: 'Bitte einen gültigen Betrag eingeben.',
+        errExtraNegative: 'Sondertilgung muss ≥ 0 € sein.',
+        errExtraTooLarge: 'Sondertilgung über 50 % des Kredits — korrekt?',
+        cardMonthlyRate: 'Monatsrate',
+        cardTotalInterest: 'Gesamtzinsen',
+        cardTotalCost: 'Gesamtkosten',
+        extraEffectAria: 'Sondertilgung-Einsparung',
+        extraEffectBodyHtml:
+          'Durch die jährliche Sondertilgung von {amount}&nbsp;€ sparst du <strong>{savings}&nbsp;€ Zinsen</strong> und bist <strong>{months} Monate früher</strong> schuldenfrei.',
+        tableTitle: 'Tilgungsplan (Jahresübersicht)',
+        tableAria: 'Jährlicher Tilgungsplan',
+        colYear: 'Jahr',
+        colInterest: 'Zinsen',
+        colPrincipal: 'Tilgung',
+        colExtra: 'Sondertilg.',
+        colBalance: 'Restschuld',
+        emptyStateCheckFields: 'Bitte alle Pflichtfelder prüfen — die Berechnung startet automatisch.',
+        emptyStateFillFields: 'Gib Kreditbetrag, Sollzins und Laufzeit ein, um die Berechnung zu starten.',
+        disclaimer:
+          'Diese Berechnung dient ausschließlich zur unverbindlichen Information und ersetzt keine Bankberatung. Tatsächliche Konditionen hängen von Ihrer Bonität und dem jeweiligen Kreditvertrag ab.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+      },
     },
   },
 
@@ -984,6 +1088,55 @@ const strings: Record<Lang, UiStrings> = {
         clipboardTotalInterest: 'Total interest: {amount} €',
         clipboardBalanceAfter: 'Balance after fixed-rate period: {amount} €',
         clipboardTerm: 'Total term: {years} years ({months} months)',
+      },
+      loanCalculator: {
+        regionAria: 'Loan calculator',
+        resultsAria: 'Calculation result',
+        loanAmountLabel: 'Loan amount',
+        loanAmountPlaceholder: 'e.g. 200,000',
+        loanAmountAria: 'Loan amount in euros',
+        interestRateLabel: 'Annual interest rate',
+        interestRatePlaceholder: 'e.g. 3.80',
+        interestRateAria: 'Annual interest rate in percent',
+        termLabel: 'Loan term',
+        termPlaceholder: 'e.g. 240',
+        termAria: 'Loan term in months',
+        extraPayoffLabel: 'Annual extra payment',
+        extraPayoffPlaceholder: 'e.g. 5,000',
+        extraPayoffAria: 'Annual extra payment in euros',
+        optionalBadge: 'optional',
+        unitMonths: 'months',
+        unitEuroPerYear: '€/year',
+        errAmountRequired: 'Please enter an amount.',
+        errAmountMin: 'Loan amount must be > 0 €.',
+        errAmountMax: 'Maximum amount: 10,000,000 €',
+        errInterestRequired: 'Please enter an interest rate.',
+        errInterestMin: 'Interest rate must be > 0 %.',
+        errInterestMax: 'Interest rate cannot exceed 20 %.',
+        errTermRequired: 'Please enter a loan term.',
+        errTermMin: 'Loan term must be at least 1 month.',
+        errTermMax: 'Loan term cannot exceed 600 months (50 years).',
+        errExtraAmountInvalid: 'Please enter a valid amount.',
+        errExtraNegative: 'Extra payment must be ≥ 0 €.',
+        errExtraTooLarge: 'Extra payment exceeds 50 % of the loan — is that correct?',
+        cardMonthlyRate: 'Monthly payment',
+        cardTotalInterest: 'Total interest',
+        cardTotalCost: 'Total cost',
+        extraEffectAria: 'Extra payment impact',
+        extraEffectBodyHtml:
+          'With an annual extra payment of {amount}&nbsp;€, you save <strong>{savings}&nbsp;€ in interest</strong> and are <strong>debt-free {months} months earlier</strong>.',
+        tableTitle: 'Amortization schedule (annual overview)',
+        tableAria: 'Annual amortization schedule',
+        colYear: 'Year',
+        colInterest: 'Interest',
+        colPrincipal: 'Principal',
+        colExtra: 'Extra',
+        colBalance: 'Balance',
+        emptyStateCheckFields: 'Please check all required fields — calculation starts automatically.',
+        emptyStateFillFields: 'Enter loan amount, interest rate, and term to start the calculation.',
+        disclaimer:
+          'This calculation is for informational purposes only and does not constitute financial advice. Actual terms depend on your creditworthiness and loan agreement.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },
     },
   },

@@ -17,6 +17,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.loanCalculator);
 
   // ---- Hilfsfunktionen ----
   function formatEuro(n: number): string {
@@ -38,32 +39,32 @@
 
   // ---- Validierung ----
   const kreditbetragError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(kreditbetrag)) return 'Bitte einen Betrag eingeben.';
-    if (kreditbetrag <= 0) return 'Kreditbetrag muss > 0 € sein.';
-    if (kreditbetrag > 10_000_000) return 'Maximalbetrag: 10.000.000 €';
+    if (!Number.isFinite(kreditbetrag)) return T.errAmountRequired;
+    if (kreditbetrag <= 0) return T.errAmountMin;
+    if (kreditbetrag > 10_000_000) return T.errAmountMax;
     return null;
   });
 
   const sollzinsError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(sollzins)) return 'Bitte einen Zinssatz eingeben.';
-    if (sollzins <= 0) return 'Sollzins muss > 0 % sein.';
-    if (sollzins > 20) return 'Sollzins darf maximal 20 % betragen.';
+    if (!Number.isFinite(sollzins)) return T.errInterestRequired;
+    if (sollzins <= 0) return T.errInterestMin;
+    if (sollzins > 20) return T.errInterestMax;
     return null;
   });
 
   const laufzeitError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(laufzeit)) return 'Bitte eine Laufzeit eingeben.';
-    if (laufzeit < 1) return 'Laufzeit muss mindestens 1 Monat betragen.';
-    if (laufzeit > 600) return 'Laufzeit maximal 600 Monate (50 Jahre).';
+    if (!Number.isFinite(laufzeit)) return T.errTermRequired;
+    if (laufzeit < 1) return T.errTermMin;
+    if (laufzeit > 600) return T.errTermMax;
     return null;
   });
 
   const sondertilgungError = $derived.by<string | null>(() => {
     if (sondertilgungStr.trim() === '') return null;
-    if (!Number.isFinite(sondertilgung)) return 'Bitte einen gültigen Betrag eingeben.';
-    if (sondertilgung < 0) return 'Sondertilgung muss ≥ 0 € sein.';
+    if (!Number.isFinite(sondertilgung)) return T.errExtraAmountInvalid;
+    if (sondertilgung < 0) return T.errExtraNegative;
     if (Number.isFinite(kreditbetrag) && sondertilgung > kreditbetrag * 0.5) {
-      return 'Sondertilgung über 50 % des Kredits — korrekt?';
+      return T.errExtraTooLarge;
     }
     return null;
   });
@@ -88,7 +89,7 @@
   $effect(() => {
     if (!_firstResult && ergebnis !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
     }
   });
 
@@ -142,22 +143,22 @@
   }
 </script>
 
-<section class="kreditrechner-tool" aria-label="Kreditrechner">
+<section class="kreditrechner-tool" aria-label={T.regionAria}>
 
   <!-- Eingabefelder -->
   <div class="inputs-grid">
 
     <div class="input-field">
-      <label class="input-field__label" for="inp-kreditbetrag">Kreditbetrag</label>
+      <label class="input-field__label" for="inp-kreditbetrag">{T.loanAmountLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={kreditbetragError !== null}>
         <input
           id="inp-kreditbetrag"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 200.000"
+          placeholder={T.loanAmountPlaceholder}
           bind:value={kreditbetragStr}
-          aria-label="Kreditbetrag in Euro"
+          aria-label={T.loanAmountAria}
           aria-invalid={kreditbetragError !== null}
           autocomplete="off"
         />
@@ -169,16 +170,16 @@
     </div>
 
     <div class="input-field">
-      <label class="input-field__label" for="inp-sollzins">Sollzins p.a.</label>
+      <label class="input-field__label" for="inp-sollzins">{T.interestRateLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={sollzinsError !== null}>
         <input
           id="inp-sollzins"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 3,80"
+          placeholder={T.interestRatePlaceholder}
           bind:value={sollzinsStr}
-          aria-label="Sollzinssatz pro Jahr in Prozent"
+          aria-label={T.interestRateAria}
           aria-invalid={sollzinsError !== null}
           autocomplete="off"
         />
@@ -190,20 +191,20 @@
     </div>
 
     <div class="input-field">
-      <label class="input-field__label" for="inp-laufzeit">Laufzeit</label>
+      <label class="input-field__label" for="inp-laufzeit">{T.termLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={laufzeitError !== null}>
         <input
           id="inp-laufzeit"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 240"
+          placeholder={T.termPlaceholder}
           bind:value={laufzeitStr}
-          aria-label="Laufzeit in Monaten"
+          aria-label={T.termAria}
           aria-invalid={laufzeitError !== null}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">Monate</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitMonths}</span>
       </div>
       {#if laufzeitError}
         <p class="field-error" role="alert">{laufzeitError}</p>
@@ -212,8 +213,8 @@
 
     <div class="input-field input-field--optional">
       <label class="input-field__label" for="inp-sondertilgung">
-        Sondertilgung p.a.
-        <span class="optional-badge">optional</span>
+        {T.extraPayoffLabel}
+        <span class="optional-badge">{T.optionalBadge}</span>
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={sondertilgungError !== null}>
         <input
@@ -221,13 +222,13 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 5.000"
+          placeholder={T.extraPayoffPlaceholder}
           bind:value={sondertilgungStr}
-          aria-label="Jährliche Sondertilgung in Euro"
+          aria-label={T.extraPayoffAria}
           aria-invalid={sondertilgungError !== null}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">€/Jahr</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitEuroPerYear}</span>
       </div>
       {#if sondertilgungError}
         <p class="field-error" role="alert">{sondertilgungError}</p>
@@ -237,33 +238,34 @@
   </div><!-- /inputs-grid -->
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
     {#if ergebnis}
       <!-- Haupt-Summary-Cards -->
       <div class="summary-grid">
         <div class="summary-card summary-card--primary">
-          <span class="summary-card__label">Monatsrate</span>
+          <span class="summary-card__label">{T.cardMonthlyRate}</span>
           <span class="summary-card__value">{formatEuro(ergebnis.monatsrate)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
-          <span class="summary-card__label">Gesamtzinsen</span>
+          <span class="summary-card__label">{T.cardTotalInterest}</span>
           <span class="summary-card__value">{formatEuro(ergebnis.gesamtzinsen)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
-          <span class="summary-card__label">Gesamtkosten</span>
+          <span class="summary-card__label">{T.cardTotalCost}</span>
           <span class="summary-card__value">{formatEuro(ergebnis.gesamtkosten)} <span class="summary-card__unit">€</span></span>
         </div>
       </div>
 
       <!-- Sondertilgungs-Delta (Differenzierung H2) -->
       {#if ergebnis.ersparnis_zinsen > 0}
-        <div class="sondertilgung-box" role="note" aria-label="Sondertilgung-Einsparung">
+        <div class="sondertilgung-box" role="note" aria-label={T.extraEffectAria}>
           <span class="sondertilgung-box__icon" aria-hidden="true">✓</span>
           <div>
-            Durch die jährliche Sondertilgung von {formatEuro(sondertilgung)}&nbsp;€ sparst du
-            <strong>{formatEuro(ergebnis.ersparnis_zinsen)}&nbsp;€ Zinsen</strong> und bist
-            <strong>{ergebnis.ersparnis_monate} Monate früher</strong> schuldenfrei.
+            {@html T.extraEffectBodyHtml
+              .replace('{amount}', formatEuro(sondertilgung))
+              .replace('{savings}', formatEuro(ergebnis.ersparnis_zinsen))
+              .replace('{months}', String(ergebnis.ersparnis_monate))}
           </div>
         </div>
       {/if}
@@ -272,19 +274,19 @@
       {#if jahresplan.length > 0}
         <div class="table-section">
           <div class="table-header">
-            <h2 class="table-title">Tilgungsplan (Jahresübersicht)</h2>
+            <h2 class="table-title">{T.tableTitle}</h2>
           </div>
           <div class="table-wrap">
-            <table class="tilgungsplan-table" aria-label="Jährlicher Tilgungsplan">
+            <table class="tilgungsplan-table" aria-label={T.tableAria}>
               <thead>
                 <tr>
-                  <th scope="col">Jahr</th>
-                  <th scope="col">Zinsen</th>
-                  <th scope="col">Tilgung</th>
+                  <th scope="col">{T.colYear}</th>
+                  <th scope="col">{T.colInterest}</th>
+                  <th scope="col">{T.colPrincipal}</th>
                   {#if hatSondertilgung}
-                    <th scope="col">Sondertilg.</th>
+                    <th scope="col">{T.colExtra}</th>
                   {/if}
-                  <th scope="col">Restschuld</th>
+                  <th scope="col">{T.colBalance}</th>
                 </tr>
               </thead>
               <tbody>
@@ -306,9 +308,9 @@
       {/if}
 
     {:else if !hasErrors && Number.isFinite(kreditbetrag) && Number.isFinite(sollzins) && Number.isFinite(laufzeit)}
-      <p class="empty-state">Bitte alle Pflichtfelder prüfen — die Berechnung startet automatisch.</p>
+      <p class="empty-state">{T.emptyStateCheckFields}</p>
     {:else if !Number.isFinite(kreditbetrag) || !Number.isFinite(sollzins) || !Number.isFinite(laufzeit)}
-      <p class="empty-state">Gib Kreditbetrag, Sollzins und Laufzeit ein, um die Berechnung zu starten.</p>
+      <p class="empty-state">{T.emptyStateFillFields}</p>
     {/if}
 
   </div><!-- /results -->
@@ -320,13 +322,12 @@
 
   <!-- Disclaimer -->
   <p class="disclaimer">
-    Diese Berechnung dient ausschließlich zur unverbindlichen Information und ersetzt keine Bankberatung.
-    Tatsächliche Konditionen hängen von Ihrer Bonität und dem jeweiligen Kreditvertrag ab.
+    {T.disclaimer}
   </p>
 
   <!-- Privacy badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </section><!-- /kreditrechner-tool -->
