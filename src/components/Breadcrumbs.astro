@@ -16,15 +16,28 @@ interface Props {
 
 const { items, ariaLabel = 'Breadcrumb' } = Astro.props;
 
+// Schema.org `BreadcrumbList` expects every `ListItem` to carry an `item`
+// URL — including the last (current) entry, which points at the canonical
+// URL of the current page. Earlier the last entry was href-less and the
+// JSON-LD silently dropped its `item:` field, which Google's Rich-Results
+// validator flagged as „missing required field" (audit P1-H, 2026-04-27).
+const currentPageUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: items.map((item, i) => ({
-    '@type': 'ListItem',
-    position: i + 1,
-    name: item.label,
-    ...(item.href ? { item: new URL(item.href, Astro.site).toString() } : {}),
-  })),
+  itemListElement: items.map((item, i) => {
+    const isLast = i === items.length - 1;
+    const itemUrl = item.href
+      ? new URL(item.href, Astro.site).toString()
+      : (isLast ? currentPageUrl : undefined);
+    return {
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.label,
+      ...(itemUrl ? { item: itemUrl } : {}),
+    };
+  }),
 };
 ---
 <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
