@@ -977,6 +977,54 @@ export interface UiStrings {
       exportNote1: string;
       exportNote2: string;
     };
+    audioTranscription: {
+      // Upload
+      removeFileAria: string;
+      uploadText: string;
+      uploadHint: string;
+      // Size warnings
+      /** {mb} */
+      sizeWarningTemplate: string;
+      /** {mb} */
+      sizeHintTemplate: string;
+      // Config
+      modelLabel: string;
+      modelTiny: string;
+      modelBase: string;
+      modelSmall: string;
+      languageLabel: string;
+      languageGerman: string;
+      languageEnglish: string;
+      languageFrench: string;
+      languageSpanish: string;
+      languageAuto: string;
+      // Actions
+      startButton: string;
+      // Loading
+      loaderModelLoading: string;
+      /** {sizeLabel} */
+      loaderModelLoadingNoteTemplate: string;
+      // Speed labels (used in loader template)
+      speedSchnell: string;
+      speedAusgewogen: string;
+      speedGroß: string;
+      sizeTiny: string;
+      sizeBase: string;
+      sizeSmall: string;
+      analyzingText: string;
+      analyzingNote: string;
+      // Result
+      resultTitle: string;
+      formatTxt: string;
+      formatSrt: string;
+      copyTitle: string;
+      downloadTitle: string;
+      downloadButton: string;
+      // Errors
+      errorGeneric: string;
+      // Reset
+      otherFileButton: string;
+    };
   };
 }
 
@@ -1862,6 +1910,43 @@ const strings: Record<Lang, UiStrings> = {
         exportNote1: 'Hinweis: Diese Berechnung dient nur als erste Orientierung.',
         exportNote2: 'Betriebsvermögen, internationale Erbschaften und Vorerbschaft erfordern Fachberatung (§§ 13a, 13b ErbStG, DBA).',
       },
+      audioTranscription: {
+        removeFileAria: 'Datei entfernen',
+        uploadText: 'Audio-Datei auswählen',
+        uploadHint: 'MP3, WAV, M4A · Lokal im Browser',
+        sizeWarningTemplate: 'Große Datei ({mb} MB) – die Verarbeitung kann je nach Gerät mehrere Minuten dauern und den Browser beanspruchen.',
+        sizeHintTemplate: 'Mittlere Datei ({mb} MB) – Verarbeitung kann etwas dauern.',
+        modelLabel: 'Modell:',
+        modelTiny: 'Schnell (~150 MB)',
+        modelBase: 'Ausgewogen (~450 MB)',
+        modelSmall: 'Beste Qualität (~1 GB)',
+        languageLabel: 'Sprache:',
+        languageGerman: 'Deutsch',
+        languageEnglish: 'Englisch',
+        languageFrench: 'Französisch',
+        languageSpanish: 'Spanisch',
+        languageAuto: 'Auto-Erkennung',
+        startButton: 'Transkription starten',
+        loaderModelLoading: 'KI-Modell lädt...',
+        loaderModelLoadingNoteTemplate:
+          'Das {speed} Spracherkennungs-Modell ({size}) wird geladen und im Browser vorbereitet.',
+        speedSchnell: 'schnelle',
+        speedAusgewogen: 'ausgewogene',
+        speedGroß: 'große',
+        sizeTiny: '~150 MB',
+        sizeBase: '~450 MB',
+        sizeSmall: '~1 GB',
+        analyzingText: 'Audiodaten werden transkribiert...',
+        analyzingNote: 'Lokale Transkription läuft. Keine Audiodaten verlassen deinen Browser. Dies kann je nach Audio-Länge etwas dauern.',
+        resultTitle: 'Transkribierter Text',
+        formatTxt: '.txt (Nur Text)',
+        formatSrt: '.srt (Untertitel)',
+        copyTitle: 'In die Zwischenablage kopieren',
+        downloadTitle: 'Herunterladen',
+        downloadButton: 'Download',
+        errorGeneric: 'Fehler bei der Transkription.',
+        otherFileButton: 'Andere Datei wählen',
+      },
     },
   },
 
@@ -2746,6 +2831,43 @@ const strings: Record<Lang, UiStrings> = {
         exportLabelNetto: 'Net inheritance:',
         exportNote1: 'Note: This calculation is only a first orientation.',
         exportNote2: 'Business assets, international inheritances, and reversionary inheritance require professional advice (§§ 13a, 13b ErbStG, DTA).',
+      },
+      audioTranscription: {
+        removeFileAria: 'Remove file',
+        uploadText: 'Choose audio file',
+        uploadHint: 'MP3, WAV, M4A · Local in browser',
+        sizeWarningTemplate: 'Large file ({mb} MB) — processing may take several minutes depending on device and put load on your browser.',
+        sizeHintTemplate: 'Medium file ({mb} MB) — processing may take a while.',
+        modelLabel: 'Model:',
+        modelTiny: 'Fast (~150 MB)',
+        modelBase: 'Balanced (~450 MB)',
+        modelSmall: 'Best quality (~1 GB)',
+        languageLabel: 'Language:',
+        languageGerman: 'German',
+        languageEnglish: 'English',
+        languageFrench: 'French',
+        languageSpanish: 'Spanish',
+        languageAuto: 'Auto-detect',
+        startButton: 'Start transcription',
+        loaderModelLoading: 'AI model loading...',
+        loaderModelLoadingNoteTemplate:
+          'The {speed} speech-recognition model ({size}) is being loaded and prepared in the browser.',
+        speedSchnell: 'fast',
+        speedAusgewogen: 'balanced',
+        speedGroß: 'large',
+        sizeTiny: '~150 MB',
+        sizeBase: '~450 MB',
+        sizeSmall: '~1 GB',
+        analyzingText: 'Transcribing audio data...',
+        analyzingNote: 'Local transcription in progress. No audio data leaves your browser. This may take a while depending on audio length.',
+        resultTitle: 'Transcribed text',
+        formatTxt: '.txt (text only)',
+        formatSrt: '.srt (subtitles)',
+        copyTitle: 'Copy to clipboard',
+        downloadTitle: 'Download',
+        downloadButton: 'Download',
+        errorGeneric: 'Transcription failed.',
+        otherFileButton: 'Choose another file',
       },
     },
   },

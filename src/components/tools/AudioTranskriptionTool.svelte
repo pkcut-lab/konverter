@@ -12,7 +12,9 @@
     lang: Lang;
   }
   let { config, lang }: Props = $props();
+  void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.audioTranscription);
 
   let file = $state<File | null>(null);
   let audioUrl = $state<string | null>(null);
@@ -106,7 +108,7 @@
     } catch (err) {
       console.error(err);
       phase = 'error';
-      errorMessage = err instanceof Error ? err.message : 'Fehler bei der Transkription.';
+      errorMessage = err instanceof Error ? err.message : T.errorGeneric;
     } finally {
       // Always close AudioContext after use, regardless of success or failure.
       if (activeAudioCtx && activeAudioCtx.state !== 'closed') {
@@ -188,7 +190,7 @@
                 <span class="file-name">{file.name}</span>
                 <span class="file-size">{(file.size / 1024 / 1024).toFixed(2)}&nbsp;MB</span>
               </div>
-              <button class="remove-btn" onclick={reset} aria-label="Datei entfernen">
+              <button class="remove-btn" onclick={reset} aria-label={T.removeFileAria}>
                 <span class="remove-icon">×</span>
               </button>
             </div>
@@ -203,8 +205,8 @@
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>
               </svg>
             </div>
-            <span class="upload-text">Audio-Datei auswählen</span>
-            <span class="upload-hint">MP3, WAV, M4A · Lokal im Browser</span>
+            <span class="upload-text">{T.uploadText}</span>
+            <span class="upload-hint">{T.uploadHint}</span>
           </label>
         {/if}
         <input 
@@ -222,38 +224,38 @@
 
       {#if fileSizeWarningMb > 100}
         <div class="audio-tool__size-warning">
-          Große Datei ({fileSizeWarningMb.toFixed(0)} MB) – die Verarbeitung kann je nach Gerät mehrere Minuten dauern und den Browser beanspruchen.
+          {T.sizeWarningTemplate.replace('{mb}', fileSizeWarningMb.toFixed(0))}
         </div>
       {:else if fileSizeWarningMb > 50}
         <div class="audio-tool__size-hint">
-          Mittlere Datei ({fileSizeWarningMb.toFixed(0)} MB) – Verarbeitung kann etwas dauern.
+          {T.sizeHintTemplate.replace('{mb}', fileSizeWarningMb.toFixed(0))}
         </div>
       {/if}
 
       <div class="audio-tool__config">
         <div class="config-group">
-          <label for="model-select">Modell:</label>
+          <label for="model-select">{T.modelLabel}</label>
           <select id="model-select" bind:value={selectedModel} class="select-input">
-            <option value="tiny">Schnell (~150 MB)</option>
-            <option value="base">Ausgewogen (~450 MB)</option>
-            <option value="small">Beste Qualität (~1 GB)</option>
+            <option value="tiny">{T.modelTiny}</option>
+            <option value="base">{T.modelBase}</option>
+            <option value="small">{T.modelSmall}</option>
           </select>
         </div>
         <div class="config-group">
-          <label for="lang-select">Sprache:</label>
+          <label for="lang-select">{T.languageLabel}</label>
           <select id="lang-select" bind:value={selectedLanguage} class="select-input">
-            <option value="german">Deutsch</option>
-            <option value="english">Englisch</option>
-            <option value="french">Französisch</option>
-            <option value="spanish">Spanisch</option>
-            <option value="">Auto-Erkennung</option>
+            <option value="german">{T.languageGerman}</option>
+            <option value="english">{T.languageEnglish}</option>
+            <option value="french">{T.languageFrench}</option>
+            <option value="spanish">{T.languageSpanish}</option>
+            <option value="">{T.languageAuto}</option>
           </select>
         </div>
       </div>
 
       <div class="audio-tool__actions">
         <button class="btn btn--primary" onclick={startTranscription} disabled={!file}>
-          Transkription starten
+          {T.startButton}
         </button>
       </div>
     </div>
@@ -261,21 +263,23 @@
     <div class="audio-tool__loading">
       <div class="audio-tool__loading-box">
         {#if phase === 'preparing'}
-          <Loader 
-            variant="progress" 
+          <Loader
+            variant="progress"
             value={prepareProgress.total ? prepareProgress.loaded / prepareProgress.total : 0}
-            label="KI-Modell lädt..."
+            label={T.loaderModelLoading}
           />
           <p class="audio-tool__loading-note">
-            Das {selectedModel === 'tiny' ? 'schnelle' : selectedModel === 'small' ? 'große' : 'ausgewogene'} Spracherkennungs-Modell ({selectedModel === 'tiny' ? '~150 MB' : selectedModel === 'small' ? '~1 GB' : '~450 MB'}) wird geladen und im Browser vorbereitet.
+            {T.loaderModelLoadingNoteTemplate
+              .replace('{speed}', selectedModel === 'tiny' ? T.speedSchnell : selectedModel === 'small' ? T.speedGroß : T.speedAusgewogen)
+              .replace('{size}', selectedModel === 'tiny' ? T.sizeTiny : selectedModel === 'small' ? T.sizeSmall : T.sizeBase)}
           </p>
         {:else}
           <div class="analyzing-indicator">
             <Loader variant="spinner" />
-            <span class="analyzing-text">Audiodaten werden transkribiert...</span>
+            <span class="analyzing-text">{T.analyzingText}</span>
           </div>
           <p class="audio-tool__loading-note">
-            Lokale Transkription läuft. Keine Audiodaten verlassen deinen Browser. Dies kann je nach Audio-Länge etwas dauern.
+            {T.analyzingNote}
           </p>
         {/if}
       </div>
@@ -285,28 +289,28 @@
       <div class="result-card">
         <div class="result-header">
           <div class="result-header-left">
-            <h3 class="result-title">Transkribierter Text</h3>
+            <h3 class="result-title">{T.resultTitle}</h3>
             <select bind:value={selectedFormat} class="format-select">
-              <option value="txt">.txt (Nur Text)</option>
-              <option value="srt">.srt (Untertitel)</option>
+              <option value="txt">{T.formatTxt}</option>
+              <option value="srt">{T.formatSrt}</option>
             </select>
           </div>
           <div class="result-actions">
-            <button class="copy-btn" onclick={copyToClipboard} title="In die Zwischenablage kopieren">
+            <button class="copy-btn" onclick={copyToClipboard} title={T.copyTitle}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
               </svg>
               {strings.toolsCommon.copy}
             </button>
-            <button class="copy-btn copy-btn--primary" onclick={downloadResult} title="Herunterladen">
+            <button class="copy-btn copy-btn--primary" onclick={downloadResult} title={T.downloadTitle}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
               </svg>
-              Download
+              {T.downloadButton}
             </button>
           </div>
         </div>
-        
+
         <div class="transcription-container">
           <p class="transcription-text">
             {#if selectedFormat === 'srt' && result.chunks}
@@ -319,7 +323,7 @@
       </div>
 
       <div class="audio-tool__actions">
-        <button class="btn btn--secondary" onclick={reset}>Andere Datei wählen</button>
+        <button class="btn btn--secondary" onclick={reset}>{T.otherFileButton}</button>
       </div>
     </div>
   {/if}
