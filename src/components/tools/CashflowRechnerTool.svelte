@@ -18,6 +18,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.cashFlowCalculator);
 
   type Mode = 'direkt' | 'indirekt' | 'free';
   let mode = $state<Mode>('direkt');
@@ -59,58 +60,58 @@
 
   // ---- Validierung: Direkt ----
   const einzahlungenError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(einzahlungen)) return 'Bitte eine gültige Zahl eingeben.';
-    if (einzahlungen < 0) return 'Einzahlungen müssen ≥ 0 € sein.';
+    if (!Number.isFinite(einzahlungen)) return T.errInvalidNumber;
+    if (einzahlungen < 0) return T.errEinzahlungenNegative;
     return null;
   });
 
   const auszahlungenError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(auszahlungen)) return 'Bitte eine gültige Zahl eingeben.';
-    if (auszahlungen < 0) return 'Auszahlungen müssen ≥ 0 € sein.';
+    if (!Number.isFinite(auszahlungen)) return T.errInvalidNumber;
+    if (auszahlungen < 0) return T.errAuszahlungenNegative;
     return null;
   });
 
   // ---- Validierung: Indirekt ----
   const juError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(ju)) return 'Bitte eine gültige Zahl eingeben.';
+    if (!Number.isFinite(ju)) return T.errInvalidNumber;
     return null;
   });
 
   const afaError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(afa)) return 'Bitte eine gültige Zahl eingeben.';
-    if (afa < 0) return 'Abschreibungen müssen ≥ 0 € sein.';
+    if (!Number.isFinite(afa)) return T.errInvalidNumber;
+    if (afa < 0) return T.errAfaNegative;
     return null;
   });
 
   const rueckstellungenError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(rueckstellungen)) return 'Bitte eine gültige Zahl eingeben.';
+    if (!Number.isFinite(rueckstellungen)) return T.errInvalidNumber;
     return null;
   });
 
   const forderungenError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(forderungen)) return 'Bitte eine gültige Zahl eingeben.';
+    if (!Number.isFinite(forderungen)) return T.errInvalidNumber;
     return null;
   });
 
   const vorraedeError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(vorraede)) return 'Bitte eine gültige Zahl eingeben.';
+    if (!Number.isFinite(vorraede)) return T.errInvalidNumber;
     return null;
   });
 
   const verbindlichkeitenError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(verbindlichkeiten)) return 'Bitte eine gültige Zahl eingeben.';
+    if (!Number.isFinite(verbindlichkeiten)) return T.errInvalidNumber;
     return null;
   });
 
   // ---- Validierung: Free CF ----
   const ocfError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(ocf)) return 'Bitte eine gültige Zahl eingeben.';
+    if (!Number.isFinite(ocf)) return T.errInvalidNumber;
     return null;
   });
 
   const capexError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(capex)) return 'Bitte eine gültige Zahl eingeben.';
-    if (capex < 0) return 'CapEx muss ≥ 0 € sein.';
+    if (!Number.isFinite(capex)) return T.errInvalidNumber;
+    if (capex < 0) return T.errCapexNegative;
     return null;
   });
 
@@ -175,41 +176,41 @@
   }
 </script>
 
-<div class="cf-tool" aria-label="Cashflow-Rechner">
+<div class="cf-tool" aria-label={T.regionAria}>
 
   <!-- Methoden-Tabs -->
-  <div class="mode-switcher" role="tablist" aria-label="Berechnungsmethode wählen">
+  <div class="mode-switcher" role="tablist" aria-label={T.modeAria}>
     <button
       role="tab"
       class="mode-btn"
       class:mode-btn--active={mode === 'direkt'}
       aria-selected={mode === 'direkt'}
       onclick={() => { mode = 'direkt'; }}
-    >Direkte Methode</button>
+    >{T.modeDirekt}</button>
     <button
       role="tab"
       class="mode-btn"
       class:mode-btn--active={mode === 'indirekt'}
       aria-selected={mode === 'indirekt'}
       onclick={() => { mode = 'indirekt'; }}
-    >Indirekte Methode</button>
+    >{T.modeIndirekt}</button>
     <button
       role="tab"
       class="mode-btn"
       class:mode-btn--active={mode === 'free'}
       aria-selected={mode === 'free'}
       onclick={() => { mode = 'free'; }}
-    >Free Cashflow</button>
+    >{T.modeFree}</button>
   </div>
 
   <!-- Methoden-Beschreibung -->
   <p class="mode-desc">
     {#if mode === 'direkt'}
-      Direkte Methode: Cashflow = Einzahlungen − Auszahlungen. Geeignet für Selbstständige und Kleinunternehmen.
+      {T.descDirekt}
     {:else if mode === 'indirekt'}
-      Indirekte Methode (HGB/IFRS): Ausgangspunkt Jahresüberschuss, korrigiert um nicht zahlungswirksame Posten und Working-Capital-Änderungen.
+      {T.descIndirekt}
     {:else}
-      Free Cashflow: Das nach Investitionen frei verfügbare Kapital — für Tilgung, Dividenden oder Reinvestition.
+      {T.descFree}
     {/if}
   </p>
 
@@ -218,16 +219,16 @@
     <div class="inputs-grid">
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-einz">Einzahlungen</label>
+        <label class="input-field__label" for="inp-einz">{T.einzahlungenLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={einzahlungenError !== null}>
           <input
             id="inp-einz"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 85.000"
+            placeholder={T.einzahlungenPlaceholder}
             bind:value={einzahlungenStr}
-            aria-label="Einzahlungen in Euro"
+            aria-label={T.einzahlungenAria}
             aria-invalid={einzahlungenError !== null}
             autocomplete="off"
           />
@@ -239,16 +240,16 @@
       </div>
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-ausz">Auszahlungen</label>
+        <label class="input-field__label" for="inp-ausz">{T.auszahlungenLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={auszahlungenError !== null}>
           <input
             id="inp-ausz"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 72.000"
+            placeholder={T.auszahlungenPlaceholder}
             bind:value={auszahlungenStr}
-            aria-label="Auszahlungen in Euro"
+            aria-label={T.auszahlungenAria}
             aria-invalid={auszahlungenError !== null}
             autocomplete="off"
           />
@@ -268,8 +269,8 @@
 
       <div class="input-field">
         <label class="input-field__label" for="inp-ju">
-          Jahresüberschuss
-          <span class="field-hint">darf negativ sein</span>
+          {T.juLabel}
+          <span class="field-hint">{T.juHint}</span>
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={juError !== null}>
           <input
@@ -277,9 +278,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 20.000"
+            placeholder={T.juPlaceholder}
             bind:value={juStr}
-            aria-label="Jahresüberschuss in Euro"
+            aria-label={T.juAria}
             aria-invalid={juError !== null}
             autocomplete="off"
           />
@@ -291,16 +292,16 @@
       </div>
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-afa">Abschreibungen (AfA)</label>
+        <label class="input-field__label" for="inp-afa">{T.afaLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={afaError !== null}>
           <input
             id="inp-afa"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 15.000"
+            placeholder={T.afaPlaceholder}
             bind:value={afaStr}
-            aria-label="Abschreibungen in Euro"
+            aria-label={T.afaAria}
             aria-invalid={afaError !== null}
             autocomplete="off"
           />
@@ -313,8 +314,8 @@
 
       <div class="input-field">
         <label class="input-field__label" for="inp-rueck">
-          Δ&nbsp;Rückstellungen
-          <span class="field-hint">+ = gestiegen</span>
+          {T.rueckLabel}
+          <span class="field-hint">{T.rueckHint}</span>
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={rueckstellungenError !== null}>
           <input
@@ -322,9 +323,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 0"
+            placeholder={T.rueckPlaceholder}
             bind:value={rueckstellungenStr}
-            aria-label="Änderung Rückstellungen in Euro"
+            aria-label={T.rueckAria}
             aria-invalid={rueckstellungenError !== null}
             autocomplete="off"
           />
@@ -337,8 +338,8 @@
 
       <div class="input-field">
         <label class="input-field__label" for="inp-ford">
-          Δ&nbsp;Forderungen
-          <span class="field-hint">+ = gestiegen → verschlechtert CF</span>
+          {T.fordLabel}
+          <span class="field-hint">{T.fordHint}</span>
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={forderungenError !== null}>
           <input
@@ -346,9 +347,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 5.000"
+            placeholder={T.fordPlaceholder}
             bind:value={forderungenStr}
-            aria-label="Änderung Forderungen in Euro"
+            aria-label={T.fordAria}
             aria-invalid={forderungenError !== null}
             autocomplete="off"
           />
@@ -361,8 +362,8 @@
 
       <div class="input-field">
         <label class="input-field__label" for="inp-vorr">
-          Δ&nbsp;Vorräte
-          <span class="field-hint">+ = gestiegen → verschlechtert CF</span>
+          {T.vorrLabel}
+          <span class="field-hint">{T.vorrHint}</span>
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={vorraedeError !== null}>
           <input
@@ -370,9 +371,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 0"
+            placeholder={T.vorrPlaceholder}
             bind:value={vorraedeStr}
-            aria-label="Änderung Vorräte in Euro"
+            aria-label={T.vorrAria}
             aria-invalid={vorraedeError !== null}
             autocomplete="off"
           />
@@ -385,8 +386,8 @@
 
       <div class="input-field">
         <label class="input-field__label" for="inp-verb">
-          Δ&nbsp;Verbindlichkeiten
-          <span class="field-hint">+ = gestiegen → verbessert CF</span>
+          {T.verbLabel}
+          <span class="field-hint">{T.verbHint}</span>
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={verbindlichkeitenError !== null}>
           <input
@@ -394,9 +395,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 0"
+            placeholder={T.verbPlaceholder}
             bind:value={verbindlichkeitenStr}
-            aria-label="Änderung Verbindlichkeiten in Euro"
+            aria-label={T.verbAria}
             aria-invalid={verbindlichkeitenError !== null}
             autocomplete="off"
           />
@@ -415,16 +416,16 @@
     <div class="inputs-grid">
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-ocf">Operativer Cashflow (OCF)</label>
+        <label class="input-field__label" for="inp-ocf">{T.ocfLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={ocfError !== null}>
           <input
             id="inp-ocf"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 30.000"
+            placeholder={T.ocfPlaceholder}
             bind:value={ocfStr}
-            aria-label="Operativer Cashflow in Euro"
+            aria-label={T.ocfAria}
             aria-invalid={ocfError !== null}
             autocomplete="off"
           />
@@ -437,7 +438,7 @@
 
       <div class="input-field">
         <label class="input-field__label" for="inp-capex">
-          Investitionsauszahlungen (CapEx)
+          {T.capexLabel}
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={capexError !== null}>
           <input
@@ -445,9 +446,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 10.000"
+            placeholder={T.capexPlaceholder}
             bind:value={capexStr}
-            aria-label="CapEx in Euro"
+            aria-label={T.capexAria}
             aria-invalid={capexError !== null}
             autocomplete="off"
           />
@@ -462,7 +463,7 @@
   {/if}
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
     {#if activeResult && activeCf !== null}
 
@@ -472,7 +473,7 @@
         class:cf-card--positiv={activeStatus === 'positiv'}
         class:cf-card--negativ={activeStatus === 'negativ'}
         role="region"
-        aria-label="Cashflow-Ergebnis"
+        aria-label={T.resultRegionAria}
       >
         <div class="cf-card__top">
           <div class="cf-card__label-group">
@@ -484,7 +485,7 @@
               aria-hidden="true"
             ></span>
             <span class="cf-card__label">
-              {mode === 'direkt' ? 'Cashflow' : mode === 'indirekt' ? 'Operativer Cashflow' : 'Free Cashflow'}
+              {mode === 'direkt' ? T.cardCashflow : mode === 'indirekt' ? T.cardOcf : T.cardFreeCf}
             </span>
           </div>
           <button
@@ -501,48 +502,47 @@
 
         <p class="cf-card__status">
           {#if activeStatus === 'positiv'}
-            Positiver Cashflow — Liquiditätszufluss
+            {T.statusPositiv}
           {:else if activeStatus === 'negativ'}
-            Negativer Cashflow — Liquiditätsrisiko prüfen
+            {T.statusNegativ}
           {:else}
-            Break-Even — Cashflow ausgeglichen
+            {T.statusBreakeven}
           {/if}
         </p>
       </div>
 
       <!-- Lernmoment: Gewinn ≠ Liquidität (Dossier §9 H2) -->
       {#if indirektResult?.hatLernmoment}
-        <div class="lernmoment" role="note" aria-label="Lernmoment">
-          <span class="lernmoment__label">Warum Gewinn ≠ Liquidität</span>
+        <div class="lernmoment" role="note" aria-label={T.lernmomentAria}>
+          <span class="lernmoment__label">{T.lernmomentLabel}</span>
           <p class="lernmoment__text">
-            Ihr Jahresüberschuss beträgt <strong>{formatEuro(indirektResult.jahresueberschuss)}&nbsp;€</strong>,
-            Ihr operativer Cashflow ist <strong>{formatEuro(indirektResult.ocf)}&nbsp;€</strong>.
-            Die Differenz erklärt sich durch nicht zahlungswirksame Posten (AfA, Rückstellungen)
-            und Änderungen im Working Capital (Forderungen, Vorräte, Verbindlichkeiten).
+            {@html T.lernmomentTextHtml
+              .replace('{ju}', formatEuro(indirektResult.jahresueberschuss))
+              .replace('{ocf}', formatEuro(indirektResult.ocf))}
           </p>
         </div>
       {/if}
 
       <!-- Free-CF-Erklärung -->
       {#if freeCfResult}
-        <div class="lernmoment" role="note" aria-label="Free-Cashflow-Erklärung">
-          <span class="lernmoment__label">Was bedeutet der Free Cashflow?</span>
+        <div class="lernmoment" role="note" aria-label={T.freeAria}>
+          <span class="lernmoment__label">{T.freeLabel}</span>
           <p class="lernmoment__text">
-            Nach Abzug der Investitionsauszahlungen ({formatEuro(freeCfResult.capex)}&nbsp;€)
-            verbleiben <strong>{formatEuro(freeCfResult.freeCf)}&nbsp;€</strong> frei —
-            für Schuldentilgung, Dividenden oder neue Investitionen.
+            {@html T.freeTextHtml
+              .replace('{capex}', formatEuro(freeCfResult.capex))
+              .replace('{free}', formatEuro(freeCfResult.freeCf))}
           </p>
         </div>
       {/if}
 
       <!-- Formel-Aufschlüsselung -->
-      <div class="formel-row" aria-label="Formel-Aufschlüsselung">
-        <span class="formel-label">Formel</span>
+      <div class="formel-row" aria-label={T.formelAria}>
+        <span class="formel-label">{T.formelLabel}</span>
         <span class="formel-text">{activeResult.formelText}</span>
       </div>
 
     {:else}
-      <p class="empty-state">Gib die Werte ein, um den Cashflow sofort zu sehen.</p>
+      <p class="empty-state">{T.emptyState}</p>
     {/if}
 
   </div><!-- /results -->
@@ -554,7 +554,7 @@
 
   <!-- Privacy Badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </div><!-- /cf-tool -->
@@ -825,7 +825,8 @@
     line-height: 1.6;
   }
 
-  .lernmoment__text strong {
+  /* `<strong>` lives inside {@html} — :global to keep Svelte scoped CSS alive. */
+  .lernmoment__text :global(strong) {
     color: var(--color-text);
     font-weight: 600;
   }

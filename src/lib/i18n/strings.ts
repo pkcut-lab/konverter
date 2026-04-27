@@ -738,6 +738,87 @@ export interface UiStrings {
       emptyState: string;
       privacyBadge: string;
     };
+    cashFlowCalculator: {
+      regionAria: string;
+      // Mode
+      modeAria: string;
+      modeDirekt: string;
+      modeIndirekt: string;
+      modeFree: string;
+      // Mode descriptions
+      descDirekt: string;
+      descIndirekt: string;
+      descFree: string;
+      // Direct inputs
+      einzahlungenLabel: string;
+      einzahlungenPlaceholder: string;
+      einzahlungenAria: string;
+      auszahlungenLabel: string;
+      auszahlungenPlaceholder: string;
+      auszahlungenAria: string;
+      // Indirect inputs
+      juLabel: string;
+      juHint: string;
+      juPlaceholder: string;
+      juAria: string;
+      afaLabel: string;
+      afaPlaceholder: string;
+      afaAria: string;
+      rueckLabel: string;
+      rueckHint: string;
+      rueckPlaceholder: string;
+      rueckAria: string;
+      fordLabel: string;
+      fordHint: string;
+      fordPlaceholder: string;
+      fordAria: string;
+      vorrLabel: string;
+      vorrHint: string;
+      vorrPlaceholder: string;
+      vorrAria: string;
+      verbLabel: string;
+      verbHint: string;
+      verbPlaceholder: string;
+      verbAria: string;
+      // Free CF inputs
+      ocfLabel: string;
+      ocfPlaceholder: string;
+      ocfAria: string;
+      capexLabel: string;
+      capexPlaceholder: string;
+      capexAria: string;
+      // Validation
+      errInvalidNumber: string;
+      errEinzahlungenNegative: string;
+      errAuszahlungenNegative: string;
+      errAfaNegative: string;
+      errCapexNegative: string;
+      // Results
+      resultsAria: string;
+      resultRegionAria: string;
+      cardCashflow: string;
+      cardOcf: string;
+      cardFreeCf: string;
+      statusPositiv: string;
+      statusNegativ: string;
+      statusBreakeven: string;
+      // Lernmoment
+      lernmomentAria: string;
+      lernmomentLabel: string;
+      /** {ju} {ocf} — rendered with `{@html}` because of inline `<strong>`. */
+      lernmomentTextHtml: string;
+      // Free CF explanation
+      freeAria: string;
+      freeLabel: string;
+      /** {capex} {free} — rendered with `{@html}` because of inline `<strong>`. */
+      freeTextHtml: string;
+      // Formula
+      formelAria: string;
+      formelLabel: string;
+      // Empty / privacy
+      emptyState: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -1413,6 +1494,76 @@ const strings: Record<Lang, UiStrings> = {
         emptyState: 'Gib die Werte ein, um das Ergebnis sofort zu sehen.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
       },
+      cashFlowCalculator: {
+        regionAria: 'Cashflow-Rechner',
+        modeAria: 'Berechnungsmethode wählen',
+        modeDirekt: 'Direkte Methode',
+        modeIndirekt: 'Indirekte Methode',
+        modeFree: 'Free Cashflow',
+        descDirekt: 'Direkte Methode: Cashflow = Einzahlungen − Auszahlungen. Geeignet für Selbstständige und Kleinunternehmen.',
+        descIndirekt: 'Indirekte Methode (HGB/IFRS): Ausgangspunkt Jahresüberschuss, korrigiert um nicht zahlungswirksame Posten und Working-Capital-Änderungen.',
+        descFree: 'Free Cashflow: Das nach Investitionen frei verfügbare Kapital — für Tilgung, Dividenden oder Reinvestition.',
+        einzahlungenLabel: 'Einzahlungen',
+        einzahlungenPlaceholder: 'z.B. 85.000',
+        einzahlungenAria: 'Einzahlungen in Euro',
+        auszahlungenLabel: 'Auszahlungen',
+        auszahlungenPlaceholder: 'z.B. 72.000',
+        auszahlungenAria: 'Auszahlungen in Euro',
+        juLabel: 'Jahresüberschuss',
+        juHint: 'darf negativ sein',
+        juPlaceholder: 'z.B. 20.000',
+        juAria: 'Jahresüberschuss in Euro',
+        afaLabel: 'Abschreibungen (AfA)',
+        afaPlaceholder: 'z.B. 15.000',
+        afaAria: 'Abschreibungen in Euro',
+        rueckLabel: 'Δ Rückstellungen',
+        rueckHint: '+ = gestiegen',
+        rueckPlaceholder: 'z.B. 0',
+        rueckAria: 'Änderung Rückstellungen in Euro',
+        fordLabel: 'Δ Forderungen',
+        fordHint: '+ = gestiegen → verschlechtert CF',
+        fordPlaceholder: 'z.B. 5.000',
+        fordAria: 'Änderung Forderungen in Euro',
+        vorrLabel: 'Δ Vorräte',
+        vorrHint: '+ = gestiegen → verschlechtert CF',
+        vorrPlaceholder: 'z.B. 0',
+        vorrAria: 'Änderung Vorräte in Euro',
+        verbLabel: 'Δ Verbindlichkeiten',
+        verbHint: '+ = gestiegen → verbessert CF',
+        verbPlaceholder: 'z.B. 0',
+        verbAria: 'Änderung Verbindlichkeiten in Euro',
+        ocfLabel: 'Operativer Cashflow (OCF)',
+        ocfPlaceholder: 'z.B. 30.000',
+        ocfAria: 'Operativer Cashflow in Euro',
+        capexLabel: 'Investitionsauszahlungen (CapEx)',
+        capexPlaceholder: 'z.B. 10.000',
+        capexAria: 'CapEx in Euro',
+        errInvalidNumber: 'Bitte eine gültige Zahl eingeben.',
+        errEinzahlungenNegative: 'Einzahlungen müssen ≥ 0 € sein.',
+        errAuszahlungenNegative: 'Auszahlungen müssen ≥ 0 € sein.',
+        errAfaNegative: 'Abschreibungen müssen ≥ 0 € sein.',
+        errCapexNegative: 'CapEx muss ≥ 0 € sein.',
+        resultsAria: 'Berechnungsergebnis',
+        resultRegionAria: 'Cashflow-Ergebnis',
+        cardCashflow: 'Cashflow',
+        cardOcf: 'Operativer Cashflow',
+        cardFreeCf: 'Free Cashflow',
+        statusPositiv: 'Positiver Cashflow — Liquiditätszufluss',
+        statusNegativ: 'Negativer Cashflow — Liquiditätsrisiko prüfen',
+        statusBreakeven: 'Break-Even — Cashflow ausgeglichen',
+        lernmomentAria: 'Lernmoment',
+        lernmomentLabel: 'Warum Gewinn ≠ Liquidität',
+        lernmomentTextHtml:
+          'Ihr Jahresüberschuss beträgt <strong>{ju}&nbsp;€</strong>, Ihr operativer Cashflow ist <strong>{ocf}&nbsp;€</strong>. Die Differenz erklärt sich durch nicht zahlungswirksame Posten (AfA, Rückstellungen) und Änderungen im Working Capital (Forderungen, Vorräte, Verbindlichkeiten).',
+        freeAria: 'Free-Cashflow-Erklärung',
+        freeLabel: 'Was bedeutet der Free Cashflow?',
+        freeTextHtml:
+          'Nach Abzug der Investitionsauszahlungen ({capex}&nbsp;€) verbleiben <strong>{free}&nbsp;€</strong> frei — für Schuldentilgung, Dividenden oder neue Investitionen.',
+        formelAria: 'Formel-Aufschlüsselung',
+        formelLabel: 'Formel',
+        emptyState: 'Gib die Werte ein, um den Cashflow sofort zu sehen.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+      },
     },
   },
 
@@ -2086,6 +2237,76 @@ const strings: Record<Lang, UiStrings> = {
         nettoBruttoNach: 'Gross after discount',
         nettoHint: 'Note: The discount also reduces the buyer\'s deductible input VAT.',
         emptyState: 'Enter the values to see the result instantly.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      cashFlowCalculator: {
+        regionAria: 'Cash-flow calculator',
+        modeAria: 'Select calculation method',
+        modeDirekt: 'Direct method',
+        modeIndirekt: 'Indirect method',
+        modeFree: 'Free cash flow',
+        descDirekt: 'Direct method: Cash flow = receipts − payments. Suited for freelancers and small businesses.',
+        descIndirekt: 'Indirect method (HGB/IFRS): Starts from net income, adjusted for non-cash items and working-capital changes.',
+        descFree: 'Free cash flow: Capital available after investments — for debt repayment, dividends, or reinvestment.',
+        einzahlungenLabel: 'Cash receipts',
+        einzahlungenPlaceholder: 'e.g. 85,000',
+        einzahlungenAria: 'Cash receipts in euros',
+        auszahlungenLabel: 'Cash payments',
+        auszahlungenPlaceholder: 'e.g. 72,000',
+        auszahlungenAria: 'Cash payments in euros',
+        juLabel: 'Net income',
+        juHint: 'may be negative',
+        juPlaceholder: 'e.g. 20,000',
+        juAria: 'Net income in euros',
+        afaLabel: 'Depreciation',
+        afaPlaceholder: 'e.g. 15,000',
+        afaAria: 'Depreciation in euros',
+        rueckLabel: 'Δ Provisions',
+        rueckHint: '+ = increased',
+        rueckPlaceholder: 'e.g. 0',
+        rueckAria: 'Change in provisions in euros',
+        fordLabel: 'Δ Receivables',
+        fordHint: '+ = increased → reduces CF',
+        fordPlaceholder: 'e.g. 5,000',
+        fordAria: 'Change in receivables in euros',
+        vorrLabel: 'Δ Inventory',
+        vorrHint: '+ = increased → reduces CF',
+        vorrPlaceholder: 'e.g. 0',
+        vorrAria: 'Change in inventory in euros',
+        verbLabel: 'Δ Liabilities',
+        verbHint: '+ = increased → improves CF',
+        verbPlaceholder: 'e.g. 0',
+        verbAria: 'Change in liabilities in euros',
+        ocfLabel: 'Operating cash flow (OCF)',
+        ocfPlaceholder: 'e.g. 30,000',
+        ocfAria: 'Operating cash flow in euros',
+        capexLabel: 'Capital expenditures (CapEx)',
+        capexPlaceholder: 'e.g. 10,000',
+        capexAria: 'CapEx in euros',
+        errInvalidNumber: 'Please enter a valid number.',
+        errEinzahlungenNegative: 'Cash receipts must be ≥ 0 €.',
+        errAuszahlungenNegative: 'Cash payments must be ≥ 0 €.',
+        errAfaNegative: 'Depreciation must be ≥ 0 €.',
+        errCapexNegative: 'CapEx must be ≥ 0 €.',
+        resultsAria: 'Calculation result',
+        resultRegionAria: 'Cash-flow result',
+        cardCashflow: 'Cash flow',
+        cardOcf: 'Operating cash flow',
+        cardFreeCf: 'Free cash flow',
+        statusPositiv: 'Positive cash flow — liquidity inflow',
+        statusNegativ: 'Negative cash flow — review liquidity risk',
+        statusBreakeven: 'Break-even — cash flow balanced',
+        lernmomentAria: 'Learning moment',
+        lernmomentLabel: 'Why profit ≠ liquidity',
+        lernmomentTextHtml:
+          'Your net income is <strong>{ju}&nbsp;€</strong>, your operating cash flow is <strong>{ocf}&nbsp;€</strong>. The difference is explained by non-cash items (depreciation, provisions) and changes in working capital (receivables, inventory, liabilities).',
+        freeAria: 'Free cash-flow explanation',
+        freeLabel: 'What does the free cash flow mean?',
+        freeTextHtml:
+          'After subtracting capital expenditures ({capex}&nbsp;€), <strong>{free}&nbsp;€</strong> remains free — for debt repayment, dividends, or new investments.',
+        formelAria: 'Formula breakdown',
+        formelLabel: 'Formula',
+        emptyState: 'Enter the values to see the cash flow instantly.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },
     },
