@@ -58,12 +58,25 @@ export default defineConfig({
         // Skip the Transformers.js bundle (540 KB) and heic2any chunk
         // (1.3 MB) — they lazy-load only when needed, no point precaching
         // them for every visitor.
+        // Skip root index.html: it's the unstyled CF-Functions fallback
+        // (src/pages/index.astro). Precaching it makes the SW serve that
+        // bare HTML on every repeat visit to /, causing a meta-refresh
+        // flash before the CF Function 302 can fire. Pattern is root-only
+        // (no '**/' prefix) so dist/de/index.html, dist/en/index.html and
+        // every tool page stay precached.
         globIgnores: [
+          'index.html',
           '**/FileTool.*.js',
           '**/heic2any.*.js',
           '**/onnx*.js',
           '**/*.wasm',
         ],
+        // No App-Shell fallback. Default in @vite-pwa/astro is '/', which
+        // would call createHandlerBoundToURL('/') and throw at install
+        // because we just dropped '/' from the precache. Disabling means
+        // unknown navigations fall through to the network — fine for an
+        // MPA where every real route is individually precached.
+        navigateFallback: null,
         // SW update flow: claim clients + skipWaiting so autoUpdate works
         // without the user needing a second refresh.
         clientsClaim: true,
