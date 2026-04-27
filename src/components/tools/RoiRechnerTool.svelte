@@ -19,6 +19,13 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.roiCalculator);
+
+  function statusLabel(status: 'gewinn' | 'verlust' | 'breakeven'): string {
+    if (status === 'gewinn') return T.statusGewinn;
+    if (status === 'verlust') return T.statusVerlust;
+    return T.statusBreakeven;
+  }
 
   type Mode = 'basis' | 'erweitert' | 'dupont';
   let mode = $state<Mode>('basis');
@@ -52,50 +59,50 @@
 
   // ---- Validierung: Basis ----
   const investitionError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(investition)) return 'Bitte eine gültige Zahl eingeben.';
-    if (investition <= 0) return 'Investitionsbetrag muss größer als 0 sein.';
+    if (!Number.isFinite(investition)) return T.errInvalidNumber;
+    if (investition <= 0) return T.errInvestitionPositive;
     return null;
   });
 
   const ertragError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(ertrag)) return 'Bitte einen gültigen Ertrag eingeben.';
+    if (!Number.isFinite(ertrag)) return T.errInvalidErtrag;
     return null;
   });
 
   // ---- Validierung: Erweitert ----
   const laufzeitError = $derived.by<string | null>(() => {
     if (mode !== 'erweitert') return null;
-    if (!Number.isFinite(laufzeit)) return 'Bitte eine gültige Laufzeit eingeben.';
-    if (laufzeit <= 0) return 'Laufzeit muss mindestens 0,01 Jahre betragen.';
-    if (laufzeit > 100) return 'Sehr lange Laufzeit — annualisierter ROI nähert sich 0 %.';
+    if (!Number.isFinite(laufzeit)) return T.errInvalidLaufzeit;
+    if (laufzeit <= 0) return T.errLaufzeitMin;
+    if (laufzeit > 100) return T.errLaufzeitMax;
     return null;
   });
 
   const betriebskostenError = $derived.by<string | null>(() => {
     if (mode !== 'erweitert') return null;
-    if (!Number.isFinite(betriebskosten)) return 'Bitte einen gültigen Betrag eingeben.';
-    if (betriebskosten < 0) return 'Betriebskosten müssen ≥ 0 € sein.';
+    if (!Number.isFinite(betriebskosten)) return T.errInvalidBetrag;
+    if (betriebskosten < 0) return T.errBetriebskostenNegative;
     return null;
   });
 
   // ---- Validierung: DuPont ----
   const gewinnError = $derived.by<string | null>(() => {
     if (mode !== 'dupont') return null;
-    if (!Number.isFinite(gewinn)) return 'Bitte einen gültigen Gewinn eingeben.';
+    if (!Number.isFinite(gewinn)) return T.errInvalidGewinn;
     return null;
   });
 
   const nettoumsatzError = $derived.by<string | null>(() => {
     if (mode !== 'dupont') return null;
-    if (!Number.isFinite(nettoumsatz)) return 'Bitte eine gültige Zahl eingeben.';
-    if (nettoumsatz <= 0) return 'Nettoumsatz muss größer als 0 sein.';
+    if (!Number.isFinite(nettoumsatz)) return T.errInvalidZahl;
+    if (nettoumsatz <= 0) return T.errNettoumsatzPositive;
     return null;
   });
 
   const gesamtkapitalError = $derived.by<string | null>(() => {
     if (mode !== 'dupont') return null;
-    if (!Number.isFinite(gesamtkapital)) return 'Bitte eine gültige Zahl eingeben.';
-    if (gesamtkapital <= 0) return 'Gesamtkapital muss größer als 0 sein.';
+    if (!Number.isFinite(gesamtkapital)) return T.errInvalidZahl;
+    if (gesamtkapital <= 0) return T.errGesamtkapitalPositive;
     return null;
   });
 
@@ -165,31 +172,31 @@
   }
 </script>
 
-<div class="roi-tool" aria-label="ROI-Rechner">
+<div class="roi-tool" aria-label={T.regionAria}>
 
   <!-- Modus-Switcher -->
-  <div class="mode-switcher" role="tablist" aria-label="Berechnungsmodus">
+  <div class="mode-switcher" role="tablist" aria-label={T.modeAria}>
     <button
       role="tab"
       class="mode-btn"
       class:mode-btn--active={mode === 'basis'}
       aria-selected={mode === 'basis'}
       onclick={() => { mode = 'basis'; }}
-    >Einfach</button>
+    >{T.modeBasis}</button>
     <button
       role="tab"
       class="mode-btn"
       class:mode-btn--active={mode === 'erweitert'}
       aria-selected={mode === 'erweitert'}
       onclick={() => { mode = 'erweitert'; }}
-    >Erweitert</button>
+    >{T.modeErweitert}</button>
     <button
       role="tab"
       class="mode-btn"
       class:mode-btn--active={mode === 'dupont'}
       aria-selected={mode === 'dupont'}
       onclick={() => { mode = 'dupont'; }}
-    >DuPont</button>
+    >{T.modeDupont}</button>
   </div>
 
   <!-- Eingaben: Basis + Erweitert teilen Investition/Ertrag -->
@@ -197,16 +204,16 @@
     <div class="inputs-grid">
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-investition">Investition</label>
+        <label class="input-field__label" for="inp-investition">{T.investitionLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={investitionError !== null}>
           <input
             id="inp-investition"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 50.000"
+            placeholder={T.investitionPlaceholder}
             bind:value={investitionStr}
-            aria-label="Anfangsinvestition in Euro"
+            aria-label={T.investitionAria}
             aria-invalid={investitionError !== null}
             autocomplete="off"
           />
@@ -218,16 +225,16 @@
       </div>
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-ertrag">Gesamtertrag</label>
+        <label class="input-field__label" for="inp-ertrag">{T.ertragLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={ertragError !== null}>
           <input
             id="inp-ertrag"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 63.400"
+            placeholder={T.ertragPlaceholder}
             bind:value={ertragStr}
-            aria-label="Gesamtertrag oder Endwert in Euro"
+            aria-label={T.ertragAria}
             aria-invalid={ertragError !== null}
             autocomplete="off"
           />
@@ -240,20 +247,20 @@
 
       {#if mode === 'erweitert'}
         <div class="input-field">
-          <label class="input-field__label" for="inp-laufzeit">Laufzeit</label>
+          <label class="input-field__label" for="inp-laufzeit">{T.laufzeitLabel}</label>
           <div class="input-field__wrap" class:input-field__wrap--error={laufzeitError !== null}>
             <input
               id="inp-laufzeit"
               type="text"
               inputmode="decimal"
               class="input-field__input"
-              placeholder="z.B. 3"
+              placeholder={T.laufzeitPlaceholder}
               bind:value={laufzeitStr}
-              aria-label="Laufzeit in Jahren"
+              aria-label={T.laufzeitAria}
               aria-invalid={laufzeitError !== null}
               autocomplete="off"
             />
-            <span class="input-field__unit" aria-hidden="true">Jahre</span>
+            <span class="input-field__unit" aria-hidden="true">{T.unitYears}</span>
           </div>
           {#if laufzeitError}
             <p class="field-error" role="alert">{laufzeitError}</p>
@@ -262,8 +269,8 @@
 
         <div class="input-field">
           <label class="input-field__label" for="inp-betriebskosten">
-            Betriebskosten/Jahr
-            <span class="default-badge">optional</span>
+            {T.betriebskostenLabel}
+            <span class="default-badge">{T.optionalBadge}</span>
           </label>
           <div class="input-field__wrap" class:input-field__wrap--error={betriebskostenError !== null}>
             <input
@@ -271,13 +278,13 @@
               type="text"
               inputmode="decimal"
               class="input-field__input"
-              placeholder="z.B. 0"
+              placeholder={T.betriebskostenPlaceholder}
               bind:value={betriebskostenStr}
-              aria-label="Jährliche Betriebskosten in Euro"
+              aria-label={T.betriebskostenAria}
               aria-invalid={betriebskostenError !== null}
               autocomplete="off"
             />
-            <span class="input-field__unit" aria-hidden="true">€/Jahr</span>
+            <span class="input-field__unit" aria-hidden="true">{T.unitEuroPerYear}</span>
           </div>
           {#if betriebskostenError}
             <p class="field-error" role="alert">{betriebskostenError}</p>
@@ -293,16 +300,16 @@
     <div class="inputs-grid">
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-gewinn">Betriebsgewinn</label>
+        <label class="input-field__label" for="inp-gewinn">{T.gewinnLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={gewinnError !== null}>
           <input
             id="inp-gewinn"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 13.400"
+            placeholder={T.gewinnPlaceholder}
             bind:value={gewinnStr}
-            aria-label="Betriebsgewinn in Euro"
+            aria-label={T.gewinnAria}
             aria-invalid={gewinnError !== null}
             autocomplete="off"
           />
@@ -314,16 +321,16 @@
       </div>
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-nettoumsatz">Nettoumsatz</label>
+        <label class="input-field__label" for="inp-nettoumsatz">{T.nettoumsatzLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={nettoumsatzError !== null}>
           <input
             id="inp-nettoumsatz"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 200.000"
+            placeholder={T.nettoumsatzPlaceholder}
             bind:value={nettoumsatzStr}
-            aria-label="Nettoumsatz in Euro"
+            aria-label={T.nettoumsatzAria}
             aria-invalid={nettoumsatzError !== null}
             autocomplete="off"
           />
@@ -335,16 +342,16 @@
       </div>
 
       <div class="input-field">
-        <label class="input-field__label" for="inp-gesamtkapital">Gesamtkapital</label>
+        <label class="input-field__label" for="inp-gesamtkapital">{T.gesamtkapitalLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={gesamtkapitalError !== null}>
           <input
             id="inp-gesamtkapital"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 100.000"
+            placeholder={T.gesamtkapitalPlaceholder}
             bind:value={gesamtkapitalStr}
-            aria-label="Gesamtkapital oder investiertes Kapital in Euro"
+            aria-label={T.gesamtkapitalAria}
             aria-invalid={gesamtkapitalError !== null}
             autocomplete="off"
           />
@@ -359,13 +366,13 @@
   {/if}
 
   <!-- Ergebnis -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
     {#if basisResult}
       <div class="results-grid">
 
         <div class="result-card result-card--primary">
-          <span class="result-card__label">Return on Investment</span>
+          <span class="result-card__label">{T.cardRoi}</span>
           <span class="result-card__value">
             {formatProzent(basisResult.roi, 2)}<span class="result-card__unit"> %</span>
           </span>
@@ -375,22 +382,22 @@
             class:status-badge--verlust={basisResult.status === 'verlust'}
             class:status-badge--breakeven={basisResult.status === 'breakeven'}
           >
-            {basisResult.status === 'gewinn' ? 'Gewinn' : basisResult.status === 'verlust' ? 'Verlust' : 'Break-Even'}
+            {statusLabel(basisResult.status)}
           </span>
         </div>
 
         <div class="result-card">
-          <span class="result-card__label">Gewinn / Verlust</span>
+          <span class="result-card__label">{T.cardProfit}</span>
           <span class="result-card__value">
             {formatEuro(basisResult.gewinn)}<span class="result-card__unit"> €</span>
           </span>
-          <span class="result-card__sub">Ertrag − Investition</span>
+          <span class="result-card__sub">{T.cardProfitSub}</span>
         </div>
 
       </div>
 
-      <div class="formel-row" aria-label="Formel-Aufschlüsselung">
-        <span class="formel-label">Formel</span>
+      <div class="formel-row" aria-label={T.formelAriaBasis}>
+        <span class="formel-label">{T.formelLabelBasis}</span>
         <span class="formel-text">{basisResult.formelText}</span>
       </div>
 
@@ -400,7 +407,7 @@
       <div class="results-grid">
 
         <div class="result-card result-card--primary">
-          <span class="result-card__label">ROI gesamt</span>
+          <span class="result-card__label">{T.cardRoiTotal}</span>
           <span class="result-card__value">
             {formatProzent(erweiterterResult.roi, 2)}<span class="result-card__unit"> %</span>
           </span>
@@ -410,56 +417,56 @@
             class:status-badge--verlust={erweiterterResult.status === 'verlust'}
             class:status-badge--breakeven={erweiterterResult.status === 'breakeven'}
           >
-            {erweiterterResult.status === 'gewinn' ? 'Gewinn' : erweiterterResult.status === 'verlust' ? 'Verlust' : 'Break-Even'}
+            {statusLabel(erweiterterResult.status)}
           </span>
         </div>
 
         <div class="result-card result-card--highlight">
-          <span class="result-card__label">Annualisierter ROI</span>
+          <span class="result-card__label">{T.cardRoiAnnualized}</span>
           <span class="result-card__value">
             {formatProzent(erweiterterResult.aroi, 2)}<span class="result-card__unit"> % p.a.</span>
           </span>
-          <span class="result-card__sub">Zinseszins-Formel</span>
+          <span class="result-card__sub">{T.cardRoiAnnualizedSub}</span>
         </div>
 
         <div class="result-card">
-          <span class="result-card__label">Gewinn / Verlust</span>
+          <span class="result-card__label">{T.cardProfit}</span>
           <span class="result-card__value">
             {formatEuro(erweiterterResult.gewinn)}<span class="result-card__unit"> €</span>
           </span>
           {#if erweiterterResult.gesamtBetriebskosten > 0}
             <span class="result-card__sub">
-              inkl. {formatEuro(erweiterterResult.gesamtBetriebskosten)}&nbsp;€ Betriebskosten
+              {T.cardProfitInclTemplate.replace('{amount}', formatEuro(erweiterterResult.gesamtBetriebskosten))}
             </span>
           {:else}
-            <span class="result-card__sub">Ertrag − Investition</span>
+            <span class="result-card__sub">{T.cardProfitSub}</span>
           {/if}
         </div>
 
         {#if erweiterterResult.amortisation !== null}
           <div class="result-card">
-            <span class="result-card__label">Amortisation</span>
+            <span class="result-card__label">{T.cardAmortization}</span>
             <span class="result-card__value">
-              {formatProzent(erweiterterResult.amortisation, 1)}<span class="result-card__unit"> Jahre</span>
+              {formatProzent(erweiterterResult.amortisation, 1)}<span class="result-card__unit"> {T.cardAmortizationUnit}</span>
             </span>
-            <span class="result-card__sub">bis zur Kostendeckung</span>
+            <span class="result-card__sub">{T.cardAmortizationSub}</span>
           </div>
         {:else}
           <div class="result-card result-card--muted">
-            <span class="result-card__label">Amortisation</span>
+            <span class="result-card__label">{T.cardAmortization}</span>
             <span class="result-card__value result-card__value--muted">—</span>
-            <span class="result-card__sub">kein positiver Ertrag</span>
+            <span class="result-card__sub">{T.cardAmortizationNoneSub}</span>
           </div>
         {/if}
 
       </div>
 
-      <div class="formel-row" aria-label="Formel-Aufschlüsselung ROI">
-        <span class="formel-label">ROI-Formel</span>
+      <div class="formel-row" aria-label={T.formelAriaErweitertRoi}>
+        <span class="formel-label">{T.formelLabelErweitertRoi}</span>
         <span class="formel-text">{erweiterterResult.formelText}</span>
       </div>
-      <div class="formel-row" aria-label="Formel-Aufschlüsselung annualisierter ROI">
-        <span class="formel-label">AROI-Formel</span>
+      <div class="formel-row" aria-label={T.formelAriaErweitertAroi}>
+        <span class="formel-label">{T.formelLabelErweitertAroi}</span>
         <span class="formel-text">{erweiterterResult.aroiFormelText}</span>
       </div>
 
@@ -469,7 +476,7 @@
       <div class="results-grid">
 
         <div class="result-card result-card--primary">
-          <span class="result-card__label">ROI (DuPont)</span>
+          <span class="result-card__label">{T.cardRoiDupont}</span>
           <span class="result-card__value">
             {formatProzent(dupontResult.roi, 2)}<span class="result-card__unit"> %</span>
           </span>
@@ -479,30 +486,30 @@
             class:status-badge--verlust={dupontResult.status === 'verlust'}
             class:status-badge--breakeven={dupontResult.status === 'breakeven'}
           >
-            {dupontResult.status === 'gewinn' ? 'Gewinn' : dupontResult.status === 'verlust' ? 'Verlust' : 'Break-Even'}
+            {statusLabel(dupontResult.status)}
           </span>
         </div>
 
         <div class="result-card">
-          <span class="result-card__label">Umsatzrendite</span>
+          <span class="result-card__label">{T.cardUmsatzrendite}</span>
           <span class="result-card__value">
             {formatProzent(dupontResult.umsatzrendite, 2)}<span class="result-card__unit"> %</span>
           </span>
-          <span class="result-card__sub">Gewinn / Nettoumsatz</span>
+          <span class="result-card__sub">{T.cardUmsatzrenditeSub}</span>
         </div>
 
         <div class="result-card">
-          <span class="result-card__label">Kapitalumschlag</span>
+          <span class="result-card__label">{T.cardKapitalumschlag}</span>
           <span class="result-card__value">
             {dupontResult.kapitalumschlag.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
-          <span class="result-card__sub">Nettoumsatz / Gesamtkapital</span>
+          <span class="result-card__sub">{T.cardKapitalumschlagSub}</span>
         </div>
 
       </div>
 
-      <div class="formel-row" aria-label="DuPont-Formel">
-        <span class="formel-label">DuPont</span>
+      <div class="formel-row" aria-label={T.formelAriaDupont}>
+        <span class="formel-label">{T.formelLabelDupont}</span>
         <span class="formel-text">{dupontResult.formelText}</span>
       </div>
 
@@ -516,9 +523,9 @@
           class="copy-btn"
           class:copy-btn--copied={copyState === 'copied'}
           onclick={copyRoi}
-          aria-label="ROI-Ergebnis in die Zwischenablage kopieren"
+          aria-label={T.copyAria}
         >
-          {copyState === 'copied' ? strings.toolsCommon.copied : copyState === 'error' ? 'Fehler' : strings.toolsCommon.copy}
+          {copyState === 'copied' ? strings.toolsCommon.copied : copyState === 'error' ? T.copyError : strings.toolsCommon.copy}
         </button>
         <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
       </div>
@@ -532,13 +539,12 @@
 
   <!-- Disclaimer -->
   <p class="disclaimer">
-    Diese Berechnung dient ausschließlich zur unverbindlichen Information.
-    Tatsächliche Renditen können abweichen. Kein Ersatz für Fachberatung.
+    {T.disclaimer}
   </p>
 
   <!-- Privacy badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </div>

@@ -457,6 +457,90 @@ export interface UiStrings {
       hintFillCorrectly: string;
       privacyBadge: string;
     };
+    roiCalculator: {
+      regionAria: string;
+      // Mode switcher
+      modeAria: string;
+      modeBasis: string;
+      modeErweitert: string;
+      modeDupont: string;
+      // Inputs
+      investitionLabel: string;
+      investitionPlaceholder: string;
+      investitionAria: string;
+      ertragLabel: string;
+      ertragPlaceholder: string;
+      ertragAria: string;
+      laufzeitLabel: string;
+      laufzeitPlaceholder: string;
+      laufzeitAria: string;
+      betriebskostenLabel: string;
+      betriebskostenPlaceholder: string;
+      betriebskostenAria: string;
+      gewinnLabel: string;
+      gewinnPlaceholder: string;
+      gewinnAria: string;
+      nettoumsatzLabel: string;
+      nettoumsatzPlaceholder: string;
+      nettoumsatzAria: string;
+      gesamtkapitalLabel: string;
+      gesamtkapitalPlaceholder: string;
+      gesamtkapitalAria: string;
+      optionalBadge: string;
+      unitYears: string;
+      unitEuroPerYear: string;
+      // Validation
+      errInvalidNumber: string;
+      errInvestitionPositive: string;
+      errInvalidErtrag: string;
+      errInvalidLaufzeit: string;
+      errLaufzeitMin: string;
+      errLaufzeitMax: string;
+      errInvalidBetrag: string;
+      errBetriebskostenNegative: string;
+      errInvalidGewinn: string;
+      errInvalidZahl: string;
+      errNettoumsatzPositive: string;
+      errGesamtkapitalPositive: string;
+      // Results
+      resultsAria: string;
+      cardRoi: string;
+      cardRoiTotal: string;
+      cardRoiAnnualized: string;
+      cardRoiAnnualizedSub: string;
+      cardRoiDupont: string;
+      cardProfit: string;
+      cardProfitSub: string;
+      /** {amount} */
+      cardProfitInclTemplate: string;
+      cardAmortization: string;
+      cardAmortizationSub: string;
+      cardAmortizationNoneSub: string;
+      cardAmortizationUnit: string;
+      cardUmsatzrendite: string;
+      cardUmsatzrenditeSub: string;
+      cardKapitalumschlag: string;
+      cardKapitalumschlagSub: string;
+      // Status
+      statusGewinn: string;
+      statusVerlust: string;
+      statusBreakeven: string;
+      // Formula labels
+      formelAriaBasis: string;
+      formelLabelBasis: string;
+      formelAriaErweitertRoi: string;
+      formelLabelErweitertRoi: string;
+      formelAriaErweitertAroi: string;
+      formelLabelErweitertAroi: string;
+      formelAriaDupont: string;
+      formelLabelDupont: string;
+      // Actions / status
+      copyAria: string;
+      copyError: string;
+      // Disclaimer / privacy
+      disclaimer: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -883,6 +967,82 @@ const strings: Record<Lang, UiStrings> = {
         hintFillCorrectly: 'Bitte alle Pflichtfelder korrekt ausfüllen.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal im Browser',
       },
+      roiCalculator: {
+        regionAria: 'ROI-Rechner',
+        modeAria: 'Berechnungsmodus',
+        modeBasis: 'Einfach',
+        modeErweitert: 'Erweitert',
+        modeDupont: 'DuPont',
+        investitionLabel: 'Investition',
+        investitionPlaceholder: 'z.B. 50.000',
+        investitionAria: 'Anfangsinvestition in Euro',
+        ertragLabel: 'Gesamtertrag',
+        ertragPlaceholder: 'z.B. 63.400',
+        ertragAria: 'Gesamtertrag oder Endwert in Euro',
+        laufzeitLabel: 'Laufzeit',
+        laufzeitPlaceholder: 'z.B. 3',
+        laufzeitAria: 'Laufzeit in Jahren',
+        betriebskostenLabel: 'Betriebskosten/Jahr',
+        betriebskostenPlaceholder: 'z.B. 0',
+        betriebskostenAria: 'Jährliche Betriebskosten in Euro',
+        gewinnLabel: 'Betriebsgewinn',
+        gewinnPlaceholder: 'z.B. 13.400',
+        gewinnAria: 'Betriebsgewinn in Euro',
+        nettoumsatzLabel: 'Nettoumsatz',
+        nettoumsatzPlaceholder: 'z.B. 200.000',
+        nettoumsatzAria: 'Nettoumsatz in Euro',
+        gesamtkapitalLabel: 'Gesamtkapital',
+        gesamtkapitalPlaceholder: 'z.B. 100.000',
+        gesamtkapitalAria: 'Gesamtkapital oder investiertes Kapital in Euro',
+        optionalBadge: 'optional',
+        unitYears: 'Jahre',
+        unitEuroPerYear: '€/Jahr',
+        errInvalidNumber: 'Bitte eine gültige Zahl eingeben.',
+        errInvestitionPositive: 'Investitionsbetrag muss größer als 0 sein.',
+        errInvalidErtrag: 'Bitte einen gültigen Ertrag eingeben.',
+        errInvalidLaufzeit: 'Bitte eine gültige Laufzeit eingeben.',
+        errLaufzeitMin: 'Laufzeit muss mindestens 0,01 Jahre betragen.',
+        errLaufzeitMax: 'Sehr lange Laufzeit — annualisierter ROI nähert sich 0 %.',
+        errInvalidBetrag: 'Bitte einen gültigen Betrag eingeben.',
+        errBetriebskostenNegative: 'Betriebskosten müssen ≥ 0 € sein.',
+        errInvalidGewinn: 'Bitte einen gültigen Gewinn eingeben.',
+        errInvalidZahl: 'Bitte eine gültige Zahl eingeben.',
+        errNettoumsatzPositive: 'Nettoumsatz muss größer als 0 sein.',
+        errGesamtkapitalPositive: 'Gesamtkapital muss größer als 0 sein.',
+        resultsAria: 'Berechnungsergebnis',
+        cardRoi: 'Return on Investment',
+        cardRoiTotal: 'ROI gesamt',
+        cardRoiAnnualized: 'Annualisierter ROI',
+        cardRoiAnnualizedSub: 'Zinseszins-Formel',
+        cardRoiDupont: 'ROI (DuPont)',
+        cardProfit: 'Gewinn / Verlust',
+        cardProfitSub: 'Ertrag − Investition',
+        cardProfitInclTemplate: 'inkl. {amount} € Betriebskosten',
+        cardAmortization: 'Amortisation',
+        cardAmortizationSub: 'bis zur Kostendeckung',
+        cardAmortizationNoneSub: 'kein positiver Ertrag',
+        cardAmortizationUnit: 'Jahre',
+        cardUmsatzrendite: 'Umsatzrendite',
+        cardUmsatzrenditeSub: 'Gewinn / Nettoumsatz',
+        cardKapitalumschlag: 'Kapitalumschlag',
+        cardKapitalumschlagSub: 'Nettoumsatz / Gesamtkapital',
+        statusGewinn: 'Gewinn',
+        statusVerlust: 'Verlust',
+        statusBreakeven: 'Break-Even',
+        formelAriaBasis: 'Formel-Aufschlüsselung',
+        formelLabelBasis: 'Formel',
+        formelAriaErweitertRoi: 'Formel-Aufschlüsselung ROI',
+        formelLabelErweitertRoi: 'ROI-Formel',
+        formelAriaErweitertAroi: 'Formel-Aufschlüsselung annualisierter ROI',
+        formelLabelErweitertAroi: 'AROI-Formel',
+        formelAriaDupont: 'DuPont-Formel',
+        formelLabelDupont: 'DuPont',
+        copyAria: 'ROI-Ergebnis in die Zwischenablage kopieren',
+        copyError: 'Fehler',
+        disclaimer:
+          'Diese Berechnung dient ausschließlich zur unverbindlichen Information. Tatsächliche Renditen können abweichen. Kein Ersatz für Fachberatung.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+      },
     },
   },
 
@@ -1307,6 +1467,82 @@ const strings: Record<Lang, UiStrings> = {
         detailGrossInterest: 'Gross interest earnings',
         detailTaxesTotal: 'Total taxes',
         hintFillCorrectly: 'Please fill in all required fields correctly.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      roiCalculator: {
+        regionAria: 'ROI calculator',
+        modeAria: 'Calculation mode',
+        modeBasis: 'Simple',
+        modeErweitert: 'Extended',
+        modeDupont: 'DuPont',
+        investitionLabel: 'Investment',
+        investitionPlaceholder: 'e.g. 50,000',
+        investitionAria: 'Initial investment in euros',
+        ertragLabel: 'Total return',
+        ertragPlaceholder: 'e.g. 63,400',
+        ertragAria: 'Total return or final value in euros',
+        laufzeitLabel: 'Term',
+        laufzeitPlaceholder: 'e.g. 3',
+        laufzeitAria: 'Term in years',
+        betriebskostenLabel: 'Operating costs/year',
+        betriebskostenPlaceholder: 'e.g. 0',
+        betriebskostenAria: 'Annual operating costs in euros',
+        gewinnLabel: 'Operating profit',
+        gewinnPlaceholder: 'e.g. 13,400',
+        gewinnAria: 'Operating profit in euros',
+        nettoumsatzLabel: 'Net revenue',
+        nettoumsatzPlaceholder: 'e.g. 200,000',
+        nettoumsatzAria: 'Net revenue in euros',
+        gesamtkapitalLabel: 'Total capital',
+        gesamtkapitalPlaceholder: 'e.g. 100,000',
+        gesamtkapitalAria: 'Total or invested capital in euros',
+        optionalBadge: 'optional',
+        unitYears: 'years',
+        unitEuroPerYear: '€/year',
+        errInvalidNumber: 'Please enter a valid number.',
+        errInvestitionPositive: 'Investment amount must be greater than 0.',
+        errInvalidErtrag: 'Please enter a valid return.',
+        errInvalidLaufzeit: 'Please enter a valid term.',
+        errLaufzeitMin: 'Term must be at least 0.01 years.',
+        errLaufzeitMax: 'Very long term — annualized ROI approaches 0 %.',
+        errInvalidBetrag: 'Please enter a valid amount.',
+        errBetriebskostenNegative: 'Operating costs must be ≥ 0 €.',
+        errInvalidGewinn: 'Please enter a valid profit.',
+        errInvalidZahl: 'Please enter a valid number.',
+        errNettoumsatzPositive: 'Net revenue must be greater than 0.',
+        errGesamtkapitalPositive: 'Total capital must be greater than 0.',
+        resultsAria: 'Calculation result',
+        cardRoi: 'Return on investment',
+        cardRoiTotal: 'Total ROI',
+        cardRoiAnnualized: 'Annualized ROI',
+        cardRoiAnnualizedSub: 'Compound-interest formula',
+        cardRoiDupont: 'ROI (DuPont)',
+        cardProfit: 'Profit / loss',
+        cardProfitSub: 'Return − investment',
+        cardProfitInclTemplate: 'incl. {amount} € operating costs',
+        cardAmortization: 'Payback period',
+        cardAmortizationSub: 'until break-even',
+        cardAmortizationNoneSub: 'no positive return',
+        cardAmortizationUnit: 'years',
+        cardUmsatzrendite: 'Net profit margin',
+        cardUmsatzrenditeSub: 'Profit / net revenue',
+        cardKapitalumschlag: 'Asset turnover',
+        cardKapitalumschlagSub: 'Net revenue / total capital',
+        statusGewinn: 'Profit',
+        statusVerlust: 'Loss',
+        statusBreakeven: 'Break-even',
+        formelAriaBasis: 'Formula breakdown',
+        formelLabelBasis: 'Formula',
+        formelAriaErweitertRoi: 'ROI formula breakdown',
+        formelLabelErweitertRoi: 'ROI formula',
+        formelAriaErweitertAroi: 'Annualized ROI formula breakdown',
+        formelLabelErweitertAroi: 'AROI formula',
+        formelAriaDupont: 'DuPont formula',
+        formelLabelDupont: 'DuPont',
+        copyAria: 'Copy ROI result to clipboard',
+        copyError: 'Error',
+        disclaimer:
+          'This calculation is for informational purposes only. Actual returns may differ. Not a substitute for professional advice.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },
     },
