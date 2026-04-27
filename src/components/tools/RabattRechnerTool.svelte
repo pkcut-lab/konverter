@@ -21,6 +21,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.discountCalculator);
 
   type Modus = 'standard' | 'rueck-preis' | 'rueck-rabatt' | 'kette';
   let modus = $state<Modus>('standard');
@@ -45,46 +46,46 @@
   // ---- Validierung ----
   const ursprungspreisError = $derived.by<string | null>(() => {
     if (modus === 'rueck-preis') return null; // Ursprungspreis wird berechnet, nicht eingegeben
-    if (!Number.isFinite(ursprungspreis)) return 'Bitte einen Betrag eingeben.';
-    if (ursprungspreis <= 0) return 'Bitte einen positiven Betrag eingeben.';
-    if (ursprungspreis > 9_999_999) return 'Maximalbetrag: 9.999.999 €';
+    if (!Number.isFinite(ursprungspreis)) return T.errAmountRequired;
+    if (ursprungspreis <= 0) return T.errAmountPositive;
+    if (ursprungspreis > 9_999_999) return T.errAmountMax;
     return null;
   });
 
   const endpreisError = $derived.by<string | null>(() => {
     if (modus !== 'rueck-preis' && modus !== 'rueck-rabatt') return null;
-    if (!Number.isFinite(endpreis)) return 'Bitte einen Endpreis eingeben.';
-    if (endpreis < 0) return 'Endpreis muss ≥ 0 sein.';
+    if (!Number.isFinite(endpreis)) return T.errEndpreisRequired;
+    if (endpreis < 0) return T.errEndpreisNegative;
     if (
       modus === 'rueck-rabatt' &&
       Number.isFinite(ursprungspreis) &&
       ursprungspreis > 0 &&
       endpreis > ursprungspreis
     ) {
-      return 'Endpreis darf nicht größer als Ursprungspreis sein.';
+      return T.errEndpreisGreater;
     }
     return null;
   });
 
   const rabattError = $derived.by<string | null>(() => {
     if (modus === 'rueck-rabatt' || modus === 'kette') return null;
-    if (!Number.isFinite(rabatt)) return 'Bitte einen Rabatt-Prozentsatz eingeben.';
-    if (rabatt < 0) return 'Rabatt muss ≥ 0 % sein.';
-    if (rabatt > 100) return 'Rabatt kann nicht mehr als 100 % betragen.';
+    if (!Number.isFinite(rabatt)) return T.errRabattRequired;
+    if (rabatt < 0) return T.errRabattNegative;
+    if (rabatt > 100) return T.errRabattMax;
     return null;
   });
 
   const rabatt1Error = $derived.by<string | null>(() => {
     if (modus !== 'kette') return null;
-    if (!Number.isFinite(rabatt1)) return 'Bitte Rabatt 1 eingeben.';
-    if (rabatt1 < 0 || rabatt1 > 100) return 'Rabatt: 0–100 %';
+    if (!Number.isFinite(rabatt1)) return T.errRabatt1Required;
+    if (rabatt1 < 0 || rabatt1 > 100) return T.errRabattRange;
     return null;
   });
 
   const rabatt2Error = $derived.by<string | null>(() => {
     if (modus !== 'kette') return null;
-    if (!Number.isFinite(rabatt2)) return 'Bitte Rabatt 2 eingeben.';
-    if (rabatt2 < 0 || rabatt2 > 100) return 'Rabatt: 0–100 %';
+    if (!Number.isFinite(rabatt2)) return T.errRabatt2Required;
+    if (rabatt2 < 0 || rabatt2 > 100) return T.errRabattRange;
     return null;
   });
 
@@ -125,7 +126,7 @@
   $effect(() => {
     if (!_firstResult && result !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
     }
   });
 
@@ -168,40 +169,40 @@
   }
 </script>
 
-<div class="rabatt-tool" aria-label="Rabatt-Rechner">
+<div class="rabatt-tool" aria-label={T.regionAria}>
 
   <!-- Modus-Toggle -->
   <div class="modus-bar">
-    <span class="modus-bar__label">Berechne</span>
-    <div class="modus-pills" role="group" aria-label="Berechnungsmodus auswählen">
+    <span class="modus-bar__label">{T.modeLabel}</span>
+    <div class="modus-pills" role="group" aria-label={T.modeBarAria}>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'standard'}
         aria-pressed={modus === 'standard'}
         onclick={() => { modus = 'standard'; }}
-      >Endpreis</button>
+      >{T.modeStandard}</button>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'rueck-preis'}
         aria-pressed={modus === 'rueck-preis'}
         onclick={() => { modus = 'rueck-preis'; }}
-      >Ursprungspreis</button>
+      >{T.modeRueckPreis}</button>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'rueck-rabatt'}
         aria-pressed={modus === 'rueck-rabatt'}
         onclick={() => { modus = 'rueck-rabatt'; }}
-      >Rabatt&nbsp;%</button>
+      >{T.modeRueckRabatt}</button>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'kette'}
         aria-pressed={modus === 'kette'}
         onclick={() => { modus = 'kette'; }}
-      >Kettenrabatt</button>
+      >{T.modeKette}</button>
     </div>
   </div>
 
@@ -211,16 +212,16 @@
     <!-- Ursprungspreis (alle Modi außer rueck-preis) -->
     {#if modus !== 'rueck-preis'}
       <div class="input-field">
-        <label class="input-field__label" for="inp-ursprungspreis">Ursprungspreis</label>
+        <label class="input-field__label" for="inp-ursprungspreis">{T.ursprungspreisLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={ursprungspreisError !== null}>
           <input
             id="inp-ursprungspreis"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 100"
+            placeholder={T.ursprungspreisPlaceholder}
             bind:value={ursprungspreisStr}
-            aria-label="Ursprungspreis in Euro"
+            aria-label={T.ursprungspreisAria}
             aria-invalid={ursprungspreisError !== null}
             aria-describedby={ursprungspreisError ? 'err-ursprungspreis' : undefined}
             autocomplete="off"
@@ -237,7 +238,7 @@
     {#if modus === 'rueck-preis' || modus === 'rueck-rabatt'}
       <div class="input-field">
         <label class="input-field__label" for="inp-endpreis">
-          {modus === 'rueck-preis' ? 'Endpreis (bezahlt)' : 'Endpreis'}
+          {modus === 'rueck-preis' ? T.endpreisLabelPaid : T.endpreisLabel}
         </label>
         <div class="input-field__wrap" class:input-field__wrap--error={endpreisError !== null}>
           <input
@@ -245,9 +246,9 @@
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 80"
+            placeholder={T.endpreisPlaceholder}
             bind:value={endpreisStr}
-            aria-label="Endpreis in Euro"
+            aria-label={T.endpreisAria}
             aria-invalid={endpreisError !== null}
             aria-describedby={endpreisError ? 'err-endpreis' : undefined}
             autocomplete="off"
@@ -263,16 +264,16 @@
     <!-- Rabatt% (Standard und rueck-preis) -->
     {#if modus === 'standard' || modus === 'rueck-preis'}
       <div class="input-field">
-        <label class="input-field__label" for="inp-rabatt">Rabatt</label>
+        <label class="input-field__label" for="inp-rabatt">{T.rabattLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={rabattError !== null}>
           <input
             id="inp-rabatt"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 20"
+            placeholder={T.rabattPlaceholder}
             bind:value={rabattStr}
-            aria-label="Rabatt in Prozent"
+            aria-label={T.rabattAria}
             aria-invalid={rabattError !== null}
             aria-describedby={rabattError ? 'err-rabatt' : undefined}
             autocomplete="off"
@@ -288,16 +289,16 @@
     <!-- Kettenrabatt: zwei Rabattsätze -->
     {#if modus === 'kette'}
       <div class="input-field">
-        <label class="input-field__label" for="inp-rabatt1">Rabatt 1</label>
+        <label class="input-field__label" for="inp-rabatt1">{T.rabatt1Label}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={rabatt1Error !== null}>
           <input
             id="inp-rabatt1"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 15"
+            placeholder={T.rabatt1Placeholder}
             bind:value={rabatt1Str}
-            aria-label="Erster Rabattsatz in Prozent"
+            aria-label={T.rabatt1Aria}
             aria-invalid={rabatt1Error !== null}
             aria-describedby={rabatt1Error ? 'err-rabatt1' : undefined}
             autocomplete="off"
@@ -309,16 +310,16 @@
         {/if}
       </div>
       <div class="input-field">
-        <label class="input-field__label" for="inp-rabatt2">Rabatt 2</label>
+        <label class="input-field__label" for="inp-rabatt2">{T.rabatt2Label}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={rabatt2Error !== null}>
           <input
             id="inp-rabatt2"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 8"
+            placeholder={T.rabatt2Placeholder}
             bind:value={rabatt2Str}
-            aria-label="Zweiter Rabattsatz in Prozent"
+            aria-label={T.rabatt2Aria}
             aria-invalid={rabatt2Error !== null}
             aria-describedby={rabatt2Error ? 'err-rabatt2' : undefined}
             autocomplete="off"
@@ -334,7 +335,7 @@
   </div><!-- /inputs-grid -->
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
     {#if result}
       <!-- Summary-Cards -->
@@ -342,50 +343,50 @@
 
         {#if modus === 'standard' || modus === 'kette'}
           <div class="summary-card summary-card--primary">
-            <span class="summary-card__label">Endpreis</span>
+            <span class="summary-card__label">{T.cardEndpreis}</span>
             <span class="summary-card__value">{formatEuro(result.endpreis)} <span class="summary-card__unit">€</span></span>
           </div>
           <div class="summary-card">
-            <span class="summary-card__label">Du sparst</span>
+            <span class="summary-card__label">{T.cardSavings}</span>
             <span class="summary-card__value">−{formatEuro(result.rabattBetrag)} <span class="summary-card__unit">€</span></span>
           </div>
           {#if modus === 'kette' && result.gesamtRabattProzent !== undefined}
             <div class="summary-card">
-              <span class="summary-card__label">Gesamtrabatt</span>
+              <span class="summary-card__label">{T.cardGesamtRabatt}</span>
               <span class="summary-card__value">{formatProzent(result.gesamtRabattProzent)} <span class="summary-card__unit">%</span></span>
             </div>
           {:else}
             <div class="summary-card">
-              <span class="summary-card__label">Rabatt</span>
+              <span class="summary-card__label">{T.cardRabatt}</span>
               <span class="summary-card__value">{formatProzent(result.rabattProzent)} <span class="summary-card__unit">%</span></span>
             </div>
           {/if}
 
         {:else if modus === 'rueck-preis'}
           <div class="summary-card summary-card--primary">
-            <span class="summary-card__label">Ursprungspreis</span>
+            <span class="summary-card__label">{T.cardUrsprungspreis}</span>
             <span class="summary-card__value">{formatEuro(result.ursprungspreis)} <span class="summary-card__unit">€</span></span>
           </div>
           <div class="summary-card">
-            <span class="summary-card__label">Ersparnis</span>
+            <span class="summary-card__label">{T.cardSavingsAlt}</span>
             <span class="summary-card__value">−{formatEuro(result.rabattBetrag)} <span class="summary-card__unit">€</span></span>
           </div>
           <div class="summary-card">
-            <span class="summary-card__label">Endpreis</span>
+            <span class="summary-card__label">{T.cardEndpreis}</span>
             <span class="summary-card__value">{formatEuro(result.endpreis)} <span class="summary-card__unit">€</span></span>
           </div>
 
         {:else if modus === 'rueck-rabatt'}
           <div class="summary-card summary-card--primary">
-            <span class="summary-card__label">Rabatt</span>
+            <span class="summary-card__label">{T.cardRabatt}</span>
             <span class="summary-card__value">{formatProzent(result.rabattProzent)} <span class="summary-card__unit">%</span></span>
           </div>
           <div class="summary-card">
-            <span class="summary-card__label">Du sparst</span>
+            <span class="summary-card__label">{T.cardSavings}</span>
             <span class="summary-card__value">−{formatEuro(result.rabattBetrag)} <span class="summary-card__unit">€</span></span>
           </div>
           <div class="summary-card">
-            <span class="summary-card__label">Ursprungspreis</span>
+            <span class="summary-card__label">{T.cardUrsprungspreis}</span>
             <span class="summary-card__value">{formatEuro(result.ursprungspreis)} <span class="summary-card__unit">€</span></span>
           </div>
         {/if}
@@ -401,30 +402,28 @@
 
       <!-- Additivfallen-Erklärung (Kettenrabatt, White-Space-Feature Dossier §9 H1) -->
       {#if modus === 'kette' && additivFalle !== null}
-        <div class="additiv-box" role="note" aria-label="Erklärung: Warum addieren sich Rabatte nicht?">
+        <div class="additiv-box" role="note" aria-label={T.additivAria}>
           <div class="additiv-box__header">
             <span class="additiv-box__icon" aria-hidden="true">i</span>
-            <strong>Warum {formatProzent(rabatt1)}&nbsp;% + {formatProzent(rabatt2)}&nbsp;% ≠ {formatProzent(additivFalle.naive)}&nbsp;% Gesamtrabatt?</strong>
+            <strong>{T.additivHeader.replace('{r1}', formatProzent(rabatt1)).replace('{r2}', formatProzent(rabatt2)).replace('{naive}', formatProzent(additivFalle.naive))}</strong>
           </div>
           <p class="additiv-box__text">
-            Jeder Rabatt wird auf den <em>bereits reduzierten</em> Preis angewendet. Der zweite Rabatt
-            bezieht sich also nicht mehr auf den Originalpreis, sondern auf den günstigeren Zwischenpreis.
+            {T.additivExplanation}
           </p>
-          <div class="additiv-box__math" aria-label="Rechenweg Kettenrabatt">
+          <div class="additiv-box__math" aria-label={T.additivMathAria}>
             <span class="additiv-box__calc">
-              {formatProzent(rabatt1)}&nbsp;%&thinsp;+&thinsp;{formatProzent(rabatt2)}&nbsp;%
-              <span class="calc--wrong">≠&thinsp;{formatProzent(additivFalle.naive)}&nbsp;%</span>
+              {@html T.additivCalcWrongHtml.replace('{r1}', formatProzent(rabatt1)).replace('{r2}', formatProzent(rabatt2)).replace('{naive}', formatProzent(additivFalle.naive))}
             </span>
             <span class="additiv-box__sep" aria-hidden="true">→</span>
             <span class="additiv-box__calc">
-              Richtig: <span class="calc--right">{formatProzent(additivFalle.richtig)}&nbsp;%</span>
+              {@html T.additivCalcRightHtml.replace('{right}', formatProzent(additivFalle.richtig))}
             </span>
           </div>
         </div>
       {/if}
 
     {:else if !hasErrors}
-      <p class="empty-state">Gib die Werte ein, um das Ergebnis sofort zu sehen.</p>
+      <p class="empty-state">{T.emptyState}</p>
     {/if}
 
   </div><!-- /results -->
@@ -436,7 +435,7 @@
 
   <!-- Privacy Badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </div><!-- /rabatt-tool -->
@@ -689,12 +688,13 @@
     font-size: 0.75rem;
   }
 
-  .calc--wrong {
+  /* Used inside {@html} — must be :global for Svelte scoped-CSS visibility. */
+  .additiv-box :global(.calc--wrong) {
     color: var(--color-error);
     text-decoration: line-through;
   }
 
-  .calc--right {
+  .additiv-box :global(.calc--right) {
     color: var(--color-success);
     font-weight: 600;
   }

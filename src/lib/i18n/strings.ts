@@ -612,6 +612,68 @@ export interface UiStrings {
       // Privacy
       privacyBadge: string;
     };
+    discountCalculator: {
+      regionAria: string;
+      // Mode
+      modeLabel: string;
+      modeBarAria: string;
+      modeStandard: string;
+      modeRueckPreis: string;
+      modeRueckRabatt: string;
+      modeKette: string;
+      // Inputs
+      ursprungspreisLabel: string;
+      ursprungspreisPlaceholder: string;
+      ursprungspreisAria: string;
+      endpreisLabelPaid: string;
+      endpreisLabel: string;
+      endpreisPlaceholder: string;
+      endpreisAria: string;
+      rabattLabel: string;
+      rabattPlaceholder: string;
+      rabattAria: string;
+      rabatt1Label: string;
+      rabatt1Placeholder: string;
+      rabatt1Aria: string;
+      rabatt2Label: string;
+      rabatt2Placeholder: string;
+      rabatt2Aria: string;
+      // Validation
+      errAmountRequired: string;
+      errAmountPositive: string;
+      errAmountMax: string;
+      errEndpreisRequired: string;
+      errEndpreisNegative: string;
+      errEndpreisGreater: string;
+      errRabattRequired: string;
+      errRabattNegative: string;
+      errRabattMax: string;
+      errRabatt1Required: string;
+      errRabattRange: string;
+      errRabatt2Required: string;
+      // Results
+      resultsAria: string;
+      cardEndpreis: string;
+      cardSavings: string;
+      cardSavingsAlt: string;
+      cardRabatt: string;
+      cardGesamtRabatt: string;
+      cardUrsprungspreis: string;
+      // Additiv-Falle
+      /** {r1} {r2} {naive} */
+      additivAria: string;
+      /** {r1} {r2} {naive} */
+      additivHeader: string;
+      additivExplanation: string;
+      additivMathAria: string;
+      /** {r1} {r2} {naive} */
+      additivCalcWrongHtml: string;
+      /** {right} */
+      additivCalcRightHtml: string;
+      // Empty / privacy
+      emptyState: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -1175,6 +1237,61 @@ const strings: Record<Lang, UiStrings> = {
         emptyStateToHourly: 'Jahresgehalt eingeben — Stundenlohn und alle Zeiträume erscheinen sofort.',
         privacyBadge: 'Alle Berechnungen lokal im Browser · Deine Gehaltsinfos verlassen nicht dein Gerät · Kein Tracking',
       },
+      discountCalculator: {
+        regionAria: 'Rabatt-Rechner',
+        modeLabel: 'Berechne',
+        modeBarAria: 'Berechnungsmodus auswählen',
+        modeStandard: 'Endpreis',
+        modeRueckPreis: 'Ursprungspreis',
+        modeRueckRabatt: 'Rabatt %',
+        modeKette: 'Kettenrabatt',
+        ursprungspreisLabel: 'Ursprungspreis',
+        ursprungspreisPlaceholder: 'z.B. 100',
+        ursprungspreisAria: 'Ursprungspreis in Euro',
+        endpreisLabelPaid: 'Endpreis (bezahlt)',
+        endpreisLabel: 'Endpreis',
+        endpreisPlaceholder: 'z.B. 80',
+        endpreisAria: 'Endpreis in Euro',
+        rabattLabel: 'Rabatt',
+        rabattPlaceholder: 'z.B. 20',
+        rabattAria: 'Rabatt in Prozent',
+        rabatt1Label: 'Rabatt 1',
+        rabatt1Placeholder: 'z.B. 15',
+        rabatt1Aria: 'Erster Rabattsatz in Prozent',
+        rabatt2Label: 'Rabatt 2',
+        rabatt2Placeholder: 'z.B. 8',
+        rabatt2Aria: 'Zweiter Rabattsatz in Prozent',
+        errAmountRequired: 'Bitte einen Betrag eingeben.',
+        errAmountPositive: 'Bitte einen positiven Betrag eingeben.',
+        errAmountMax: 'Maximalbetrag: 9.999.999 €',
+        errEndpreisRequired: 'Bitte einen Endpreis eingeben.',
+        errEndpreisNegative: 'Endpreis muss ≥ 0 sein.',
+        errEndpreisGreater: 'Endpreis darf nicht größer als Ursprungspreis sein.',
+        errRabattRequired: 'Bitte einen Rabatt-Prozentsatz eingeben.',
+        errRabattNegative: 'Rabatt muss ≥ 0 % sein.',
+        errRabattMax: 'Rabatt kann nicht mehr als 100 % betragen.',
+        errRabatt1Required: 'Bitte Rabatt 1 eingeben.',
+        errRabattRange: 'Rabatt: 0–100 %',
+        errRabatt2Required: 'Bitte Rabatt 2 eingeben.',
+        resultsAria: 'Berechnungsergebnis',
+        cardEndpreis: 'Endpreis',
+        cardSavings: 'Du sparst',
+        cardSavingsAlt: 'Ersparnis',
+        cardRabatt: 'Rabatt',
+        cardGesamtRabatt: 'Gesamtrabatt',
+        cardUrsprungspreis: 'Ursprungspreis',
+        additivAria: 'Erklärung: Warum addieren sich Rabatte nicht?',
+        additivHeader: 'Warum {r1} % + {r2} % ≠ {naive} % Gesamtrabatt?',
+        additivExplanation:
+          'Jeder Rabatt wird auf den bereits reduzierten Preis angewendet. Der zweite Rabatt bezieht sich also nicht mehr auf den Originalpreis, sondern auf den günstigeren Zwischenpreis.',
+        additivMathAria: 'Rechenweg Kettenrabatt',
+        additivCalcWrongHtml:
+          '{r1}&nbsp;%&thinsp;+&thinsp;{r2}&nbsp;% <span class="calc--wrong">≠&thinsp;{naive}&nbsp;%</span>',
+        additivCalcRightHtml:
+          'Richtig: <span class="calc--right">{right}&nbsp;%</span>',
+        emptyState: 'Gib die Werte ein, um das Ergebnis sofort zu sehen.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+      },
     },
   },
 
@@ -1737,6 +1854,61 @@ const strings: Record<Lang, UiStrings> = {
         emptyStateToSalary: 'Enter hourly wage — yearly, monthly, weekly and daily values appear instantly.',
         emptyStateToHourly: 'Enter annual salary — hourly wage and all periods appear instantly.',
         privacyBadge: 'All calculations run locally in your browser · Your salary data never leaves your device · No tracking',
+      },
+      discountCalculator: {
+        regionAria: 'Discount calculator',
+        modeLabel: 'Calculate',
+        modeBarAria: 'Select calculation mode',
+        modeStandard: 'Final price',
+        modeRueckPreis: 'Original price',
+        modeRueckRabatt: 'Discount %',
+        modeKette: 'Chain discount',
+        ursprungspreisLabel: 'Original price',
+        ursprungspreisPlaceholder: 'e.g. 100',
+        ursprungspreisAria: 'Original price in euros',
+        endpreisLabelPaid: 'Final price (paid)',
+        endpreisLabel: 'Final price',
+        endpreisPlaceholder: 'e.g. 80',
+        endpreisAria: 'Final price in euros',
+        rabattLabel: 'Discount',
+        rabattPlaceholder: 'e.g. 20',
+        rabattAria: 'Discount in percent',
+        rabatt1Label: 'Discount 1',
+        rabatt1Placeholder: 'e.g. 15',
+        rabatt1Aria: 'First discount rate in percent',
+        rabatt2Label: 'Discount 2',
+        rabatt2Placeholder: 'e.g. 8',
+        rabatt2Aria: 'Second discount rate in percent',
+        errAmountRequired: 'Please enter an amount.',
+        errAmountPositive: 'Please enter a positive amount.',
+        errAmountMax: 'Maximum amount: 9,999,999 €',
+        errEndpreisRequired: 'Please enter a final price.',
+        errEndpreisNegative: 'Final price must be ≥ 0.',
+        errEndpreisGreater: 'Final price cannot exceed the original price.',
+        errRabattRequired: 'Please enter a discount percentage.',
+        errRabattNegative: 'Discount must be ≥ 0 %.',
+        errRabattMax: 'Discount cannot exceed 100 %.',
+        errRabatt1Required: 'Please enter discount 1.',
+        errRabattRange: 'Discount: 0–100 %',
+        errRabatt2Required: 'Please enter discount 2.',
+        resultsAria: 'Calculation result',
+        cardEndpreis: 'Final price',
+        cardSavings: 'You save',
+        cardSavingsAlt: 'Savings',
+        cardRabatt: 'Discount',
+        cardGesamtRabatt: 'Total discount',
+        cardUrsprungspreis: 'Original price',
+        additivAria: 'Explanation: Why do discounts not add up?',
+        additivHeader: 'Why does {r1} % + {r2} % ≠ {naive} % total discount?',
+        additivExplanation:
+          'Each discount is applied to the already-reduced price. The second discount refers not to the original price, but to the lower intermediate price.',
+        additivMathAria: 'Chain-discount calculation',
+        additivCalcWrongHtml:
+          '{r1}&nbsp;%&thinsp;+&thinsp;{r2}&nbsp;% <span class="calc--wrong">≠&thinsp;{naive}&nbsp;%</span>',
+        additivCalcRightHtml:
+          'Correct: <span class="calc--right">{right}&nbsp;%</span>',
+        emptyState: 'Enter the values to see the result instantly.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },
     },
   },
