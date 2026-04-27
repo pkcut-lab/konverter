@@ -92,12 +92,13 @@ describe('FooterToolsList', () => {
     expect(componentSrc).toMatch(/strings\.header\.nav\.tools/);
   });
 
-  it('does NOT render overflow link when count <= 8', async () => {
-    // CAP is 8. With 3 mocked tools, `overflow` is 0, overflow-<li> is not
-    // emitted. Assert both the CAP constant and the conditional guard.
+  it('does NOT render overflow link when count <= CAP', async () => {
+    // CAP is 16 (raised 2026-04-27, audit P1-N — was 8). With 3 mocked
+    // tools, `overflow` is 0, overflow-<li> is not emitted. Assert both
+    // the CAP constant and the conditional guard.
     const tools = await listToolsForLang('de');
-    expect(tools.length).toBeLessThanOrEqual(8);
-    expect(componentSrc).toMatch(/const CAP = 8;/);
+    expect(tools.length).toBeLessThanOrEqual(16);
+    expect(componentSrc).toMatch(/const CAP = 16;/);
     expect(componentSrc).toMatch(/\{overflow > 0 && \(/);
   });
 });

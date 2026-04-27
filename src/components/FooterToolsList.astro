@@ -11,7 +11,12 @@ interface Props {
 const { lang } = Astro.props;
 const strings = t(lang);
 
-const CAP = 8;
+// 2026-04-27 audit P1-N: at CAP=8, only 8/73 tools were footer-discoverable
+// — the other 65 had to be reached through search or the tools index. CAP=16
+// roughly doubles in-footer coverage while staying readable on mobile (the
+// list is single-column <40rem and 2-column ≥40rem) and avoiding excessive
+// page weight on every route.
+const CAP = 16;
 const tools = await listToolsForLang(lang);
 const visible = tools.slice(0, CAP);
 const overflow = Math.max(0, tools.length - CAP);
