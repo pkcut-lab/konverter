@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-27 — i18n-Migration Phase A + B1 + B2 + B3 vollständig · 48 Files · 1853/1853 Tests grün · 0 errors · Commit `0d00bd9`
+**Letztes Update:** 2026-04-27 — i18n-Migration Phase A + B1 + B2 + B3 + B4 vollständig · 28 Files · 1853/1853 Tests grün · 0 errors · Commit `f7d9d18`
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
 
 ---
