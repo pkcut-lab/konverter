@@ -50,6 +50,10 @@ import InterestCalculatorEnTool from '../../components/tools/InterestCalculatorE
 // with i18n labels) — replaces the generic-Formatter rendering. Audit
 // P0-2.4 (2026-04-27).
 import UnixTimestampTool from '../../components/tools/UnixTimestampTool.svelte';
+// jpg-to-pdf gets multi-image + reorder + page-size picker — replaces the
+// generic single-input FileTool. The runtime convertImagesToPdf was already
+// multi-image-capable; only the UI was single. Audit P0-2.5 (2026-04-27).
+import JpgToPdfTool from '../../components/tools/JpgToPdfTool.svelte';
 import ToolStats from '../../components/ToolStats.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
@@ -350,7 +354,10 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'file-tool' && config.id === VIDEO_BG_REMOVE_TOOL_ID && (
             <VideoHintergrundEntfernenTool config={config} lang={entry.data.language as Lang} client:load />
           )}
-          {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && (
+          {config.type === 'file-tool' && config.id === 'jpg-to-pdf' && (
+            <JpgToPdfTool config={config} lang={entry.data.language as Lang} client:load />
+          )}
+          {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && config.id !== 'jpg-to-pdf' && (
             <FileTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
