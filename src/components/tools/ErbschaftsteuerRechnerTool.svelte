@@ -18,18 +18,19 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.inheritanceTaxCalculator);
 
-  const VERWANDTSCHAFT_OPTIONS: { value: Verwandtschaftsgrad; label: string }[] = [
-    { value: 'ehepartner',                  label: 'Ehepartner / Lebenspartner' },
-    { value: 'kind',                        label: 'Kind (unter 28 Jahre)' },
-    { value: 'enkel-eltern-verstorben',     label: 'Enkel (Eltern verstorben)' },
-    { value: 'enkel-eltern-leben',          label: 'Enkel (Eltern leben)' },
-    { value: 'eltern-grosseltern',          label: 'Eltern / Großeltern' },
-    { value: 'geschwister',                 label: 'Geschwister' },
-    { value: 'nichten-neffen',              label: 'Nichten / Neffen' },
-    { value: 'schwiegereltern-stiefeltern', label: 'Schwiegereltern / Stiefeltern' },
-    { value: 'sonstiges',                   label: 'Nicht verwandt' },
-  ];
+  const VERWANDTSCHAFT_OPTIONS = $derived<{ value: Verwandtschaftsgrad; label: string }[]>([
+    { value: 'ehepartner',                  label: T.vgEhepartner },
+    { value: 'kind',                        label: T.vgKind },
+    { value: 'enkel-eltern-verstorben',     label: T.vgEnkelEltVerstorben },
+    { value: 'enkel-eltern-leben',          label: T.vgEnkelEltLeben },
+    { value: 'eltern-grosseltern',          label: T.vgElternGroßeltern },
+    { value: 'geschwister',                 label: T.vgGeschwister },
+    { value: 'nichten-neffen',              label: T.vgNichtenNeffen },
+    { value: 'schwiegereltern-stiefeltern', label: T.vgSchwiegerStief },
+    { value: 'sonstiges',                   label: T.vgSonstiges },
+  ]);
 
   // ---- Eingaben ----
   let verwandtschaft = $state<Verwandtschaftsgrad>('ehepartner');
@@ -59,37 +60,37 @@
   // ---- Validierung ----
   const nachlasswertError = $derived.by<string | null>(() => {
     if (nachlasswertStr.trim() === '') return null;
-    if (!Number.isFinite(nachlasswert) || nachlasswert < 0) return 'Bitte einen gültigen Betrag eingeben.';
+    if (!Number.isFinite(nachlasswert) || nachlasswert < 0) return T.errInvalidAmount;
     return null;
   });
 
   const schuldenError = $derived.by<string | null>(() => {
     if (schuldenStr.trim() === '') return null;
-    if (!Number.isFinite(schulden) || schulden < 0) return 'Bitte einen gültigen Betrag eingeben.';
+    if (!Number.isFinite(schulden) || schulden < 0) return T.errInvalidAmount;
     return null;
   });
 
   const familienheimError = $derived.by<string | null>(() => {
     if (familienheimStr.trim() === '') return null;
-    if (!Number.isFinite(familienheimWert) || familienheimWert < 0) return 'Bitte einen gültigen Betrag eingeben.';
+    if (!Number.isFinite(familienheimWert) || familienheimWert < 0) return T.errInvalidAmount;
     return null;
   });
 
   const mietwohnError = $derived.by<string | null>(() => {
     if (!mietwohnAbschlag || mietwohnStr.trim() === '') return null;
-    if (!Number.isFinite(mietwohnWert) || mietwohnWert < 0) return 'Bitte einen gültigen Betrag eingeben.';
+    if (!Number.isFinite(mietwohnWert) || mietwohnWert < 0) return T.errInvalidAmount;
     return null;
   });
 
   const vorschenkungError = $derived.by<string | null>(() => {
     if (vorschenkungStr.trim() === '') return null;
-    if (!Number.isFinite(vorschenkungen) || vorschenkungen < 0) return 'Bitte einen gültigen Betrag eingeben.';
+    if (!Number.isFinite(vorschenkungen) || vorschenkungen < 0) return T.errInvalidAmount;
     return null;
   });
 
   const kindesalterError = $derived.by<string | null>(() => {
     if (!isKind || kindesalterStr.trim() === '') return null;
-    if (!Number.isFinite(kindesalter) || kindesalter < 0 || kindesalter > 150) return 'Bitte ein gültiges Alter eingeben (0–150).';
+    if (!Number.isFinite(kindesalter) || kindesalter < 0 || kindesalter > 150) return T.errInvalidAge;
     return null;
   });
 
@@ -124,29 +125,28 @@
     const r = result;
     const vgLabel = VERWANDTSCHAFT_OPTIONS.find((o) => o.value === verwandtschaft)?.label ?? verwandtschaft;
     const lines: string[] = [
-      '=== Erbschaftsteuer-Berechnung (kittokit.com) ===',
+      T.exportTitle,
       '',
-      `Verwandtschaftsgrad:        ${vgLabel}`,
-      `Steuerklasse:               ${r.steuerklasse}`,
-      `Nachlasswert (brutto):      ${formatEuro(r.nachlasswertBrutto)} €`,
-      r.schulden > 0 ? `Schulden / Verbindlichk.:  −${formatEuro(r.schulden)} €` : null,
-      `Erbfallkostenpauschale:    −${formatEuro(r.erbfallkostenpauschale)} €`,
-      `Hausrat-Pauschale:         −${formatEuro(r.hausratPauschale)} €`,
-      r.familienheimAbzug > 0 ? `Familienheim (§13):        −${formatEuro(r.familienheimAbzug)} €` : null,
-      r.mietwohnAbzug > 0 ? `Mietwohn-Abschlag (§13d):  −${formatEuro(r.mietwohnAbzug)} €` : null,
-      `Stpfl. Erwerb (vor FB):     ${formatEuro(r.stpflErwerbVorFreibetrag)} €`,
-      `Persönl. Freibetrag (§16): −${formatEuro(r.freibetrag)} €`,
-      r.versorgungsfreibetrag > 0 ? `Versorgungsfreibetrag §17: −${formatEuro(r.versorgungsfreibetrag)} €` : null,
-      r.vorschenkungen > 0 ? `Vorschenkungen (§14):      +${formatEuro(r.vorschenkungen)} €` : null,
-      `Stpfl. Erwerb (netto):      ${formatEuro(r.stpflErwerbNetto)} €`,
+      `${T.exportLabelVg}        ${vgLabel}`,
+      `${T.exportLabelKlasse}               ${r.steuerklasse}`,
+      `${T.exportLabelNachlass}      ${formatEuro(r.nachlasswertBrutto)} €`,
+      r.schulden > 0 ? `${T.exportLabelSchulden}  −${formatEuro(r.schulden)} €` : null,
+      `${T.exportLabelErbfallkosten}    −${formatEuro(r.erbfallkostenpauschale)} €`,
+      `${T.exportLabelHausrat}         −${formatEuro(r.hausratPauschale)} €`,
+      r.familienheimAbzug > 0 ? `${T.exportLabelFamilienheim}        −${formatEuro(r.familienheimAbzug)} €` : null,
+      r.mietwohnAbzug > 0 ? `${T.exportLabelMietwohn}  −${formatEuro(r.mietwohnAbzug)} €` : null,
+      `${T.exportLabelStpflVor}     ${formatEuro(r.stpflErwerbVorFreibetrag)} €`,
+      `${T.exportLabelFreibetrag} −${formatEuro(r.freibetrag)} €`,
+      r.versorgungsfreibetrag > 0 ? `${T.exportLabelVersorgung} −${formatEuro(r.versorgungsfreibetrag)} €` : null,
+      r.vorschenkungen > 0 ? `${T.exportLabelVorschenkung}      +${formatEuro(r.vorschenkungen)} €` : null,
+      `${T.exportLabelStpflNetto}      ${formatEuro(r.stpflErwerbNetto)} €`,
       '',
-      `Steuersatz:                 ${formatProzent(r.angewandterSatz)}`,
-      `ERBSCHAFTSTEUER:            ${formatEuroRound(r.erbschaftsteuer)} €`,
-      `Netto-Erbe:                 ${formatEuroRound(r.nettoErbe)} €`,
+      `${T.exportLabelSatz}                 ${formatProzent(r.angewandterSatz)}`,
+      `${T.exportLabelSteuer}            ${formatEuroRound(r.erbschaftsteuer)} €`,
+      `${T.exportLabelNetto}                 ${formatEuroRound(r.nettoErbe)} €`,
       '',
-      'Hinweis: Diese Berechnung dient nur als erste Orientierung.',
-      'Betriebsvermögen, internationale Erbschaften und Vorerbschaft',
-      'erfordern Fachberatung (§§ 13a, 13b ErbStG, DBA).',
+      T.exportNote1,
+      T.exportNote2,
     ].filter((l): l is string => l !== null);
     try {
       await navigator.clipboard.writeText(lines.join('\n'));
@@ -172,17 +172,17 @@
   }
 </script>
 
-<div class="erb-tool" aria-label="Erbschaftsteuer-Rechner">
+<div class="erb-tool" aria-label={T.regionAria}>
 
   <!-- Verwandtschaftsgrad -->
   <div class="input-field input-field--full">
-    <label class="input-field__label" for="inp-verwandtschaft">Verwandtschaftsgrad</label>
+    <label class="input-field__label" for="inp-verwandtschaft">{T.verwandtschaftLabel}</label>
     <div class="input-field__wrap input-field__wrap--select">
       <select
         id="inp-verwandtschaft"
         class="input-field__select"
         bind:value={verwandtschaft}
-        aria-label="Verwandtschaftsgrad zum Erblasser"
+        aria-label={T.verwandtschaftAria}
       >
         {#each VERWANDTSCHAFT_OPTIONS as opt (opt.value)}
           <option value={opt.value}>{opt.label}</option>
@@ -191,19 +191,19 @@
     </div>
     <p class="field-hint">
       {#if verwandtschaft === 'ehepartner'}
-        Steuerklasse I · Freibetrag 500.000&nbsp;€ · Versorgungsfreibetrag 256.000&nbsp;€
+        {T.hintEhepartner}
       {:else if verwandtschaft === 'kind'}
-        Steuerklasse I · Freibetrag 400.000&nbsp;€ · Versorgungsfreibetrag altersabhängig
+        {T.hintKind}
       {:else if verwandtschaft === 'enkel-eltern-verstorben'}
-        Steuerklasse I · Freibetrag 400.000&nbsp;€
+        {T.hintEnkelEltVerstorben}
       {:else if verwandtschaft === 'enkel-eltern-leben'}
-        Steuerklasse I · Freibetrag 200.000&nbsp;€
+        {T.hintEnkelEltLeben}
       {:else if verwandtschaft === 'eltern-grosseltern'}
-        Steuerklasse I · Freibetrag 100.000&nbsp;€
+        {T.hintElternGroßeltern}
       {:else if verwandtschaft === 'geschwister' || verwandtschaft === 'nichten-neffen' || verwandtschaft === 'schwiegereltern-stiefeltern'}
-        Steuerklasse II · Freibetrag 20.000&nbsp;€
+        {T.hintKlasse2}
       {:else}
-        Steuerklasse III · Freibetrag 20.000&nbsp;€
+        {T.hintKlasse3}
       {/if}
     </p>
   </div>
@@ -212,8 +212,8 @@
   {#if isKind}
     <div class="input-field">
       <label class="input-field__label" for="inp-alter">
-        Alter des Kindes
-        <span class="default-badge">für Versorgungsfreibetrag</span>
+        {T.kindesalterLabel}
+        <span class="default-badge">{T.kindesalterBadge}</span>
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={kindesalterError !== null}>
         <input
@@ -221,13 +221,13 @@
           type="text"
           inputmode="numeric"
           class="input-field__input"
-          placeholder="z.B. 12"
+          placeholder={T.kindesalterPlaceholder}
           bind:value={kindesalterStr}
-          aria-label="Alter des Kindes in Jahren"
+          aria-label={T.kindesalterAria}
           aria-invalid={kindesalterError !== null}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">Jahre</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitYears}</span>
       </div>
       {#if kindesalterError}
         <p class="field-error" role="alert">{kindesalterError}</p>
@@ -238,16 +238,16 @@
   <!-- Nachlasswert -->
   <div class="inputs-grid">
     <div class="input-field">
-      <label class="input-field__label" for="inp-nachlasswert">Nachlasswert (brutto)</label>
+      <label class="input-field__label" for="inp-nachlasswert">{T.nachlasswertLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={nachlasswertError !== null}>
         <input
           id="inp-nachlasswert"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 500.000"
+          placeholder={T.nachlasswertPlaceholder}
           bind:value={nachlasswertStr}
-          aria-label="Gesamter Nachlasswert in Euro"
+          aria-label={T.nachlasswertAria}
           aria-invalid={nachlasswertError !== null}
           autocomplete="off"
         />
@@ -260,8 +260,8 @@
 
     <div class="input-field">
       <label class="input-field__label" for="inp-schulden">
-        Schulden / Verbindlichkeiten
-        <span class="default-badge">optional</span>
+        {T.schuldenLabel}
+        <span class="default-badge">{T.optionalBadge}</span>
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={schuldenError !== null}>
         <input
@@ -269,9 +269,9 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 50.000"
+          placeholder={T.schuldenPlaceholder}
           bind:value={schuldenStr}
-          aria-label="Schulden und Verbindlichkeiten des Nachlasses in Euro"
+          aria-label={T.schuldenAria}
           aria-invalid={schuldenError !== null}
           autocomplete="off"
         />
@@ -285,8 +285,8 @@
     <!-- §13 Familienheim -->
     <div class="input-field">
       <label class="input-field__label" for="inp-familienheim">
-        Familienheim-Wert (§13 befreit)
-        <span class="default-badge">optional</span>
+        {T.familienheimLabel}
+        <span class="default-badge">{T.optionalBadge}</span>
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={familienheimError !== null}>
         <input
@@ -294,9 +294,9 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 300.000"
+          placeholder={T.familienheimPlaceholder}
           bind:value={familienheimStr}
-          aria-label="Wert des selbstgenutzten Familienheims in Euro (§13 ErbStG vollständig steuerfrei)"
+          aria-label={T.familienheimAria}
           aria-invalid={familienheimError !== null}
           autocomplete="off"
         />
@@ -310,8 +310,8 @@
     <!-- §14 Vorschenkungen -->
     <div class="input-field">
       <label class="input-field__label" for="inp-vorschenk">
-        Vorschenkungen (letzte 10 Jahre, §14)
-        <span class="default-badge">optional</span>
+        {T.vorschenkungLabel}
+        <span class="default-badge">{T.optionalBadge}</span>
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={vorschenkungError !== null}>
         <input
@@ -319,9 +319,9 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 100.000"
+          placeholder={T.vorschenkungPlaceholder}
           bind:value={vorschenkungStr}
-          aria-label="Wert der erhaltenen Schenkungen der letzten 10 Jahre in Euro"
+          aria-label={T.vorschenkungAria}
           aria-invalid={vorschenkungError !== null}
           autocomplete="off"
         />
@@ -340,10 +340,10 @@
         type="checkbox"
         class="checkbox-input"
         bind:checked={mietwohnAbschlag}
-        aria-label="10%-Abschlag auf Mietwohngrundstücke nach §13d ErbStG anwenden"
+        aria-label={T.mietwohnCheckboxAria}
       />
       <span class="checkbox-text">
-        10&nbsp;%-Abschlag Mietwohngrundstück (§13d ErbStG, ab 2023)
+        {T.mietwohnCheckboxText}
       </span>
     </label>
   </div>
@@ -351,7 +351,7 @@
   {#if mietwohnAbschlag}
     <div class="input-field">
       <label class="input-field__label" for="inp-mietwohn">
-        Wert der Mietwohnimmobilie
+        {T.mietwohnLabel}
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={mietwohnError !== null}>
         <input
@@ -359,9 +359,9 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 400.000"
+          placeholder={T.mietwohnPlaceholder}
           bind:value={mietwohnStr}
-          aria-label="Wert der Mietwohnimmobilie in Euro"
+          aria-label={T.mietwohnAria}
           aria-invalid={mietwohnError !== null}
           autocomplete="off"
         />
@@ -375,85 +375,85 @@
 
   <!-- Ergebnis -->
   {#if result}
-    <div class="result-section" aria-live="polite" aria-label="Berechnungsergebnis">
+    <div class="result-section" aria-live="polite" aria-label={T.resultsAria}>
 
       <!-- Haupt-Kacheln -->
       <div class="result-kacheln">
         <div class="kachel kachel--primary">
-          <span class="kachel__label">Erbschaftsteuer</span>
+          <span class="kachel__label">{T.kachelSteuer}</span>
           <span class="kachel__value">{formatEuroRound(result.erbschaftsteuer)}&nbsp;€</span>
-          <span class="kachel__sub">Steuersatz {formatProzent(result.angewandterSatz)}</span>
+          <span class="kachel__sub">{T.kachelSteuerSubTemplate.replace('{satz}', formatProzent(result.angewandterSatz))}</span>
         </div>
         <div class="kachel">
-          <span class="kachel__label">Netto-Erbe</span>
+          <span class="kachel__label">{T.kachelNetto}</span>
           <span class="kachel__value">{formatEuroRound(result.nettoErbe)}&nbsp;€</span>
-          <span class="kachel__sub">nach Steuer</span>
+          <span class="kachel__sub">{T.kachelNettoSub}</span>
         </div>
         <div class="kachel">
-          <span class="kachel__label">Steuerklasse</span>
+          <span class="kachel__label">{T.kachelKlasse}</span>
           <span class="kachel__value">
             {#if result.steuerklasse === 1}I{:else if result.steuerklasse === 2}II{:else}III{/if}
           </span>
-          <span class="kachel__sub">§15 ErbStG</span>
+          <span class="kachel__sub">{T.kachelKlasseSub}</span>
         </div>
       </div>
 
       <!-- Aufschlüsselung -->
-      <div class="aufschluesselung" aria-label="Berechnungsaufschlüsselung">
-        <div class="aufschluesselung__title">Berechnungsweg</div>
+      <div class="aufschluesselung" aria-label={T.aufschluesselungAria}>
+        <div class="aufschluesselung__title">{T.aufTitle}</div>
         <dl class="aufschluesselung__list">
           <div class="aufschluesselung__row">
-            <dt>Nachlasswert (brutto)</dt>
+            <dt>{T.rowNachlassBrutto}</dt>
             <dd>{formatEuro(result.nachlasswertBrutto)}&nbsp;€</dd>
           </div>
           {#if result.schulden > 0}
             <div class="aufschluesselung__row aufschluesselung__row--abzug">
-              <dt>Schulden / Verbindlichk.</dt>
+              <dt>{T.rowSchulden}</dt>
               <dd>−{formatEuro(result.schulden)}&nbsp;€</dd>
             </div>
           {/if}
           <div class="aufschluesselung__row aufschluesselung__row--abzug">
-            <dt>Erbfallkosten-Pauschale (§10 Abs. 5)</dt>
+            <dt>{T.rowErbfallkosten}</dt>
             <dd>−{formatEuro(result.erbfallkostenpauschale)}&nbsp;€</dd>
           </div>
           <div class="aufschluesselung__row aufschluesselung__row--abzug">
-            <dt>Hausrat-Pauschale (§13 Abs. 1 Nr. 1)</dt>
+            <dt>{T.rowHausrat}</dt>
             <dd>−{formatEuro(result.hausratPauschale)}&nbsp;€</dd>
           </div>
           {#if result.familienheimAbzug > 0}
             <div class="aufschluesselung__row aufschluesselung__row--abzug">
-              <dt>Familienheim steuerfrei (§13)</dt>
+              <dt>{T.rowFamilienheim}</dt>
               <dd>−{formatEuro(result.familienheimAbzug)}&nbsp;€</dd>
             </div>
           {/if}
           {#if result.mietwohnAbzug > 0}
             <div class="aufschluesselung__row aufschluesselung__row--abzug">
-              <dt>10&nbsp;%-Abschlag Mietwohng. (§13d)</dt>
+              <dt>{T.rowMietwohnAbzug}</dt>
               <dd>−{formatEuro(result.mietwohnAbzug)}&nbsp;€</dd>
             </div>
           {/if}
           <div class="aufschluesselung__row aufschluesselung__row--subtotal">
-            <dt>Stpfl. Erwerb (vor Freibetrag)</dt>
+            <dt>{T.rowSubtotal}</dt>
             <dd>{formatEuro(result.stpflErwerbVorFreibetrag)}&nbsp;€</dd>
           </div>
           <div class="aufschluesselung__row aufschluesselung__row--abzug">
-            <dt>Persönl. Freibetrag (§16)</dt>
+            <dt>{T.rowFreibetrag}</dt>
             <dd>−{formatEuro(result.freibetrag)}&nbsp;€</dd>
           </div>
           {#if result.versorgungsfreibetrag > 0}
             <div class="aufschluesselung__row aufschluesselung__row--abzug">
-              <dt>Versorgungsfreibetrag (§17)</dt>
+              <dt>{T.rowVersorgungsfreibetrag}</dt>
               <dd>−{formatEuro(result.versorgungsfreibetrag)}&nbsp;€</dd>
             </div>
           {/if}
           {#if result.vorschenkungen > 0}
             <div class="aufschluesselung__row aufschluesselung__row--addition">
-              <dt>Vorschenkungen §14 (10 J.)</dt>
+              <dt>{T.rowVorschenkungen}</dt>
               <dd>+{formatEuro(result.vorschenkungen)}&nbsp;€</dd>
             </div>
           {/if}
           <div class="aufschluesselung__row aufschluesselung__row--total">
-            <dt>Stpfl. Erwerb (netto)</dt>
+            <dt>{T.rowTotal}</dt>
             <dd>{formatEuro(result.stpflErwerbNetto)}&nbsp;€</dd>
           </div>
         </dl>
@@ -461,9 +461,7 @@
 
       <!-- Disclaimer -->
       <p class="disclaimer">
-        Betriebsvermögen (§§&nbsp;13a/13b ErbStG), internationale Erbschaften sowie Vor-/Nacherbschaft
-        erfordern individuelle Fachberatung. Diese Berechnung ist eine erste Orientierung, kein Rechtsgutachten.
-        BVerfG-Entscheidung zu Betriebsvermögen-Verschonung steht noch aus.
+        {T.disclaimer}
       </p>
 
       <!-- Aktionen -->
@@ -474,21 +472,21 @@
           class:btn-copy--copied={copyState === 'copied'}
           class:btn-copy--error={copyState === 'error'}
           onclick={copyExport}
-          aria-label="Ergebnis als Text für Steuerberater kopieren"
+          aria-label={T.copyAria}
         >
           {#if copyState === 'copied'}
             {strings.toolsCommon.copied}
           {:else if copyState === 'error'}
-            Fehler
+            {T.copyError}
           {:else}
-            Ergebnis für Berater kopieren
+            {T.copyButton}
           {/if}
         </button>
         <button
           type="button"
           class="btn-reset"
           onclick={handleReset}
-          aria-label="Alle Eingaben zurücksetzen"
+          aria-label={T.resetAria}
         >
           {strings.toolsCommon.reset}
         </button>

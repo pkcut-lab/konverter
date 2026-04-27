@@ -877,6 +877,106 @@ export interface UiStrings {
       disclaimer: string;
       privacyBadge: string;
     };
+    inheritanceTaxCalculator: {
+      regionAria: string;
+      // Verwandtschaft
+      verwandtschaftLabel: string;
+      verwandtschaftAria: string;
+      vgEhepartner: string;
+      vgKind: string;
+      vgEnkelEltVerstorben: string;
+      vgEnkelEltLeben: string;
+      vgElternGroßeltern: string;
+      vgGeschwister: string;
+      vgNichtenNeffen: string;
+      vgSchwiegerStief: string;
+      vgSonstiges: string;
+      // Hint per relationship
+      hintEhepartner: string;
+      hintKind: string;
+      hintEnkelEltVerstorben: string;
+      hintEnkelEltLeben: string;
+      hintElternGroßeltern: string;
+      hintKlasse2: string;
+      hintKlasse3: string;
+      // Kindesalter
+      kindesalterLabel: string;
+      kindesalterBadge: string;
+      kindesalterPlaceholder: string;
+      kindesalterAria: string;
+      unitYears: string;
+      // Inputs
+      nachlasswertLabel: string;
+      nachlasswertPlaceholder: string;
+      nachlasswertAria: string;
+      schuldenLabel: string;
+      optionalBadge: string;
+      schuldenPlaceholder: string;
+      schuldenAria: string;
+      familienheimLabel: string;
+      familienheimPlaceholder: string;
+      familienheimAria: string;
+      vorschenkungLabel: string;
+      vorschenkungPlaceholder: string;
+      vorschenkungAria: string;
+      mietwohnCheckboxAria: string;
+      mietwohnCheckboxText: string;
+      mietwohnLabel: string;
+      mietwohnPlaceholder: string;
+      mietwohnAria: string;
+      // Validation
+      errInvalidAmount: string;
+      errInvalidAge: string;
+      // Result
+      resultsAria: string;
+      kachelSteuer: string;
+      /** {satz} */
+      kachelSteuerSubTemplate: string;
+      kachelNetto: string;
+      kachelNettoSub: string;
+      kachelKlasse: string;
+      kachelKlasseSub: string;
+      // Aufschlüsselung
+      aufschluesselungAria: string;
+      aufTitle: string;
+      rowNachlassBrutto: string;
+      rowSchulden: string;
+      rowErbfallkosten: string;
+      rowHausrat: string;
+      rowFamilienheim: string;
+      rowMietwohnAbzug: string;
+      rowSubtotal: string;
+      rowFreibetrag: string;
+      rowVersorgungsfreibetrag: string;
+      rowVorschenkungen: string;
+      rowTotal: string;
+      // Disclaimer / actions
+      disclaimer: string;
+      copyAria: string;
+      copyButton: string;
+      copyError: string;
+      resetAria: string;
+      // Export
+      exportTitle: string;
+      exportLabelVg: string;
+      exportLabelKlasse: string;
+      exportLabelNachlass: string;
+      exportLabelSchulden: string;
+      exportLabelErbfallkosten: string;
+      exportLabelHausrat: string;
+      exportLabelFamilienheim: string;
+      exportLabelMietwohn: string;
+      exportLabelStpflVor: string;
+      exportLabelFreibetrag: string;
+      exportLabelVersorgung: string;
+      exportLabelVorschenkung: string;
+      exportLabelStpflNetto: string;
+      exportLabelSatz: string;
+      exportLabelSteuer: string;
+      exportLabelNetto: string;
+      exportNote1: string;
+      exportNote2: string;
+    };
   };
 }
 
@@ -1671,6 +1771,97 @@ const strings: Record<Lang, UiStrings> = {
           'Diese Berechnung dient ausschließlich zur unverbindlichen Information. Der Leasingfaktor ist eine Vergleichskennzahl — er ersetzt keine vollständige Angebotsprüfung.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
       },
+      inheritanceTaxCalculator: {
+        regionAria: 'Erbschaftsteuer-Rechner',
+        verwandtschaftLabel: 'Verwandtschaftsgrad',
+        verwandtschaftAria: 'Verwandtschaftsgrad zum Erblasser',
+        vgEhepartner: 'Ehepartner / Lebenspartner',
+        vgKind: 'Kind (unter 28 Jahre)',
+        vgEnkelEltVerstorben: 'Enkel (Eltern verstorben)',
+        vgEnkelEltLeben: 'Enkel (Eltern leben)',
+        vgElternGroßeltern: 'Eltern / Großeltern',
+        vgGeschwister: 'Geschwister',
+        vgNichtenNeffen: 'Nichten / Neffen',
+        vgSchwiegerStief: 'Schwiegereltern / Stiefeltern',
+        vgSonstiges: 'Nicht verwandt',
+        hintEhepartner: 'Steuerklasse I · Freibetrag 500.000 € · Versorgungsfreibetrag 256.000 €',
+        hintKind: 'Steuerklasse I · Freibetrag 400.000 € · Versorgungsfreibetrag altersabhängig',
+        hintEnkelEltVerstorben: 'Steuerklasse I · Freibetrag 400.000 €',
+        hintEnkelEltLeben: 'Steuerklasse I · Freibetrag 200.000 €',
+        hintElternGroßeltern: 'Steuerklasse I · Freibetrag 100.000 €',
+        hintKlasse2: 'Steuerklasse II · Freibetrag 20.000 €',
+        hintKlasse3: 'Steuerklasse III · Freibetrag 20.000 €',
+        kindesalterLabel: 'Alter des Kindes',
+        kindesalterBadge: 'für Versorgungsfreibetrag',
+        kindesalterPlaceholder: 'z.B. 12',
+        kindesalterAria: 'Alter des Kindes in Jahren',
+        unitYears: 'Jahre',
+        nachlasswertLabel: 'Nachlasswert (brutto)',
+        nachlasswertPlaceholder: 'z.B. 500.000',
+        nachlasswertAria: 'Gesamter Nachlasswert in Euro',
+        schuldenLabel: 'Schulden / Verbindlichkeiten',
+        optionalBadge: 'optional',
+        schuldenPlaceholder: 'z.B. 50.000',
+        schuldenAria: 'Schulden und Verbindlichkeiten des Nachlasses in Euro',
+        familienheimLabel: 'Familienheim-Wert (§13 befreit)',
+        familienheimPlaceholder: 'z.B. 300.000',
+        familienheimAria: 'Wert des selbstgenutzten Familienheims in Euro (§13 ErbStG vollständig steuerfrei)',
+        vorschenkungLabel: 'Vorschenkungen (letzte 10 Jahre, §14)',
+        vorschenkungPlaceholder: 'z.B. 100.000',
+        vorschenkungAria: 'Wert der erhaltenen Schenkungen der letzten 10 Jahre in Euro',
+        mietwohnCheckboxAria: '10%-Abschlag auf Mietwohngrundstücke nach §13d ErbStG anwenden',
+        mietwohnCheckboxText: '10 %-Abschlag Mietwohngrundstück (§13d ErbStG, ab 2023)',
+        mietwohnLabel: 'Wert der Mietwohnimmobilie',
+        mietwohnPlaceholder: 'z.B. 400.000',
+        mietwohnAria: 'Wert der Mietwohnimmobilie in Euro',
+        errInvalidAmount: 'Bitte einen gültigen Betrag eingeben.',
+        errInvalidAge: 'Bitte ein gültiges Alter eingeben (0–150).',
+        resultsAria: 'Berechnungsergebnis',
+        kachelSteuer: 'Erbschaftsteuer',
+        kachelSteuerSubTemplate: 'Steuersatz {satz}',
+        kachelNetto: 'Netto-Erbe',
+        kachelNettoSub: 'nach Steuer',
+        kachelKlasse: 'Steuerklasse',
+        kachelKlasseSub: '§15 ErbStG',
+        aufschluesselungAria: 'Berechnungsaufschlüsselung',
+        aufTitle: 'Berechnungsweg',
+        rowNachlassBrutto: 'Nachlasswert (brutto)',
+        rowSchulden: 'Schulden / Verbindlichk.',
+        rowErbfallkosten: 'Erbfallkosten-Pauschale (§10 Abs. 5)',
+        rowHausrat: 'Hausrat-Pauschale (§13 Abs. 1 Nr. 1)',
+        rowFamilienheim: 'Familienheim steuerfrei (§13)',
+        rowMietwohnAbzug: '10 %-Abschlag Mietwohng. (§13d)',
+        rowSubtotal: 'Stpfl. Erwerb (vor Freibetrag)',
+        rowFreibetrag: 'Persönl. Freibetrag (§16)',
+        rowVersorgungsfreibetrag: 'Versorgungsfreibetrag (§17)',
+        rowVorschenkungen: 'Vorschenkungen §14 (10 J.)',
+        rowTotal: 'Stpfl. Erwerb (netto)',
+        disclaimer:
+          'Betriebsvermögen (§§ 13a/13b ErbStG), internationale Erbschaften sowie Vor-/Nacherbschaft erfordern individuelle Fachberatung. Diese Berechnung ist eine erste Orientierung, kein Rechtsgutachten. BVerfG-Entscheidung zu Betriebsvermögen-Verschonung steht noch aus.',
+        copyAria: 'Ergebnis als Text für Steuerberater kopieren',
+        copyButton: 'Ergebnis für Berater kopieren',
+        copyError: 'Fehler',
+        resetAria: 'Alle Eingaben zurücksetzen',
+        exportTitle: '=== Erbschaftsteuer-Berechnung (kittokit.com) ===',
+        exportLabelVg: 'Verwandtschaftsgrad:',
+        exportLabelKlasse: 'Steuerklasse:',
+        exportLabelNachlass: 'Nachlasswert (brutto):',
+        exportLabelSchulden: 'Schulden / Verbindlichk.:',
+        exportLabelErbfallkosten: 'Erbfallkostenpauschale:',
+        exportLabelHausrat: 'Hausrat-Pauschale:',
+        exportLabelFamilienheim: 'Familienheim (§13):',
+        exportLabelMietwohn: 'Mietwohn-Abschlag (§13d):',
+        exportLabelStpflVor: 'Stpfl. Erwerb (vor FB):',
+        exportLabelFreibetrag: 'Persönl. Freibetrag (§16):',
+        exportLabelVersorgung: 'Versorgungsfreibetrag §17:',
+        exportLabelVorschenkung: 'Vorschenkungen (§14):',
+        exportLabelStpflNetto: 'Stpfl. Erwerb (netto):',
+        exportLabelSatz: 'Steuersatz:',
+        exportLabelSteuer: 'ERBSCHAFTSTEUER:',
+        exportLabelNetto: 'Netto-Erbe:',
+        exportNote1: 'Hinweis: Diese Berechnung dient nur als erste Orientierung.',
+        exportNote2: 'Betriebsvermögen, internationale Erbschaften und Vorerbschaft erfordern Fachberatung (§§ 13a, 13b ErbStG, DBA).',
+      },
     },
   },
 
@@ -2464,6 +2655,97 @@ const strings: Record<Lang, UiStrings> = {
         disclaimer:
           'This calculation is for informational purposes only. The leasing factor is a comparison metric — it does not replace a full offer review.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      inheritanceTaxCalculator: {
+        regionAria: 'German inheritance-tax calculator',
+        verwandtschaftLabel: 'Relationship to deceased',
+        verwandtschaftAria: 'Relationship to the deceased',
+        vgEhepartner: 'Spouse / civil partner',
+        vgKind: 'Child (under 28 years)',
+        vgEnkelEltVerstorben: 'Grandchild (parents deceased)',
+        vgEnkelEltLeben: 'Grandchild (parents living)',
+        vgElternGroßeltern: 'Parents / grandparents',
+        vgGeschwister: 'Siblings',
+        vgNichtenNeffen: 'Nieces / nephews',
+        vgSchwiegerStief: 'Parents-in-law / step-parents',
+        vgSonstiges: 'Not related',
+        hintEhepartner: 'Tax class I · Allowance 500,000 € · Pension allowance 256,000 €',
+        hintKind: 'Tax class I · Allowance 400,000 € · Pension allowance age-dependent',
+        hintEnkelEltVerstorben: 'Tax class I · Allowance 400,000 €',
+        hintEnkelEltLeben: 'Tax class I · Allowance 200,000 €',
+        hintElternGroßeltern: 'Tax class I · Allowance 100,000 €',
+        hintKlasse2: 'Tax class II · Allowance 20,000 €',
+        hintKlasse3: 'Tax class III · Allowance 20,000 €',
+        kindesalterLabel: 'Age of child',
+        kindesalterBadge: 'for pension allowance',
+        kindesalterPlaceholder: 'e.g. 12',
+        kindesalterAria: 'Age of child in years',
+        unitYears: 'years',
+        nachlasswertLabel: 'Estate value (gross)',
+        nachlasswertPlaceholder: 'e.g. 500,000',
+        nachlasswertAria: 'Total estate value in euros',
+        schuldenLabel: 'Debts / liabilities',
+        optionalBadge: 'optional',
+        schuldenPlaceholder: 'e.g. 50,000',
+        schuldenAria: 'Estate debts and liabilities in euros',
+        familienheimLabel: 'Family home value (§13 exempt)',
+        familienheimPlaceholder: 'e.g. 300,000',
+        familienheimAria: 'Value of the owner-occupied family home in euros (§13 ErbStG fully tax-exempt)',
+        vorschenkungLabel: 'Prior gifts (last 10 years, §14)',
+        vorschenkungPlaceholder: 'e.g. 100,000',
+        vorschenkungAria: 'Value of gifts received in the last 10 years in euros',
+        mietwohnCheckboxAria: 'Apply 10 % rebate on rental properties under §13d ErbStG',
+        mietwohnCheckboxText: '10 % rebate on rental property (§13d ErbStG, since 2023)',
+        mietwohnLabel: 'Rental-property value',
+        mietwohnPlaceholder: 'e.g. 400,000',
+        mietwohnAria: 'Rental-property value in euros',
+        errInvalidAmount: 'Please enter a valid amount.',
+        errInvalidAge: 'Please enter a valid age (0–150).',
+        resultsAria: 'Calculation result',
+        kachelSteuer: 'Inheritance tax',
+        kachelSteuerSubTemplate: 'Tax rate {satz}',
+        kachelNetto: 'Net inheritance',
+        kachelNettoSub: 'after tax',
+        kachelKlasse: 'Tax class',
+        kachelKlasseSub: '§15 ErbStG',
+        aufschluesselungAria: 'Calculation breakdown',
+        aufTitle: 'Calculation steps',
+        rowNachlassBrutto: 'Estate value (gross)',
+        rowSchulden: 'Debts / liabilities',
+        rowErbfallkosten: 'Probate-cost lump sum (§10 (5))',
+        rowHausrat: 'Household-goods lump sum (§13 (1) No. 1)',
+        rowFamilienheim: 'Family home tax-exempt (§13)',
+        rowMietwohnAbzug: '10 % rental-property rebate (§13d)',
+        rowSubtotal: 'Taxable inheritance (before allowance)',
+        rowFreibetrag: 'Personal allowance (§16)',
+        rowVersorgungsfreibetrag: 'Pension allowance (§17)',
+        rowVorschenkungen: 'Prior gifts §14 (10 yrs)',
+        rowTotal: 'Taxable inheritance (net)',
+        disclaimer:
+          'Business assets (§§ 13a/13b ErbStG), international inheritances, and reversionary inheritance require individual professional advice. This calculation is a first orientation, not legal advice. The Federal Constitutional Court ruling on business-asset relief is still pending.',
+        copyAria: 'Copy result as text for tax advisor',
+        copyButton: 'Copy result for advisor',
+        copyError: 'Error',
+        resetAria: 'Reset all inputs',
+        exportTitle: '=== Inheritance-tax calculation (kittokit.com) ===',
+        exportLabelVg: 'Relationship:',
+        exportLabelKlasse: 'Tax class:',
+        exportLabelNachlass: 'Estate (gross):',
+        exportLabelSchulden: 'Debts / liabilities:',
+        exportLabelErbfallkosten: 'Probate-cost lump sum:',
+        exportLabelHausrat: 'Household-goods lump sum:',
+        exportLabelFamilienheim: 'Family home (§13):',
+        exportLabelMietwohn: 'Rental-property rebate (§13d):',
+        exportLabelStpflVor: 'Taxable inh. (before allowance):',
+        exportLabelFreibetrag: 'Personal allowance (§16):',
+        exportLabelVersorgung: 'Pension allowance §17:',
+        exportLabelVorschenkung: 'Prior gifts (§14):',
+        exportLabelStpflNetto: 'Taxable inh. (net):',
+        exportLabelSatz: 'Tax rate:',
+        exportLabelSteuer: 'INHERITANCE TAX:',
+        exportLabelNetto: 'Net inheritance:',
+        exportNote1: 'Note: This calculation is only a first orientation.',
+        exportNote2: 'Business assets, international inheritances, and reversionary inheritance require professional advice (§§ 13a, 13b ErbStG, DTA).',
       },
     },
   },
