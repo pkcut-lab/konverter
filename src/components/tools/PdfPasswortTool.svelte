@@ -99,7 +99,7 @@
           import.meta.url,
         ).href;
       } catch {
-        loadError = 'PDF.js konnte nicht geladen werden.';
+        loadError = 'PDF-Bibliothek konnte nicht geladen werden.';
         phase = 'error';
         statusMessage = '';
         return;
@@ -166,7 +166,7 @@
         import.meta.url,
       ).href;
     } catch {
-      loadError = 'PDF.js konnte nicht geladen werden.';
+      loadError = 'PDF-Bibliothek konnte nicht geladen werden.';
       phase = 'error';
       statusMessage = '';
       return;
@@ -206,7 +206,7 @@
     try {
       pdfLibModule = await import('pdf-lib');
     } catch {
-      loadError = 'pdf-lib konnte nicht geladen werden.';
+      loadError = 'PDF-Bibliothek konnte nicht geladen werden.';
       phase = 'error';
       statusMessage = '';
       return;

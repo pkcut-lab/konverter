@@ -107,15 +107,23 @@ const ALLOWED_CONTEXT_PATTERNS = [
 //                      placeholder, title, metaDescription, alt, ariaLabel).
 //                      Internal code — imports, model identifiers, status
 //                      callbacks, type annotations — is silently skipped.
+// `mode: 'state-str'`→ scan ONLY string-literal assignments to user-visible
+//                      reactive state variables (loadError, errorMsg,
+//                      statusMessage, …). For Svelte files where these live
+//                      inside <script> blocks but are rendered in templates
+//                      via {loadError}/{errorMsg}; the 'full' pass strips
+//                      the script and would miss them.
 const UI_PROP_RE = /\b(?:label|subLabel|tagline|intro|description|placeholder|title|metaDescription|alt|ariaLabel|aria-label)\s*:\s*(['"`])((?:\\.|(?!\1).)*)\1/g;
+const STATE_STR_RE = /\b(?:loadError|errorMsg|errorMessage|statusMessage|statusMsg|toastMessage|notification|alertMessage|userMessage|displayError|warningMsg|infoMessage|successMessage|passwordError|passwordMsg)\s*=\s*(['"`])((?:\\.|(?!\1).)*)\1/g;
 
 const SCOPES = [
-  { dir: 'src/content',          ext: ['.md'],     mode: 'full',    stripComments: false },
-  { dir: 'src/components/tools', ext: ['.svelte'], mode: 'full',    stripComments: 'svelte' },
-  { dir: 'src/lib/tools',        ext: ['.ts'],     mode: 'ui-only', stripComments: 'js' },
-  { dir: 'public',               ext: ['.txt'],    mode: 'full',    stripComments: false,
+  { dir: 'src/content',          ext: ['.md'],     mode: 'full',     stripComments: false },
+  { dir: 'src/components/tools', ext: ['.svelte'], mode: 'full',     stripComments: 'svelte' },
+  { dir: 'src/components/tools', ext: ['.svelte'], mode: 'state-str', stripComments: false },
+  { dir: 'src/lib/tools',        ext: ['.ts'],     mode: 'ui-only',  stripComments: 'js' },
+  { dir: 'public',               ext: ['.txt'],    mode: 'full',     stripComments: false,
     only: ['llms-full.txt', 'llms.txt'] },
-  { dir: 'scripts/seo',          ext: ['.mjs'],    mode: 'full',    stripComments: 'js',
+  { dir: 'scripts/seo',          ext: ['.mjs'],    mode: 'full',     stripComments: 'js',
     only: ['generate-llms-txt.mjs'] },
 ];
 
@@ -164,19 +172,21 @@ for (const scope of SCOPES) {
     if (scope.stripComments === 'js') src = stripJsComments(src);
     if (scope.stripComments === 'svelte') src = stripSvelteScripts(src);
 
-    if (scope.mode === 'ui-only') {
-      // For TS configs: extract just the values of UI-facing properties
-      // and scan each one with its source line attached for the report.
+    if (scope.mode === 'ui-only' || scope.mode === 'state-str') {
+      // Extract the values of either UI-facing properties (TS configs)
+      // or user-visible state-variable assignments (Svelte scripts).
+      // Each match is scanned with its source line attached for the report.
+      const re = scope.mode === 'ui-only' ? UI_PROP_RE : STATE_STR_RE;
       const lines = src.split(/\r?\n/);
       let m;
-      UI_PROP_RE.lastIndex = 0;
-      while ((m = UI_PROP_RE.exec(src)) !== null) {
+      re.lastIndex = 0;
+      while ((m = re.exec(src)) !== null) {
         const value = m[2];
         if (!value) continue;
         if (ALLOWED_CONTEXT_PATTERNS.some((p) => p.test(value))) continue;
         const lineNo = src.slice(0, m.index).split(/\r?\n/).length;
-        for (const { name, re } of FORBIDDEN) {
-          if (!re.test(value)) continue;
+        for (const { name, re: bad } of FORBIDDEN) {
+          if (!bad.test(value)) continue;
           violations.push({
             file: relative(ROOT, file).replace(/\\/g, '/'),
             line: lineNo,

@@ -136,7 +136,7 @@
         import.meta.url,
       ).href;
     } catch {
-      loadError = 'PDF.js konnte nicht geladen werden. Bitte Seite neu laden.';
+      loadError = 'PDF-Bibliothek konnte nicht geladen werden. Bitte Seite neu laden.';
       phase = 'error';
       statusMessage = '';
       return;
@@ -270,7 +270,7 @@
         import.meta.url,
       ).href;
     } catch {
-      loadError = 'PDF.js konnte nicht geladen werden.';
+      loadError = 'PDF-Bibliothek konnte nicht geladen werden.';
       phase = 'error';
       statusMessage = '';
       return;
