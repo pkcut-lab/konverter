@@ -49,15 +49,17 @@ const canonicalPath: string =
 const canonical = new URL(`/${lang}${canonicalPath}`, Astro.site).toString();
 const ogImage = new URL(ogImagePath ?? '/og-image.png', Astro.site).toString();
 
-// Site-wide entity signals — Organization + WebSite + SearchAction.
+// Site-wide entity signals — Organization + WebSite (no SearchAction yet).
 // Emitted on every page (not just tool pages) so the brand-entity is
 // reinforced consistently. Per-tool JSON-LD (SoftwareApplication +
 // BreadcrumbList + FAQPage + HowTo) lives in `[lang]/[slug].astro` and
-// stacks on top of these blocks. Pagefind powers the SearchAction
-// endpoint at runtime — the URL pattern points at the home page with
-// a `?q=` query string the home page can intercept (Phase 2 will wire
-// the actual search-results page; today it falls through to the
-// HeaderSearch component which reads `?q` if present).
+// stacks on top of these blocks.
+//
+// SearchAction was previously emitted with urlTemplate /${lang}/?q=... but
+// no in-page code read the ?q parameter. Audit P1-I (2026-04-27) flagged
+// this as a misleading signal — Google interprets SearchAction as a
+// crawlable search endpoint. Dropped until Phase 2 ships an actual
+// search-results page; re-add then with the real URL pattern.
 const cfRumToken = import.meta.env.CF_RUM_TOKEN;
 const clarityId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID;
 
@@ -80,14 +82,6 @@ const websiteJsonLd = {
   name: siteName,
   url: siteUrl,
   inLanguage: lang,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${siteUrl}/${lang}/?q={search_term_string}`,
-    },
-    'query-input': 'required name=search_term_string',
-  },
 };
 ---
 <!DOCTYPE html>
