@@ -1,105 +1,147 @@
 ---
 toolId: interest-calculator
 language: en
-title: "Simple Interest Calculator — Loans & Savings"
-headingHtml: "Simple Interest Calculator — <em>Fast Loan & Savings Math</em>"
-metaDescription: "Calculate simple interest instantly. Formula: I = P × r × t. For car loans, personal loans, and savings. Compare simple vs compound interest."
-tagline: "Enter principal, rate, and time to calculate simple interest and total payback amount. Ideal for car loans, personal loans, and short-term savings. Includes a simple vs compound interest comparison."
-intro: "Simple interest is the most straightforward form of interest calculation: interest is charged only on the original principal, not on accumulated interest. It is used for many US car loans, personal loans, and some short-term savings products. The formula is I = P × r × t — principal times rate times time. Enter your values here to calculate interest owed, total repayment amount, and daily interest accrual."
+title: "Interest Calculator — Simple, Compound, US APR & UK ISA"
+headingHtml: "Calculate <em>simple or compound interest</em> with US/UK tax"
+metaDescription: "Free interest calculator. Simple or compound, any frequency. Apply US federal marginal tax or UK ISA / income-tax band on interest. APY shown."
+tagline: "Run the math both ways: simple I = P × r × t, or compound at any frequency. Apply your US federal marginal bracket or your UK income-tax band on the interest, or set 0% for an ISA / Roth account."
+intro: "This calculator does the two things most interest tools skip: it runs both simple and compound math, and it models the tax on interest. Pick your region (US or UK) at the top — the calculator then shows the right tax dropdown (US federal brackets, or UK ISA / income-tax bands) for your jurisdiction."
 howToUse:
-  - "Enter the principal — the original loan amount or deposit."
-  - "Enter the annual interest rate as a percentage (e.g., 6.5 for 6.5%)."
-  - "Enter the loan or deposit term in years (or switch to months for shorter terms)."
-  - "The results panel shows total interest, total amount owed or earned, and daily interest accrual."
-  - "Click 'Compare with Compound Interest' to see the difference between simple and compound calculation for the same inputs."
+  - "Pick your region — United States or United Kingdom. The choice persists in your browser."
+  - "Enter principal, annual rate, and term in years."
+  - "Choose Simple or Compound interest. Compound mode lets you pick a frequency (annual, semi-annual, quarterly, monthly, daily)."
+  - "US: pick your federal marginal tax bracket on the interest income (0% for tax-deferred / Roth). UK: tick the ISA box for tax-free, otherwise pick your income-tax band."
+  - "Read the net final amount, net interest, APY, and a daily-accrual figure useful for loan-day-cost questions."
 faq:
-  - q: "What is the simple interest formula?"
-    a: "Simple interest is calculated with I = P × r × t, where I is the interest amount, P is the principal (starting balance), r is the annual interest rate as a decimal (e.g., 6% = 0.06), and t is the time in years. The total amount owed or earned is A = P + I = P(1 + rt)."
-  - q: "Are US car loans simple interest?"
-    a: "Most US auto loans use simple interest, calculated daily on the outstanding balance. Because interest accrues daily, paying early or making extra payments reduces the total interest paid — every dollar of principal reduction immediately reduces future daily interest. The 2024–2025 average new car loan rate in the US is approximately 6–8% APR depending on credit score and loan term."
-  - q: "What is the typical personal loan interest rate in the US?"
-    a: "Personal loan rates in the US range from approximately 7% APR (excellent credit, top online lenders) to 36% APR (fair credit). The average in 2024 was approximately 12–15% APR. Credit unions often offer lower rates than banks or online lenders. Personal loans typically use simple interest amortized over 2–7 years."
-  - q: "How is simple interest different from compound interest?"
-    a: "With simple interest, interest is always calculated only on the original principal. With compound interest, interest is added to the balance periodically, and the next period's interest is calculated on the new (higher) balance. For the same principal, rate, and term, compound interest always produces more interest — beneficial for savings, detrimental for loans. The difference becomes significant over periods longer than 2–3 years."
-  - q: "What is daily interest accrual?"
-    a: "On simple-interest loans, interest accrues every day based on the current principal balance divided by 365 (or 360, depending on the lender's day-count convention). Daily interest = (principal × annual rate) ÷ 365. For a $20,000 auto loan at 7% APR, daily interest = ($20,000 × 0.07) ÷ 365 = $3.84 per day."
-  - q: "Does simple interest apply to credit cards?"
-    a: "No. Credit cards use compound interest, typically compounded daily. The daily periodic rate is the APR divided by 365, and interest is added to the balance daily. This is why credit card balances grow so quickly when only minimum payments are made — unlike a simple-interest loan where paying early reduces total cost proportionally."
+  - q: "What's the difference between simple and compound interest?"
+    a: "Simple interest uses I = P × r × t — interest is calculated only on the original principal, never on accumulated interest. It's used for many US auto loans, personal loans, and short-term Treasury bills. Compound interest uses A = P × (1 + r/n)^(n × t) where n is the compounding frequency — interest is added to the balance periodically, and the next period's interest is calculated on the new (higher) balance. For the same nominal rate and term, compound interest always produces more total interest, beneficial for savers and detrimental for borrowers."
+  - q: "What is APY and how is it different from APR?"
+    a: "APY (Annual Percentage Yield) is the rate that, compounded once a year, produces the same final amount as the actual compounding schedule. It accounts for compounding effects. APR (Annual Percentage Rate) is a nominal yearly rate — typically the headline rate quoted on a loan or savings product, ignoring compounding. For monthly-compounded 5% nominal, APY is about 5.116%. APY > APR whenever the rate compounds more than once a year."
+  - q: "How do US savings interest taxes work?"
+    a: "Interest from a regular taxable account (high-yield savings, money-market account, CDs, taxable brokerage) is taxed as ordinary income at your federal marginal bracket plus state/local income tax. Interest from a Roth IRA / 401(k) inside the wrapper grows tax-free. Interest from a Traditional IRA / 401(k) is tax-deferred — it grows untaxed until withdrawal, then is taxed as ordinary income. Pick 0% in the dropdown for any tax-deferred or Roth account."
+  - q: "How does a UK ISA make interest tax-free?"
+    a: "ISAs (Individual Savings Accounts) are a UK tax wrapper — interest, dividends, and capital gains earned inside an ISA are not subject to income tax or capital-gains tax. The annual allowance is £20,000 (2025/26) split across Cash ISAs and Stocks & Shares ISAs. Outside an ISA, the Personal Savings Allowance covers the first £1,000 of interest for basic-rate taxpayers (£500 for higher-rate, £0 for additional-rate); above the PSA, interest is taxed at your income-tax band."
+  - q: "Should I prefer monthly or daily compounding?"
+    a: "Daily compounding produces marginally more interest than monthly — for 5% nominal over 1 year, daily APY is about 5.127% versus 5.116% monthly. The difference grows over very long horizons but is small over typical savings periods. The bigger lever is the nominal rate itself; chasing 0.01% extra APY through compounding-frequency arbitrage is rarely worth the friction of switching products."
+  - q: "Why does the calculator show a 'daily accrual' figure?"
+    a: "On a loan, daily interest accrual = principal × annual-rate ÷ 365. It's the per-day cost of carrying a balance, which is what auto loans and credit cards actually charge. Knowing the figure makes loan timing decisions concrete — paying a $20,000 loan a week early at 7% APR saves about $27 in interest. We compute it at t=0 (current principal) so it's a forward-looking estimate."
 relatedTools:
   - compound-interest-calculator
   - loan-calculator
   - vat-calculator
 category: finance
-stats:
-  - label: "Compounding"
-    value: "4"
-    unit: "intervals"
-  - label: "Precision"
-    value: "±0.01"
-    unit: "EUR"
-  - label: "Processing"
-    value: "real-time"
-contentVersion: 1
+contentVersion: 2
 datePublished: '2026-04-26'
-dateModified: '2026-04-26'
+dateModified: '2026-04-27'
 
 ---
 
 ## What This Tool Does
 
-This simple interest calculator computes interest and total payback amounts using the formula I = P × r × t. It handles loans (showing total interest owed and payback amount) and savings (showing interest earned and final balance). A comparison panel shows the difference between simple and compound interest for the same inputs — helping you understand why lenders favor one and borrowers should know both.
+The calculator runs both simple and compound interest math with region-aware tax treatment behind the scenes. The region toggle at the top of the page picks which tax system the calculator applies; your choice persists for the next visit.
 
-## How It Works
+- **United States** — federal marginal-tax-bracket dropdown (0% / 10% / 12% / 22% / 24% / 32% / 35% / 37%). Pick 0% for Roth IRA / Roth 401(k) / Traditional IRA / Traditional 401(k) / HSA — everything where interest grows tax-deferred or tax-free inside the wrapper. Pick your bracket for a regular taxable account.
+- **United Kingdom** — ISA-tax-free toggle, plus an income-tax-band dropdown (0% Personal Savings Allowance / 20% basic / 40% higher / 45% additional) for non-ISA accounts.
 
-The arithmetic is direct:
+Both regions support simple and compound interest with a frequency picker (annual, semi-annual, quarterly, monthly, daily). The output shows the gross final amount, gross interest, tax on interest, net interest, net final amount, APY, and daily accrual at t=0.
 
-- **Interest earned or owed:** `I = P × r × t`
-- **Total amount:** `A = P + I = P × (1 + r × t)`
-- **Daily interest:** `daily = (P × r) ÷ 365`
+## How Does the Math Work?
 
-Where:
-- P = Principal (original amount)
-- r = Annual interest rate as a decimal (divide the percentage by 100)
-- t = Time in years
+### Simple Interest
 
-For a 6-month term, use t = 0.5. For 90 days, use t = 90/365 = 0.2466. The tool accepts months or days directly and converts internally.
+```
+I     = P × r × t
+A     = P + I = P × (1 + r × t)
+APY   = r           (no compounding — APY equals nominal rate)
+```
 
-## How Does Simple Interest Compare to Compound Interest?
+Where P is principal, r is the annual rate as a decimal, and t is time in years. Used for most US auto loans, personal loans, federal student loans, and short-term Treasury bills.
 
-Example: $15,000 principal at 7% for 5 years.
+### Compound Interest
 
-| Method | Total Interest | Final Amount |
-|--------|---------------|--------------|
-| Simple interest | $5,250.00 | $20,250.00 |
-| Annually compounded | $6,053.73 | $21,053.73 |
-| Monthly compounded | $6,188.93 | $21,188.93 |
+```
+A     = P × (1 + r/n)^(n × t)
+I     = A − P
+APY   = (1 + r/n)^n − 1
+```
 
-Over 5 years, the difference between simple and monthly compound interest is $938.93 on a $15,000 loan — significant enough to factor into loan comparisons.
+Where n is the number of compounding periods per year (12 for monthly, 365 for daily). Used for nearly every modern savings account, brokerage interest, CDs (typically monthly), and any growth-asset projection.
+
+### Tax on Interest
+
+```
+tax_on_interest = I × tax_rate
+net_interest    = I − tax_on_interest
+net_final       = P + net_interest
+```
+
+The tax rate comes from your region-specific selection. For US Roth / tax-deferred accounts and UK ISAs, set 0% — the gross figures are also the net figures.
+
+## Which Tax Rate Should You Pick (US)?
+
+The federal marginal rate that applies to your interest income is the same as the rate on your last dollar of wages — not your effective rate. If you're in the 22% bracket on wages, you're in the 22% bracket on interest. The 2025 brackets:
+
+- **0%** — Tax-deferred accounts (Traditional IRA, 401(k), HSA) where interest grows untaxed; Roth accounts where it grows tax-free.
+- **10%** — Single income up to $11,925.
+- **12%** — Single $11,925 – $48,475.
+- **22%** — Single $48,475 – $103,350. The most common bracket for middle-class W-2 earners.
+- **24%** — Single $103,350 – $197,300.
+- **32% / 35% / 37%** — Higher-income brackets.
+
+State income tax on interest is not modeled here — varies by state.
+
+## Which Tax Treatment Should You Pick (UK)?
+
+- **ISA (tax-free)** — Cash ISA, Stocks & Shares ISA, Innovative Finance ISA. Interest is not subject to income tax. Annual contribution allowance £20,000 (2025/26).
+- **0% (PSA-covered)** — Outside an ISA, the Personal Savings Allowance gives basic-rate taxpayers £1,000 of tax-free interest (£500 for higher-rate, £0 for additional-rate). For amounts within the PSA, the effective rate is 0%.
+- **20% / 40% / 45%** — Income tax on interest above the PSA, taxed at your marginal income-tax band.
 
 ## What Are Common Use Cases?
 
-**Auto loan cost estimation.** Most US car loans (bank, credit union, and dealership financing) use simple interest. Knowing the total interest cost before signing helps you compare financing options. A $30,000 auto loan at 7% for 5 years costs $5,250 in total interest. The same loan at 9% costs $6,750 — a $1,500 difference worth negotiating over.
+**Comparing a tax-free ISA against a higher-yielding regular account.** A 5% UK Cash ISA versus a 5.5% taxable savings account at the higher 40% rate: ISA wins because 5.5% × (1 − 0.40) = 3.3% net, which is lower than the ISA's 5% tax-free.
 
-**Personal loan comparison.** Online lenders (SoFi, LightStream, Marcus), credit unions, and banks all offer personal loans with different APRs. Use this calculator to compute the total cost of each offer in dollars, not just percentages — a 3-point rate difference on a $10,000 3-year loan translates to approximately $450 in total interest.
+**Long-term retirement projection (US).** $100,000 at 7% nominal compounded monthly for 30 years inside a Roth IRA: about $811,649 net (no tax). Same numbers in a taxable account at 24% marginal: about $658,053 net. The wrapper choice is worth ~$150k over 30 years.
 
-**Short-term savings instruments.** Some money market accounts and short-term Treasury bills use simple interest for their stated yields. Entering the current rate and your deposit amount shows the exact dollar return at maturity without guessing.
+**Loan day-cost estimation.** A $30,000 auto loan at 7.5% APR has a daily accrual of about $6.16. Paying a week early saves ~$43.
 
-**Understanding daily interest accrual on auto loans.** Because US auto loans accrue interest daily, the timing of your payment within the month affects total interest paid. Paying a week early every month saves a modest but real amount over a 5-year loan term. This calculator's daily interest output makes that math concrete.
+**APY arbitrage between savings products.** Bank A advertises 4.5% APR with monthly compounding (APY ≈ 4.59%). Bank B advertises 4.55% APR with annual compounding (APY = 4.55%). Bank A wins by 0.04 percentage points despite the lower headline rate.
 
-**Comparing simple interest offers against APY savings accounts.** If a lender quotes a simple interest rate and a bank quotes a savings account APY (which assumes compounding), they are not directly comparable. This tool calculates simple interest total returns, which you can compare against the compounded APY output from the compound interest calculator.
+**Comparing simple-interest auto-loan offers.** Two dealerships quote 7% and 8% APR simple interest on $25,000 over 5 years. The 1% rate difference costs $1,250 in total interest — meaningful enough to negotiate.
 
-**Student loan interest estimation.** Federal student loans use simple interest that accrues daily. During a deferment or forbearance period, unpaid interest may capitalize (be added to the principal) — converting into compound interest after that point. Understanding daily accrual on a deferred loan helps borrowers decide whether to make interest-only payments during school to prevent capitalization.
+## What's the APY for Common Compounding Frequencies?
+
+For a 5% nominal rate:
+
+| Frequency | Periods/year | APY |
+| --------- | ------------ | --- |
+| Annual | 1 | 5.0000% |
+| Semi-annual | 2 | 5.0625% |
+| Quarterly | 4 | 5.0945% |
+| Monthly | 12 | 5.1162% |
+| Daily | 365 | 5.1267% |
+
+Daily compounding adds about 11 basis points (0.11%) over annual compounding at 5% nominal. The marginal benefit of switching from monthly to daily is about 1 basis point.
+
+## Where Do the Tax Brackets Come From and What About Privacy?
+
+US brackets are the 2025 IRS-published federal marginal rates (Rev. Proc. 2024-40). UK rates are HMRC's 2025/26 income-tax bands. The Personal Savings Allowance has been £1,000 / £500 / £0 since April 2016.
+
+The calculator runs entirely client-side. Your principal, rate, term, and tax-bracket pick never leave your browser — no analytics, no signup, no server. The region (US or UK) is the only thing stored, and only in your own browser's `localStorage`.
 
 ## Frequently Asked Questions
 
-**What is the difference between APR and interest rate?**
-The interest rate is the cost of borrowing expressed as a percentage. APR (Annual Percentage Rate) includes the interest rate plus other costs — origination fees, closing costs, mandatory insurance — expressed as a single annual percentage. For simple comparison, APR is more complete. This calculator uses the interest rate only; to account for fees, add them to the principal or subtract them from the loan proceeds.
+**Does this tool model variable-rate accounts?**
+No. The calculator assumes a constant annual rate over the entire term — it's the right model for fixed-rate CDs, fixed-rate bonds, fixed-rate loans, and back-of-envelope projections. For a variable-rate savings account, plug in your current rate; the result is a snapshot, not a forecast.
 
-**What is the US federal student loan interest rate?**
-For undergraduate Direct Subsidized and Unsubsidized Loans in the 2024–2025 school year, the rate is 6.53% APR (fixed for the life of the loan). Graduate Direct Unsubsidized Loans are at 8.08%. Interest accrues daily using simple interest at these rates. Unsubsidized loans accrue interest during school; subsidized loans are interest-free during enrollment.
+**Does this account for inflation?**
+No. The output is in nominal currency units. To convert to real (inflation-adjusted) terms, divide the final amount by (1 + expected_inflation)^years. Real returns are typically 2–3 percentage points lower than nominal in long-run modeling.
 
-**How do I calculate interest for less than one year?**
-Use the fraction of the year: 6 months = t × 0.5, 3 months = t × 0.25, 90 days = t × (90/365). For example, $5,000 at 5% for 6 months: I = 5,000 × 0.05 × 0.5 = $125. Many CDs and Treasury bills use this approach to calculate interest for terms shorter than a year.
+**What about the Additional Rate Threshold change in the UK?**
+The £125,140 threshold for the 45% additional-rate band has been in place since April 2023 (reduced from £150,000). The calculator uses the current threshold; the dropdown picks the rate, the threshold is just for context.
 
-**Why do some lenders use 360 days instead of 365?**
-The 360-day convention (also called the "banker's rule" or "30/360") simplifies monthly calculations by assuming each month has exactly 30 days. It slightly increases the effective interest rate compared to 365/actual. Mortgages, bonds, and some commercial loans use 360-day conventions. Consumer auto loans and most retail loans use 365/actual. The tool uses 365 by default, matching consumer loan practice.
+**Why is daily accrual computed at t=0 instead of averaging?**
+Daily accrual at t=0 is the most useful single number for loan-timing decisions ("what does each extra day on this balance cost?"). Averaging over the full term would smooth out the figure and make per-day comparisons less actionable. For total interest over a term, the gross-interest output is the right number.
+
+## Which Related Tools Pair Well With This One?
+
+For deeper compounding scenarios use the dedicated [compound interest calculator](/en/compound-interest-calculator); for loan amortization see the [loan calculator](/en/loan-calculator); for after-tax pricing the [VAT/sales-tax calculator](/en/vat-calculator).
