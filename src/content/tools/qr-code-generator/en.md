@@ -91,7 +91,7 @@ QR codes encode data using a matrix of black and white squares following the ISO
 
 **Classroom and education.** Teachers use QR codes on printed handouts to link to supplemental videos, Google Forms quizzes, or classroom portals — making resources accessible without students manually typing URLs.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is the difference between static and dynamic QR codes?** Static QR codes (what this tool generates) encode the destination directly. Dynamic QR codes use a short redirect URL managed by a third-party service, allowing the destination to be changed after printing. Dynamic codes require a paid subscription to services like Bitly or QR Tiger. For most personal and small business use, static codes are sufficient.
 

@@ -79,7 +79,7 @@ The tool uses a specialized neural network for subject/background segmentation, 
 | Custom image (JPG/PNG) | MP4 or WebM | Branded environments |
 | Blur (Gaussian) | MP4 or WebM | Privacy-focused calls |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does the segmentation look rough around hair and fine details?**
 Edge refinement on complex boundaries (hair, fur, fine fabric) is the hardest problem in video matting. The model applies feathering at the mask boundary to soften edges, but fine strands may not be perfectly isolated. For professional broadcast-quality matting, a physical green screen provides significantly cleaner results.

@@ -81,7 +81,7 @@ For someone earning $25/hour on a standard US full-time schedule:
 
 Source: BLS Occupational Employment Statistics, 2024.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Is 2,080 always the right divisor?**
 Only for a standard 40-hour, 52-week year with no unpaid time off. If you take 2 weeks of unpaid leave, use 50 weeks (2,000 hours). Always match the divisor to your actual schedule.

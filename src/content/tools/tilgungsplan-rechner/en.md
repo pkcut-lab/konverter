@@ -86,7 +86,7 @@ Each row in the schedule then calculates:
 
 Notice how the interest column declines gradually while the principal column grows — the crossover point where principal exceeds interest occurs around payment 252 (month 21 of year 21) for this example.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Can I use this for adjustable-rate mortgages (ARMs)?**
 This tool calculates fixed-rate schedules. For ARMs, the rate resets periodically — run separate calculations for each rate period and manually chain the results, using the end balance of one period as the principal for the next.

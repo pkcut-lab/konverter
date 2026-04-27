@@ -77,7 +77,7 @@ Reading time is estimated at 200–238 words per minute — the average adult re
 
 **Password field validation.** Many systems impose character limits or minimum requirements on passwords (e.g., 8–64 characters, no spaces). Checking a draft password against these constraints before submission saves a frustrating round trip.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Does copying formatted text (bold, links) affect the count?**
 Pasting rich text into the input area strips formatting — only the raw text characters are counted. This matches how most platforms count characters: they see the plaintext, not the HTML markup.

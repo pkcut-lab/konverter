@@ -65,7 +65,7 @@ PDF encryption wraps the document's content streams in a symmetric cipher. When 
 
 **Real estate closing documents.** Title companies and escrow services may send closing disclosure PDFs locked with a shared password. Unlocking produces a clean copy for your personal records.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Will the unlocked PDF look identical to the original?** Yes. Decryption does not alter content — fonts, images, layout, bookmarks, and annotations are all preserved exactly.
 

@@ -151,7 +151,7 @@ When precision work requires expressing results as fractions of an inch:
 | 0.875" | 7/8" | 22.225 mm |
 | 1.0" | 1" | 25.400 mm |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why do car tires use millimeters for width but inches for rim diameter?**
 

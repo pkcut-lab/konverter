@@ -68,7 +68,7 @@ All calculations happen in your browser. Nothing is sent to a server.
 
 **Restaurant and app promo codes** — Food delivery apps (DoorDash, Uber Eats) frequently offer 20–30% off your first order or $15 off orders over $30. Check which deal type saves you more for your order size.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does stacking two 10% discounts not equal 20% off?**
 Because each discount applies to the already-reduced price. First 10% off $100 = $90. Second 10% off $90 = $81. Total savings: $19, which is 19% — not 20%.

@@ -76,7 +76,7 @@ No server is involved at any step. After the initial page load, the tool works o
 
 **Print shops.** Some local and online print services (Vistaprint, FedEx Office) accept JPG but not PDF for certain products. Converting at 300 DPI provides print-ready output.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Do I get the full page or just a crop?** The full page is rendered, including margins, exactly as it appears in the PDF viewer.
 

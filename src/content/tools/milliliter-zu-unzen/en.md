@@ -128,7 +128,7 @@ A 4% difference sounds small, but in large-batch cooking or pharmaceutical conte
 
 Difference: 11.6 mL — about 2.5 teaspoons. For baking a single cake, negligible. For a 50-gallon batch production, it becomes a significant systematic error.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does the US use fl oz instead of mL?**
 

@@ -74,7 +74,7 @@ This approach is fast, dependency-free, and identical in behavior to the XML par
 
 **Cleaning up localization files.** XLIFF (`.xlf`) files used in iOS, Android, and web localization are XML. Formatting them makes it easier to spot untranslated segments or malformed translation units.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What characters need to be escaped in XML?**
 The five predefined XML entities are: `&amp;` for `&`, `&lt;` for `<`, `&gt;` for `>`, `&quot;` for `"` inside attribute values, and `&apos;` for `'` inside attribute values. Forgetting to escape an `&` character in element content is one of the most common XML well-formedness errors.

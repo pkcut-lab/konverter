@@ -92,7 +92,7 @@ UUID v4 is the right choice when you need a guaranteed-unique, opaque, privacy-s
 | Braces (Windows GUID) | `{550e8400-e29b-41d4-a716-446655440000}` |
 | URN | `urn:uuid:550e8400-e29b-41d4-a716-446655440000` |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Are the UUIDs generated here truly random?**
 Yes. The Web Crypto API derives randomness from the operating system's entropy pool — hardware events, CPU timing jitter, and similar sources. This is the same CSPRNG used for HTTPS and password hashing. The output is not predictable.

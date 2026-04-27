@@ -72,7 +72,7 @@ Because computation happens locally, the tool works offline after the initial pa
 
 **Print-on-demand.** Many POD services require single-page PDF uploads. Burst a chapter PDF into individual pages ready for upload.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Can I reorder pages before splitting?** The current version focuses on extraction. For reordering before merging, use our PDF Merger tool, which supports drag-and-drop page ordering.
 

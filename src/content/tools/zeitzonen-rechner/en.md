@@ -73,7 +73,7 @@ Time zone conversion works by normalizing both times to UTC and then applying th
 
 **Understanding daylight saving transitions.** The day of a DST transition is tricky: clocks skip an hour in spring, creating a non-existent 2:00–3:00 AM window, and repeat an hour in fall. Entering a time in that window shows whether it is ambiguous or invalid for the selected date.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why do some US states not observe DST?**
 Congress grants states the right to opt out of DST under the Uniform Time Act. Hawaii has never observed DST (its proximity to the equator makes seasonal light variation minor). Arizona opted out in 1968, citing the extreme summer heat — an extra hour of daylight in 110°F temperatures was seen as a burden rather than a benefit. The Navajo Nation within Arizona does observe DST, creating a zone-within-a-zone situation.

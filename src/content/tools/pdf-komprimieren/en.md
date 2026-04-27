@@ -73,7 +73,7 @@ Processing runs in a Web Worker to keep the browser UI responsive during large f
 
 **Academic submissions.** Many university portals cap PDF uploads at 10 MB. Compressing a thesis or dissertation scan before submission prevents upload errors.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Can I undo the compression?** Once you download the compressed file, the original is unchanged on your device — the tool never modifies your source file. If the compressed result is unsatisfactory, simply try a lower compression level.
 

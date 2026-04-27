@@ -123,7 +123,7 @@ This creates friction when:
 - Following international fitness or health benchmarks
 - Understanding foreign news reports ("the storm surge reached 3 meters")
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Is 6 feet considered tall in the US?**
 

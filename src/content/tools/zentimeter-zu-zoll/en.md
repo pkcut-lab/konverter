@@ -77,7 +77,7 @@ The conversion uses the exact defined equivalence: 1 inch = 2.54 centimeters. To
 
 **Electronics and hardware.** Screw and bolt diameters, drill bit sizes, and PCB dimensions are often specified in metric (mm or cm) in international specs and in fractional inches in US catalogs. A 6 mm screw is 0.236 inches — close to but not the same as 1/4" (6.35 mm). This distinction matters for hardware selection.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is 5 feet in centimeters?**
 5 feet = 60 inches = 60 × 2.54 = 152.4 centimeters. 6 feet = 72 inches = 182.88 cm. The conversion from feet to centimeters goes through inches: multiply feet by 12 to get inches, then multiply by 2.54.

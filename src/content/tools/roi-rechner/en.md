@@ -72,7 +72,7 @@ This is the compound annual growth rate (CAGR) equivalent of your ROI, assuming 
 
 **HVAC and energy efficiency upgrades** — A $6,000 heat pump installation reduces energy bills by $1,200 per year. Payback period = 5 years, ROI after 10 years = 100% (annualized ≈ 7.2%).
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is a negative ROI?**
 A negative ROI means you lost money. If you invested $1,000 and got back $700, net profit = −$300, ROI = −30%. Negative ROI is still useful data — it tells you the magnitude of the loss and helps you decide whether to cut or continue an investment.

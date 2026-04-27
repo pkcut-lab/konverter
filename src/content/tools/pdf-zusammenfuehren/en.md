@@ -74,7 +74,7 @@ The entire operation runs in memory on your device. No temporary files are creat
 
 **Medical record compilation.** Patients gathering records from multiple providers (primary care, specialist, lab) can merge individual report PDFs into one organized file before a referral appointment.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Can I set a specific page order within a single PDF?** The current version merges whole files in the order you arrange them. For rearranging individual pages from a single PDF, split it first using the PDF Splitter, then re-merge the extracted single-page PDFs in the desired sequence.
 

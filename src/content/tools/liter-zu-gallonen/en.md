@@ -98,7 +98,7 @@ The Imperial gallon is larger than the US gallon by exactly 20%. This discrepanc
 
 Always verify which gallon a source uses before comparing fuel costs or economy figures across countries.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Is a liter bigger than a quart?**
 

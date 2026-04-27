@@ -79,7 +79,7 @@ The gap between annual and monthly compounding is $704.52 on a $10,000 investmen
 
 **Comparing savings vehicles.** Enter the same principal and time period for different rates — a 4.5% CD versus an investment at 7% average return versus a HYSA at 5% — to see the absolute dollar difference at your target date.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is APY vs APR?**
 APR (Annual Percentage Rate) is the stated interest rate without accounting for compounding. APY (Annual Percentage Yield) is the effective annual rate after compounding is included. For savings accounts, the APY is always higher than or equal to the APR. Banks are required to disclose APY on savings products so you can compare apples to apples. Enter APY into this calculator when comparing savings accounts or CDs.

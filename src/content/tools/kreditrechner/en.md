@@ -89,7 +89,7 @@ A simple rule: paying one extra monthly payment per year on a 30-year mortgage s
 - **Choose a shorter term** if your budget allows. Monthly payments are higher, but total interest shrinks significantly.
 - **Make a larger down payment** to reduce the financed amount — smaller principal means less interest regardless of rate.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Does paying biweekly instead of monthly save money?**
 

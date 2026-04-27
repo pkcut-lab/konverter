@@ -93,7 +93,7 @@ PowerPoint and Keynote slides benefit from placeholder text that resembles real 
 
 **Set a reminder.** Placeholder text left in production is an SEO signal (thin content) and a credibility issue. Add a content ticket before any lorem ipsum makes it past staging.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Is lorem ipsum Latin?**
 

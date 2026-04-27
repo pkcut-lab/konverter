@@ -112,7 +112,7 @@ At lease end, you can typically purchase the vehicle at the residual value. If m
 
 **Excess Mileage:** Standard leases allow 10,000–15,000 miles per year. Excess is charged at $0.15–$0.30 per mile depending on the lender and vehicle class.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Should I put money down on a lease?**
 

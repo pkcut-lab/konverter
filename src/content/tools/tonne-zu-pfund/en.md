@@ -74,7 +74,7 @@ The converter uses these ratios directly — no intermediate rounding. Results a
 | 25 t | 55,116 lbs | 27.558 tn | 24.606 LT |
 | 100 t | 220,462 lbs | 110.231 tn | 98.421 LT |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Is a metric ton the same as a tonne?**
 Yes. "Tonne" is the international spelling used in most countries; "metric ton" is the preferred US term for the same unit. Both equal exactly 1,000 kg.

@@ -138,7 +138,7 @@ IT teams creating initial passwords for new employees should use random generati
 
 Note: Some password policies exclude ambiguous characters (l, 1, I, O, 0) to prevent transcription errors. If you need to read or type the password manually, consider enabling an "exclude ambiguous" option.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is the maximum secure password length?**
 

@@ -79,7 +79,7 @@ WebP hits the sweet spot: it beats JPEG on file size, beats PNG on compression, 
 
 **Portfolio and landing pages.** A single large hero image converted from PNG (often 1–3 MB) to WebP with quality 85 typically yields a 300–900 KB file — a meaningful improvement for first contentful paint on mobile connections.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Should I use lossless or lossy WebP?**
 Lossy WebP (quality 75–90) is best for photographs and complex imagery where the eye cannot detect subtle compression artifacts. Lossless WebP is better for screenshots, diagrams, icons, and any image where pixel-perfect accuracy matters — though lossless WebP files are larger than lossy, they are still often smaller than PNG equivalents.

@@ -71,7 +71,7 @@ The conversion uses the internationally defined exact value:
 
 **Navy and military operations** — US Navy surface ships, submarines, and carrier strike groups operate using nautical miles and knots. Range-to-target calculations, tanker rendezvous planning, and patrol sectors all use nautical units.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why is the nautical mile exactly 1.852 km?**
 The nautical mile was originally defined as one arcminute of a great circle of Earth. Early measurements of Earth's circumference were slightly inconsistent across countries, leading to different "nautical miles." In 1929, the International Hydrographic Conference in Monaco standardized it at exactly 1,852 meters (1.852 km), reconciling the various national definitions.

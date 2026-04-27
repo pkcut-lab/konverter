@@ -90,7 +90,7 @@ Over 5 years, the difference between simple and monthly compound interest is $93
 
 **Student loan interest estimation.** Federal student loans use simple interest that accrues daily. During a deferment or forbearance period, unpaid interest may capitalize (be added to the principal) — converting into compound interest after that point. Understanding daily accrual on a deferred loan helps borrowers decide whether to make interest-only payments during school to prevent capitalization.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is the difference between APR and interest rate?**
 The interest rate is the cost of borrowing expressed as a percentage. APR (Annual Percentage Rate) includes the interest rate plus other costs — origination fees, closing costs, mandatory insurance — expressed as a single annual percentage. For simple comparison, APR is more complete. This calculator uses the interest rate only; to account for fees, add them to the principal or subtract them from the loan proceeds.

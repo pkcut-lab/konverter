@@ -80,7 +80,7 @@ For the reverse calculation (kg to lbs), the factor is:
 
 **Medical and clinical.** Drug dosing in pediatrics and many pharmacological contexts uses kg-based dosing (mg/kg). Nurses and caregivers working with US patients whose weights are charted in pounds need a quick conversion.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is the difference between a pound and a kilogram?** A kilogram is the base unit of mass in the International System (SI). A pound is a unit of mass in the US customary and imperial systems. One kilogram equals approximately 2.205 pounds.
 

@@ -93,7 +93,7 @@ US state and territory reference table:
 | Ohio | 116,098 | 44,826 |
 | Rhode Island | 4,001 | 1,545 |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **How does km² compare to acres?** 1 km² = 247.105 acres. For small land areas, acres are often more intuitive for US users than square miles (which are large units). This converter focuses on km² to mi²; for hectares to acres, use our dedicated tool.
 

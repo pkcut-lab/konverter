@@ -83,7 +83,7 @@ Example: 11.5 st = 11 st + (0.5 × 14) lbs = 11 st 7 lbs = 73.03 kg.
 
 **Online shopping for UK-designed clothing** — Some UK brands size clothing by stone-based weight ranges. Understanding the stone scale helps when reading size guides from ASOS, Marks & Spencer, or other UK retailers shipping to the US.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does the UK use stone when the rest of the world uses kilograms?**
 The stone is a traditional British imperial unit that was never replaced during metrication for the specific context of body weight. The UK officially adopted metric in 1995 for most trade, but body weight remains culturally attached to stone — similar to how the US has retained Fahrenheit for everyday temperatures while using Celsius in science.

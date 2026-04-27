@@ -92,7 +92,7 @@ To use the blurred feed in any video call app:
 
 This routes the browser-processed, blurred feed as a system-wide virtual camera available to all applications.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why is the blur edge around my hair imperfect?**
 Real-time segmentation at 30fps runs a lighter model than still-image processing. Hair and flyaways at the boundary are harder to classify correctly at speed. Increasing ambient light and wearing clothing that contrasts with your background significantly improves edge quality.

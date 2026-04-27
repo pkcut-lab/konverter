@@ -108,7 +108,7 @@ Bookkeepers routinely need to back out sales tax from bank deposit totals to rec
 | Typical rate range | 0%–10.25% | 17%–27% |
 | Reduced rates? | Some states exempt groceries/medicine | Common (5%–12% for food, medicine) |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does my total seem higher than expected?**
 

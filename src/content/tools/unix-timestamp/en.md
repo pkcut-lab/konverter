@@ -80,7 +80,7 @@ The tool outputs the timestamp in multiple formats:
 | RFC 2822 | Sat, 26 Apr 2025 14:30:00 +0000 |
 | Day of week | Saturday |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What happens with negative Unix timestamps?**
 Negative values represent dates before January 1, 1970. For example, -86,400 = December 31, 1969, 00:00:00 UTC. Most systems support negative timestamps, though some older APIs may not.

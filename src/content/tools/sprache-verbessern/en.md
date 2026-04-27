@@ -70,7 +70,7 @@ Audio enhancement is a two-stage process:
 
 **YouTube and social media content** — Creators recording voiceovers, tutorials, or commentary in non-studio environments use noise reduction to avoid viewer complaints about audio quality.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why is browser-side processing important for privacy?**
 Many audio enhancement tools require uploading your file to a server, where it is processed (and potentially retained) by a third party. For sensitive content — legal depositions, medical consultations, confidential business calls — server-side processing creates a privacy risk. This tool never transmits your audio.

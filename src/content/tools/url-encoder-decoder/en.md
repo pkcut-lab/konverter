@@ -93,7 +93,7 @@ Input: `https://example.com/search?q=hello world&lang=en`
 | `?` | `%3F` | Query values |
 | `@` | `%40` | Query values |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Is URL encoding the same as HTML encoding?**
 No. HTML encoding (also called HTML entity encoding) replaces characters like `<`, `>`, and `&` with `&lt;`, `&gt;`, and `&amp;` for safe display in HTML. URL encoding is a separate standard for safe transmission in URLs. The two serve different purposes and should not be conflated.

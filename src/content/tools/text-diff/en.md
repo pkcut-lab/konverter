@@ -73,7 +73,7 @@ The diff output can be read in two views:
 - **Unified view:** A single scrollable list, additions and deletions interleaved. Mirrors the output of `git diff` — familiar to developers.
 - **Split view:** Two columns side-by-side, with original on the left and revised on the right. Easier for prose review and non-technical users.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Can I diff more than two versions?**
 This tool compares exactly two inputs at a time. For multi-version history, use a version control system like Git, which stores every revision and lets you diff any two commits.

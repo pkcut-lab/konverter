@@ -73,7 +73,7 @@ The conversion is arithmetic: multiply yards by 0.9144 to get meters. Divide met
 
 **Track and field.** Older track records in the US were set on 440-yard tracks. Modern tracks are 400 meters. The difference (37.664 meters per lap) means times are not directly comparable. Athletes converting their performance data between legacy yard-based records and current metric standards use this conversion regularly.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does the US still use yards instead of meters?**
 The United States uses a customary system (derived from the British Imperial system) that predates metrication. Unlike most countries, the US has not mandated metric adoption for everyday commerce, sports, or construction — though science, medicine, and the military use metric. This dual-system reality makes yard-to-meter conversion a practical daily need for many Americans working with international content.

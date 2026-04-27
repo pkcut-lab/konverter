@@ -78,7 +78,7 @@ Example: 1,994 = MCMXCIV → M (1,000) + CM (900) + XC (90) + IV (4).
 
 **Chapter and volume numbering** — Books, encyclopedias, and academic journals use Roman numerals for front matter (pages i, ii, iii) and volume numbering. Convert for citation formatting.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why did the Romans not just use Arabic numerals?**
 Arabic numerals (and the zero they require) were not introduced to Europe until the 10th–13th centuries via Arabic-speaking scholars. Roman numerals predate that system by over a millennium.

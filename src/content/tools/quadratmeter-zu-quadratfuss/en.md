@@ -99,7 +99,7 @@ US room size reference table:
 | 2-bedroom apartment | 900–1,300 ft² | 83.6–120.8 m² |
 | Median new US home | ~2,300 ft² | ~213.7 m² |
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Why does the US use square feet instead of square meters?** The US is one of three countries (along with Liberia and Myanmar) that has not fully adopted the SI metric system for everyday use. Square feet are embedded in real estate law, building codes, and common vernacular — a change that is unlikely in the foreseeable future.
 

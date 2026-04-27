@@ -84,7 +84,7 @@ ORDER BY o.total DESC
 
 **Sharing queries in Slack or GitHub** — Formatted SQL in a code block is immediately readable without asking colleagues to mentally parse a compressed string. Paste formatted output directly into PR comments or Slack messages.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **Should I use leading or trailing commas in SQL?**
 Both are valid. Trailing commas (`col1,\n col2,`) are the SQL standard default and what most teams use. Leading commas (`,col1\n,col2`) make it easier to comment out individual columns without touching the previous line. This tool defaults to trailing commas but supports both styles in settings.

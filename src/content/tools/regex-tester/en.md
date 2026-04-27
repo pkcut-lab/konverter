@@ -73,7 +73,7 @@ Everything runs in your browser. Your pattern and test data never leave your mac
 
 **Find-and-replace in editors** — VS Code, JetBrains IDEs, and Sublime Text all support regex find-and-replace. Prototype the pattern here where you can see matches highlighted, then paste it into your editor.
 
-## Häufige Fragen?
+## Frequently Asked Questions
 
 **What is the difference between `test()` and `match()`?**
 `RegExp.prototype.test(str)` returns a boolean — useful when you only need to know if a pattern matches. `String.prototype.match()` returns the match array. This tool uses `matchAll()` to surface all matches and their groups.
