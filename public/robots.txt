@@ -1,25 +1,10 @@
 # kittokit — robots.txt
-# Policy: ALLOW. kittokit is a public-utility tool platform (no premium
-# content, no user data). Maximum reach in classic search engines AND in
-# AI search/answer engines is the goal of Phase 1–2. Re-evaluate once
-# brand-entity is established (see docs/superpowers/research/2026-04-26-seo-geo-deep-research.md
-# §"Re-Evaluation-Trigger").
+# Policy: allow all crawlers, including AI search and AI training.
 
 User-agent: *
 Allow: /
 
-# --- Classic search crawlers (explicit allow, redundant with the wildcard
-# above but documents the choice) ---
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-# --- AI search / citation crawlers (deliver attributed traffic) ---
+# AI search / citation crawlers (return attributed traffic).
 User-agent: OAI-SearchBot
 Allow: /
 
@@ -44,9 +29,7 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-# --- AI training crawlers (no attribution) ---
-# kittokit allows these in Phase 1–2 to maximise corpus inclusion and
-# brand-entity formation in foundation models. Trade-off documented.
+# AI training crawlers.
 User-agent: GPTBot
 Allow: /
 
@@ -68,5 +51,4 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-# --- Sitemap discovery ---
 Sitemap: https://kittokit.com/sitemap-index.xml
