@@ -21,6 +21,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.tilgungsplan);
 
   // ---- Berechnungs-Modus ----
   type Modus = 'anfangstilgung' | 'monatsrate' | 'laufzeit';
@@ -46,35 +47,35 @@
 
   // ---- Validierung ----
   const betragError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(betrag)) return 'Bitte einen Betrag eingeben.';
-    if (betrag < 1000) return 'Mindestbetrag: 1.000 €';
-    if (betrag > 10_000_000) return 'Maximalbetrag: 10.000.000 €';
+    if (!Number.isFinite(betrag)) return T.errAmountRequired;
+    if (betrag < 1000) return T.errAmountMin;
+    if (betrag > 10_000_000) return T.errAmountMax;
     return null;
   });
 
   const zinssatzError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(zinssatz)) return 'Bitte einen Zinssatz eingeben.';
-    if (zinssatz < 0.1) return 'Zinssatz muss mindestens 0,1 % betragen.';
-    if (zinssatz > 20) return 'Zinssatz darf maximal 20 % betragen.';
+    if (!Number.isFinite(zinssatz)) return T.errInterestRequired;
+    if (zinssatz < 0.1) return T.errInterestMin;
+    if (zinssatz > 20) return T.errInterestMax;
     return null;
   });
 
   const anfangstilgungError = $derived.by<string | null>(() => {
     if (modus !== 'anfangstilgung') return null;
-    if (!Number.isFinite(anfangstilgung)) return 'Bitte eine Anfangstilgung eingeben.';
-    if (anfangstilgung <= 0) return 'Anfangstilgung muss > 0 % sein.';
-    if (anfangstilgung > 20) return 'Anfangstilgung maximal 20 %.';
+    if (!Number.isFinite(anfangstilgung)) return T.errInitialPayoffRequired;
+    if (anfangstilgung <= 0) return T.errInitialPayoffMin;
+    if (anfangstilgung > 20) return T.errInitialPayoffMax;
     return null;
   });
 
   const monatsrateError = $derived.by<string | null>(() => {
     if (modus !== 'monatsrate') return null;
-    if (!Number.isFinite(monatsrateInput)) return 'Bitte eine Monatsrate eingeben.';
-    if (monatsrateInput <= 0) return 'Monatsrate muss > 0 € sein.';
+    if (!Number.isFinite(monatsrateInput)) return T.errMonthlyRequired;
+    if (monatsrateInput <= 0) return T.errMonthlyMin;
     if (Number.isFinite(zinssatz) && Number.isFinite(betrag)) {
       const monatszins = betrag * (zinssatz / 100 / 12);
       if (monatsrateInput <= monatszins) {
-        return `Rate zu gering — Monatszinsen betragen ${formatEuro(monatszins)} €.`;
+        return T.errMonthlyTooLow.replace('{amount}', formatEuro(monatszins));
       }
     }
     return null;
@@ -82,23 +83,23 @@
 
   const laufzeitError = $derived.by<string | null>(() => {
     if (modus !== 'laufzeit') return null;
-    if (!Number.isFinite(laufzeitInput)) return 'Bitte eine Laufzeit eingeben.';
-    if (laufzeitInput < 1 || laufzeitInput > 50) return 'Laufzeit: 1–50 Jahre.';
+    if (!Number.isFinite(laufzeitInput)) return T.errTermRequired;
+    if (laufzeitInput < 1 || laufzeitInput > 50) return T.errTermRange;
     return null;
   });
 
   const zinsbindungError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(zinsbindung)) return 'Bitte eine Zinsbindung eingeben.';
-    if (zinsbindung < 1 || zinsbindung > 40) return 'Zinsbindung: 1–40 Jahre.';
+    if (!Number.isFinite(zinsbindung)) return T.errFixedTermRequired;
+    if (zinsbindung < 1 || zinsbindung > 40) return T.errFixedTermRange;
     return null;
   });
 
   const sondertilgungError = $derived.by<string | null>(() => {
     if (sondertilgungStr.trim() === '') return null;
-    if (!Number.isFinite(sondertilgung)) return 'Bitte einen gültigen Betrag eingeben.';
-    if (sondertilgung < 0) return 'Sondertilgung muss ≥ 0 € sein.';
+    if (!Number.isFinite(sondertilgung)) return T.errExtraAmountInvalid;
+    if (sondertilgung < 0) return T.errExtraNegative;
     if (Number.isFinite(betrag) && sondertilgung > betrag * 0.5) {
-      return 'Sondertilgung über 50 % des Darlehens — korrekt?';
+      return T.errExtraTooLarge;
     }
     return null;
   });
@@ -154,7 +155,7 @@
   $effect(() => {
     if (!_firstResult && result !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
     }
   });
 
@@ -179,9 +180,6 @@
     return computeMonatsrate(result.restschuldNachZinsbindung, anschlussZinssatz, restLaufzeit);
   });
 
-  // ---- Tabellen-Toggle ----
-  let showMonths = $state(false);
-
   // ---- Copy Result ----
   type CopyState = 'idle' | 'copied';
   let copyResult = $state<CopyState>('idle');
@@ -189,11 +187,13 @@
   async function handleCopyResult() {
     if (!result) return;
     const lines = [
-      `Tilgungsplan-Ergebnis`,
-      `Monatsrate: ${formatEuro(result.monatsrate)} €`,
-      `Gesamtzinsen: ${formatEuro(result.gesamtZinsen)} €`,
-      `Restschuld nach Zinsbindung: ${formatEuro(result.restschuldNachZinsbindung)} €`,
-      `Gesamtlaufzeit: ${result.laufzeitJahre} Jahre (${result.laufzeitMonate} Monate)`,
+      T.clipboardTitle,
+      T.clipboardMonthly.replace('{amount}', formatEuro(result.monatsrate)),
+      T.clipboardTotalInterest.replace('{amount}', formatEuro(result.gesamtZinsen)),
+      T.clipboardBalanceAfter.replace('{amount}', formatEuro(result.restschuldNachZinsbindung)),
+      T.clipboardTerm
+        .replace('{years}', String(result.laufzeitJahre))
+        .replace('{months}', String(result.laufzeitMonate)),
     ];
     try {
       await navigator.clipboard.writeText(lines.join('\n'));
@@ -217,33 +217,33 @@
   }
 </script>
 
-<div class="tilgungsplan-tool" role="region" aria-label="Tilgungsplan-Rechner">
+<div class="tilgungsplan-tool" role="region" aria-label={T.regionAria}>
 
   <!-- Modus-Toggle -->
   <div class="modus-bar">
-    <span class="modus-bar__label">Berechne</span>
-    <div class="modus-pills" role="group" aria-label="Berechnungsmodus auswählen">
+    <span class="modus-bar__label">{T.modeLabel}</span>
+    <div class="modus-pills" role="group" aria-label={T.modeBarAria}>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'anfangstilgung'}
         aria-pressed={modus === 'anfangstilgung'}
         onclick={() => { modus = 'anfangstilgung'; }}
-      >Monatsrate aus Tilgungssatz</button>
+      >{T.modeAnfangstilgung}</button>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'monatsrate'}
         aria-pressed={modus === 'monatsrate'}
         onclick={() => { modus = 'monatsrate'; }}
-      >Laufzeit aus Monatsrate</button>
+      >{T.modeMonatsrate}</button>
       <button
         type="button"
         class="modus-pill"
         class:modus-pill--active={modus === 'laufzeit'}
         aria-pressed={modus === 'laufzeit'}
         onclick={() => { modus = 'laufzeit'; }}
-      >Monatsrate aus Laufzeit</button>
+      >{T.modeLaufzeit}</button>
     </div>
   </div>
 
@@ -252,16 +252,16 @@
 
     <!-- Darlehensbetrag -->
     <div class="input-field">
-      <label class="input-field__label" for="inp-betrag">Darlehensbetrag</label>
+      <label class="input-field__label" for="inp-betrag">{T.loanAmountLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={betragError !== null}>
         <input
           id="inp-betrag"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 300.000"
+          placeholder={T.loanAmountPlaceholder}
           bind:value={betragStr}
-          aria-label="Darlehensbetrag in Euro"
+          aria-label={T.loanAmountAria}
           aria-invalid={betragError !== null}
           aria-describedby={betragError ? 'inp-betrag-error' : undefined}
           autocomplete="off"
@@ -275,16 +275,16 @@
 
     <!-- Sollzinssatz -->
     <div class="input-field">
-      <label class="input-field__label" for="inp-zinssatz">Sollzinssatz p.a.</label>
+      <label class="input-field__label" for="inp-zinssatz">{T.interestRateLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={zinssatzError !== null}>
         <input
           id="inp-zinssatz"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 3,50"
+          placeholder={T.interestRatePlaceholder}
           bind:value={zinssatzStr}
-          aria-label="Sollzinssatz pro Jahr in Prozent"
+          aria-label={T.interestRateAria}
           aria-invalid={zinssatzError !== null}
           aria-describedby={zinssatzError ? 'inp-zinssatz-error' : undefined}
           autocomplete="off"
@@ -299,16 +299,16 @@
     <!-- Modus-abhängiges Eingabefeld -->
     {#if modus === 'anfangstilgung'}
       <div class="input-field">
-        <label class="input-field__label" for="inp-anfangstilgung">Anfangstilgung p.a.</label>
+        <label class="input-field__label" for="inp-anfangstilgung">{T.initialPayoffLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={anfangstilgungError !== null}>
           <input
             id="inp-anfangstilgung"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 2,00"
+            placeholder={T.initialPayoffPlaceholder}
             bind:value={anfangstilgungStr}
-            aria-label="Anfangstilgung pro Jahr in Prozent"
+            aria-label={T.initialPayoffAria}
             aria-invalid={anfangstilgungError !== null}
             aria-describedby={anfangstilgungError ? 'inp-anfangstilgung-error' : undefined}
             autocomplete="off"
@@ -321,16 +321,16 @@
       </div>
     {:else if modus === 'monatsrate'}
       <div class="input-field">
-        <label class="input-field__label" for="inp-monatsrate">Gewünschte Monatsrate</label>
+        <label class="input-field__label" for="inp-monatsrate">{T.desiredMonthlyLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={monatsrateError !== null}>
           <input
             id="inp-monatsrate"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 1.375"
+            placeholder={T.desiredMonthlyPlaceholder}
             bind:value={monatsrateStr}
-            aria-label="Monatliche Rate in Euro"
+            aria-label={T.desiredMonthlyAria}
             aria-invalid={monatsrateError !== null}
             aria-describedby={monatsrateError ? 'inp-monatsrate-error' : undefined}
             autocomplete="off"
@@ -343,21 +343,21 @@
       </div>
     {:else}
       <div class="input-field">
-        <label class="input-field__label" for="inp-laufzeit">Gewünschte Laufzeit</label>
+        <label class="input-field__label" for="inp-laufzeit">{T.desiredTermLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={laufzeitError !== null}>
           <input
             id="inp-laufzeit"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 25"
+            placeholder={T.desiredTermPlaceholder}
             bind:value={laufzeitStr}
-            aria-label="Laufzeit in Jahren"
+            aria-label={T.desiredTermAria}
             aria-invalid={laufzeitError !== null}
             aria-describedby={laufzeitError ? 'inp-laufzeit-error' : undefined}
             autocomplete="off"
           />
-          <span class="input-field__unit" aria-hidden="true">Jahre</span>
+          <span class="input-field__unit" aria-hidden="true">{T.unitYears}</span>
         </div>
         {#if laufzeitError}
           <p id="inp-laufzeit-error" class="field-error" role="alert">{laufzeitError}</p>
@@ -367,21 +367,21 @@
 
     <!-- Zinsbindung -->
     <div class="input-field">
-      <label class="input-field__label" for="inp-zinsbindung">Zinsbindung</label>
+      <label class="input-field__label" for="inp-zinsbindung">{T.fixedTermLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={zinsbindungError !== null}>
         <input
           id="inp-zinsbindung"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 10"
+          placeholder={T.fixedTermPlaceholder}
           bind:value={zinsbindungStr}
-          aria-label="Zinsbindungsdauer in Jahren"
+          aria-label={T.fixedTermAria}
           aria-invalid={zinsbindungError !== null}
           aria-describedby={zinsbindungError ? 'inp-zinsbindung-error' : undefined}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">Jahre</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitYears}</span>
       </div>
       {#if zinsbindungError}
         <p id="inp-zinsbindung-error" class="field-error" role="alert">{zinsbindungError}</p>
@@ -391,8 +391,8 @@
     <!-- Sondertilgung (optional) -->
     <div class="input-field input-field--optional">
       <label class="input-field__label" for="inp-sondertilgung">
-        Sondertilgung p.a.
-        <span class="optional-badge">optional</span>
+        {T.extraPayoffLabel}
+        <span class="optional-badge">{T.optionalBadge}</span>
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={sondertilgungError !== null}>
         <input
@@ -400,14 +400,14 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 5.000"
+          placeholder={T.extraPayoffPlaceholder}
           bind:value={sondertilgungStr}
-          aria-label="Jährliche Sondertilgung in Euro"
+          aria-label={T.extraPayoffAria}
           aria-invalid={sondertilgungError !== null}
           aria-describedby={sondertilgungError ? 'inp-sondertilgung-error' : undefined}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">€/Jahr</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitEuroPerYear}</span>
       </div>
       {#if sondertilgungError}
         <p id="inp-sondertilgung-error" class="field-error" role="alert">{sondertilgungError}</p>
@@ -417,7 +417,7 @@
   </div><!-- /inputs-grid -->
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" role="region" aria-label="Berechnungsergebnis">
+  <div class="results" role="region" aria-label={T.resultsAria}>
 
     {#if result}
       <!-- Copy Result -->
@@ -440,52 +440,56 @@
       <!-- Summary-Cards -->
       <div class="summary-grid">
         <div class="summary-card summary-card--primary">
-          <span class="summary-card__label">Monatsrate</span>
+          <span class="summary-card__label">{T.cardMonthlyRate}</span>
           <span class="summary-card__value" aria-live="polite">{formatEuro(result.monatsrate)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
-          <span class="summary-card__label">Gesamtzinsen</span>
+          <span class="summary-card__label">{T.cardTotalInterest}</span>
           <span class="summary-card__value" aria-live="polite">{formatEuro(result.gesamtZinsen)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
-          <span class="summary-card__label">Restschuld nach Zinsbindung</span>
+          <span class="summary-card__label">{T.cardBalanceAfter}</span>
           <span class="summary-card__value" aria-live="polite">{formatEuro(result.restschuldNachZinsbindung)} <span class="summary-card__unit">€</span></span>
         </div>
         <div class="summary-card">
-          <span class="summary-card__label">Gesamtlaufzeit</span>
+          <span class="summary-card__label">{T.cardTotalTerm}</span>
           <span class="summary-card__value" aria-live="polite">
-            {result.laufzeitJahre} <span class="summary-card__unit">Jahre</span>
+            {result.laufzeitJahre} <span class="summary-card__unit">{T.unitYears}</span>
             {#if result.laufzeitMonate % 12 !== 0}
-              <span class="summary-card__sub">({result.laufzeitMonate} Monate)</span>
+              <span class="summary-card__sub">({result.laufzeitMonate} {T.unitMonths})</span>
             {/if}
           </span>
         </div>
         {#if modus === 'monatsrate' && abgeleitetereLaufzeit !== null}
           <div class="summary-card">
-            <span class="summary-card__label">Anfangstilgung</span>
-            <span class="summary-card__value">{formatPct(result.anfangstilgungPct)} <span class="summary-card__unit">% p.a.</span></span>
+            <span class="summary-card__label">{T.cardInitialPayoff}</span>
+            <span class="summary-card__value">{formatPct(result.anfangstilgungPct)} <span class="summary-card__unit">{T.unitPctPerYear}</span></span>
           </div>
         {/if}
       </div>
 
       <!-- Tilgungsparadoxon-Warnung -->
       {#if result.paradoxWarning}
-        <div class="warning-box" role="alert" aria-label="Tilgungsparadoxon-Hinweis">
+        <div class="warning-box" role="alert" aria-label={T.warningParadoxAria}>
           <span class="warning-box__icon" aria-hidden="true">!</span>
           <div>
-            <strong>Tilgungsparadoxon:</strong> Bei {formatPct(result.anfangstilgungPct)}&nbsp;% Anfangstilgung und {formatPct(zinssatz)}&nbsp;% Zinssatz beträgt Ihre vollständige Tilgungsdauer
-            <strong>{result.laufzeitJahre} Jahre</strong>. Experten empfehlen mindestens 2&nbsp;% Anfangstilgung — dadurch sinkt die Gesamtlaufzeit erheblich.
+            <strong>{T.warningParadoxLabel}</strong>
+            {@html ' ' + T.warningParadoxBodyHtml
+              .replace('{init}', formatPct(result.anfangstilgungPct))
+              .replace('{rate}', formatPct(zinssatz))
+              .replace('{years}', String(result.laufzeitJahre))}
           </div>
         </div>
       {/if}
 
       <!-- Sondertilgung-Effekt -->
       {#if result.sondertilgungEinsparungZinsen > 0}
-        <div class="sondertilgung-box" role="note" aria-label="Sondertilgung-Effekt">
+        <div class="sondertilgung-box" role="note" aria-label={T.extraEffectAria}>
           <div>
-            Durch die jährliche Sondertilgung von {formatEuro(sondertilgung)}&nbsp;€ sparst du
-            <strong>{formatEuro(result.sondertilgungEinsparungZinsen)}&nbsp;€ Zinsen</strong> und bist
-            <strong>{result.sondertilgungVerkürzungMonate} Monate früher</strong> schuldenfrei.
+            {@html T.extraEffectBodyHtml
+              .replace('{amount}', formatEuro(sondertilgung))
+              .replace('{savings}', formatEuro(result.sondertilgungEinsparungZinsen))
+              .replace('{months}', String(result.sondertilgungVerkürzungMonate))}
           </div>
         </div>
       {/if}
@@ -493,20 +497,20 @@
       <!-- Tilgungsplan-Tabelle -->
       <div class="table-section">
         <div class="table-header">
-          <h2 class="table-title">Tilgungsplan (Jahresübersicht)</h2>
+          <h2 class="table-title">{T.tableTitle}</h2>
         </div>
-        <div class="table-wrap" role="region" aria-label="Tilgungsplan-Tabelle, horizontal scrollbar" tabindex="0">
-          <table class="tilgungsplan-table" aria-label="Jährlicher Tilgungsplan">
+        <div class="table-wrap" role="region" aria-label={T.tableScrollAria} tabindex="0">
+          <table class="tilgungsplan-table" aria-label={T.tableAria}>
             <thead>
               <tr>
-                <th scope="col">Jahr</th>
-                <th scope="col">Rate/Jahr</th>
-                <th scope="col">Zinsen</th>
-                <th scope="col">Tilgung</th>
+                <th scope="col">{T.colYear}</th>
+                <th scope="col">{T.colRatePerYear}</th>
+                <th scope="col">{T.colInterest}</th>
+                <th scope="col">{T.colPrincipal}</th>
                 {#if result.rows.some((r) => r.sondertilgungJahr > 0)}
-                  <th scope="col">Sondertilg.</th>
+                  <th scope="col">{T.colExtra}</th>
                 {/if}
-                <th scope="col">Restschuld</th>
+                <th scope="col">{T.colBalance}</th>
               </tr>
             </thead>
             <tbody>
@@ -517,9 +521,9 @@
                     {#if row.isZinsbindungsende}
                       <span
                         class="zinsbindungsende-marker"
-                        aria-label="Ende der Zinsbindungsperiode"
-                        title="Ende der Zinsbindungsperiode"
-                      >ZB-Ende</span>
+                        aria-label={T.endOfFixedTerm}
+                        title={T.endOfFixedTerm}
+                      >{T.endOfFixedTermBadge}</span>
                     {/if}
                   </th>
                   <td class="cell--num">{formatEuro(row.rateJahr)}</td>
@@ -538,41 +542,45 @@
 
       <!-- Anschlussfinanzierung -->
       {#if result.restschuldNachZinsbindung > 0}
-        <div class="anschluss-section" role="region" aria-label="Anschlussfinanzierung planen">
-          <h2 class="anschluss-title">Wie hoch wäre meine Rate nach der Zinsbindung?</h2>
+        <div class="anschluss-section" role="region" aria-label={T.followupAria}>
+          <h2 class="anschluss-title">{T.followupTitle}</h2>
           <p class="anschluss-desc">
-            Restschuld nach {Math.round(zinsbindung)} Jahren Zinsbindung:
-            <strong>{formatEuro(result.restschuldNachZinsbindung)}&nbsp;€</strong>
+            {@html T.followupRemainingBalanceHtml
+              .replace('{years}', `${Math.round(zinsbindung)} ${T.unitYears}`)
+              .replace('{amount}', formatEuro(result.restschuldNachZinsbindung))}
           </p>
           <div class="anschluss-input-row">
-            <label class="anschluss-label" for="inp-anschluss-zinssatz">Neuer Zinssatz:</label>
+            <label class="anschluss-label" for="inp-anschluss-zinssatz">{T.followupNewRateLabel}</label>
             <div class="anschluss-input-wrap">
               <input
                 id="inp-anschluss-zinssatz"
                 type="text"
                 inputmode="decimal"
                 class="anschluss-input"
-                placeholder="z.B. 4,00"
+                placeholder={T.followupNewRatePlaceholder}
                 bind:value={anschlussZinssatzStr}
-                aria-label="Neuer Zinssatz für Anschlussfinanzierung in Prozent"
+                aria-label={T.followupNewRateAria}
                 autocomplete="off"
               />
               <span class="anschluss-unit" aria-hidden="true">%</span>
             </div>
             {#if anschlussRate !== null}
               <div class="anschluss-result" aria-live="polite">
-                Neue Monatsrate: <strong>{formatEuro(anschlussRate)}&nbsp;€</strong>
+                {@html T.followupNewMonthlyHtml.replace('{amount}', formatEuro(anschlussRate))}
               </div>
             {/if}
           </div>
           <p class="anschluss-hint">
-            Restlaufzeit nach Zinsbindungsende: ca. {result.laufzeitJahre - Math.round(zinsbindung)} Jahre
+            {T.followupRemainingTerm.replace(
+              '{years}',
+              `${result.laufzeitJahre - Math.round(zinsbindung)} ${T.unitYears}`,
+            )}
           </p>
         </div>
       {/if}
 
     {:else if !hasErrors && Number.isFinite(betrag) && Number.isFinite(zinssatz)}
-      <p class="empty-state">Gib alle Pflichtfelder ein, um den Tilgungsplan zu berechnen.</p>
+      <p class="empty-state">{T.emptyState}</p>
     {/if}
 
   </div><!-- /results -->
@@ -583,14 +591,11 @@
   </div>
 
   <!-- Disclaimer -->
-  <p class="disclaimer">
-    Diese Berechnung dient ausschließlich zur unverbindlichen Information und ersetzt keine Bankberatung.
-    Tatsächliche Konditionen hängen von Ihrer Bonität und dem jeweiligen Kreditvertrag ab.
-  </p>
+  <p class="disclaimer">{T.disclaimer}</p>
 
   <!-- Privacy badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </div><!-- /tilgungsplan-tool -->

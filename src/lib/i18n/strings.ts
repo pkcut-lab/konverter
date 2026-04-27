@@ -223,6 +223,125 @@ export interface UiStrings {
     emptyInput: string;
     parseFailed: string;
   };
+
+  // ── Per-tool namespaces ────────────────────────────────────────
+  // Tool-specific labels live here so adding a new language is one file.
+  // Components access via `t(lang).tools.<slug>.<key>`. Interpolation:
+  // `{placeholder}` tokens are resolved with `.replace()` at the use site.
+  tools: {
+    tilgungsplan: {
+      // Region / aria
+      regionAria: string;
+      resultsAria: string;
+      // Mode bar
+      modeLabel: string;
+      modeBarAria: string;
+      modeAnfangstilgung: string;
+      modeMonatsrate: string;
+      modeLaufzeit: string;
+      // Inputs
+      loanAmountLabel: string;
+      loanAmountPlaceholder: string;
+      loanAmountAria: string;
+      interestRateLabel: string;
+      interestRatePlaceholder: string;
+      interestRateAria: string;
+      initialPayoffLabel: string;
+      initialPayoffPlaceholder: string;
+      initialPayoffAria: string;
+      desiredMonthlyLabel: string;
+      desiredMonthlyPlaceholder: string;
+      desiredMonthlyAria: string;
+      desiredTermLabel: string;
+      desiredTermPlaceholder: string;
+      desiredTermAria: string;
+      fixedTermLabel: string;
+      fixedTermPlaceholder: string;
+      fixedTermAria: string;
+      extraPayoffLabel: string;
+      extraPayoffPlaceholder: string;
+      extraPayoffAria: string;
+      optionalBadge: string;
+      unitYears: string;
+      unitMonths: string;
+      unitEuroPerYear: string;
+      unitPctPerYear: string;
+      // Validation
+      errAmountRequired: string;
+      errAmountMin: string;
+      errAmountMax: string;
+      errInterestRequired: string;
+      errInterestMin: string;
+      errInterestMax: string;
+      errInitialPayoffRequired: string;
+      errInitialPayoffMin: string;
+      errInitialPayoffMax: string;
+      errMonthlyRequired: string;
+      errMonthlyMin: string;
+      /** {amount} — formatted euro value of monthly interest. */
+      errMonthlyTooLow: string;
+      errTermRequired: string;
+      errTermRange: string;
+      errFixedTermRequired: string;
+      errFixedTermRange: string;
+      errExtraAmountInvalid: string;
+      errExtraNegative: string;
+      errExtraTooLarge: string;
+      // Result cards
+      cardMonthlyRate: string;
+      cardTotalInterest: string;
+      cardBalanceAfter: string;
+      cardTotalTerm: string;
+      cardInitialPayoff: string;
+      // Warning / extra-effect
+      warningParadoxAria: string;
+      warningParadoxLabel: string;
+      /** {init} {rate} {years} — rendered with `{@html}` because of inline `<strong>`. */
+      warningParadoxBodyHtml: string;
+      extraEffectAria: string;
+      /** {amount} {savings} {months} — rendered with `{@html}` because of inline `<strong>`. */
+      extraEffectBodyHtml: string;
+      // Table
+      tableTitle: string;
+      tableScrollAria: string;
+      tableAria: string;
+      colYear: string;
+      colRatePerYear: string;
+      colInterest: string;
+      colPrincipal: string;
+      colExtra: string;
+      colBalance: string;
+      endOfFixedTerm: string;
+      endOfFixedTermBadge: string;
+      // Follow-up financing
+      followupAria: string;
+      followupTitle: string;
+      /** {years} {amount} — rendered with `{@html}` because of inline `<strong>`. */
+      followupRemainingBalanceHtml: string;
+      followupNewRateLabel: string;
+      followupNewRatePlaceholder: string;
+      followupNewRateAria: string;
+      /** {amount} */
+      /** {amount} — rendered with `{@html}` because of inline `<strong>`. */
+      followupNewMonthlyHtml: string;
+      /** {years} */
+      followupRemainingTerm: string;
+      // Empty / disclaimer / privacy
+      emptyState: string;
+      disclaimer: string;
+      privacyBadge: string;
+      // Clipboard
+      clipboardTitle: string;
+      /** {amount} */
+      clipboardMonthly: string;
+      /** {amount} */
+      clipboardTotalInterest: string;
+      /** {amount} */
+      clipboardBalanceAfter: string;
+      /** {years} {months} */
+      clipboardTerm: string;
+    };
+  };
 }
 
 const strings: Record<Lang, UiStrings> = {
@@ -448,6 +567,103 @@ const strings: Record<Lang, UiStrings> = {
       emptyInput: 'Eingabe ist leer.',
       parseFailed: 'Konnte Eingabe nicht verarbeiten.',
     },
+
+    tools: {
+      tilgungsplan: {
+        regionAria: 'Tilgungsplan-Rechner',
+        resultsAria: 'Berechnungsergebnis',
+        modeLabel: 'Berechne',
+        modeBarAria: 'Berechnungsmodus auswählen',
+        modeAnfangstilgung: 'Monatsrate aus Tilgungssatz',
+        modeMonatsrate: 'Laufzeit aus Monatsrate',
+        modeLaufzeit: 'Monatsrate aus Laufzeit',
+        loanAmountLabel: 'Darlehensbetrag',
+        loanAmountPlaceholder: 'z.B. 300.000',
+        loanAmountAria: 'Darlehensbetrag in Euro',
+        interestRateLabel: 'Sollzinssatz p.a.',
+        interestRatePlaceholder: 'z.B. 3,50',
+        interestRateAria: 'Sollzinssatz pro Jahr in Prozent',
+        initialPayoffLabel: 'Anfangstilgung p.a.',
+        initialPayoffPlaceholder: 'z.B. 2,00',
+        initialPayoffAria: 'Anfangstilgung pro Jahr in Prozent',
+        desiredMonthlyLabel: 'Gewünschte Monatsrate',
+        desiredMonthlyPlaceholder: 'z.B. 1.375',
+        desiredMonthlyAria: 'Monatliche Rate in Euro',
+        desiredTermLabel: 'Gewünschte Laufzeit',
+        desiredTermPlaceholder: 'z.B. 25',
+        desiredTermAria: 'Laufzeit in Jahren',
+        fixedTermLabel: 'Zinsbindung',
+        fixedTermPlaceholder: 'z.B. 10',
+        fixedTermAria: 'Zinsbindungsdauer in Jahren',
+        extraPayoffLabel: 'Sondertilgung p.a.',
+        extraPayoffPlaceholder: 'z.B. 5.000',
+        extraPayoffAria: 'Jährliche Sondertilgung in Euro',
+        optionalBadge: 'optional',
+        unitYears: 'Jahre',
+        unitMonths: 'Monate',
+        unitEuroPerYear: '€/Jahr',
+        unitPctPerYear: '% p.a.',
+        errAmountRequired: 'Bitte einen Betrag eingeben.',
+        errAmountMin: 'Mindestbetrag: 1.000 €',
+        errAmountMax: 'Maximalbetrag: 10.000.000 €',
+        errInterestRequired: 'Bitte einen Zinssatz eingeben.',
+        errInterestMin: 'Zinssatz muss mindestens 0,1 % betragen.',
+        errInterestMax: 'Zinssatz darf maximal 20 % betragen.',
+        errInitialPayoffRequired: 'Bitte eine Anfangstilgung eingeben.',
+        errInitialPayoffMin: 'Anfangstilgung muss > 0 % sein.',
+        errInitialPayoffMax: 'Anfangstilgung maximal 20 %.',
+        errMonthlyRequired: 'Bitte eine Monatsrate eingeben.',
+        errMonthlyMin: 'Monatsrate muss > 0 € sein.',
+        errMonthlyTooLow: 'Rate zu gering — Monatszinsen betragen {amount} €.',
+        errTermRequired: 'Bitte eine Laufzeit eingeben.',
+        errTermRange: 'Laufzeit: 1–50 Jahre.',
+        errFixedTermRequired: 'Bitte eine Zinsbindung eingeben.',
+        errFixedTermRange: 'Zinsbindung: 1–40 Jahre.',
+        errExtraAmountInvalid: 'Bitte einen gültigen Betrag eingeben.',
+        errExtraNegative: 'Sondertilgung muss ≥ 0 € sein.',
+        errExtraTooLarge: 'Sondertilgung über 50 % des Darlehens — korrekt?',
+        cardMonthlyRate: 'Monatsrate',
+        cardTotalInterest: 'Gesamtzinsen',
+        cardBalanceAfter: 'Restschuld nach Zinsbindung',
+        cardTotalTerm: 'Gesamtlaufzeit',
+        cardInitialPayoff: 'Anfangstilgung',
+        warningParadoxAria: 'Tilgungsparadoxon-Hinweis',
+        warningParadoxLabel: 'Tilgungsparadoxon:',
+        warningParadoxBodyHtml:
+          'Bei {init}&nbsp;% Anfangstilgung und {rate}&nbsp;% Zinssatz beträgt Ihre vollständige Tilgungsdauer <strong>{years} Jahre</strong>. Experten empfehlen mindestens 2&nbsp;% Anfangstilgung — dadurch sinkt die Gesamtlaufzeit erheblich.',
+        extraEffectAria: 'Sondertilgung-Effekt',
+        extraEffectBodyHtml:
+          'Durch die jährliche Sondertilgung von {amount}&nbsp;€ sparst du <strong>{savings}&nbsp;€ Zinsen</strong> und bist <strong>{months} Monate früher</strong> schuldenfrei.',
+        tableTitle: 'Tilgungsplan (Jahresübersicht)',
+        tableScrollAria: 'Tilgungsplan-Tabelle, horizontal scrollbar',
+        tableAria: 'Jährlicher Tilgungsplan',
+        colYear: 'Jahr',
+        colRatePerYear: 'Rate/Jahr',
+        colInterest: 'Zinsen',
+        colPrincipal: 'Tilgung',
+        colExtra: 'Sondertilg.',
+        colBalance: 'Restschuld',
+        endOfFixedTerm: 'Ende der Zinsbindungsperiode',
+        endOfFixedTermBadge: 'ZB-Ende',
+        followupAria: 'Anschlussfinanzierung planen',
+        followupTitle: 'Wie hoch wäre meine Rate nach der Zinsbindung?',
+        followupRemainingBalanceHtml: 'Restschuld nach {years} Zinsbindung: <strong>{amount}&nbsp;€</strong>',
+        followupNewRateLabel: 'Neuer Zinssatz:',
+        followupNewRatePlaceholder: 'z.B. 4,00',
+        followupNewRateAria: 'Neuer Zinssatz für Anschlussfinanzierung in Prozent',
+        followupNewMonthlyHtml: 'Neue Monatsrate: <strong>{amount}&nbsp;€</strong>',
+        followupRemainingTerm: 'Restlaufzeit nach Zinsbindungsende: ca. {years}',
+        emptyState: 'Gib alle Pflichtfelder ein, um den Tilgungsplan zu berechnen.',
+        disclaimer:
+          'Diese Berechnung dient ausschließlich zur unverbindlichen Information und ersetzt keine Bankberatung. Tatsächliche Konditionen hängen von Ihrer Bonität und dem jeweiligen Kreditvertrag ab.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+        clipboardTitle: 'Tilgungsplan-Ergebnis',
+        clipboardMonthly: 'Monatsrate: {amount} €',
+        clipboardTotalInterest: 'Gesamtzinsen: {amount} €',
+        clipboardBalanceAfter: 'Restschuld nach Zinsbindung: {amount} €',
+        clipboardTerm: 'Gesamtlaufzeit: {years} Jahre ({months} Monate)',
+      },
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -671,6 +887,104 @@ const strings: Record<Lang, UiStrings> = {
       outOfRange: 'Value is out of range.',
       emptyInput: 'Input is empty.',
       parseFailed: 'Could not parse input.',
+    },
+
+    tools: {
+      tilgungsplan: {
+        regionAria: 'Amortization calculator',
+        resultsAria: 'Calculation result',
+        modeLabel: 'Calculate',
+        modeBarAria: 'Select calculation mode',
+        modeAnfangstilgung: 'Monthly payment from repayment rate',
+        modeMonatsrate: 'Term from monthly payment',
+        modeLaufzeit: 'Monthly payment from term',
+        loanAmountLabel: 'Loan amount',
+        loanAmountPlaceholder: 'e.g. 300,000',
+        loanAmountAria: 'Loan amount in euros',
+        interestRateLabel: 'Annual interest rate',
+        interestRatePlaceholder: 'e.g. 3.50',
+        interestRateAria: 'Annual interest rate in percent',
+        initialPayoffLabel: 'Initial repayment rate (p.a.)',
+        initialPayoffPlaceholder: 'e.g. 2.00',
+        initialPayoffAria: 'Annual initial repayment rate in percent',
+        desiredMonthlyLabel: 'Desired monthly payment',
+        desiredMonthlyPlaceholder: 'e.g. 1,375',
+        desiredMonthlyAria: 'Monthly payment in euros',
+        desiredTermLabel: 'Desired loan term',
+        desiredTermPlaceholder: 'e.g. 25',
+        desiredTermAria: 'Loan term in years',
+        fixedTermLabel: 'Fixed-rate period',
+        fixedTermPlaceholder: 'e.g. 10',
+        fixedTermAria: 'Fixed-rate period in years',
+        extraPayoffLabel: 'Annual extra payment',
+        extraPayoffPlaceholder: 'e.g. 5,000',
+        extraPayoffAria: 'Annual extra payment in euros',
+        optionalBadge: 'optional',
+        unitYears: 'years',
+        unitMonths: 'months',
+        unitEuroPerYear: '€/year',
+        unitPctPerYear: '% p.a.',
+        errAmountRequired: 'Please enter an amount.',
+        errAmountMin: 'Minimum amount: 1,000 €',
+        errAmountMax: 'Maximum amount: 10,000,000 €',
+        errInterestRequired: 'Please enter an interest rate.',
+        errInterestMin: 'Interest rate must be at least 0.1 %.',
+        errInterestMax: 'Interest rate cannot exceed 20 %.',
+        errInitialPayoffRequired: 'Please enter an initial repayment rate.',
+        errInitialPayoffMin: 'Initial repayment rate must be > 0 %.',
+        errInitialPayoffMax: 'Initial repayment rate cannot exceed 20 %.',
+        errMonthlyRequired: 'Please enter a monthly payment.',
+        errMonthlyMin: 'Monthly payment must be > 0 €.',
+        errMonthlyTooLow: 'Payment too low — monthly interest is {amount} €.',
+        errTermRequired: 'Please enter a loan term.',
+        errTermRange: 'Loan term: 1–50 years.',
+        errFixedTermRequired: 'Please enter a fixed-rate period.',
+        errFixedTermRange: 'Fixed-rate period: 1–40 years.',
+        errExtraAmountInvalid: 'Please enter a valid amount.',
+        errExtraNegative: 'Extra payment must be ≥ 0 €.',
+        errExtraTooLarge: 'Extra payment exceeds 50 % of the loan — is that correct?',
+        cardMonthlyRate: 'Monthly payment',
+        cardTotalInterest: 'Total interest',
+        cardBalanceAfter: 'Balance after fixed-rate period',
+        cardTotalTerm: 'Total term',
+        cardInitialPayoff: 'Initial repayment',
+        warningParadoxAria: 'Amortization paradox notice',
+        warningParadoxLabel: 'Amortization paradox:',
+        warningParadoxBodyHtml:
+          'At {init}&nbsp;% initial repayment and {rate}&nbsp;% interest, your full repayment period is <strong>{years} years</strong>. Experts recommend at least 2&nbsp;% initial repayment — this reduces the total term substantially.',
+        extraEffectAria: 'Extra payment impact',
+        extraEffectBodyHtml:
+          'With an annual extra payment of {amount}&nbsp;€, you save <strong>{savings}&nbsp;€ in interest</strong> and are <strong>debt-free {months} months earlier</strong>.',
+        tableTitle: 'Amortization schedule (annual overview)',
+        tableScrollAria: 'Amortization table, horizontally scrollable',
+        tableAria: 'Annual amortization schedule',
+        colYear: 'Year',
+        colRatePerYear: 'Payment/year',
+        colInterest: 'Interest',
+        colPrincipal: 'Principal',
+        colExtra: 'Extra',
+        colBalance: 'Balance',
+        endOfFixedTerm: 'End of fixed-rate period',
+        endOfFixedTermBadge: 'FRP end',
+        followupAria: 'Plan follow-up financing',
+        followupTitle: 'What would my payment be after the fixed-rate period?',
+        followupRemainingBalanceHtml:
+          'Balance after {years} of fixed rate: <strong>{amount}&nbsp;€</strong>',
+        followupNewRateLabel: 'New interest rate:',
+        followupNewRatePlaceholder: 'e.g. 4.00',
+        followupNewRateAria: 'New interest rate for follow-up financing in percent',
+        followupNewMonthlyHtml: 'New monthly payment: <strong>{amount}&nbsp;€</strong>',
+        followupRemainingTerm: 'Remaining term after fixed-rate period: approx. {years}',
+        emptyState: 'Fill in all required fields to calculate the amortization schedule.',
+        disclaimer:
+          'This calculation is for informational purposes only and does not constitute financial advice. Actual terms depend on your creditworthiness and loan agreement.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+        clipboardTitle: 'Amortization schedule result',
+        clipboardMonthly: 'Monthly payment: {amount} €',
+        clipboardTotalInterest: 'Total interest: {amount} €',
+        clipboardBalanceAfter: 'Balance after fixed-rate period: {amount} €',
+        clipboardTerm: 'Total term: {years} years ({months} months)',
+      },
     },
   },
 };
