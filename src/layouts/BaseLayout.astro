@@ -35,6 +35,13 @@ const { lang, title, description, pathWithoutLang, ogImagePath, ogAvifPath, hero
 const strings = t(lang as Lang);
 const hreflangs = buildHreflangLinks({ pathWithoutLang });
 
+// Brand suffix is appended centrally so every <title> in the SERP includes
+// it. Per-page strings stay short ("VAT Calculator") and the layout adds
+// " — kittokit" once. We only skip it when the per-page title already
+// mentions the brand verbatim (legacy legal/about pages), so we never
+// double-suffix. Audit P1-E (2026-04-27).
+const brandedTitle = /kittokit/i.test(title) ? title : `${title} — kittokit`;
+
 const canonicalPath: string =
   typeof pathWithoutLang === 'string'
     ? pathWithoutLang
@@ -88,7 +95,7 @@ const websiteJsonLd = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{brandedTitle}</title>
     {description && <meta name="description" content={description} />}
     {!noindex && <link rel="canonical" href={canonical} />}
     <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
@@ -96,7 +103,7 @@ const websiteJsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="kittokit" />
     <meta property="og:locale" content={OG_LOCALE_MAP[lang as Lang]} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={brandedTitle} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
     {ogAvifPath && <meta property="og:image" content={new URL(ogAvifPath, Astro.site).toString()} />}
@@ -110,7 +117,7 @@ const websiteJsonLd = {
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={strings.ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={brandedTitle} />
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={strings.ogImageAlt} />
