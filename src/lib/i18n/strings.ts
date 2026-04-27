@@ -674,6 +674,70 @@ export interface UiStrings {
       emptyState: string;
       privacyBadge: string;
     };
+    cashDiscountCalculator: {
+      regionAria: string;
+      // Basis bar
+      basisLabel: string;
+      basisBarAria: string;
+      basisBrutto: string;
+      basisNetto: string;
+      basisHintBrutto: string;
+      basisHintNetto: string;
+      // Inputs
+      betragLabelBrutto: string;
+      betragLabelNetto: string;
+      betragPlaceholder: string;
+      betragAria: string;
+      satzLabel: string;
+      satzPlaceholder: string;
+      satzAria: string;
+      skontofristLabel: string;
+      skontofristPlaceholder: string;
+      skontofristAria: string;
+      zahlungszielLabel: string;
+      zahlungszielPlaceholder: string;
+      zahlungszielAria: string;
+      mwstLabel: string;
+      mwstPlaceholder: string;
+      mwstAria: string;
+      unitDays: string;
+      // Validation
+      errAmountRequired: string;
+      errAmountPositive: string;
+      errSatzRequired: string;
+      errSatzNegative: string;
+      errSatzMax: string;
+      errDaysPositive: string;
+      errZahlungszielPositive: string;
+      errFristShorter: string;
+      errMwstRequired: string;
+      errMwstNegative: string;
+      // Results
+      resultsAria: string;
+      jahreszinsAria: string;
+      jahreszinsLabel: string;
+      jahreszinsCopyAria: string;
+      jahreszinsUnit: string;
+      ampelGruen: string;
+      ampelGelb: string;
+      ampelRot: string;
+      cardSkontoBetrag: string;
+      cardSkontoCopyAria: string;
+      cardZahlBetrag: string;
+      cardZahlCopyAria: string;
+      // Netto-Box
+      nettoAria: string;
+      nettoTitle: string;
+      nettoVorSkonto: string;
+      nettoNachSkonto: string;
+      /** {mwst} */
+      nettoMwstNachTemplate: string;
+      nettoBruttoNach: string;
+      nettoHint: string;
+      // Empty / privacy
+      emptyState: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -1292,6 +1356,63 @@ const strings: Record<Lang, UiStrings> = {
         emptyState: 'Gib die Werte ein, um das Ergebnis sofort zu sehen.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
       },
+      cashDiscountCalculator: {
+        regionAria: 'Skonto-Rechner',
+        basisLabel: 'Skontobasis',
+        basisBarAria: 'Skontobasis auswählen',
+        basisBrutto: 'Brutto',
+        basisNetto: 'Netto + MwSt',
+        basisHintBrutto: 'Buchhalterischer Standard (DE)',
+        basisHintNetto: 'Nettobetrag eingeben, MwSt wird separat ausgewiesen',
+        betragLabelBrutto: 'Rechnungsbetrag (Brutto)',
+        betragLabelNetto: 'Rechnungsbetrag (Netto)',
+        betragPlaceholder: 'z.B. 1000',
+        betragAria: 'Rechnungsbetrag in Euro',
+        satzLabel: 'Skontosatz',
+        satzPlaceholder: 'z.B. 2',
+        satzAria: 'Skontosatz in Prozent',
+        skontofristLabel: 'Skontofrist',
+        skontofristPlaceholder: 'z.B. 10',
+        skontofristAria: 'Skontofrist in Tagen',
+        zahlungszielLabel: 'Zahlungsziel',
+        zahlungszielPlaceholder: 'z.B. 30',
+        zahlungszielAria: 'Zahlungsziel in Tagen',
+        mwstLabel: 'MwSt-Satz',
+        mwstPlaceholder: 'z.B. 19',
+        mwstAria: 'Mehrwertsteuersatz in Prozent',
+        unitDays: 'Tage',
+        errAmountRequired: 'Bitte einen Betrag eingeben.',
+        errAmountPositive: 'Bitte einen positiven Betrag eingeben.',
+        errSatzRequired: 'Bitte einen Skontosatz eingeben.',
+        errSatzNegative: 'Der Skontosatz kann nicht negativ sein.',
+        errSatzMax: 'Ein Skontosatz von 100 % oder mehr ist nicht zulässig.',
+        errDaysPositive: 'Bitte positive Tage eingeben.',
+        errZahlungszielPositive: 'Bitte positive Tage eingeben.',
+        errFristShorter: 'Die Skontofrist muss kürzer sein als das Zahlungsziel.',
+        errMwstRequired: 'Bitte einen MwSt-Satz eingeben.',
+        errMwstNegative: 'MwSt-Satz muss ≥ 0 % sein.',
+        resultsAria: 'Berechnungsergebnis',
+        jahreszinsAria: 'Effektiver Jahreszins',
+        jahreszinsLabel: 'Effektiver Jahreszins (Lieferantenkredit)',
+        jahreszinsCopyAria: 'Jahreszins kopieren',
+        jahreszinsUnit: '% p.a.',
+        ampelGruen: 'Skonto lohnt sich — günstiger als jeder Bankkredit',
+        ampelGelb: 'Hängt von Ihrem Finanzierungszins ab',
+        ampelRot: 'Skonto lohnt sich selten bei so niedrigem Zinssatz',
+        cardSkontoBetrag: 'Skontobetrag',
+        cardSkontoCopyAria: 'Skontobetrag kopieren',
+        cardZahlBetrag: 'Zahlbetrag',
+        cardZahlCopyAria: 'Zahlbetrag kopieren',
+        nettoAria: 'Netto-Aufschlüsselung',
+        nettoTitle: 'Aufschlüsselung (Netto-Basis)',
+        nettoVorSkonto: 'Netto vor Skonto',
+        nettoNachSkonto: 'Netto nach Skonto',
+        nettoMwstNachTemplate: 'MwSt nach Skonto ({mwst} %)',
+        nettoBruttoNach: 'Brutto nach Skonto',
+        nettoHint: 'Hinweis: Durch den Skontoabzug reduziert sich auch die Vorsteuer des Käufers.',
+        emptyState: 'Gib die Werte ein, um das Ergebnis sofort zu sehen.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+      },
     },
   },
 
@@ -1907,6 +2028,63 @@ const strings: Record<Lang, UiStrings> = {
           '{r1}&nbsp;%&thinsp;+&thinsp;{r2}&nbsp;% <span class="calc--wrong">≠&thinsp;{naive}&nbsp;%</span>',
         additivCalcRightHtml:
           'Correct: <span class="calc--right">{right}&nbsp;%</span>',
+        emptyState: 'Enter the values to see the result instantly.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      cashDiscountCalculator: {
+        regionAria: 'Cash discount calculator',
+        basisLabel: 'Discount basis',
+        basisBarAria: 'Select discount basis',
+        basisBrutto: 'Gross',
+        basisNetto: 'Net + VAT',
+        basisHintBrutto: 'Standard accounting practice (DE)',
+        basisHintNetto: 'Enter net amount; VAT is shown separately',
+        betragLabelBrutto: 'Invoice amount (gross)',
+        betragLabelNetto: 'Invoice amount (net)',
+        betragPlaceholder: 'e.g. 1000',
+        betragAria: 'Invoice amount in euros',
+        satzLabel: 'Discount rate',
+        satzPlaceholder: 'e.g. 2',
+        satzAria: 'Discount rate in percent',
+        skontofristLabel: 'Discount period',
+        skontofristPlaceholder: 'e.g. 10',
+        skontofristAria: 'Discount period in days',
+        zahlungszielLabel: 'Payment due date',
+        zahlungszielPlaceholder: 'e.g. 30',
+        zahlungszielAria: 'Payment due date in days',
+        mwstLabel: 'VAT rate',
+        mwstPlaceholder: 'e.g. 19',
+        mwstAria: 'VAT rate in percent',
+        unitDays: 'days',
+        errAmountRequired: 'Please enter an amount.',
+        errAmountPositive: 'Please enter a positive amount.',
+        errSatzRequired: 'Please enter a discount rate.',
+        errSatzNegative: 'The discount rate cannot be negative.',
+        errSatzMax: 'A discount rate of 100 % or more is not allowed.',
+        errDaysPositive: 'Please enter a positive number of days.',
+        errZahlungszielPositive: 'Please enter a positive number of days.',
+        errFristShorter: 'The discount period must be shorter than the payment due date.',
+        errMwstRequired: 'Please enter a VAT rate.',
+        errMwstNegative: 'VAT rate must be ≥ 0 %.',
+        resultsAria: 'Calculation result',
+        jahreszinsAria: 'Effective annual interest rate',
+        jahreszinsLabel: 'Effective annual rate (supplier credit)',
+        jahreszinsCopyAria: 'Copy annual rate',
+        jahreszinsUnit: '% p.a.',
+        ampelGruen: 'Cash discount pays off — cheaper than any bank loan',
+        ampelGelb: 'Depends on your financing rate',
+        ampelRot: 'Cash discount rarely pays off at such a low rate',
+        cardSkontoBetrag: 'Discount amount',
+        cardSkontoCopyAria: 'Copy discount amount',
+        cardZahlBetrag: 'Payment amount',
+        cardZahlCopyAria: 'Copy payment amount',
+        nettoAria: 'Net breakdown',
+        nettoTitle: 'Breakdown (net basis)',
+        nettoVorSkonto: 'Net before discount',
+        nettoNachSkonto: 'Net after discount',
+        nettoMwstNachTemplate: 'VAT after discount ({mwst} %)',
+        nettoBruttoNach: 'Gross after discount',
+        nettoHint: 'Note: The discount also reduces the buyer\'s deductible input VAT.',
         emptyState: 'Enter the values to see the result instantly.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },

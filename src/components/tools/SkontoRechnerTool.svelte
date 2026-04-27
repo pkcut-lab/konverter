@@ -19,6 +19,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.cashDiscountCalculator);
 
   // ---- Skontobasis-Toggle ----
   type Basis = 'brutto' | 'netto';
@@ -43,37 +44,37 @@
 
   // ---- Validierung ----
   const betragError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(rechnungsBetrag)) return 'Bitte einen Betrag eingeben.';
-    if (rechnungsBetrag <= 0) return 'Bitte einen positiven Betrag eingeben.';
+    if (!Number.isFinite(rechnungsBetrag)) return T.errAmountRequired;
+    if (rechnungsBetrag <= 0) return T.errAmountPositive;
     return null;
   });
 
   const satzError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(skontosatz)) return 'Bitte einen Skontosatz eingeben.';
-    if (skontosatz < 0) return 'Der Skontosatz kann nicht negativ sein.';
-    if (skontosatz >= 100) return 'Ein Skontosatz von 100 % oder mehr ist nicht zulässig.';
+    if (!Number.isFinite(skontosatz)) return T.errSatzRequired;
+    if (skontosatz < 0) return T.errSatzNegative;
+    if (skontosatz >= 100) return T.errSatzMax;
     return null;
   });
 
   const skontofristError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(skontofrist)) return 'Bitte positive Tage eingeben.';
-    if (skontofrist < 0) return 'Bitte positive Tage eingeben.';
+    if (!Number.isFinite(skontofrist)) return T.errDaysPositive;
+    if (skontofrist < 0) return T.errDaysPositive;
     return null;
   });
 
   const zahlungszielError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(zahlungsziel)) return 'Bitte positive Tage eingeben.';
-    if (zahlungsziel <= 0) return 'Bitte positive Tage eingeben.';
+    if (!Number.isFinite(zahlungsziel)) return T.errZahlungszielPositive;
+    if (zahlungsziel <= 0) return T.errZahlungszielPositive;
     if (Number.isFinite(skontofrist) && zahlungsziel <= skontofrist) {
-      return 'Die Skontofrist muss kürzer sein als das Zahlungsziel.';
+      return T.errFristShorter;
     }
     return null;
   });
 
   const mwstError = $derived.by<string | null>(() => {
     if (basis !== 'netto') return null;
-    if (!Number.isFinite(mwstSatz)) return 'Bitte einen MwSt-Satz eingeben.';
-    if (mwstSatz < 0) return 'MwSt-Satz muss ≥ 0 % sein.';
+    if (!Number.isFinite(mwstSatz)) return T.errMwstRequired;
+    if (mwstSatz < 0) return T.errMwstNegative;
     return null;
   });
 
@@ -99,7 +100,7 @@
   $effect(() => {
     if (!_firstResult && result !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
     }
   });
 
@@ -110,9 +111,9 @@
 
   const ampelText = $derived.by<string>(() => {
     if (!result || result.effJahreszins === null) return '';
-    if (ampel === 'gruen') return 'Skonto lohnt sich — günstiger als jeder Bankkredit';
-    if (ampel === 'gelb') return 'Hängt von Ihrem Finanzierungszins ab';
-    if (ampel === 'rot') return 'Skonto lohnt sich selten bei so niedrigem Zinssatz';
+    if (ampel === 'gruen') return T.ampelGruen;
+    if (ampel === 'gelb') return T.ampelGelb;
+    if (ampel === 'rot') return T.ampelRot;
     return '';
   });
 
@@ -136,31 +137,29 @@
   }
 </script>
 
-<div class="skonto-tool" aria-label="Skonto-Rechner">
+<div class="skonto-tool" aria-label={T.regionAria}>
 
   <!-- Skontobasis-Toggle (Dossier §9 H1 — Privacy-First Brutto/Netto) -->
   <div class="basis-bar">
-    <span class="basis-bar__label">Skontobasis</span>
-    <div class="basis-pills" role="group" aria-label="Skontobasis auswählen">
+    <span class="basis-bar__label">{T.basisLabel}</span>
+    <div class="basis-pills" role="group" aria-label={T.basisBarAria}>
       <button
         type="button"
         class="basis-pill"
         class:basis-pill--active={basis === 'brutto'}
         aria-pressed={basis === 'brutto'}
         onclick={() => { basis = 'brutto'; }}
-      >Brutto</button>
+      >{T.basisBrutto}</button>
       <button
         type="button"
         class="basis-pill"
         class:basis-pill--active={basis === 'netto'}
         aria-pressed={basis === 'netto'}
         onclick={() => { basis = 'netto'; }}
-      >Netto&nbsp;+&nbsp;MwSt</button>
+      >{T.basisNetto}</button>
     </div>
     <span class="basis-hint">
-      {basis === 'brutto'
-        ? 'Buchhalterischer Standard (DE)'
-        : 'Nettobetrag eingeben, MwSt wird separat ausgewiesen'}
+      {basis === 'brutto' ? T.basisHintBrutto : T.basisHintNetto}
     </span>
   </div>
 
@@ -170,7 +169,7 @@
     <!-- Rechnungsbetrag -->
     <div class="input-field">
       <label class="input-field__label" for="inp-betrag">
-        {basis === 'brutto' ? 'Rechnungsbetrag (Brutto)' : 'Rechnungsbetrag (Netto)'}
+        {basis === 'brutto' ? T.betragLabelBrutto : T.betragLabelNetto}
       </label>
       <div class="input-field__wrap" class:input-field__wrap--error={betragError !== null}>
         <input
@@ -178,9 +177,9 @@
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 1000"
+          placeholder={T.betragPlaceholder}
           bind:value={rechnungsBetragStr}
-          aria-label="Rechnungsbetrag in Euro"
+          aria-label={T.betragAria}
           aria-invalid={betragError !== null}
           aria-describedby={betragError ? 'err-betrag' : undefined}
           autocomplete="off"
@@ -194,16 +193,16 @@
 
     <!-- Skontosatz -->
     <div class="input-field">
-      <label class="input-field__label" for="inp-satz">Skontosatz</label>
+      <label class="input-field__label" for="inp-satz">{T.satzLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={satzError !== null}>
         <input
           id="inp-satz"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 2"
+          placeholder={T.satzPlaceholder}
           bind:value={skontosatzStr}
-          aria-label="Skontosatz in Prozent"
+          aria-label={T.satzAria}
           aria-invalid={satzError !== null}
           aria-describedby={satzError ? 'err-satz' : undefined}
           autocomplete="off"
@@ -217,21 +216,21 @@
 
     <!-- Skontofrist -->
     <div class="input-field">
-      <label class="input-field__label" for="inp-skontofrist">Skontofrist</label>
+      <label class="input-field__label" for="inp-skontofrist">{T.skontofristLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={skontofristError !== null}>
         <input
           id="inp-skontofrist"
           type="text"
           inputmode="numeric"
           class="input-field__input"
-          placeholder="z.B. 10"
+          placeholder={T.skontofristPlaceholder}
           bind:value={skontofristStr}
-          aria-label="Skontofrist in Tagen"
+          aria-label={T.skontofristAria}
           aria-invalid={skontofristError !== null}
           aria-describedby={skontofristError ? 'err-skontofrist' : undefined}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">Tage</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitDays}</span>
       </div>
       {#if skontofristError}
         <p id="err-skontofrist" class="field-error" role="alert">{skontofristError}</p>
@@ -240,21 +239,21 @@
 
     <!-- Zahlungsziel -->
     <div class="input-field">
-      <label class="input-field__label" for="inp-zahlungsziel">Zahlungsziel</label>
+      <label class="input-field__label" for="inp-zahlungsziel">{T.zahlungszielLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={zahlungszielError !== null}>
         <input
           id="inp-zahlungsziel"
           type="text"
           inputmode="numeric"
           class="input-field__input"
-          placeholder="z.B. 30"
+          placeholder={T.zahlungszielPlaceholder}
           bind:value={zahlungszielStr}
-          aria-label="Zahlungsziel in Tagen"
+          aria-label={T.zahlungszielAria}
           aria-invalid={zahlungszielError !== null}
           aria-describedby={zahlungszielError ? 'err-zahlungsziel' : undefined}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">Tage</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitDays}</span>
       </div>
       {#if zahlungszielError}
         <p id="err-zahlungsziel" class="field-error" role="alert">{zahlungszielError}</p>
@@ -264,16 +263,16 @@
     <!-- MwSt-Satz (nur Netto-Modus) -->
     {#if basis === 'netto'}
       <div class="input-field">
-        <label class="input-field__label" for="inp-mwst">MwSt-Satz</label>
+        <label class="input-field__label" for="inp-mwst">{T.mwstLabel}</label>
         <div class="input-field__wrap" class:input-field__wrap--error={mwstError !== null}>
           <input
             id="inp-mwst"
             type="text"
             inputmode="decimal"
             class="input-field__input"
-            placeholder="z.B. 19"
+            placeholder={T.mwstPlaceholder}
             bind:value={mwstSatzStr}
-            aria-label="Mehrwertsteuersatz in Prozent"
+            aria-label={T.mwstAria}
             aria-invalid={mwstError !== null}
             aria-describedby={mwstError ? 'err-mwst' : undefined}
             autocomplete="off"
@@ -289,7 +288,7 @@
   </div><!-- /inputs-grid -->
 
   <!-- Ergebnis-Bereich -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
     {#if result}
 
@@ -301,7 +300,7 @@
           class:jahreszins-card--gelb={ampel === 'gelb'}
           class:jahreszins-card--rot={ampel === 'rot'}
           role="region"
-          aria-label="Effektiver Jahreszins"
+          aria-label={T.jahreszinsAria}
         >
           <div class="jahreszins-card__top">
             <div class="jahreszins-card__label-group">
@@ -312,17 +311,17 @@
                 class:ampel-dot--rot={ampel === 'rot'}
                 aria-hidden="true"
               ></span>
-              <span class="jahreszins-card__label">Effektiver Jahreszins (Lieferantenkredit)</span>
+              <span class="jahreszins-card__label">{T.jahreszinsLabel}</span>
             </div>
             <button
               type="button"
               class="copy-inline"
               onclick={() => copyText(formatProzent(result!.effJahreszins!) + ' %', 'ejz')}
-              aria-label="Jahreszins kopieren"
+              aria-label={T.jahreszinsCopyAria}
             >{copiedField === 'ejz' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
           </div>
           <div class="jahreszins-card__value">
-            {formatProzent(result.effJahreszins)}&nbsp;<span class="jahreszins-card__unit">%&nbsp;p.a.</span>
+            {formatProzent(result.effJahreszins)}&nbsp;<span class="jahreszins-card__unit">{T.jahreszinsUnit}</span>
           </div>
           {#if ampelText}
             <p class="jahreszins-card__hint">{ampelText}</p>
@@ -335,12 +334,12 @@
 
         <div class="summary-card summary-card--primary">
           <div class="summary-card__header">
-            <span class="summary-card__label">Skontobetrag</span>
+            <span class="summary-card__label">{T.cardSkontoBetrag}</span>
             <button
               type="button"
               class="copy-inline"
               onclick={() => copyText(formatEuro(result!.skontoBetrag) + ' €', 'skonto')}
-              aria-label="Skontobetrag kopieren"
+              aria-label={T.cardSkontoCopyAria}
             >{copiedField === 'skonto' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
           </div>
           <span class="summary-card__value">
@@ -350,12 +349,12 @@
 
         <div class="summary-card">
           <div class="summary-card__header">
-            <span class="summary-card__label">Zahlbetrag</span>
+            <span class="summary-card__label">{T.cardZahlBetrag}</span>
             <button
               type="button"
               class="copy-inline"
               onclick={() => copyText(formatEuro(result!.zahlBetrag) + ' €', 'zahl')}
-              aria-label="Zahlbetrag kopieren"
+              aria-label={T.cardZahlCopyAria}
             >{copiedField === 'zahl' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
           </div>
           <span class="summary-card__value">
@@ -367,34 +366,34 @@
 
       <!-- Netto-Aufschlüsselung (nur Netto-Modus, Dossier §9 H1) -->
       {#if basis === 'netto' && result.nettoBasis}
-        <div class="netto-box" role="region" aria-label="Netto-Aufschlüsselung">
-          <p class="netto-box__title">Aufschlüsselung (Netto-Basis)</p>
+        <div class="netto-box" role="region" aria-label={T.nettoAria}>
+          <p class="netto-box__title">{T.nettoTitle}</p>
           <dl class="netto-dl">
             <div class="netto-dl__row">
-              <dt>Netto vor Skonto</dt>
+              <dt>{T.nettoVorSkonto}</dt>
               <dd>{formatEuro(result.nettoBasis.nettoVorSkonto)}&nbsp;€</dd>
             </div>
             <div class="netto-dl__row">
-              <dt>Netto nach Skonto</dt>
+              <dt>{T.nettoNachSkonto}</dt>
               <dd>{formatEuro(result.nettoBasis.nettoNachSkonto)}&nbsp;€</dd>
             </div>
             <div class="netto-dl__row">
-              <dt>MwSt nach Skonto ({formatProzent(mwstSatz, 0)}&nbsp;%)</dt>
+              <dt>{T.nettoMwstNachTemplate.replace('{mwst}', formatProzent(mwstSatz, 0))}</dt>
               <dd>{formatEuro(result.nettoBasis.mwstNachSkonto)}&nbsp;€</dd>
             </div>
             <div class="netto-dl__row netto-dl__row--total">
-              <dt>Brutto nach Skonto</dt>
+              <dt>{T.nettoBruttoNach}</dt>
               <dd>{formatEuro(result.nettoBasis.bruttoNachSkonto)}&nbsp;€</dd>
             </div>
           </dl>
           <p class="netto-box__hint">
-            Hinweis: Durch den Skontoabzug reduziert sich auch die Vorsteuer des Käufers.
+            {T.nettoHint}
           </p>
         </div>
       {/if}
 
     {:else if !hasErrors}
-      <p class="empty-state">Gib die Werte ein, um das Ergebnis sofort zu sehen.</p>
+      <p class="empty-state">{T.emptyState}</p>
     {/if}
 
   </div><!-- /results -->
@@ -406,7 +405,7 @@
 
   <!-- Privacy Badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </div><!-- /skonto-tool -->
