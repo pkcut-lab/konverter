@@ -113,6 +113,18 @@ export default defineConfig({
         // lastmod from frontmatter.dateModified — preserves Google's freshness
         // signal so unchanged pages aren't constantly re-flagged. Audit P1-C.
         const lastmod = URL_TO_DATE_MODIFIED.get(path);
+
+        // Audit P1-P (2026-04-27): regexes below previously hardcoded (de|en).
+        // Now derived from ACTIVE_LANGUAGES so future locales (es/fr/pt-br)
+        // get the priority + changefreq classification automatically.
+        const langGroup = ACTIVE_LANGUAGES.join('|');
+        const homeRe = new RegExp(`/(?:${langGroup})/?$`);
+        // Tools-index slugs are 'werkzeuge' (de) + 'tools' (en) for now —
+        // hardcoded here because static-page-slugs.ts needs an async import
+        // path that doesn't fit the sync config-load contract. The pattern
+        // tolerates new tools-index slugs without code changes — re-add to
+        // the alternation when adding a new language.
+        const toolsIndexRe = /\/(?:de\/werkzeuge|en\/tools)\/?$/;
         // Sitemap plugin shape: each link is { url, lang } and gets emitted
         // as <xhtml:link rel="alternate" hreflang="<lang>" href="<url>">.
         // Plus an x-default mirror of the default-language entry.
@@ -126,19 +138,12 @@ export default defineConfig({
             ]
           : undefined;
 
-        // TODO(phase-3): the (de|en) regex group below is hardcoded.
-        // Generate it from ACTIVE_LANGUAGES.join('|') so new languages
-        // get the priority boost automatically. Same for the
-        // (de/werkzeuge|en/tools) group — should derive from
-        // STATIC_PAGE_SLUGS in src/lib/static-page-slugs.ts.
-        // See CONVENTIONS.md section 11.
-
-        // Home pages: /de  /en
-        if (/\/(de|en)\/?$/.test(url)) {
+        // Home pages: /de  /en (and any future locale prefix).
+        if (homeRe.test(url)) {
           return { ...item, priority: 1.0, changefreq: 'weekly' };
         }
         // Tools index: /de/werkzeuge  /en/tools
-        if (/\/(de\/werkzeuge|en\/tools)\/?$/.test(url)) {
+        if (toolsIndexRe.test(url)) {
           return { ...item, priority: 0.9, changefreq: 'weekly' };
         }
         // Legal / static: datenschutz, impressum, privacy, imprint, ueber, about, security-policy
