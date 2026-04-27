@@ -3,12 +3,16 @@
   import { computeZinseszinsCalc } from '../../lib/tools/zinseszins-rechner';
   import { parseDE } from '../../lib/tools/parse-de';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   // ---- Formatierung ----
   function fmt(n: number, decimals = 2): string {
@@ -301,13 +305,13 @@
               type="button"
               class="copy-btn"
               class:copy-btn--copied={copyNominal === 'copied'}
-              aria-label={copyNominal === 'copied' ? 'Kopiert!' : 'Nominales Endkapital kopieren'}
+              aria-label={copyNominal === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
               onclick={() => copyValue(result.endkapital_nominal, 'nominal')}
             >
               {#if copyNominal === 'copied'}
-                Kopiert
+                {strings.toolsCommon.copied}
               {:else}
-                <span aria-hidden="true">⧉</span> Kopieren
+                <span aria-hidden="true">⧉</span> {strings.toolsCommon.copy}
               {/if}
             </button>
           </div>
@@ -325,13 +329,13 @@
               type="button"
               class="copy-btn"
               class:copy-btn--copied={copyNetto === 'copied'}
-              aria-label={copyNetto === 'copied' ? 'Kopiert!' : 'Endkapital nach Steuer kopieren'}
+              aria-label={copyNetto === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
               onclick={() => copyValue(result.endkapital_netto, 'netto')}
             >
               {#if copyNetto === 'copied'}
-                Kopiert
+                {strings.toolsCommon.copied}
               {:else}
-                <span aria-hidden="true">⧉</span> Kopieren
+                <span aria-hidden="true">⧉</span> {strings.toolsCommon.copy}
               {/if}
             </button>
           </div>
@@ -349,13 +353,13 @@
               type="button"
               class="copy-btn"
               class:copy-btn--copied={copyReal === 'copied'}
-              aria-label={copyReal === 'copied' ? 'Kopiert!' : 'Reale Kaufkraft kopieren'}
+              aria-label={copyReal === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
               onclick={() => copyValue(result.endkapital_real, 'real')}
             >
               {#if copyReal === 'copied'}
-                Kopiert
+                {strings.toolsCommon.copied}
               {:else}
-                <span aria-hidden="true">⧉</span> Kopieren
+                <span aria-hidden="true">⧉</span> {strings.toolsCommon.copy}
               {/if}
             </button>
           </div>
@@ -389,7 +393,7 @@
   {/if}
 
   <!-- Privacy badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal im Browser
   </div>
 </div>

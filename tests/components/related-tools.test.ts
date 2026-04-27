@@ -69,9 +69,10 @@ describe('RelatedTools — template invariants (source inspection)', () => {
     );
   });
 
-  it('resolves the label by language (de → "Verwandt", en → "Related")', () => {
-    expect(componentSrc).toMatch(/de:\s*'Verwandt'/);
-    expect(componentSrc).toMatch(/en:\s*'Related'/);
+  it('resolves the label by language via t(lang).relatedToolsHeading', () => {
+    // After i18n migration the label comes from the central strings bundle
+    // (DE: 'Verwandte Werkzeuge', EN: 'Related Tools') — not an inline Record.
+    expect(componentSrc).toMatch(/t\(lang\)\.relatedToolsHeading/);
   });
 
   it('guards output with a `tools.length > 0` conditional so empty resolutions render nothing', () => {

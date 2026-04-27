@@ -89,6 +89,7 @@
 
   const i18n = {
     de: {
+      toolLabel: 'Mondphasen-Rechner',
       label: 'Datum wählen',
       phaseName: 'Phase',
       illumination: 'Beleuchtung',
@@ -104,6 +105,7 @@
       privacy: 'Kein Server-Upload · Berechnung lokal im Browser',
     },
     en: {
+      toolLabel: 'Moon phase calculator',
       label: 'Select date',
       phaseName: 'Phase',
       illumination: 'Illumination',
@@ -124,7 +126,7 @@
   const s = $derived(i18n[(lang as LangKey) in i18n ? (lang as LangKey) : 'de']);
 </script>
 
-<div class="moon-tool" aria-label={lang === 'en' ? 'Moon phase calculator' : 'Mondphasen-Rechner'}>
+<div class="moon-tool" aria-label={s.toolLabel}>
 
   <!-- Date input with prev/next day arrows -->
   <div class="date-row">

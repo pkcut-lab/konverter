@@ -1,44 +1,19 @@
 <script lang="ts">
+  import { t } from '../lib/i18n/strings';
+  import type { Lang } from '../lib/i18n/lang';
+
   interface Props {
-    lang: string;
+    lang: Lang;
     placeholder: string;
   }
 
   const { lang, placeholder }: Props = $props();
+  const strings = $derived(t(lang));
 
   let host: HTMLDivElement;
   let ready = $state(false);
   let unavailable = $state(false);
   let initialized = false;
-
-  const translations: Record<string, Record<string, string>> = {
-    de: {
-      placeholder,
-      clear_search: 'Zurücksetzen',
-      load_more: 'Mehr laden',
-      search_label: 'Tools durchsuchen',
-      filters_label: 'Filter',
-      zero_results: 'Nichts gefunden zu [SEARCH_TERM]',
-      many_results: '[COUNT] Ergebnisse zu [SEARCH_TERM]',
-      one_result: '[COUNT] Ergebnis zu [SEARCH_TERM]',
-      alt_search: 'Nichts gefunden zu [SEARCH_TERM] — [DISPLAY_QUERY] anzeigen',
-      search_suggestion: 'Nichts gefunden zu [SEARCH_TERM] — andere Suche: [DISPLAY_QUERY]',
-      searching: 'Suche [SEARCH_TERM]…',
-    },
-    en: {
-      placeholder,
-      clear_search: 'Clear',
-      load_more: 'Load more',
-      search_label: 'Search tools',
-      filters_label: 'Filters',
-      zero_results: 'No results for [SEARCH_TERM]',
-      many_results: '[COUNT] results for [SEARCH_TERM]',
-      one_result: '[COUNT] result for [SEARCH_TERM]',
-      alt_search: 'No results for [SEARCH_TERM] — showing [DISPLAY_QUERY]',
-      search_suggestion: 'No results for [SEARCH_TERM] — try [DISPLAY_QUERY]',
-      searching: 'Searching [SEARCH_TERM]…',
-    },
-  };
 
   async function initPagefind() {
     if (initialized || !host) return;
@@ -54,6 +29,7 @@
         link.dataset.pagefindUi = '';
         document.head.appendChild(link);
       }
+      const pf = t(lang);
       const bundleUrl = '/pagefind/pagefind-ui.js';
       const mod = await import(/* @vite-ignore */ bundleUrl);
       new mod.PagefindUI({
@@ -64,7 +40,19 @@
         pageSize: 8,
         resetStyles: false,
         autofocus: false,
-        translations: translations[lang] ?? translations.en,
+        translations: {
+          placeholder,
+          clear_search: pf.search.pagefind.clearSearch,
+          load_more: pf.search.pagefind.loadMore,
+          search_label: pf.search.pagefind.searchLabel,
+          filters_label: pf.search.pagefind.filtersLabel,
+          zero_results: pf.search.pagefind.zeroResults,
+          many_results: pf.search.pagefind.manyResults,
+          one_result: pf.search.pagefind.oneResult,
+          alt_search: pf.search.pagefind.altSearch,
+          search_suggestion: pf.search.pagefind.searchSuggestion,
+          searching: pf.search.pagefind.searching,
+        },
       });
       ready = true;
     } catch {
@@ -90,14 +78,14 @@
   });
 </script>
 
-<div class="search-host" role="search" aria-label="Tool-Suche">
+<div class="search-host" role="search" aria-label={strings.search.hostAria}>
   <div bind:this={host} class:is-ready={ready}></div>
 
   {#if unavailable}
     <input
       type="search"
       class="search-fallback"
-      placeholder="{placeholder} (nur im Produktions-Build)"
+      placeholder={strings.search.fallbackPlaceholder}
       disabled
       aria-hidden="true"
     />

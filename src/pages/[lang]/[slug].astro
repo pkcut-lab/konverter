@@ -50,6 +50,8 @@ import { buildToolJsonLd } from '../../lib/seo/tool-jsonld';
 import { getAsideDefault } from '../../lib/content/aside-defaults';
 import { getStaticPagePath } from '../../lib/static-page-slugs';
 import { t } from '../../lib/i18n/strings';
+import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
+import type { Lang } from '../../lib/i18n/lang';
 import { listToolsForLang } from '../../lib/tools/list';
 import { computeRelatedTools } from '../../lib/related-tools';
 
@@ -325,74 +327,70 @@ const dateModifiedFormatted = entry.data.dateModified
           ]}
           aria-label="Tool"
         >
-          {/* TODO(phase-3): Converter locale prop below uses a de+en ternary
-              that falls back to the bare lang code for other languages.
-              Replace with INTL_LOCALE_MAP from src/lib/i18n/locale-maps.ts
-              so es, fr, pt-br get correct number formatting.
-              See CONVENTIONS.md section 11. */}
           {config.type === 'converter' && (
             <Converter
               config={config}
-              locale={entry.data.language === 'de' ? 'de-DE' : entry.data.language === 'en' ? 'en-US' : entry.data.language}
+              lang={entry.data.language as Lang}
+              locale={INTL_LOCALE_MAP[entry.data.language as Lang]}
               client:load
             />
           )}
           {config.type === 'file-tool' && config.id === VIDEO_BG_REMOVE_TOOL_ID && (
-            <VideoHintergrundEntfernenTool config={config} client:load />
+            <VideoHintergrundEntfernenTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && (
             <FileTool config={config} client:load />
           )}
           {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
-            <ColorConverter config={config} client:load />
+            <ColorConverter config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === IMAGE_DIFF_TOOL_ID && (
-            <BildDiffTool config={config} client:load />
+            <BildDiffTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === QR_GENERATOR_TOOL_ID && (
-            <QrCodeGeneratorTool config={config} client:load />
+            <QrCodeGeneratorTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === CONTRAST_CHECKER_TOOL_ID && (
-            <ContrastCheckerTool config={config} client:load />
+            <ContrastCheckerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === VAT_CALCULATOR_TOOL_ID && (
-            <MehrwertsteuerRechnerTool config={config} client:load />
+            <MehrwertsteuerRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID && (
-            <StundenlohnJahresgehaltTool config={config} client:load />
+            <StundenlohnJahresgehaltTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID && (
-            <TilgungsplanRechnerTool config={config} client:load />
+            <TilgungsplanRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && (
-            <BruttoNettoRechnerTool config={config} client:load />
+            <BruttoNettoRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID && (
-            <KreditrechnerTool config={config} client:load />
+            <KreditrechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID && (
-            <RabattRechnerTool config={config} client:load />
+            <RabattRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && (
-            <ZinsrechnerTool config={config} client:load />
+            <ZinsrechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && (
-            <ZinseszinsRechnerTool config={config} client:load />
+            <ZinseszinsRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === ROI_CALCULATOR_TOOL_ID && (
-            <RoiRechnerTool config={config} client:load />
+            <RoiRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === CASH_DISCOUNT_TOOL_ID && (
-            <SkontoRechnerTool config={config} client:load />
+            <SkontoRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === CASH_FLOW_TOOL_ID && (
-            <CashflowRechnerTool config={config} client:load />
+            <CashflowRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === LEASING_FACTOR_TOOL_ID && (
-            <LeasingFaktorRechnerTool config={config} client:load />
+            <LeasingFaktorRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === INHERITANCE_TAX_TOOL_ID && (
-            <ErbschaftsteuerRechnerTool config={config} client:load />
+            <ErbschaftsteuerRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'ki-text-detektor' && (
             <KiTextDetektorTool config={config} client:load />
@@ -401,7 +399,7 @@ const dateModifiedFormatted = entry.data.dateModified
             <KiBildDetektorTool config={config} client:load />
           )}
           {config.type === 'formatter' && config.id === 'audio-transkription' && (
-            <AudioTranskriptionTool config={config} client:load />
+            <AudioTranskriptionTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'pdf-merge' && (
             <PdfZusammenfuehrenTool config={config} client:load />
@@ -421,6 +419,7 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter
               config={config}
+              lang={entry.data.language as Lang}
               placeholder={config.placeholder ?? ''}
               inversePlaceholder={config.inversePlaceholder ?? ''}
               inverseLabel={config.inverseLabel ?? 'Decode'}
@@ -430,6 +429,7 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'comparer' && (
             <Comparer
               config={config}
+              lang={entry.data.language as Lang}
               placeholderA={config.placeholderA ?? ''}
               placeholderB={config.placeholderB ?? ''}
               client:load
@@ -442,7 +442,7 @@ const dateModifiedFormatted = entry.data.dateModified
               client:load
             />
           )}
-          {config.type === 'generator' && <Generator config={config} client:load />}
+          {config.type === 'generator' && <Generator config={config} lang={entry.data.language as Lang} client:load />}
           {config.type === 'validator' && config.id === REGEX_TESTER_TOOL_ID && (
             <RegexTesterTool config={config} client:load />
           )}

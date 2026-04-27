@@ -3,9 +3,12 @@
   import { getRuntime } from '../../lib/tools/tool-runtime-registry';
   import Loader from '../Loader.svelte';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FileToolConfig;
+    lang: Lang;
   }
 
   type Phase =
@@ -19,7 +22,8 @@
   type ModelKey = 'quality' | 'speed';
   type OutputMode = 'transparent' | 'solid';
 
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
+  const strings = $derived(t(lang));
 
   let phase = $state<Phase>('idle');
   let modelKey = $state<ModelKey>('quality');
@@ -410,7 +414,7 @@
           onclick={reset}
           data-testid="vbg-error-reset"
         >
-          Zurücksetzen
+          {strings.toolsCommon.reset}
         </button>
       {/if}
     </div>

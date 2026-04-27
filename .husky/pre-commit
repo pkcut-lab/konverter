@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 set -e
 bash scripts/check-git-account.sh
+node scripts/i18n/lint-no-de-in-ui.mjs
+node scripts/seo/lint-no-vendor-names.mjs

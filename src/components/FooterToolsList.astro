@@ -2,25 +2,23 @@
 // src/components/FooterToolsList.astro
 import { listToolsForLang } from '../lib/tools/list';
 import { getStaticPagePath } from '../lib/static-page-slugs';
-import type { ActiveLanguage } from '../lib/hreflang';
-import type { Lang } from '../lib/tools/types';
+import { t } from '../lib/i18n/strings';
+import type { Lang } from '../lib/i18n/lang';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+const strings = t(lang);
 
 const CAP = 8;
 const tools = await listToolsForLang(lang);
 const visible = tools.slice(0, CAP);
 const overflow = Math.max(0, tools.length - CAP);
 
-const heading = lang === 'de' ? 'Werkzeuge' : 'Tools';
-const overflowLabel =
-  lang === 'de'
-    ? `+ ${overflow} weitere Werkzeuge →`
-    : `+ ${overflow} more tools →`;
-const allToolsHref = getStaticPagePath('tools', lang as ActiveLanguage);
+const heading = strings.header.nav.tools;
+const overflowLabel = strings.footer.moreTools.replace('{count}', String(overflow));
+const allToolsHref = getStaticPagePath('tools', lang);
 ---
 <section>
   <h2>{heading}</h2>

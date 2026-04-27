@@ -4,68 +4,47 @@ import HeaderSearch from './HeaderSearch.svelte';
 import { POPULAR_TOOLS } from '../lib/popular-tools';
 import { getSlug } from '../lib/slug-map';
 import { getStaticPagePath } from '../lib/static-page-slugs';
-import type { Lang } from '../lib/tools/types';
-import type { ActiveLanguage, HreflangLink } from '../lib/hreflang';
+import { t } from '../lib/i18n/strings';
+import type { Lang } from '../lib/i18n/lang';
+import { ACTIVE_LANGUAGES } from '../lib/i18n/lang';
+import type { HreflangLink } from '../lib/hreflang';
 
 interface Props {
   lang: string;
   langAlternates?: HreflangLink[];
 }
 const { lang, langAlternates } = Astro.props;
+const langTyped = lang as Lang;
+const strings = t(langTyped);
 
-// TODO(phase-3): the 5 Record<string, string> maps in this file
-// (searchPlaceholder, navByLang, popularLabelByLang, brandAriaByLang,
-// LANG_ENDONYMS) need to be migrated into src/lib/i18n/strings.ts before
-// adding a third language. Each new lang otherwise requires editing all 5
-// in lockstep with no compile-time guard. See CONVENTIONS.md section 11.
-const searchPlaceholder: Record<string, string> = {
-  de: 'Tools durchsuchen',
-  en: 'Search tools',
-};
-const placeholder = searchPlaceholder[lang] ?? searchPlaceholder.en;
+const placeholder = strings.header.searchPlaceholder;
 
 type NavItem = { label: string; href: string; disabled?: boolean };
 // Tools-page slug is lang-aware via static-page-slugs:
 //   DE → /de/werkzeuge   EN → /en/tools
-const toolsHref = getStaticPagePath('tools', lang as ActiveLanguage);
-const navByLang: Record<string, NavItem[]> = {
-  de: [
-    { label: 'Werkzeuge', href: toolsHref },
-    { label: 'Über', href: '#', disabled: true },
-  ],
-  en: [
-    { label: 'Tools', href: toolsHref },
-    { label: 'About', href: '#', disabled: true },
-  ],
-};
-const nav = navByLang[lang] ?? navByLang.en!;
+const toolsHref = getStaticPagePath('tools', langTyped);
+const nav: NavItem[] = [
+  { label: strings.header.nav.tools, href: toolsHref },
+  { label: strings.header.nav.about, href: '#', disabled: true },
+];
 
 // Language switcher: filter out x-default, keep only real lang alternates.
 // `langAlternates` already omits langs without a translation (hreflang.ts),
 // so the switcher only renders buttons that lead to real pages.
 const langLinks = langAlternates?.filter((l) => l.hreflang !== 'x-default') ?? [];
 
-// Endonyms — aria-label ensures screen readers announce "Deutsch" / "English"
-// rather than spelling out "DE" / "EN" letter by letter. Visible label stays
-// compact (2-letter code) for the header design.
-const LANG_ENDONYMS: Record<string, string> = {
-  de: 'Deutsch',
-  en: 'English',
-};
+// Endonyms come from each language's own strings bundle so screen readers
+// announce "Deutsch" / "English" / "Español" / … in the relevant tongue.
+function endonymFor(code: string): string {
+  if ((ACTIVE_LANGUAGES as readonly string[]).includes(code)) {
+    return t(code as Lang).header.endonym;
+  }
+  return code.toUpperCase();
+}
 
-// Beliebt-Bar: resolve slug per current language, drop tools that lack a
-// translation for `lang` so links never 404.
-const popularLabelByLang: Record<string, string> = {
-  de: 'Beliebt',
-  en: 'Popular',
-};
-const popularLabel = popularLabelByLang[lang] ?? popularLabelByLang.en!;
-
-const brandAriaByLang: Record<string, string> = {
-  de: 'kittokit — Startseite',
-  en: 'kittokit — Homepage',
-};
-const brandAria = brandAriaByLang[lang] ?? brandAriaByLang.en!;
+const popularLabel = strings.header.popularLabel;
+const brandAria = strings.header.brandAria;
+const mainNavAria = strings.header.mainNavAria;
 
 type PopularEntry = { href: string; label: string; active: boolean };
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
@@ -91,7 +70,7 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
       <span class="wordmark">kit<em>to</em>kit</span>
     </a>
 
-    <nav class="nav" aria-label="Hauptnavigation">
+    <nav class="nav" aria-label={mainNavAria}>
       {nav.map((item) => (
         item.disabled ? (
           <a
@@ -120,15 +99,15 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
             lang={l.hreflang}
             data-lang={l.hreflang}
             aria-current={l.hreflang === lang ? 'true' : undefined}
-            aria-label={LANG_ENDONYMS[l.hreflang] ?? l.hreflang.toUpperCase()}
-            title={LANG_ENDONYMS[l.hreflang] ?? l.hreflang.toUpperCase()}
+            aria-label={endonymFor(l.hreflang)}
+            title={endonymFor(l.hreflang)}
           >{l.hreflang.toUpperCase()}</a>
         ))}
       </div>
     )}
 
     <div class="toggle-slot">
-      <ThemeToggle client:visible />
+      <ThemeToggle client:visible lang={langTyped} />
     </div>
   </div>
 

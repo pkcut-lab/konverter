@@ -10,12 +10,16 @@
     BEWERTUNG_LABEL,
   } from '../../lib/tools/leasing-faktor-rechner';
   import type { FaktorBewertung } from '../../lib/tools/leasing-faktor-rechner';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   // ---- Eingabe-Felder ----
   let rateStr = $state('250');
@@ -314,14 +318,14 @@
           onclick={copyFaktor}
           aria-label="Leasingfaktor in die Zwischenablage kopieren"
         >
-          {copyState === 'copied' ? 'Kopiert!' : copyState === 'error' ? 'Fehler' : 'Faktor kopieren'}
+          {copyState === 'copied' ? strings.toolsCommon.copied : copyState === 'error' ? 'Fehler' : strings.toolsCommon.copy}
         </button>
-        <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+        <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
       </div>
 
     {:else}
       <div class="actions-bar">
-        <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+        <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
       </div>
     {/if}
 
@@ -334,7 +338,7 @@
   </p>
 
   <!-- Privacy badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
   </div>
 

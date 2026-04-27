@@ -1,12 +1,16 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
   import { generateQrSvg } from '../../lib/tools/qr-code-generator';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   let input = $state<string>('https://konverter.app');
   let copyState = $state<'idle' | 'copied'>('idle');
@@ -112,7 +116,7 @@
           class:qr__btn--copied={copyState === 'copied'}
           onclick={copySvg}
         >
-          {copyState === 'copied' ? 'Kopiert' : 'SVG kopieren'}
+          {copyState === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}
         </button>
       </div>
     {:else if result.ok === 'empty'}

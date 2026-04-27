@@ -2,14 +2,19 @@
   import type { ConverterConfig } from '../../lib/tools/schemas';
   import { computeConversion, type Direction } from '../../lib/tools/compute';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: ConverterConfig;
+    lang: Lang;
     locale?: string;
   }
   type CopyState = 'idle' | 'copied';
 
-  let { config, locale = 'de-DE' }: Props = $props();
+  let { config, lang, locale = INTL_LOCALE_MAP[lang] }: Props = $props();
+  const strings = $derived(t(lang));
 
   let inputValue = $state<number>(config.examples[0] ?? 1);
   let direction = $state<Direction>('forward');
@@ -118,7 +123,7 @@
     class:kbd-chip--copied={copyState === 'copied'}
     data-testid="converter-copy"
     onclick={onCopy}
-    aria-label="Ergebnis kopieren"
+    aria-label={strings.toolsCommon.copyAria}
   >
     <svg class="kbd-chip__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <rect
@@ -140,7 +145,7 @@
         stroke-linejoin="round"
       />
     </svg>
-    <span>{copyState === 'copied' ? 'Kopiert' : 'Kopieren'}</span>
+    <span>{copyState === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</span>
   </button>
 
   <button
@@ -148,7 +153,7 @@
     class="kbd-chip"
     data-testid="converter-swap"
     onclick={onSwap}
-    aria-label="Richtung tauschen"
+    aria-label={strings.toolsCommon.swapAria}
     aria-pressed={direction === 'inverse'}
   >
     <svg class="kbd-chip__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -161,13 +166,13 @@
         stroke-linejoin="round"
       />
     </svg>
-    <span>Tauschen</span>
+    <span>{strings.toolsCommon.swap}</span>
   </button>
 </div>
 
 {#if config.examples.length > 0}
   <div class="quick">
-    <span class="quick__label">Häufige Werte</span>
+    <span class="quick__label">{strings.toolsCommon.quickValues}</span>
     <div class="quick__list">
       {#each config.examples as ex (ex)}
         <button

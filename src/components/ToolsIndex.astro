@@ -52,18 +52,14 @@ if (other && other.length > 0) {
 }
 
 const total = all.length;
-const toolsWord = lang === 'de' ? 'Werkzeuge' : 'tools';
+const toolsWord = strings.toolsPageItemCountLabel;
+const lede = strings.toolsPageLede.replace('{count}', String(total));
 ---
 <div class="index">
   <header class="index-hero">
     <p class="index-eyebrow">{strings.toolsPageEyebrow}</p>
     <h1>{strings.toolsPageH1}</h1>
-    <p class="lede">
-      {lang === 'de'
-        ? `${total} Werkzeuge, gruppiert nach Kategorie. Alles läuft direkt im Browser — kein Upload, keine Anmeldung, kein Tracking.`
-        : `${total} tools, grouped by category. Everything runs directly in your browser — no uploads, no account, no tracking.`
-      }
-    </p>
+    <p class="lede">{lede}</p>
   </header>
 
   <nav class="jump" aria-label={strings.toolsPageCategoriesNav}>

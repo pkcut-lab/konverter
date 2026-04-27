@@ -1,11 +1,15 @@
 <script lang="ts">
   import type { GeneratorConfig } from '../../lib/tools/schemas';
   import { loadGenerate, type GenerateFn } from '../../lib/tools/type-runtime-registry';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: GeneratorConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
+  const strings = $derived(t(lang));
 
   // Lazy-load the generator module so only this tool's chunk ships.
   let generate = $state<GenerateFn | undefined>(undefined);
@@ -144,7 +148,7 @@
       onclick={onCopy}
       disabled={!output}
     >
-      {copyState === 'copied' ? 'Kopiert' : 'Kopieren'}
+      {copyState === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}
     </button>
   </div>
 

@@ -8,12 +8,16 @@
     formatEuro,
   } from '../../lib/tools/cash-flow-calculator';
   import type { DirectResult, IndirectResult, FreeCfResult } from '../../lib/tools/cash-flow-calculator';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   type Mode = 'direkt' | 'indirekt' | 'free';
   let mode = $state<Mode>('direkt');
@@ -487,8 +491,8 @@
             type="button"
             class="copy-inline"
             onclick={() => copyText(formatEuro(activeCf) + ' €', 'cf')}
-            aria-label="Cashflow-Ergebnis kopieren"
-          >{copiedField === 'cf' ? 'Kopiert' : 'Kopieren'}</button>
+            aria-label={strings.toolsCommon.copyAria}
+          >{copiedField === 'cf' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
         </div>
 
         <div class="cf-card__value">
@@ -545,11 +549,11 @@
 
   <!-- Aktionen -->
   <div class="actions-bar">
-    <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+    <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
   </div>
 
   <!-- Privacy Badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
   </div>
 

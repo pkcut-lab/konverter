@@ -11,12 +11,16 @@
   } from '../../lib/tools/rabatt-rechner';
   import type { RabattResult } from '../../lib/tools/rabatt-rechner';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   type Modus = 'standard' | 'rueck-preis' | 'rueck-rabatt' | 'kette';
   let modus = $state<Modus>('standard');
@@ -390,8 +394,8 @@
 
       <!-- Copy-Button -->
       <div class="copy-row">
-        <button type="button" class="copy-btn" onclick={copyResult} aria-label="Ergebnis in Zwischenablage kopieren">
-          {#if copied}Kopiert{:else}Ergebnis kopieren{/if}
+        <button type="button" class="copy-btn" onclick={copyResult} aria-label={strings.toolsCommon.copyAria}>
+          {#if copied}{strings.toolsCommon.copied}{:else}{strings.toolsCommon.copy}{/if}
         </button>
       </div>
 
@@ -425,13 +429,13 @@
 
   </div><!-- /results -->
 
-  <!-- Zurücksetzen -->
+  <!-- Reset button -->
   <div class="actions-bar">
-    <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+    <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
   </div>
 
   <!-- Privacy Badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
   </div>
 

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { Result } from './types';
 import { err, ok } from './types';
+import { localizedStringSchema, type LocalizedString } from '../i18n/types';
 
 /**
  * Tool-Config-Schemas (9 types).
@@ -15,9 +16,38 @@ import { err, ok } from './types';
  * schema does not generate TS types matching our intended call signatures —
  * we model those as plain TS types in `./types` and each tool file declares
  * its variable with the exact type.
+ *
+ * i18n: every user-visible label, placeholder, sub-label, etc. is typed as
+ * `LocalizableLabel`, which accepts EITHER a plain `string` (legacy / DE-only,
+ * still supported during migration) OR a `LocalizedString` (`Record<Lang, string>`).
+ * Use `resolveLabel(value, lang)` from `./label` to normalise to a single
+ * string at render time.
  */
 
-const idLabelPair = z.object({ id: z.string().min(1), label: z.string().min(1) });
+/**
+ * A user-visible label. Accepts:
+ *   - `string` — legacy form, treated as DE-only and still rendered everywhere
+ *     until the relevant tool-config is migrated. Lint-guarded going forward.
+ *   - `LocalizedString` — `Record<Lang, string>` with all active languages.
+ *
+ * The union exists ONLY to keep the migration tractable; new code MUST pass
+ * a `LocalizedString` (use the `unit()` glossary helper or the `L()`
+ * constructor in `../i18n/types`).
+ *
+ * Two flavours:
+ *   - `requiredLocalizableLabel` — non-empty (used for displayed labels).
+ *   - `optionalLocalizableText`  — allows empty strings (used for placeholders
+ *     where `''` historically meant "no placeholder").
+ */
+const requiredLocalizableLabel = z.union([z.string().min(1), localizedStringSchema]);
+const optionalLocalizableText = z.union([z.string(), localizedStringSchema]);
+
+export type LocalizableLabel = string | LocalizedString;
+
+const idLabelPair = z.object({
+  id: z.string().min(1),
+  label: requiredLocalizableLabel,
+});
 
 const base = z.object({
   id: z.string().min(1),
@@ -68,37 +98,37 @@ export const formatterSchema = base.extend({
   // "Encode ↔ Decode" pill-toggle and calls this when decode is active.
   // Used by base64-encoder, url-encoder-decoder.
   inverse: z.function().optional(),
-  inverseLabel: z.string().optional(),
-  placeholder: z.string().optional(),
-  inversePlaceholder: z.string().optional(),
+  inverseLabel: optionalLocalizableText.optional(),
+  placeholder: optionalLocalizableText.optional(),
+  inversePlaceholder: optionalLocalizableText.optional(),
 });
 
 export const validatorSchema = base.extend({
   type: z.literal('validator'),
   rule: z.string().min(1),
   validate: z.function(),
-  placeholder: z.string().optional(),
+  placeholder: optionalLocalizableText.optional(),
 });
 
 export const analyzerSchema = base.extend({
   type: z.literal('analyzer'),
   metrics: z.array(idLabelPair).min(1),
-  placeholder: z.string().optional(),
+  placeholder: optionalLocalizableText.optional(),
 });
 
 export const comparerSchema = base.extend({
   type: z.literal('comparer'),
   diffMode: z.enum(['text', 'json', 'csv']),
   diff: z.function(),
-  placeholderA: z.string().optional(),
-  placeholderB: z.string().optional(),
+  placeholderA: optionalLocalizableText.optional(),
+  placeholderB: optionalLocalizableText.optional(),
 });
 
 const toggleVisibleIfSchema = z.enum(['source-gt-1080p']);
 
 const fileToolToggleSchema = z.object({
   id: z.string().min(1),
-  label: z.string().min(1),
+  label: requiredLocalizableLabel,
   visibleIf: toggleVisibleIfSchema.optional(),
 });
 
@@ -108,9 +138,9 @@ const fileToolPresetsSchema = z.object({
     .array(
       z.object({
         id: z.string().min(1),
-        label: z.string().min(1),
+        label: requiredLocalizableLabel,
         /** Optional mono sub-label shown beside the main label in the segmented pill (e.g. "CRF 18 · größte Datei"). */
-        subLabel: z.string().min(1).optional(),
+        subLabel: optionalLocalizableText.optional(),
       }),
     )
     .min(2),
@@ -127,7 +157,7 @@ export const fileToolSchema = base.extend({
   cameraCapture: z.boolean().optional(),
   filenameSuffix: z.string().optional(),
   showQuality: z.boolean().optional(),
-  resetLabel: z.string().optional(),
+  resetLabel: optionalLocalizableText.optional(),
   toggles: z.array(fileToolToggleSchema).optional(),
   presets: fileToolPresetsSchema.optional(),
 });

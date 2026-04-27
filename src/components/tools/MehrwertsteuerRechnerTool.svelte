@@ -7,12 +7,16 @@
     computeFromBrutto,
     computeFromMwst,
   } from '../../lib/tools/mehrwertsteuer-rechner';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   // -- Rate state --
   type RatePreset = '19' | '7' | '0' | 'custom';
@@ -240,14 +244,14 @@
             type="button"
             class="copy-btn"
             class:copy-btn--copied={copyNetto === 'copied'}
-            aria-label={copyNetto === 'copied' ? 'Kopiert!' : 'Nettobetrag kopieren'}
+            aria-label={copyNetto === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
             onclick={() => copyField(nettoDisplay, 'netto')}
             disabled={!nettoDisplay}
           >
             {#if copyNetto === 'copied'}
-              <span aria-hidden="true">✓</span> Kopiert
+              <span aria-hidden="true">✓</span> {strings.toolsCommon.copied}
             {:else}
-              <span aria-hidden="true">⧉</span> Kopieren
+              <span aria-hidden="true">⧉</span> {strings.toolsCommon.copy}
             {/if}
           </button>
         </div>
@@ -291,14 +295,14 @@
             type="button"
             class="copy-btn"
             class:copy-btn--copied={copyMwst === 'copied'}
-            aria-label={copyMwst === 'copied' ? 'Kopiert!' : 'MwSt-Betrag kopieren'}
+            aria-label={copyMwst === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
             onclick={() => copyField(mwstDisplay, 'mwst')}
             disabled={!mwstDisplay}
           >
             {#if copyMwst === 'copied'}
-              <span aria-hidden="true">✓</span> Kopiert
+              <span aria-hidden="true">✓</span> {strings.toolsCommon.copied}
             {:else}
-              <span aria-hidden="true">⧉</span> Kopieren
+              <span aria-hidden="true">⧉</span> {strings.toolsCommon.copy}
             {/if}
           </button>
         </div>
@@ -342,14 +346,14 @@
             type="button"
             class="copy-btn"
             class:copy-btn--copied={copyBrutto === 'copied'}
-            aria-label={copyBrutto === 'copied' ? 'Kopiert!' : 'Bruttobetrag kopieren'}
+            aria-label={copyBrutto === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
             onclick={() => copyField(bruttoDisplay, 'brutto')}
             disabled={!bruttoDisplay}
           >
             {#if copyBrutto === 'copied'}
-              <span aria-hidden="true">✓</span> Kopiert
+              <span aria-hidden="true">✓</span> {strings.toolsCommon.copied}
             {:else}
-              <span aria-hidden="true">⧉</span> Kopieren
+              <span aria-hidden="true">⧉</span> {strings.toolsCommon.copy}
             {/if}
           </button>
         </div>
@@ -382,7 +386,7 @@
   <!-- Clear -->
   {#if activeField !== null}
     <div class="actions-bar">
-      <button type="button" class="clear-btn" onclick={handleClear}>Zurücksetzen</button>
+      <button type="button" class="clear-btn" onclick={handleClear}>{strings.toolsCommon.reset}</button>
     </div>
   {/if}
 
@@ -392,7 +396,7 @@
   {/if}
 
   <!-- Privacy badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal im Browser
   </div>
 </div>

@@ -9,12 +9,16 @@
   } from '../../lib/tools/skonto-rechner';
   import type { SkontoResult, AmpelStatus } from '../../lib/tools/skonto-rechner';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   // ---- Skontobasis-Toggle ----
   type Basis = 'brutto' | 'netto';
@@ -315,7 +319,7 @@
               class="copy-inline"
               onclick={() => copyText(formatProzent(result!.effJahreszins!) + ' %', 'ejz')}
               aria-label="Jahreszins kopieren"
-            >{copiedField === 'ejz' ? 'Kopiert' : 'Kopieren'}</button>
+            >{copiedField === 'ejz' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
           </div>
           <div class="jahreszins-card__value">
             {formatProzent(result.effJahreszins)}&nbsp;<span class="jahreszins-card__unit">%&nbsp;p.a.</span>
@@ -337,7 +341,7 @@
               class="copy-inline"
               onclick={() => copyText(formatEuro(result!.skontoBetrag) + ' €', 'skonto')}
               aria-label="Skontobetrag kopieren"
-            >{copiedField === 'skonto' ? 'Kopiert' : 'Kopieren'}</button>
+            >{copiedField === 'skonto' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
           </div>
           <span class="summary-card__value">
             {formatEuro(result.skontoBetrag)}&nbsp;<span class="summary-card__unit">€</span>
@@ -352,7 +356,7 @@
               class="copy-inline"
               onclick={() => copyText(formatEuro(result!.zahlBetrag) + ' €', 'zahl')}
               aria-label="Zahlbetrag kopieren"
-            >{copiedField === 'zahl' ? 'Kopiert' : 'Kopieren'}</button>
+            >{copiedField === 'zahl' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</button>
           </div>
           <span class="summary-card__value">
             {formatEuro(result.zahlBetrag)}&nbsp;<span class="summary-card__unit">€</span>
@@ -395,13 +399,13 @@
 
   </div><!-- /results -->
 
-  <!-- Zurücksetzen -->
+  <!-- Reset button -->
   <div class="actions-bar">
-    <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+    <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
   </div>
 
   <!-- Privacy Badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
   </div>
 

@@ -6,9 +6,12 @@
     type FormatFn,
     type FormatterEntry,
   } from '../../lib/tools/formatter-runtime-registry';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
     placeholder?: string;
     inversePlaceholder?: string;
     inverseLabel?: string;
@@ -17,10 +20,12 @@
 
   let {
     config,
+    lang,
     placeholder = '',
     inversePlaceholder = '',
     inverseLabel = 'Decode',
   }: Props = $props();
+  const strings = $derived(t(lang));
 
   // Formatter module is lazy-imported by config.id so each tool page ships its
   // own chunk instead of all 17 formatters. `entry` stays undefined until the
@@ -169,10 +174,10 @@
         class:formatter__ghost-btn--copied={copyState === 'copied'}
         onclick={onCopyOutput}
         disabled={!hasOutput}
-        aria-label="Formatierte Ausgabe in die Zwischenablage kopieren"
+        aria-label={strings.toolsCommon.copyAria}
         data-testid="formatter-copy"
       >
-        {copyState === 'copied' ? 'Kopiert' : 'Kopieren'}
+        {copyState === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}
       </button>
     </div>
     {#if result.ok === true && result.value}

@@ -35,8 +35,10 @@ describe('Header tools-nav link is lang-aware', () => {
   });
 
   it('keeps the German label "Werkzeuge" and English label "Tools"', () => {
-    expect(headerSrc).toMatch(/label:\s*['"]Werkzeuge['"]/);
-    expect(headerSrc).toMatch(/label:\s*['"]Tools['"]/);
+    // After i18n migration the labels come from strings.header.nav rather
+    // than hardcoded literals in Header.astro; assert the lookup is present.
+    expect(headerSrc).toMatch(/strings\.header\.nav\.tools/);
+    expect(headerSrc).toMatch(/strings\.header\.nav\.about/);
   });
 
   it('DE language → /de/werkzeuge', () => {

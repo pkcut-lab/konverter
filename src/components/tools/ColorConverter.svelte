@@ -3,13 +3,17 @@
   import { QUICK_COLORS } from '../../lib/tools/hex-rgb-konverter-presets';
   import { loadFormatter, type FormatFn } from '../../lib/tools/formatter-runtime-registry';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
   type CopyState = 'idle' | 'copied';
 
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
+  const strings = $derived(t(lang));
 
   // Lazy-load the formatter module so only the hex-rgb-konverter chunk ships
   // on this page, not all 17 formatters. See formatter-runtime-registry.ts.
@@ -156,7 +160,7 @@
               <rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.75" />
               <path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span>{copyStates[i] === 'copied' ? 'Kopiert' : 'Kopieren'}</span>
+            <span>{copyStates[i] === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</span>
           </button>
         </div>
       {/each}
@@ -181,7 +185,7 @@
         <rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.75" />
         <path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      <span>{copyStates.all === 'copied' ? 'Alle kopiert' : 'Alle kopieren'}</span>
+      <span>{copyStates.all === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}</span>
     </button>
   </div>
 

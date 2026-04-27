@@ -1,23 +1,30 @@
 <script lang="ts">
+  import { t } from '../lib/i18n/strings';
+  import type { Lang } from '../lib/i18n/lang';
+
   type Mode = 'auto' | 'light' | 'dark';
 
-  let mql;
+  interface Props {
+    lang: Lang;
+  }
+  const { lang }: Props = $props();
+  const strings = $derived(t(lang));
 
-  function readInitialMode() {
+  let mql: MediaQueryList | undefined;
+
+  function readInitialMode(): Mode {
     if (typeof localStorage === 'undefined') return 'auto';
     const stored = localStorage.getItem('theme');
     return stored === 'light' || stored === 'dark' ? stored : 'auto';
   }
 
-  let mode = $state(readInitialMode());
+  let mode = $state<Mode>(readInitialMode());
 
-  function systemTheme() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+  function systemTheme(): 'dark' | 'light' {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function apply(next) {
+  function apply(next: Mode) {
     mode = next;
     if (next === 'auto') {
       localStorage.removeItem('theme');
@@ -30,7 +37,7 @@
 
   $effect(() => {
     mql = window.matchMedia('(prefers-color-scheme: dark)');
-    const onChange = (e) => {
+    const onChange = (e: MediaQueryListEvent) => {
       if (mode === 'auto') {
         document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
       }
@@ -45,23 +52,23 @@
 <div
   class="theme-toggle"
   role="group"
-  aria-label="Farbschema auswählen"
+  aria-label={strings.themeToggle.groupLabel}
 >
   <button
     type="button"
     aria-pressed={mode === 'auto'}
     onclick={() => apply('auto')}
-  >Auto</button>
+  >{strings.themeToggle.auto}</button>
   <button
     type="button"
     aria-pressed={mode === 'light'}
     onclick={() => apply('light')}
-  >Hell</button>
+  >{strings.themeToggle.light}</button>
   <button
     type="button"
     aria-pressed={mode === 'dark'}
     onclick={() => apply('dark')}
-  >Dunkel</button>
+  >{strings.themeToggle.dark}</button>
 </div>
 
 <style>

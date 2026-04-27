@@ -8,12 +8,17 @@
     formatEuro,
     formatProzent,
   } from '../../lib/tools/roi-rechner';
+  import { t } from '../../lib/i18n/strings';
+  import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   type Mode = 'basis' | 'erweitert' | 'dupont';
   let mode = $state<Mode>('basis');
@@ -489,7 +494,7 @@
         <div class="result-card">
           <span class="result-card__label">Kapitalumschlag</span>
           <span class="result-card__value">
-            {dupontResult.kapitalumschlag.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {dupontResult.kapitalumschlag.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span class="result-card__sub">Nettoumsatz / Gesamtkapital</span>
         </div>
@@ -513,13 +518,13 @@
           onclick={copyRoi}
           aria-label="ROI-Ergebnis in die Zwischenablage kopieren"
         >
-          {copyState === 'copied' ? 'Kopiert!' : copyState === 'error' ? 'Fehler' : 'ROI kopieren'}
+          {copyState === 'copied' ? strings.toolsCommon.copied : copyState === 'error' ? 'Fehler' : strings.toolsCommon.copy}
         </button>
-        <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+        <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
       </div>
     {:else}
       <div class="actions-bar">
-        <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+        <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
       </div>
     {/if}
 
@@ -532,7 +537,7 @@
   </p>
 
   <!-- Privacy badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
   </div>
 

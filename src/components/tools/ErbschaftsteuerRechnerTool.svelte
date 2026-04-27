@@ -8,12 +8,16 @@
     formatProzent,
     type Verwandtschaftsgrad,
   } from '../../lib/tools/erbschaftsteuer-rechner';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   const VERWANDTSCHAFT_OPTIONS: { value: Verwandtschaftsgrad; label: string }[] = [
     { value: 'ehepartner',                  label: 'Ehepartner / Lebenspartner' },
@@ -473,9 +477,9 @@
           aria-label="Ergebnis als Text für Steuerberater kopieren"
         >
           {#if copyState === 'copied'}
-            Kopiert ✓
+            {strings.toolsCommon.copied}
           {:else if copyState === 'error'}
-            Fehler beim Kopieren
+            Fehler
           {:else}
             Ergebnis für Berater kopieren
           {/if}
@@ -486,7 +490,7 @@
           onclick={handleReset}
           aria-label="Alle Eingaben zurücksetzen"
         >
-          Zurücksetzen
+          {strings.toolsCommon.reset}
         </button>
       </div>
     </div>

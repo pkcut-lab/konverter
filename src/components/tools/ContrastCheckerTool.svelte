@@ -1,12 +1,16 @@
 <script lang="ts">
   import type { FormatterConfig } from '../../lib/tools/schemas';
   import { evaluatePair, normalizeHex } from '../../lib/tools/kontrast-pruefer';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   let fgInput = $state<string>('#1A1A1A');
   let bgInput = $state<string>('#FFFFFF');
@@ -59,11 +63,11 @@
       </div>
     </div>
 
-    <button type="button" class="contrast__swap" onclick={swap} aria-label="Farben tauschen">
+    <button type="button" class="contrast__swap" onclick={swap} aria-label={strings.toolsCommon.swapAria}>
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
         <path d="M7 10h10M7 10l3-3M7 10l3 3M17 14H7m10 0-3-3m3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span>Tauschen</span>
+      <span>{strings.toolsCommon.swap}</span>
     </button>
 
     <div class="contrast__picker">

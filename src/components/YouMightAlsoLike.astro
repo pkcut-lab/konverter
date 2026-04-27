@@ -10,6 +10,7 @@
 // aktuelle Tool wird und bereits als „Verwandt" gelistete Slugs werden
 // ausgeschlossen.
 import { listToolsForLang } from '../lib/tools/list';
+import { t } from '../lib/i18n/strings';
 import type { Lang } from '../lib/tools/types';
 
 interface Props {
@@ -21,15 +22,11 @@ interface Props {
 }
 const { lang, currentToolId, excludeSlugs = [], limit = 6 } = Astro.props;
 
-const labelByLang: Record<string, string> = {
-  de: 'Das könnte dir auch gefallen',
-  en: 'You might also like',
-};
-const label = labelByLang[lang] ?? labelByLang.en!;
+const label = t(lang).youMightAlsoLike;
 
-// Deterministisch gemischtes Auswahl-Array pro `currentToolId`. xfnv1a → mulberry32
-// gibt uns einen billigen, seedbaren PRNG ohne Dependency. So bleibt das
-// Ergebnis beim Rebuild stabil (gut für HTTP-Caches), variiert aber pro Tool.
+// Deterministic shuffle per `currentToolId`. xfnv1a → mulberry32 gives a cheap
+// seedable PRNG without a dependency. Stable across rebuilds (HTTP-cache friendly)
+// but different per tool so each page shows a distinct set of suggestions.
 function xfnv1a(str: string): number {
   let h = 2166136261 >>> 0;
   for (let i = 0; i < str.length; i++) {

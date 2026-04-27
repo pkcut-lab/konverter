@@ -7,7 +7,8 @@ import CookieBanner from '../components/CookieBanner.svelte';
 import WebVitals from '../components/WebVitals.svelte';
 import { buildHreflangLinks, DEFAULT_LANGUAGE, type ActiveLanguage } from '../lib/hreflang';
 import { t } from '../lib/i18n/strings';
-import type { Lang } from '../lib/tools/types';
+import { OG_LOCALE_MAP } from '../lib/i18n/locale-maps';
+import type { Lang } from '../lib/i18n/lang';
 
 interface Props {
   lang: string;
@@ -94,10 +95,7 @@ const websiteJsonLd = {
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="kittokit" />
-    {/* TODO(phase-3): replace ternary with OG_LOCALE_MAP from src/lib/i18n/locale-maps.ts.
-        Falls through to raw lang code for non-de/en, which is invalid for og:locale
-        (e.g. 'pt-br' → Facebook expects 'pt_BR'). See CONVENTIONS.md §11.1. */}
-    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang === 'en' ? 'en_US' : lang} />
+    <meta property="og:locale" content={OG_LOCALE_MAP[lang as Lang]} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
@@ -180,14 +178,14 @@ const websiteJsonLd = {
   </head>
   <body>
     <a href="#main" class="skip-to-content">
-      {lang === 'de' ? 'Zum Inhalt springen' : 'Skip to content'}
+      {strings.skipToContent}
     </a>
     <Header lang={lang} langAlternates={hreflangs} />
     <main id="main" class="site-main" data-pagefind-body>
       <slot />
     </main>
     <Footer lang={lang} />
-    <CookieBanner client:idle />
+    <CookieBanner client:idle lang={lang as Lang} />
     <WebVitals client:idle />
 
     {/* Cloudflare Web Analytics — privacy-first, no consent required */}

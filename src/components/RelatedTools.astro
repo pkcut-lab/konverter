@@ -6,6 +6,7 @@
 // explicit-Slugs first, dann Same-Category-Geschwister bis `minCount` erreicht.
 // Wrap ist conditional: null Treffer → kein Markup.
 import { resolveRelatedToolsWithFallback } from '../lib/tools/list';
+import { t } from '../lib/i18n/strings';
 import type { Lang } from '../lib/tools/types';
 
 interface Props {
@@ -17,11 +18,7 @@ interface Props {
 const { lang, ownSlug, relatedSlugs, minCount = 3 } = Astro.props;
 const tools = await resolveRelatedToolsWithFallback(lang, ownSlug, relatedSlugs, minCount);
 
-const labelByLang: Record<string, string> = {
-  de: 'Verwandt',
-  en: 'Related',
-};
-const label = labelByLang[lang] ?? labelByLang.en!;
+const label = t(lang).relatedToolsHeading;
 ---
 {tools.length > 0 && (
   <nav class="related-bar" aria-label={label}>

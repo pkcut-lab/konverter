@@ -11,12 +11,16 @@
   } from '../../lib/tools/tilgungsplan-rechner';
   import type { TilgungsplanResult } from '../../lib/tools/tilgungsplan-rechner';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   // ---- Berechnungs-Modus ----
   type Modus = 'anfangstilgung' | 'monatsrate' | 'laufzeit';
@@ -422,13 +426,13 @@
           type="button"
           class="copy-btn"
           class:copy-btn--copied={copyResult === 'copied'}
-          aria-label={copyResult === 'copied' ? 'Kopiert!' : 'Ergebnis kopieren'}
+          aria-label={copyResult === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
           onclick={handleCopyResult}
         >
           {#if copyResult === 'copied'}
-            Kopiert
+            {strings.toolsCommon.copied}
           {:else}
-            Ergebnis kopieren
+            {strings.toolsCommon.copy}
           {/if}
         </button>
       </div>
@@ -573,9 +577,9 @@
 
   </div><!-- /results -->
 
-  <!-- Zurücksetzen -->
+  <!-- Reset button -->
   <div class="actions-bar">
-    <button type="button" class="reset-btn" onclick={handleReset}>Zurücksetzen</button>
+    <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
   </div>
 
   <!-- Disclaimer -->
@@ -585,7 +589,7 @@
   </p>
 
   <!-- Privacy badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
   </div>
 

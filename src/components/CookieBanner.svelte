@@ -1,5 +1,17 @@
 <script lang="ts">
+  import { t } from '../lib/i18n/strings';
+  import type { Lang } from '../lib/i18n/lang';
   import { getConsent, setConsent } from '../lib/consent';
+
+  interface Props {
+    lang: Lang;
+  }
+  const { lang }: Props = $props();
+
+  const strings = t(lang);
+  const privacyUrl = `/${lang}${strings.cookieBanner.privacyHref}`;
+  const privacyLink = `<a href="${privacyUrl}">${strings.cookieBanner.privacyLinkLabel}</a>`;
+  const bannerBodyHtml = strings.cookieBanner.bodyHtml.replace('{privacyLink}', privacyLink);
 
   let mode = $state<'banner' | 'drawer' | 'hidden'>('hidden');
   let toggles = $state({ notwendig: true, statistik: false, marketing: false });
@@ -29,44 +41,40 @@
 </script>
 
 {#if mode === 'banner'}
-  <div class="banner" role="dialog" aria-modal="true" aria-label="Cookie-Einstellungen">
-    <p class="eyebrow">Datenschutz</p>
-    <p class="body">
-      kittokit nutzt nur notwendige Cookies. Mit deiner Zustimmung helfen Statistik-Cookies
-      (Microsoft Clarity) und später Marketing-Cookies (Google AdSense), kittokit zu verbessern.
-      Details in <a href="/de/datenschutz">Datenschutz</a>.
-    </p>
+  <div class="banner" role="dialog" aria-modal="true" aria-label={strings.cookieBanner.bannerAria}>
+    <p class="eyebrow">{strings.cookieBanner.eyebrowPrivacy}</p>
+    <p class="body">{@html bannerBodyHtml}</p>
     <div class="buttons">
-      <button class="primary" onclick={acceptAll}>Alle akzeptieren</button>
-      <button class="ghost" onclick={openDrawer}>Auswählen</button>
-      <button class="ghost" onclick={acceptNecessary}>Nur notwendige</button>
+      <button class="primary" onclick={acceptAll}>{strings.cookieBanner.acceptAll}</button>
+      <button class="ghost" onclick={openDrawer}>{strings.cookieBanner.selectChoices}</button>
+      <button class="ghost" onclick={acceptNecessary}>{strings.cookieBanner.acceptNecessary}</button>
     </div>
   </div>
 {:else if mode === 'drawer'}
-  <div class="banner" role="dialog" aria-modal="true" aria-label="Cookie-Auswahl">
-    <p class="eyebrow">Auswahl</p>
+  <div class="banner" role="dialog" aria-modal="true" aria-label={strings.cookieBanner.drawerAria}>
+    <p class="eyebrow">{strings.cookieBanner.eyebrowSelection}</p>
     <ul class="toggles">
       <li>
         <label>
           <input type="checkbox" checked disabled />
-          <span>Notwendig <span class="note">(immer aktiv)</span></span>
+          <span>{strings.cookieBanner.necessaryLabel} <span class="note">{strings.cookieBanner.necessaryNote}</span></span>
         </label>
       </li>
       <li>
         <label>
           <input type="checkbox" bind:checked={toggles.statistik} />
-          <span>Statistik <span class="note">(Microsoft Clarity)</span></span>
+          <span>{strings.cookieBanner.statisticsLabel} <span class="note">{strings.cookieBanner.statisticsNote}</span></span>
         </label>
       </li>
       <li>
         <label>
           <input type="checkbox" bind:checked={toggles.marketing} />
-          <span>Marketing <span class="note">(Google AdSense)</span></span>
+          <span>{strings.cookieBanner.marketingLabel} <span class="note">{strings.cookieBanner.marketingNote}</span></span>
         </label>
       </li>
     </ul>
     <div class="buttons">
-      <button class="primary" onclick={saveDrawer}>Speichern</button>
+      <button class="primary" onclick={saveDrawer}>{strings.cookieBanner.save}</button>
     </div>
   </div>
 {/if}
@@ -101,13 +109,13 @@
     color: var(--color-text-muted);
   }
 
-  .body a {
+  .body :global(a) {
     color: var(--color-accent);
     text-decoration-thickness: 1px;
     text-underline-offset: var(--underline-offset);
   }
 
-  .body a:hover {
+  .body :global(a:hover) {
     color: var(--color-accent-hover);
   }
 

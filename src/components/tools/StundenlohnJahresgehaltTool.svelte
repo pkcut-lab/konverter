@@ -11,12 +11,17 @@
     MINIJOB_GRENZE_2026,
   } from '../../lib/tools/stundenlohn-jahresgehalt';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
   void config;
+  const strings = $derived(t(lang));
 
   // ── Direction ──────────────────────────────────────────────────────────────
   type Direction = 'stundenlohn-zu-gehalt' | 'gehalt-zu-stundenlohn';
@@ -318,7 +323,7 @@
           <div class="result-row result-row--header" role="row">
             <span class="result-cell result-cell--label" role="columnheader">Zeitraum</span>
             <span class="result-cell result-cell--value" role="columnheader">Betrag (Brutto)</span>
-            <span class="result-cell result-cell--action" role="columnheader" aria-label="Kopieren"></span>
+            <span class="result-cell result-cell--action" role="columnheader" aria-label={strings.toolsCommon.copy}></span>
           </div>
         </div>
         <div class="result-table__body" role="rowgroup">
@@ -350,7 +355,7 @@
                   class="copy-btn"
                   class:copy-btn--copied={copyState[row.key] === 'copied'}
                   onclick={() => copyValue(row.key, formatEuroFull(row.value))}
-                  aria-label={copyState[row.key] === 'copied' ? 'Kopiert!' : `${row.label} kopieren`}
+                  aria-label={copyState[row.key] === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copyAria}
                 >
                   {copyState[row.key] === 'copied' ? '✓' : '⧉'}
                 </button>
@@ -363,7 +368,7 @@
       <!-- Mindestlohn warnings -->
       {#if unterMindestlohn}
         <div class="alert alert--warn" role="alert">
-          <strong>Unter Mindestlohn 2026:</strong> Der gesetzliche Mindestlohn beträgt ab Januar&nbsp;2026 <strong>{MINDESTLOHN_2026.toLocaleString('de-DE', { minimumFractionDigits: 2 })}&nbsp;€/h</strong>.
+          <strong>Unter Mindestlohn 2026:</strong> Der gesetzliche Mindestlohn beträgt ab Januar&nbsp;2026 <strong>{MINDESTLOHN_2026.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2 })}&nbsp;€/h</strong>.
         </div>
       {/if}
 
@@ -375,7 +380,7 @@
 
       <!-- Mindestlohn 2027 preview -->
       <div class="min-preview" role="note">
-        Vorschau: Ab 1.&nbsp;Jan&nbsp;2027 steigt der Mindestlohn auf <strong>{MINDESTLOHN_2027.toLocaleString('de-DE', { minimumFractionDigits: 2 })}&nbsp;€/h</strong> (geplant).
+        Vorschau: Ab 1.&nbsp;Jan&nbsp;2027 steigt der Mindestlohn auf <strong>{MINDESTLOHN_2027.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2 })}&nbsp;€/h</strong> (geplant).
       </div>
 
       <!-- Brutto-Hinweis -->
@@ -386,7 +391,7 @@
     </div>
 
     <div class="actions-bar">
-      <button type="button" class="clear-btn" onclick={handleReset}>Zurücksetzen</button>
+      <button type="button" class="clear-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
     </div>
   {:else if (direction === 'stundenlohn-zu-gehalt' ? stundenlohnStr === '' : jahresgehaltStr === '')}
     <p class="empty-state">
@@ -397,7 +402,7 @@
   {/if}
 
   <!-- Privacy badge -->
-  <div class="privacy-badge" aria-label="Datenschutz-Hinweis">
+  <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
     Alle Berechnungen lokal im Browser · Deine Gehaltsinfos verlassen nicht dein Gerät · Kein Tracking
   </div>
 </div>

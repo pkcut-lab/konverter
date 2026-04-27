@@ -6,12 +6,16 @@
     formatNumber,
     formatPercent,
   } from '../../lib/tools/bild-diff';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let { config: _config }: Props = $props();
+  let { config: _config, lang }: Props = $props();
+  const strings = $derived(t(lang));
 
   type Slot = 'a' | 'b';
   type Loaded = {
@@ -373,7 +377,7 @@
       onclick={onCopy}
       disabled={!report}
     >
-      {copyState === 'copied' ? 'Kopiert' : 'Kopieren'}
+      {copyState === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}
     </button>
   </div>
   {#if report}

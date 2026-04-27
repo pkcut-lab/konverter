@@ -4,11 +4,15 @@
   import Loader from '../Loader.svelte';
   import type { ProgressEvent, TranscriptionResult, ModelSize } from '../../lib/tools/audio-transkription';
   import { onDestroy } from 'svelte';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: FormatterConfig;
+    lang: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
+  const strings = $derived(t(lang));
 
   let file = $state<File | null>(null);
   let audioUrl = $state<string | null>(null);
@@ -292,7 +296,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
               </svg>
-              Kopieren
+              {strings.toolsCommon.copy}
             </button>
             <button class="copy-btn copy-btn--primary" onclick={downloadResult} title="Herunterladen">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

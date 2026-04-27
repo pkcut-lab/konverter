@@ -1,13 +1,17 @@
 <script lang="ts">
   import type { ComparerConfig } from '../../lib/tools/schemas';
   import { loadDiff, type DiffFn } from '../../lib/tools/type-runtime-registry';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: ComparerConfig;
+    lang: Lang;
     placeholderA?: string;
     placeholderB?: string;
   }
-  let { config, placeholderA = '', placeholderB = '' }: Props = $props();
+  let { config, lang, placeholderA = '', placeholderB = '' }: Props = $props();
+  const strings = $derived(t(lang));
 
   // Lazy-load the diff module so only this tool's chunk ships on the page.
   let diff = $state<DiffFn | undefined>(undefined);
@@ -108,7 +112,7 @@
         onclick={onCopy}
         disabled={!hasOutput}
       >
-        {copyState === 'copied' ? 'Kopiert' : 'Kopieren'}
+        {copyState === 'copied' ? strings.toolsCommon.copied : strings.toolsCommon.copy}
       </button>
     </div>
     {#if result.ok && result.value}
