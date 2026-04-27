@@ -819,6 +819,64 @@ export interface UiStrings {
       emptyState: string;
       privacyBadge: string;
     };
+    leasingFactorCalculator: {
+      regionAria: string;
+      // Inputs
+      rateLabel: string;
+      ratePlaceholder: string;
+      rateAria: string;
+      unitEuroPerMonth: string;
+      listenpreisLabel: string;
+      listenpreisPlaceholder: string;
+      listenpreisAria: string;
+      sonderzahlungToggle: string;
+      optionalBadge: string;
+      sonderzahlungLabel: string;
+      sonderzahlungPlaceholder: string;
+      sonderzahlungAria: string;
+      laufzeitLabel: string;
+      laufzeitAria: string;
+      /** {months} */
+      laufzeitOptionTemplate: string;
+      // Validation
+      errInvalidRate: string;
+      errRateNegative: string;
+      errInvalidListenpreis: string;
+      errListenpreisPositive: string;
+      errInvalidSonderzahlung: string;
+      errSonderzahlungNegative: string;
+      // Bereinigung-Info
+      /** {anteil} {bereinigt} — rendered with `{@html}` because of inline `<strong>`. */
+      bereinigungInfoHtml: string;
+      // Results
+      resultsAria: string;
+      cardLeasingfaktor: string;
+      cardMarktdurchschnitt: string;
+      cardMarktSource: string;
+      cardBereinigung: string;
+      cardBereinigungActive: string;
+      /** {months} */
+      cardBereinigungSubTemplate: string;
+      // Bewertung labels (component-mapped, do not translate data-layer)
+      bewertungSpitze: string;
+      bewertungSehrGut: string;
+      bewertungGut: string;
+      bewertungDurchschnittlich: string;
+      bewertungWenigAttraktiv: string;
+      // Gauge
+      gaugeAria: string;
+      /** {factor} {bewertung} */
+      gaugeImgAriaTemplate: string;
+      benchmarkAriaLabel: string;
+      benchmarkLabel: string;
+      // Formel / actions / disclaimer
+      formelAria: string;
+      formelLabel: string;
+      copyAria: string;
+      copyError: string;
+      disclaimer: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -1564,6 +1622,55 @@ const strings: Record<Lang, UiStrings> = {
         emptyState: 'Gib die Werte ein, um den Cashflow sofort zu sehen.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
       },
+      leasingFactorCalculator: {
+        regionAria: 'Leasingfaktor-Rechner',
+        rateLabel: 'Monatliche Rate',
+        ratePlaceholder: 'z.B. 250',
+        rateAria: 'Monatliche Leasingrate in Euro',
+        unitEuroPerMonth: '€/Monat',
+        listenpreisLabel: 'Bruttolistenpreis',
+        listenpreisPlaceholder: 'z.B. 33.850',
+        listenpreisAria: 'Bruttolistenpreis des Fahrzeugs in Euro',
+        sonderzahlungToggle: 'Sonderzahlung berücksichtigen',
+        optionalBadge: 'optional',
+        sonderzahlungLabel: 'Sonderzahlung',
+        sonderzahlungPlaceholder: 'z.B. 3.600',
+        sonderzahlungAria: 'Einmalige Sonderzahlung oder Anzahlung in Euro',
+        laufzeitLabel: 'Laufzeit',
+        laufzeitAria: 'Laufzeit in Monaten',
+        laufzeitOptionTemplate: '{months} Monate',
+        errInvalidRate: 'Bitte eine gültige Rate eingeben.',
+        errRateNegative: 'Rate muss ≥ 0 sein.',
+        errInvalidListenpreis: 'Bitte einen gültigen Listenpreis eingeben.',
+        errListenpreisPositive: 'Listenpreis muss > 0 sein.',
+        errInvalidSonderzahlung: 'Bitte eine gültige Sonderzahlung eingeben.',
+        errSonderzahlungNegative: 'Sonderzahlung muss ≥ 0 sein.',
+        bereinigungInfoHtml:
+          'Anteilige Sonderzahlung: <strong>{anteil}&nbsp;€/Monat</strong> — bereinigte Rate: <strong>{bereinigt}&nbsp;€</strong>',
+        resultsAria: 'Berechnungsergebnis',
+        cardLeasingfaktor: 'Leasingfaktor',
+        cardMarktdurchschnitt: 'Marktdurchschnitt 2024',
+        cardMarktSource: 'Quelle: leasingmarkt.de',
+        cardBereinigung: 'Bereinigung',
+        cardBereinigungActive: 'aktiv',
+        cardBereinigungSubTemplate: 'Sonderzahlung verteilt auf {months} Monate',
+        bewertungSpitze: 'Spitzenangebot',
+        bewertungSehrGut: 'Sehr gut',
+        bewertungGut: 'Gut',
+        bewertungDurchschnittlich: 'Durchschnittlich',
+        bewertungWenigAttraktiv: 'Wenig attraktiv',
+        gaugeAria: 'Bewertungs-Gauge',
+        gaugeImgAriaTemplate: 'Leasingfaktor {factor} — {bewertung}',
+        benchmarkAriaLabel: 'Marktdurchschnitt 0,63',
+        benchmarkLabel: 'Ø 0,63',
+        formelAria: 'Formel-Aufschlüsselung',
+        formelLabel: 'Formel',
+        copyAria: 'Leasingfaktor in die Zwischenablage kopieren',
+        copyError: 'Fehler',
+        disclaimer:
+          'Diese Berechnung dient ausschließlich zur unverbindlichen Information. Der Leasingfaktor ist eine Vergleichskennzahl — er ersetzt keine vollständige Angebotsprüfung.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
+      },
     },
   },
 
@@ -2307,6 +2414,55 @@ const strings: Record<Lang, UiStrings> = {
         formelAria: 'Formula breakdown',
         formelLabel: 'Formula',
         emptyState: 'Enter the values to see the cash flow instantly.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      leasingFactorCalculator: {
+        regionAria: 'Leasing factor calculator',
+        rateLabel: 'Monthly payment',
+        ratePlaceholder: 'e.g. 250',
+        rateAria: 'Monthly leasing payment in euros',
+        unitEuroPerMonth: '€/month',
+        listenpreisLabel: 'Manufacturer\'s list price',
+        listenpreisPlaceholder: 'e.g. 33,850',
+        listenpreisAria: 'Manufacturer\'s gross list price in euros',
+        sonderzahlungToggle: 'Include down payment',
+        optionalBadge: 'optional',
+        sonderzahlungLabel: 'Down payment',
+        sonderzahlungPlaceholder: 'e.g. 3,600',
+        sonderzahlungAria: 'One-time down payment in euros',
+        laufzeitLabel: 'Term',
+        laufzeitAria: 'Term in months',
+        laufzeitOptionTemplate: '{months} months',
+        errInvalidRate: 'Please enter a valid payment.',
+        errRateNegative: 'Payment must be ≥ 0.',
+        errInvalidListenpreis: 'Please enter a valid list price.',
+        errListenpreisPositive: 'List price must be > 0.',
+        errInvalidSonderzahlung: 'Please enter a valid down payment.',
+        errSonderzahlungNegative: 'Down payment must be ≥ 0.',
+        bereinigungInfoHtml:
+          'Pro-rated down payment: <strong>{anteil}&nbsp;€/month</strong> — adjusted payment: <strong>{bereinigt}&nbsp;€</strong>',
+        resultsAria: 'Calculation result',
+        cardLeasingfaktor: 'Leasing factor',
+        cardMarktdurchschnitt: 'Market average 2024',
+        cardMarktSource: 'Source: leasingmarkt.de',
+        cardBereinigung: 'Adjustment',
+        cardBereinigungActive: 'active',
+        cardBereinigungSubTemplate: 'Down payment spread over {months} months',
+        bewertungSpitze: 'Top deal',
+        bewertungSehrGut: 'Very good',
+        bewertungGut: 'Good',
+        bewertungDurchschnittlich: 'Average',
+        bewertungWenigAttraktiv: 'Unattractive',
+        gaugeAria: 'Rating gauge',
+        gaugeImgAriaTemplate: 'Leasing factor {factor} — {bewertung}',
+        benchmarkAriaLabel: 'Market average 0.63',
+        benchmarkLabel: 'Ø 0.63',
+        formelAria: 'Formula breakdown',
+        formelLabel: 'Formula',
+        copyAria: 'Copy leasing factor to clipboard',
+        copyError: 'Error',
+        disclaimer:
+          'This calculation is for informational purposes only. The leasing factor is a comparison metric — it does not replace a full offer review.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },
     },

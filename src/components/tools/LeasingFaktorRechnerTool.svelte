@@ -3,11 +3,9 @@
   import { parseDE } from '../../lib/tools/parse-de';
   import {
     computeLeasingFaktor,
-    getBewertung,
     formatFaktor,
     formatEuro,
     MARKT_DURCHSCHNITT,
-    BEWERTUNG_LABEL,
   } from '../../lib/tools/leasing-faktor-rechner';
   import type { FaktorBewertung } from '../../lib/tools/leasing-faktor-rechner';
   import { t } from '../../lib/i18n/strings';
@@ -20,6 +18,16 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.leasingFactorCalculator);
+
+  /** Map data-layer bewertung-key onto the tools-namespace label. */
+  function bewertungLabel(b: FaktorBewertung): string {
+    if (b === 'spitzenangebot') return T.bewertungSpitze;
+    if (b === 'sehr-gut') return T.bewertungSehrGut;
+    if (b === 'gut') return T.bewertungGut;
+    if (b === 'durchschnittlich') return T.bewertungDurchschnittlich;
+    return T.bewertungWenigAttraktiv;
+  }
 
   // ---- Eingabe-Felder ----
   let rateStr = $state('250');
@@ -41,22 +49,22 @@
   // ---- Validierung ----
   const rateError = $derived.by<string | null>(() => {
     if (rateStr === '') return null;
-    if (!Number.isFinite(rate)) return 'Bitte eine gültige Rate eingeben.';
-    if (rate < 0) return 'Rate muss ≥ 0 sein.';
+    if (!Number.isFinite(rate)) return T.errInvalidRate;
+    if (rate < 0) return T.errRateNegative;
     return null;
   });
 
   const listenpreisError = $derived.by<string | null>(() => {
     if (listenpreisStr === '') return null;
-    if (!Number.isFinite(listenpreis)) return 'Bitte einen gültigen Listenpreis eingeben.';
-    if (listenpreis <= 0) return 'Listenpreis muss > 0 sein.';
+    if (!Number.isFinite(listenpreis)) return T.errInvalidListenpreis;
+    if (listenpreis <= 0) return T.errListenpreisPositive;
     return null;
   });
 
   const sonderzahlungError = $derived.by<string | null>(() => {
     if (!showSonderzahlung || sonderzahlungStr === '' || sonderzahlungStr === '0') return null;
-    if (!Number.isFinite(sonderzahlung)) return 'Bitte eine gültige Sonderzahlung eingeben.';
-    if (sonderzahlung < 0) return 'Sonderzahlung muss ≥ 0 sein.';
+    if (!Number.isFinite(sonderzahlung)) return T.errInvalidSonderzahlung;
+    if (sonderzahlung < 0) return T.errSonderzahlungNegative;
     return null;
   });
 
@@ -115,26 +123,26 @@
   }
 </script>
 
-<div class="leasing-tool" aria-label="Leasingfaktor-Rechner">
+<div class="leasing-tool" aria-label={T.regionAria}>
 
   <!-- Pflicht-Eingaben -->
   <div class="inputs-grid">
 
     <div class="input-field">
-      <label class="input-field__label" for="inp-rate">Monatliche Rate</label>
+      <label class="input-field__label" for="inp-rate">{T.rateLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={rateError !== null}>
         <input
           id="inp-rate"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 250"
+          placeholder={T.ratePlaceholder}
           bind:value={rateStr}
-          aria-label="Monatliche Leasingrate in Euro"
+          aria-label={T.rateAria}
           aria-invalid={rateError !== null}
           autocomplete="off"
         />
-        <span class="input-field__unit" aria-hidden="true">€/Monat</span>
+        <span class="input-field__unit" aria-hidden="true">{T.unitEuroPerMonth}</span>
       </div>
       {#if rateError}
         <p class="field-error" role="alert">{rateError}</p>
@@ -142,16 +150,16 @@
     </div>
 
     <div class="input-field">
-      <label class="input-field__label" for="inp-listenpreis">Bruttolistenpreis</label>
+      <label class="input-field__label" for="inp-listenpreis">{T.listenpreisLabel}</label>
       <div class="input-field__wrap" class:input-field__wrap--error={listenpreisError !== null}>
         <input
           id="inp-listenpreis"
           type="text"
           inputmode="decimal"
           class="input-field__input"
-          placeholder="z.B. 33.850"
+          placeholder={T.listenpreisPlaceholder}
           bind:value={listenpreisStr}
-          aria-label="Bruttolistenpreis des Fahrzeugs in Euro"
+          aria-label={T.listenpreisAria}
           aria-invalid={listenpreisError !== null}
           autocomplete="off"
         />
@@ -173,24 +181,24 @@
       onclick={() => { showSonderzahlung = !showSonderzahlung; }}
     >
       <span class="optional-toggle__icon" aria-hidden="true">{showSonderzahlung ? '−' : '+'}</span>
-      Sonderzahlung berücksichtigen
-      <span class="optional-badge">optional</span>
+      {T.sonderzahlungToggle}
+      <span class="optional-badge">{T.optionalBadge}</span>
     </button>
 
     {#if showSonderzahlung}
       <div class="inputs-grid inputs-grid--optional">
 
         <div class="input-field">
-          <label class="input-field__label" for="inp-sonderzahlung">Sonderzahlung</label>
+          <label class="input-field__label" for="inp-sonderzahlung">{T.sonderzahlungLabel}</label>
           <div class="input-field__wrap" class:input-field__wrap--error={sonderzahlungError !== null}>
             <input
               id="inp-sonderzahlung"
               type="text"
               inputmode="decimal"
               class="input-field__input"
-              placeholder="z.B. 3.600"
+              placeholder={T.sonderzahlungPlaceholder}
               bind:value={sonderzahlungStr}
-              aria-label="Einmalige Sonderzahlung oder Anzahlung in Euro"
+              aria-label={T.sonderzahlungAria}
               aria-invalid={sonderzahlungError !== null}
               autocomplete="off"
             />
@@ -202,18 +210,18 @@
         </div>
 
         <div class="input-field">
-          <label class="input-field__label" for="inp-laufzeit">Laufzeit</label>
+          <label class="input-field__label" for="inp-laufzeit">{T.laufzeitLabel}</label>
           <div class="input-field__wrap">
             <select
               id="inp-laufzeit"
               class="input-field__select"
               bind:value={laufzeit}
-              aria-label="Laufzeit in Monaten"
+              aria-label={T.laufzeitAria}
             >
-              <option value={24}>24 Monate</option>
-              <option value={36}>36 Monate</option>
-              <option value={48}>48 Monate</option>
-              <option value={60}>60 Monate</option>
+              <option value={24}>{T.laufzeitOptionTemplate.replace('{months}', '24')}</option>
+              <option value={36}>{T.laufzeitOptionTemplate.replace('{months}', '36')}</option>
+              <option value={48}>{T.laufzeitOptionTemplate.replace('{months}', '48')}</option>
+              <option value={60}>{T.laufzeitOptionTemplate.replace('{months}', '60')}</option>
             </select>
           </div>
         </div>
@@ -222,21 +230,22 @@
 
       {#if result?.bereinigt && result.sonderzahlungProMonat !== undefined}
         <p class="bereinigung-info">
-          Anteilige Sonderzahlung: <strong>{formatEuro(result.sonderzahlungProMonat)}&nbsp;€/Monat</strong>
-          — bereinigte Rate: <strong>{formatEuro(rate + result.sonderzahlungProMonat)}&nbsp;€</strong>
+          {@html T.bereinigungInfoHtml
+            .replace('{anteil}', formatEuro(result.sonderzahlungProMonat))
+            .replace('{bereinigt}', formatEuro(rate + result.sonderzahlungProMonat))}
         </p>
       {/if}
     {/if}
   </div>
 
   <!-- Ergebnis -->
-  <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+  <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
     {#if result}
       <div class="results-grid">
 
         <div class="result-card result-card--primary">
-          <span class="result-card__label">Leasingfaktor</span>
+          <span class="result-card__label">{T.cardLeasingfaktor}</span>
           <span class="result-card__value">
             {formatFaktor(result.faktor)}
           </span>
@@ -248,31 +257,31 @@
             class:bewertung-badge--durchschnitt={result.bewertung === 'durchschnittlich'}
             class:bewertung-badge--schlecht={result.bewertung === 'wenig-attraktiv'}
           >
-            {BEWERTUNG_LABEL[result.bewertung]}
+            {bewertungLabel(result.bewertung)}
           </span>
         </div>
 
         <div class="result-card">
-          <span class="result-card__label">Marktdurchschnitt 2024</span>
+          <span class="result-card__label">{T.cardMarktdurchschnitt}</span>
           <span class="result-card__value result-card__value--muted">
             {formatFaktor(MARKT_DURCHSCHNITT)}
           </span>
-          <span class="result-card__sub">Quelle: leasingmarkt.de</span>
+          <span class="result-card__sub">{T.cardMarktSource}</span>
         </div>
 
         {#if result.bereinigt}
           <div class="result-card">
-            <span class="result-card__label">Bereinigung</span>
-            <span class="result-card__value result-card__value--muted">aktiv</span>
-            <span class="result-card__sub">Sonderzahlung verteilt auf {laufzeit}&nbsp;Monate</span>
+            <span class="result-card__label">{T.cardBereinigung}</span>
+            <span class="result-card__value result-card__value--muted">{T.cardBereinigungActive}</span>
+            <span class="result-card__sub">{T.cardBereinigungSubTemplate.replace('{months}', String(laufzeit))}</span>
           </div>
         {/if}
 
       </div>
 
       <!-- Bewertungs-Gauge -->
-      <div class="gauge-section" aria-label="Bewertungs-Gauge">
-        <div class="gauge-track" role="img" aria-label={`Leasingfaktor ${formatFaktor(result.faktor)} — ${BEWERTUNG_LABEL[result.bewertung]}`}>
+      <div class="gauge-section" aria-label={T.gaugeAria}>
+        <div class="gauge-track" role="img" aria-label={T.gaugeImgAriaTemplate.replace('{factor}', formatFaktor(result.faktor)).replace('{bewertung}', bewertungLabel(result.bewertung))}>
           <!-- Farbsegmente -->
           <div class="gauge-segment gauge-segment--spitze" style="width: 33.33%"></div>
           <div class="gauge-segment gauge-segment--sehr-gut" style="width: 13.33%"></div>
@@ -283,9 +292,9 @@
           <div
             class="gauge-benchmark"
             style="left: {benchmarkPercent}%"
-            aria-label="Marktdurchschnitt 0,63"
+            aria-label={T.benchmarkAriaLabel}
           >
-            <span class="gauge-benchmark__label">Ø 0,63</span>
+            <span class="gauge-benchmark__label">{T.benchmarkLabel}</span>
           </div>
           <!-- Faktor-Indikator -->
           <div
@@ -304,8 +313,8 @@
       </div>
 
       <!-- Formel-Zeile -->
-      <div class="formel-row" aria-label="Formel-Aufschlüsselung">
-        <span class="formel-label">Formel</span>
+      <div class="formel-row" aria-label={T.formelAria}>
+        <span class="formel-label">{T.formelLabel}</span>
         <span class="formel-text">{result.formelText}</span>
       </div>
 
@@ -316,9 +325,9 @@
           class="copy-btn"
           class:copy-btn--copied={copyState === 'copied'}
           onclick={copyFaktor}
-          aria-label="Leasingfaktor in die Zwischenablage kopieren"
+          aria-label={T.copyAria}
         >
-          {copyState === 'copied' ? strings.toolsCommon.copied : copyState === 'error' ? 'Fehler' : strings.toolsCommon.copy}
+          {copyState === 'copied' ? strings.toolsCommon.copied : copyState === 'error' ? T.copyError : strings.toolsCommon.copy}
         </button>
         <button type="button" class="reset-btn" onclick={handleReset}>{strings.toolsCommon.reset}</button>
       </div>
@@ -333,13 +342,12 @@
 
   <!-- Disclaimer -->
   <p class="disclaimer">
-    Diese Berechnung dient ausschließlich zur unverbindlichen Information. Der Leasingfaktor
-    ist eine Vergleichskennzahl — er ersetzt keine vollständige Angebotsprüfung.
+    {T.disclaimer}
   </p>
 
   <!-- Privacy badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser
+    {T.privacyBadge}
   </div>
 
 </div>
