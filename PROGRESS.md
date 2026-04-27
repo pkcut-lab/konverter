@@ -1,7 +1,54 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-27 — i18n-Migration Phase A + B1 + B2 + B3 + B4 vollständig · 28 Files · 1853/1853 Tests grün · 0 errors · Commit `f7d9d18`
-**Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en)
+**Letztes Update:** 2026-04-27 — SEO-Audit-Sweep komplett (6 Wellen, 22 Commits, +75 neue Tests) · 1928/1928 Tests grün · 0 errors · Commit `ef0e976`
+**Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
+
+---
+
+## SEO-Audit-Sweep 2026-04-27 — Punkt-für-Punkt-Status
+
+Eingehender Audit identifizierte 30+ Punkte (P0/P1) verteilt über Strategy/SEO/Performance/Polish. Resultat:
+
+### Wave 1 — Stop-the-Bleeding-Mechanik (12 P0/P1)
+✅ Apex `noindex` + hardcoded `/en` canonical entfernt (`src/pages/index.astro`)
+✅ `DEFAULT_LANGUAGE` `de`→`en` (`src/lib/hreflang.ts`) — synchron mit `functions/index.js:20` (P0-5)
+✅ 45 EN-Files: `## Häufige Fragen?` → `## Frequently Asked Questions`
+✅ Styleguide `noindex` + sitemap-filter
+✅ Breadcrumbs JSON-LD: last-item bekommt `item:` canonical-URL
+✅ JSON-LD `priceCurrency`: lang-aware (de→EUR, en→USD); `creator.@id` lang-agnostic `/#person`
+✅ Brand-suffix zentralisiert in `BaseLayout.astro` (Skip-when-already-branded-Logic)
+✅ Footer-Tools cap 8 → 16
+✅ JetBrains-Mono Preload droppen + `Inter Fallback`-Face mit metric-overrides (size-adjust 107%, ascent/descent/line-gap)
+✅ `*.pages.dev` preview-URLs: `X-Robots-Tag: noindex` via `functions/_middleware.js`
+
+### Wave 2 — Region-Adaptive Architecture (3 echte Locale-Variants, US+UK)
+✅ Region-Foundation: `src/lib/i18n/region.ts` + `region.svelte.ts` (pub-sub) + `RegionSelector.svelte` (Refined-Minimalism Pill-Toggle mit US/UK-Inline-SVG-Flags + ARIA-keyboard)
+✅ **vat-calculator** EN: 50 US-States+DC sales-tax matrix + UK-VAT 20/5/0 + exempt; custom-rate für NYC/LA-combined; Intl.NumberFormat USD/GBP
+✅ **gross-net-calculator** EN: US 2025 federal brackets × 4 filing statuses (single/mfj/hoh/mfs) + FICA (SS+Medicare+Add'l) / UK 2025/26 PAYE + Class-1 NI 8/2 + Personal-Allowance-Taper (£100k–£125,140)
+✅ **interest-calculator** EN: Simple/Compound + 5 frequencies + APY + daily-accrual-at-t0; US federal-marginal-bracket-Picker (0/10/12/22/24/32/35/37%) / UK ISA-tax-free-Toggle + PSA-Bands
+✅ Sitemap `xhtml:link` hreflang-alternates pro Tool-URL via slug-map (146/146 Tool-Pages)
+✅ `[slug].astro` EN-Override-Routing für die 3 Region-Tools
+
+### Wave 3 — Feature-Upgrades (DE+EN beide profitieren)
+✅ **unix-timestamp**: Date-Picker-UI (datetime-local + „Now"-Button) + strukturiertes Output-Panel (UTC/Local/ISO 8601/Unix-s/Unix-ms/Relative) + per-row Copy-Buttons + Voll-i18n-Labels
+✅ **jpg-to-pdf**: Multi-Image-Upload + Drag-and-Drop + Reorder (↑/↓-Buttons) + Page-Size-Picker (A4/Letter/Auto) + Orientation + Margin (0/8/16mm)
+
+### Wave 4 — Performance: dynamic-import [slug].astro CSS-Splitting
+🟡 **DEFERRED** — 257-KB CSS-Bundle bestätigt, aber Astro-5-Architektur erfordert per-Tool-Route-Refactor (nicht single-file-fix). Dokumentiert als bekannte Performance-Schuld; Fix kommt in dedizierter Phase-2-Performance-Sprint.
+
+### Wave 5 — SEO/Hreflang/Sitemap-Polish
+✅ Sitemap per-page `lastmod` aus `frontmatter.dateModified` (146/146 populated, kein build-time-default mehr)
+✅ `WebSite.SearchAction` gedroppt (kein `?q`-Handler implementiert; Re-Add in Phase 2)
+✅ Sitemap `(de|en)`-Regex aus `ACTIVE_LANGUAGES.join('|')` derived (P1-P)
+✅ CF-Function Sync-Check-Test (`tests/functions/middleware-sync.test.ts`): `SUPPORTED` + `DEFAULT_LANG` + `COOKIE_NAME` müssen mit `hreflang.ts` matchen — bricht CI bei Drift (P1-Q)
+
+### Bewusst übersprungen / als YAGNI markiert
+- **Wave 5.1 EN Related-Tools-Closer in 73 Files** — `RelatedTools.astro` Sidebar via Frontmatter `relatedTools:[…]` erfüllt bereits SEO-Goal (146/146 Tool-Pages haben Sidebar). Cookie-Cutter-Textual-Closer wäre Low-Value-Boilerplate.
+- **Wave 1.10 KiBildDetektorTool/PdfZuJpgTool DE-Strings** — 50+ Strings je Component → das ist Phase-B5-i18n-Migration, kein Wave-1-Mechanisch.
+- **PDF-Tools Worker-Wrap (P1-S)** — Investigation-only, deferred.
+- **Transformers/ONNX-Chunk-Dedup (P1-U)** — Investigation-only, deferred.
+
+---
 
 ---
 
