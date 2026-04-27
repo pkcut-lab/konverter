@@ -6,7 +6,11 @@ import { meterZuFuss } from '../../../src/lib/tools/meter-zu-fuss';
 function render() {
   const target = document.createElement('div');
   document.body.appendChild(target);
-  const cmp = mount(Converter, { target, props: { config: meterZuFuss } });
+  // Test name is "meter-zu-fuss" (DE slug) and assertions check German labels
+  // ("Meter" / "Fuß"). Pass lang='de' explicitly so resolveLabel picks the DE
+  // entry from the LocalizedString, independent of DEFAULT_LANGUAGE (which
+  // moved to 'en' in the 2026-04-27 audit fix).
+  const cmp = mount(Converter, { target, props: { config: meterZuFuss, lang: 'de' } });
   flushSync();
   return { target, cmp };
 }

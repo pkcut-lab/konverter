@@ -9,7 +9,15 @@ export const ACTIVE_LANGUAGES = ['de', 'en'] as const;
 
 export type ActiveLanguage = (typeof ACTIVE_LANGUAGES)[number];
 
-export const DEFAULT_LANGUAGE: ActiveLanguage = 'de';
+/**
+ * `x-default` hreflang target. MUST match `functions/index.js`'s
+ * DEFAULT_LANG so the in-page `<link rel="alternate" hreflang="x-default">`
+ * and the runtime CF Function fallback both pick the same locale for
+ * users with no language preference. Both are 'en' since EN serves the
+ * broader non-german audience and the audit (2026-04-27) flagged the
+ * earlier de↔en mismatch as a hard signal-conflict to Google.
+ */
+export const DEFAULT_LANGUAGE: ActiveLanguage = 'en';
 
 export interface HreflangLink {
   hreflang: string;

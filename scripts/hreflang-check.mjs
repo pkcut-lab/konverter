@@ -12,8 +12,12 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
-export const DEFAULT_LANG = 'de';
-export const ACTIVE_LANGS_PHASE_1 = ['de'];
+// 'en' since 2026-04-27 — must match src/lib/hreflang.ts DEFAULT_LANGUAGE
+// and functions/index.js DEFAULT_LANG. Mismatch was an audit P0.
+export const DEFAULT_LANG = 'en';
+// Name kept for backwards-compat with the test suite; current value reflects
+// Phase 3 (DE + EN both live). Update again when ES/FR/PT-BR ship.
+export const ACTIVE_LANGS_PHASE_1 = ['de', 'en'];
 
 /**
  * @param {string} html

@@ -10,8 +10,8 @@ describe('ACTIVE_LANGUAGES', () => {
     expect(ACTIVE_LANGUAGES).toEqual(['de', 'en']);
   });
 
-  it('DEFAULT_LANGUAGE is de', () => {
-    expect(DEFAULT_LANGUAGE).toBe('de');
+  it('DEFAULT_LANGUAGE is en (matches functions/index.js DEFAULT_LANG)', () => {
+    expect(DEFAULT_LANGUAGE).toBe('en');
   });
 });
 
@@ -25,7 +25,7 @@ describe('buildHreflangLinks', () => {
     const links = buildHreflangLinks({ pathWithoutLang: '/' });
     const xDefault = links.find((l) => l.hreflang === 'x-default');
     expect(xDefault).toBeDefined();
-    expect(xDefault?.href).toBe('https://kittokit.com/de');
+    expect(xDefault?.href).toBe('https://kittokit.com/en');
   });
 
   it('builds absolute URLs with trailing path (no trailing slash)', () => {
@@ -74,16 +74,16 @@ describe('buildHreflangLinks', () => {
 
   it('per-lang record: x-default points at default lang slug when present', () => {
     const links = buildHreflangLinks({
-      pathWithoutLang: { de: '/de-only-tool' },
+      pathWithoutLang: { en: '/en-only-tool' },
     });
     expect(links.find((l) => l.hreflang === 'x-default')?.href).toBe(
-      'https://kittokit.com/de/de-only-tool',
+      'https://kittokit.com/en/en-only-tool',
     );
   });
 
   it('per-lang record: x-default omitted when default lang slot missing', () => {
     const links = buildHreflangLinks({
-      pathWithoutLang: { en: '/en-only-tool' }, // no de — no x-default
+      pathWithoutLang: { de: '/de-only-tool' }, // no en — no x-default
     });
     expect(links.find((l) => l.hreflang === 'x-default')).toBeUndefined();
   });

@@ -70,7 +70,7 @@ describe('buildHreflangLinks — per-language path record (T3.1)', () => {
     }
   });
 
-  it('x-default matches the DE URL (default language)', () => {
+  it('x-default matches the EN URL (default language since 2026-04-27)', () => {
     for (const toolId of TOOL_IDS) {
       const deSlug = getSlug(toolId, 'de');
       const enSlug = getSlug(toolId, 'en');
@@ -78,8 +78,8 @@ describe('buildHreflangLinks — per-language path record (T3.1)', () => {
 
       const links = buildHreflangLinks({ pathWithoutLang: { de: `/${deSlug}`, en: `/${enSlug}` } });
       const xDefault = links.find((l) => l.hreflang === 'x-default');
-      const deLink = links.find((l) => l.hreflang === 'de');
-      expect(xDefault?.href).toBe(deLink?.href);
+      const enLink = links.find((l) => l.hreflang === 'en');
+      expect(xDefault?.href).toBe(enLink?.href);
     }
   });
 
