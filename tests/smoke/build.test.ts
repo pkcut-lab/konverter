@@ -49,10 +49,10 @@ describe('Cross-Links — Footer + RelatedTools', () => {
   describe('RelatedTools render matrix', () => {
     it('hintergrund-entfernen renders the bar with 1 resolvable → webp-konverter', () => {
       // Runde-3-Session-4-Redesign: <RelatedTools> rendert jetzt als
-      // `<nav class="related-bar" aria-label="Verwandt">` mit span-Label,
+      // `<nav class="related-bar" aria-label="Verwandte Werkzeuge">` mit span-Label,
       // nicht mehr als Card-Grid mit <h2 id="related-heading">.
       const html = readDist('de/hintergrund-entfernen/index.html');
-      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandt"/);
+      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandte Werkzeuge"/);
       // Forward-looking slugs (bild-komprimieren, bild-groesse-aendern) werden
       // still verworfen — nur webp-konverter resolvt heute.
       const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
@@ -64,7 +64,7 @@ describe('Cross-Links — Footer + RelatedTools', () => {
       // Phase-1 Batch-1 shipped zentimeter-zu-zoll, kilometer-zu-meilen,
       // quadratmeter-zu-quadratfuss — all three relatedSlugs now resolve.
       const html = readDist('de/meter-zu-fuss/index.html');
-      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandt"/);
+      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandte Werkzeuge"/);
       const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
       for (const slug of ['zentimeter-zu-zoll', 'kilometer-zu-meilen', 'quadratmeter-zu-quadratfuss']) {
         expect(section).toMatch(new RegExp(`href="/de/${slug}"`));
@@ -78,7 +78,7 @@ describe('Cross-Links — Footer + RelatedTools', () => {
       // Category-Fallback die Bar mit anderen image-Tools auf — aktuell
       // hintergrund-entfernen. Verifiziert den Fallback-Pfad Ende-zu-Ende.
       const html = readDist('de/webp-konverter/index.html');
-      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandt"/);
+      expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandte Werkzeuge"/);
       const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
       expect(section).toMatch(/href="\/de\/hintergrund-entfernen"/);
     });

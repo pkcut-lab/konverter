@@ -46,6 +46,10 @@ import MondphasenRechnerTool from '../../components/tools/MondphasenRechnerTool.
 import VatCalculatorEnTool from '../../components/tools/VatCalculatorEnTool.svelte';
 import GrossNetEnTool from '../../components/tools/GrossNetEnTool.svelte';
 import InterestCalculatorEnTool from '../../components/tools/InterestCalculatorEnTool.svelte';
+// unix-timestamp gets a custom UI (date picker + structured output panel
+// with i18n labels) — replaces the generic-Formatter rendering. Audit
+// P0-2.4 (2026-04-27).
+import UnixTimestampTool from '../../components/tools/UnixTimestampTool.svelte';
 import ToolStats from '../../components/ToolStats.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
@@ -110,6 +114,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
   'pdf-to-jpg',
   'pdf-password',
   'moon-phase',
+  'unix-timestamp',
 ]);
 
 const MOON_PHASE_TOOL_ID = 'moon-phase';
@@ -431,6 +436,9 @@ const dateModifiedFormatted = entry.data.dateModified
           )}
           {config.type === 'formatter' && config.id === MOON_PHASE_TOOL_ID && (
             <MondphasenRechnerTool config={config} lang={entry.data.language} client:load />
+          )}
+          {config.type === 'formatter' && config.id === 'unix-timestamp' && (
+            <UnixTimestampTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && !CUSTOM_FORMATTER_IDS.has(config.id) && (
             <Formatter

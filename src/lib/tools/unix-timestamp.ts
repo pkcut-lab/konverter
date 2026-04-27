@@ -76,7 +76,25 @@ function buildReport(d: Date, interpretedAs: string): string {
   ].join('\n');
 }
 
-export function parseTimestampInput(raw: string): { date: Date; interpretedAs: string } {
+/** Discriminator for the parsed input kind — used by the UI to render an
+ *  i18n label without re-parsing. */
+export type TimestampInputKind = 'seconds' | 'milliseconds' | 'date';
+
+export interface ParsedTimestampInput {
+  date: Date;
+  kind: TimestampInputKind;
+  /** Original numeric value when kind ∈ {seconds, milliseconds}, or the
+   *  trimmed input string when kind === 'date'. */
+  raw: string | number;
+  /**
+   * Backwards-compat human-readable label in German. Existing tests + the
+   * legacy formatter shell read this. The new Svelte component ignores this
+   * field and renders its own i18n label from `kind`.
+   */
+  interpretedAs: string;
+}
+
+export function parseTimestampInput(raw: string): ParsedTimestampInput {
   const trimmed = raw.trim();
   if (trimmed === '') {
     throw new Error(
@@ -86,12 +104,19 @@ export function parseTimestampInput(raw: string): { date: Date; interpretedAs: s
 
   if (TEN_DIGIT_RE.test(trimmed)) {
     const n = Number(trimmed);
-    return { date: new Date(n * 1000), interpretedAs: `Unix-Timestamp in Sekunden (${n})` };
+    return {
+      date: new Date(n * 1000),
+      kind: 'seconds',
+      raw: n,
+      interpretedAs: `Unix-Timestamp in Sekunden (${n})`,
+    };
   }
   if (THIRTEEN_DIGIT_RE.test(trimmed)) {
     const n = Number(trimmed);
     return {
       date: new Date(n),
+      kind: 'milliseconds',
+      raw: n,
       interpretedAs: `Unix-Timestamp in Millisekunden (${n})`,
     };
   }
@@ -102,7 +127,12 @@ export function parseTimestampInput(raw: string): { date: Date; interpretedAs: s
       'Eingabe nicht erkannt. Unterstützt: Unix-Sekunden (10 Stellen), Unix-ms (13 Stellen), ISO-8601 oder jedes vom Browser erkannte Datum.',
     );
   }
-  return { date: parsed, interpretedAs: `Datum (${trimmed})` };
+  return {
+    date: parsed,
+    kind: 'date',
+    raw: trimmed,
+    interpretedAs: `Datum (${trimmed})`,
+  };
 }
 
 function formatUnixTimestamp(input: string): string {
