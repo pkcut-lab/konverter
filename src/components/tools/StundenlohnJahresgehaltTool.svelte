@@ -22,6 +22,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.hourlyToAnnual);
 
   // ── Direction ──────────────────────────────────────────────────────────────
   type Direction = 'stundenlohn-zu-gehalt' | 'gehalt-zu-stundenlohn';
@@ -87,7 +88,7 @@
   $effect(() => {
     if (!_firstResult && result !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
     }
   });
 
@@ -105,11 +106,15 @@
   // ── Formel-Erklärung ───────────────────────────────────────────────────────
   const formulaExplanation = $derived.by<string>(() => {
     if (formulaMode === 'schnell') {
-      return `Schnell-Methode: Stundenlohn × ${wochenstunden}\u00a0h/Woche × 52\u00a0Wochen`;
+      return T.formulaSchnellTemplate.replace('{hours}', String(wochenstunden));
     }
     const at = result && 'arbeitstage' in result ? (result as { arbeitstage: number }).arbeitstage : (260 - urlaubstage - bundeslandFeiertage);
     const th = (wochenstunden / 5).toFixed(1);
-    return `Exakt-Methode: Stundenlohn × ${at}\u00a0Arbeitstage × ${th}\u00a0h/Tag (${urlaubstage}\u00a0Urlaubstage + ${bundeslandFeiertage}\u00a0Feiertage abgezogen)`;
+    return T.formulaExaktTemplate
+      .replace('{workdays}', String(at))
+      .replace('{hoursPerDay}', th)
+      .replace('{vacation}', String(urlaubstage))
+      .replace('{holidays}', String(bundeslandFeiertage));
   });
 
   // ── Copy state ─────────────────────────────────────────────────────────────
@@ -143,75 +148,75 @@
 <div class="sl-tool">
   <!-- Direction toggle -->
   <div class="direction-bar">
-    <div class="direction-pills" role="group" aria-label="Berechnungsrichtung wählen">
+    <div class="direction-pills" role="group" aria-label={T.directionAria}>
       <button
         type="button"
         class="dir-pill"
         class:dir-pill--active={direction === 'stundenlohn-zu-gehalt'}
         onclick={() => { direction = 'stundenlohn-zu-gehalt'; jahresgehaltStr = ''; }}
         aria-pressed={direction === 'stundenlohn-zu-gehalt'}
-      >Stundenlohn → Gehalt</button>
+      >{T.directionToSalary}</button>
       <button
         type="button"
         class="dir-pill"
         class:dir-pill--active={direction === 'gehalt-zu-stundenlohn'}
         onclick={() => { direction = 'gehalt-zu-stundenlohn'; stundenlohnStr = ''; }}
         aria-pressed={direction === 'gehalt-zu-stundenlohn'}
-      >Jahresgehalt → Stundenlohn</button>
+      >{T.directionToHourly}</button>
     </div>
   </div>
 
   <!-- Primary input -->
   {#if direction === 'stundenlohn-zu-gehalt'}
     <div class="input-group">
-      <label class="input-label" for="sl-input">Stundenlohn (Brutto)</label>
+      <label class="input-label" for="sl-input">{T.hourlyLabel}</label>
       <div class="input-wrap" class:input-wrap--error={stundenlohnStr !== '' && parsedStundenlohn === null}>
         <input
           id="sl-input"
           type="text"
           inputmode="decimal"
           class="main-input"
-          placeholder="z.B. 15,50"
+          placeholder={T.hourlyPlaceholder}
           bind:value={stundenlohnStr}
-          aria-label="Stundenlohn in Euro"
+          aria-label={T.hourlyAria}
           aria-invalid={stundenlohnStr !== '' && parsedStundenlohn === null}
           autocomplete="off"
         />
-        <span class="input-unit" aria-hidden="true">€/h</span>
+        <span class="input-unit" aria-hidden="true">{T.unitEuroPerHour}</span>
       </div>
       {#if stundenlohnStr !== '' && parsedStundenlohn === null}
-        <p class="field-error" role="alert">Bitte eine Zahl zwischen 0,01 und 99.999 eingeben.</p>
+        <p class="field-error" role="alert">{T.errAmountRange}</p>
       {/if}
     </div>
   {:else}
     <div class="input-group">
-      <label class="input-label" for="jg-input">Jahresgehalt (Brutto)</label>
+      <label class="input-label" for="jg-input">{T.annualLabel}</label>
       <div class="input-wrap" class:input-wrap--error={jahresgehaltStr !== '' && parsedJahresgehalt === null}>
         <input
           id="jg-input"
           type="text"
           inputmode="decimal"
           class="main-input"
-          placeholder="z.B. 45.000"
+          placeholder={T.annualPlaceholder}
           bind:value={jahresgehaltStr}
-          aria-label="Jahresgehalt in Euro"
+          aria-label={T.annualAria}
           aria-invalid={jahresgehaltStr !== '' && parsedJahresgehalt === null}
           autocomplete="off"
         />
-        <span class="input-unit" aria-hidden="true">€/Jahr</span>
+        <span class="input-unit" aria-hidden="true">{T.unitEuroPerYear}</span>
       </div>
       {#if jahresgehaltStr !== '' && parsedJahresgehalt === null}
-        <p class="field-error" role="alert">Bitte eine Zahl zwischen 0,01 und 99.999 eingeben.</p>
+        <p class="field-error" role="alert">{T.errAmountRange}</p>
       {/if}
     </div>
   {/if}
 
   <!-- Wochenstunden with quick-select -->
   <div class="param-row">
-    <label class="param-label" for="wochenstunden-input">Wochenstunden</label>
+    <label class="param-label" for="wochenstunden-input">{T.weeklyHoursLabel}</label>
     <div class="param-controls">
-      <div class="quick-select" role="group" aria-label="Wochenstunden Schnellwahl">
-        {#each [20, 32, 35, 40, 42] as h}
+      <div class="quick-select" role="group" aria-label={T.quickSelectAria}>
+        {#each QUICK_SELECT_STUNDEN as h}
           <button
             type="button"
             class="qs-btn"
@@ -233,36 +238,36 @@
             const v = parseInt((e.target as HTMLInputElement).value, 10);
             if (v >= 1 && v <= 80) wochenstunden = v;
           }}
-          aria-label="Wochenstunden anpassen"
+          aria-label={T.weeklyHoursAdjustAria}
         />
-        <span class="param-unit">h/Woche</span>
+        <span class="param-unit">{T.unitHoursPerWeek}</span>
       </div>
     </div>
     {#if ueberArbZG}
       <p class="hint hint--warn" role="note">
-        Arbeitszeitgesetz: max. 48&nbsp;h/Woche im Durchschnitt (§&nbsp;3&nbsp;ArbZG).
+        {T.hintArbeitszeitgesetz}
       </p>
     {/if}
   </div>
 
   <!-- Formula mode toggle -->
   <div class="mode-bar">
-    <span class="mode-label">Methode</span>
-    <div class="mode-pills" role="group" aria-label="Berechnungsmethode wählen">
+    <span class="mode-label">{T.modeLabel}</span>
+    <div class="mode-pills" role="group" aria-label={T.modeAria}>
       <button
         type="button"
         class="mode-pill"
         class:mode-pill--active={formulaMode === 'schnell'}
         onclick={() => (formulaMode = 'schnell')}
         aria-pressed={formulaMode === 'schnell'}
-      >Schnell <span class="mode-sub">×&nbsp;52&nbsp;Wochen</span></button>
+      >{T.modeSchnell} <span class="mode-sub">{T.modeSchnellSub}</span></button>
       <button
         type="button"
         class="mode-pill"
         class:mode-pill--active={formulaMode === 'exakt'}
         onclick={() => (formulaMode = 'exakt')}
         aria-pressed={formulaMode === 'exakt'}
-      >Exakt <span class="mode-sub">Urlaubstage + Feiertage</span></button>
+      >{T.modeExakt} <span class="mode-sub">{T.modeExaktSub}</span></button>
     </div>
   </div>
 
@@ -270,7 +275,7 @@
   {#if formulaMode === 'exakt'}
     <div class="exakt-params">
       <div class="param-row">
-        <label class="param-label" for="urlaub-input">Urlaubstage/Jahr</label>
+        <label class="param-label" for="urlaub-input">{T.vacationLabel}</label>
         <div class="param-input-wrap">
           <input
             id="urlaub-input"
@@ -283,25 +288,25 @@
               const v = parseInt((e.target as HTMLInputElement).value, 10);
               if (v >= 0 && v <= 60) urlaubstage = v;
             }}
-            aria-label="Urlaubstage pro Jahr"
+            aria-label={T.vacationAria}
           />
-          <span class="param-unit">Tage</span>
+          <span class="param-unit">{T.unitDays}</span>
         </div>
         {#if urlaubstage > 30}
-          <p class="hint" role="note">Gesetzliches Minimum: 20&nbsp;Tage (5-Tage-Woche).</p>
+          <p class="hint" role="note">{T.hintVacationMinimum}</p>
         {/if}
       </div>
 
       <div class="param-row">
-        <label class="param-label" for="bundesland-select">Bundesland</label>
+        <label class="param-label" for="bundesland-select">{T.stateLabel}</label>
         <select
           id="bundesland-select"
           class="bundesland-select"
           bind:value={selectedBundesland}
-          aria-label="Bundesland für Feiertagsanzahl"
+          aria-label={T.stateAria}
         >
           {#each BUNDESLAENDER as bl}
-            <option value={bl.id}>{bl.label} ({bl.feiertage}&nbsp;Feiertage)</option>
+            <option value={bl.id}>{bl.label} ({T.stateOptionTemplate.replace('{feiertage}', String(bl.feiertage))})</option>
           {/each}
         </select>
       </div>
@@ -310,7 +315,7 @@
 
   <!-- Formula explanation -->
   {#if result !== null}
-    <div class="formula-tip" role="note" aria-label="Verwendete Formel">
+    <div class="formula-tip" role="note" aria-label={T.formulaTipAria}>
       {formulaExplanation}
     </div>
   {/if}
@@ -318,21 +323,21 @@
   <!-- Result table -->
   {#if result !== null}
     <div class="result-section">
-      <div class="result-table" role="table" aria-label="Gehalts-Übersicht">
+      <div class="result-table" role="table" aria-label={T.resultTableAria}>
         <div class="result-table__head" role="rowgroup">
           <div class="result-row result-row--header" role="row">
-            <span class="result-cell result-cell--label" role="columnheader">Zeitraum</span>
-            <span class="result-cell result-cell--value" role="columnheader">Betrag (Brutto)</span>
+            <span class="result-cell result-cell--label" role="columnheader">{T.colTimePeriod}</span>
+            <span class="result-cell result-cell--value" role="columnheader">{T.colAmount}</span>
             <span class="result-cell result-cell--action" role="columnheader" aria-label={strings.toolsCommon.copy}></span>
           </div>
         </div>
         <div class="result-table__body" role="rowgroup">
           {#each ([
-            { key: 'stundenlohn' as const, label: 'Stündlich', value: result.stundenlohn, unit: '€/h' },
-            { key: 'tagesgehalt' as const, label: 'Täglich', value: result.tagesgehalt, unit: '€/Tag' },
-            { key: 'wochengehalt' as const, label: 'Wöchentlich', value: result.wochengehalt, unit: '€/Woche' },
-            { key: 'monatsgehalt' as const, label: 'Monatlich', value: result.monatsgehalt, unit: '€/Monat' },
-            { key: 'jahresgehalt' as const, label: 'Jährlich', value: result.jahresgehalt, unit: '€/Jahr' },
+            { key: 'stundenlohn' as const, label: T.rowHourly, value: result.stundenlohn, unit: T.unitEuroPerHour },
+            { key: 'tagesgehalt' as const, label: T.rowDaily, value: result.tagesgehalt, unit: T.unitEuroPerDay },
+            { key: 'wochengehalt' as const, label: T.rowWeekly, value: result.wochengehalt, unit: T.unitEuroPerWeek },
+            { key: 'monatsgehalt' as const, label: T.rowMonthly, value: result.monatsgehalt, unit: T.unitEuroPerMonth },
+            { key: 'jahresgehalt' as const, label: T.rowYearly, value: result.jahresgehalt, unit: T.unitEuroPerYear },
           ] as const) as row}
             <div
               class="result-row"
@@ -342,7 +347,7 @@
               <span class="result-cell result-cell--label" role="cell">
                 {row.label}
                 {#if row.key === 'stundenlohn' && unterMindestlohn}
-                  <span class="warn-dot" aria-label="Unter Mindestlohn" title="Unter Mindestlohn 2026"></span>
+                  <span class="warn-dot" aria-label={T.warnDotAria} title={T.warnDotTitle}></span>
                 {/if}
               </span>
               <span class="result-cell result-cell--value" role="cell">
@@ -368,25 +373,24 @@
       <!-- Mindestlohn warnings -->
       {#if unterMindestlohn}
         <div class="alert alert--warn" role="alert">
-          <strong>Unter Mindestlohn 2026:</strong> Der gesetzliche Mindestlohn beträgt ab Januar&nbsp;2026 <strong>{MINDESTLOHN_2026.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2 })}&nbsp;€/h</strong>.
+          {@html T.alertMinWageHtml.replace('{amount}', MINDESTLOHN_2026.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2 }))}
         </div>
       {/if}
 
       {#if minijobWarnung}
         <div class="alert alert--info" role="note">
-          <strong>Minijob-Bereich:</strong> Monatswert unter der Minijob-Grenze 2026 (€&nbsp;{MINIJOB_GRENZE_2026}/Monat). Besondere Regelungen zu Sozialabgaben und Steuern beachten.
+          {@html T.alertMinijobHtml.replace('{amount}', String(MINIJOB_GRENZE_2026))}
         </div>
       {/if}
 
       <!-- Mindestlohn 2027 preview -->
       <div class="min-preview" role="note">
-        Vorschau: Ab 1.&nbsp;Jan&nbsp;2027 steigt der Mindestlohn auf <strong>{MINDESTLOHN_2027.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2 })}&nbsp;€/h</strong> (geplant).
+        {@html T.minPreview2027Html.replace('{amount}', MINDESTLOHN_2027.toLocaleString(INTL_LOCALE_MAP[lang], { minimumFractionDigits: 2 }))}
       </div>
 
       <!-- Brutto-Hinweis -->
       <p class="brutto-hint" role="note">
-        Alle Werte sind <strong>Brutto</strong> — Steuern und Sozialabgaben noch nicht abgezogen.
-        Für die Nettoberechnung einen separaten Brutto-Netto-Rechner nutzen.
+        {@html T.bruttoHintHtml}
       </p>
     </div>
 
@@ -395,15 +399,13 @@
     </div>
   {:else if (direction === 'stundenlohn-zu-gehalt' ? stundenlohnStr === '' : jahresgehaltStr === '')}
     <p class="empty-state">
-      {direction === 'stundenlohn-zu-gehalt'
-        ? 'Stundenlohn eingeben — Jahres-, Monats-, Wochen- und Tageswert erscheinen sofort.'
-        : 'Jahresgehalt eingeben — Stundenlohn und alle Zeiträume erscheinen sofort.'}
+      {direction === 'stundenlohn-zu-gehalt' ? T.emptyStateToSalary : T.emptyStateToHourly}
     </p>
   {/if}
 
   <!-- Privacy badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Alle Berechnungen lokal im Browser · Deine Gehaltsinfos verlassen nicht dein Gerät · Kein Tracking
+    {T.privacyBadge}
   </div>
 </div>
 

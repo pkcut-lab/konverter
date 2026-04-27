@@ -541,6 +541,77 @@ export interface UiStrings {
       disclaimer: string;
       privacyBadge: string;
     };
+    hourlyToAnnual: {
+      // Direction
+      directionAria: string;
+      directionToSalary: string;
+      directionToHourly: string;
+      // Inputs
+      hourlyLabel: string;
+      hourlyPlaceholder: string;
+      hourlyAria: string;
+      annualLabel: string;
+      annualPlaceholder: string;
+      annualAria: string;
+      errAmountRange: string;
+      // Weekly hours
+      weeklyHoursLabel: string;
+      quickSelectAria: string;
+      weeklyHoursAdjustAria: string;
+      unitHoursPerWeek: string;
+      hintArbeitszeitgesetz: string;
+      // Mode
+      modeLabel: string;
+      modeAria: string;
+      modeSchnell: string;
+      modeSchnellSub: string;
+      modeExakt: string;
+      modeExaktSub: string;
+      // Exact params
+      vacationLabel: string;
+      vacationAria: string;
+      unitDays: string;
+      hintVacationMinimum: string;
+      stateLabel: string;
+      stateAria: string;
+      /** {feiertage} */
+      stateOptionTemplate: string;
+      // Formula explanation
+      formulaTipAria: string;
+      /** {hours} */
+      formulaSchnellTemplate: string;
+      /** {workdays} {hoursPerDay} {vacation} {holidays} */
+      formulaExaktTemplate: string;
+      // Result table
+      resultTableAria: string;
+      colTimePeriod: string;
+      colAmount: string;
+      rowHourly: string;
+      rowDaily: string;
+      rowWeekly: string;
+      rowMonthly: string;
+      rowYearly: string;
+      unitEuroPerHour: string;
+      unitEuroPerDay: string;
+      unitEuroPerWeek: string;
+      unitEuroPerMonth: string;
+      unitEuroPerYear: string;
+      warnDotAria: string;
+      warnDotTitle: string;
+      // Alerts
+      /** {amount} — rendered with `{@html}` because of inline `<strong>`. */
+      alertMinWageHtml: string;
+      /** {amount} — rendered with `{@html}` because of inline `<strong>`. */
+      alertMinijobHtml: string;
+      /** {amount} — rendered with `{@html}` because of inline `<strong>`. */
+      minPreview2027Html: string;
+      bruttoHintHtml: string;
+      // Empty state
+      emptyStateToSalary: string;
+      emptyStateToHourly: string;
+      // Privacy
+      privacyBadge: string;
+    };
   };
 }
 
@@ -1043,6 +1114,67 @@ const strings: Record<Lang, UiStrings> = {
           'Diese Berechnung dient ausschließlich zur unverbindlichen Information. Tatsächliche Renditen können abweichen. Kein Ersatz für Fachberatung.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
       },
+      hourlyToAnnual: {
+        directionAria: 'Berechnungsrichtung wählen',
+        directionToSalary: 'Stundenlohn → Gehalt',
+        directionToHourly: 'Jahresgehalt → Stundenlohn',
+        hourlyLabel: 'Stundenlohn (Brutto)',
+        hourlyPlaceholder: 'z.B. 15,50',
+        hourlyAria: 'Stundenlohn in Euro',
+        annualLabel: 'Jahresgehalt (Brutto)',
+        annualPlaceholder: 'z.B. 45.000',
+        annualAria: 'Jahresgehalt in Euro',
+        errAmountRange: 'Bitte eine Zahl zwischen 0,01 und 99.999 eingeben.',
+        weeklyHoursLabel: 'Wochenstunden',
+        quickSelectAria: 'Wochenstunden Schnellwahl',
+        weeklyHoursAdjustAria: 'Wochenstunden anpassen',
+        unitHoursPerWeek: 'h/Woche',
+        hintArbeitszeitgesetz:
+          'Arbeitszeitgesetz: max. 48 h/Woche im Durchschnitt (§ 3 ArbZG).',
+        modeLabel: 'Methode',
+        modeAria: 'Berechnungsmethode wählen',
+        modeSchnell: 'Schnell',
+        modeSchnellSub: '× 52 Wochen',
+        modeExakt: 'Exakt',
+        modeExaktSub: 'Urlaubstage + Feiertage',
+        vacationLabel: 'Urlaubstage/Jahr',
+        vacationAria: 'Urlaubstage pro Jahr',
+        unitDays: 'Tage',
+        hintVacationMinimum: 'Gesetzliches Minimum: 20 Tage (5-Tage-Woche).',
+        stateLabel: 'Bundesland',
+        stateAria: 'Bundesland für Feiertagsanzahl',
+        stateOptionTemplate: '{feiertage} Feiertage',
+        formulaTipAria: 'Verwendete Formel',
+        formulaSchnellTemplate: 'Schnell-Methode: Stundenlohn × {hours} h/Woche × 52 Wochen',
+        formulaExaktTemplate:
+          'Exakt-Methode: Stundenlohn × {workdays} Arbeitstage × {hoursPerDay} h/Tag ({vacation} Urlaubstage + {holidays} Feiertage abgezogen)',
+        resultTableAria: 'Gehalts-Übersicht',
+        colTimePeriod: 'Zeitraum',
+        colAmount: 'Betrag (Brutto)',
+        rowHourly: 'Stündlich',
+        rowDaily: 'Täglich',
+        rowWeekly: 'Wöchentlich',
+        rowMonthly: 'Monatlich',
+        rowYearly: 'Jährlich',
+        unitEuroPerHour: '€/h',
+        unitEuroPerDay: '€/Tag',
+        unitEuroPerWeek: '€/Woche',
+        unitEuroPerMonth: '€/Monat',
+        unitEuroPerYear: '€/Jahr',
+        warnDotAria: 'Unter Mindestlohn',
+        warnDotTitle: 'Unter Mindestlohn 2026',
+        alertMinWageHtml:
+          '<strong>Unter Mindestlohn 2026:</strong> Der gesetzliche Mindestlohn beträgt ab Januar 2026 <strong>{amount} €/h</strong>.',
+        alertMinijobHtml:
+          '<strong>Minijob-Bereich:</strong> Monatswert unter der Minijob-Grenze 2026 (€ {amount}/Monat). Besondere Regelungen zu Sozialabgaben und Steuern beachten.',
+        minPreview2027Html:
+          'Vorschau: Ab 1. Jan 2027 steigt der Mindestlohn auf <strong>{amount} €/h</strong> (geplant).',
+        bruttoHintHtml:
+          'Alle Werte sind <strong>Brutto</strong> — Steuern und Sozialabgaben noch nicht abgezogen. Für die Nettoberechnung einen separaten Brutto-Netto-Rechner nutzen.',
+        emptyStateToSalary: 'Stundenlohn eingeben — Jahres-, Monats-, Wochen- und Tageswert erscheinen sofort.',
+        emptyStateToHourly: 'Jahresgehalt eingeben — Stundenlohn und alle Zeiträume erscheinen sofort.',
+        privacyBadge: 'Alle Berechnungen lokal im Browser · Deine Gehaltsinfos verlassen nicht dein Gerät · Kein Tracking',
+      },
     },
   },
 
@@ -1544,6 +1676,67 @@ const strings: Record<Lang, UiStrings> = {
         disclaimer:
           'This calculation is for informational purposes only. Actual returns may differ. Not a substitute for professional advice.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      hourlyToAnnual: {
+        directionAria: 'Select calculation direction',
+        directionToSalary: 'Hourly wage → Salary',
+        directionToHourly: 'Annual salary → Hourly wage',
+        hourlyLabel: 'Hourly wage (gross)',
+        hourlyPlaceholder: 'e.g. 15.50',
+        hourlyAria: 'Hourly wage in euros',
+        annualLabel: 'Annual salary (gross)',
+        annualPlaceholder: 'e.g. 45,000',
+        annualAria: 'Annual salary in euros',
+        errAmountRange: 'Please enter a number between 0.01 and 99,999.',
+        weeklyHoursLabel: 'Weekly hours',
+        quickSelectAria: 'Weekly hours quick select',
+        weeklyHoursAdjustAria: 'Adjust weekly hours',
+        unitHoursPerWeek: 'h/week',
+        hintArbeitszeitgesetz:
+          'German Working Time Act: max. 48 h/week on average (§ 3 ArbZG).',
+        modeLabel: 'Method',
+        modeAria: 'Select calculation method',
+        modeSchnell: 'Quick',
+        modeSchnellSub: '× 52 weeks',
+        modeExakt: 'Exact',
+        modeExaktSub: 'Vacation + holidays',
+        vacationLabel: 'Vacation days/year',
+        vacationAria: 'Vacation days per year',
+        unitDays: 'days',
+        hintVacationMinimum: 'Legal minimum: 20 days (5-day week).',
+        stateLabel: 'Federal state',
+        stateAria: 'Federal state for public-holiday count',
+        stateOptionTemplate: '{feiertage} holidays',
+        formulaTipAria: 'Formula used',
+        formulaSchnellTemplate: 'Quick method: Hourly wage × {hours} h/week × 52 weeks',
+        formulaExaktTemplate:
+          'Exact method: Hourly wage × {workdays} workdays × {hoursPerDay} h/day ({vacation} vacation days + {holidays} public holidays subtracted)',
+        resultTableAria: 'Salary overview',
+        colTimePeriod: 'Period',
+        colAmount: 'Amount (gross)',
+        rowHourly: 'Hourly',
+        rowDaily: 'Daily',
+        rowWeekly: 'Weekly',
+        rowMonthly: 'Monthly',
+        rowYearly: 'Yearly',
+        unitEuroPerHour: '€/h',
+        unitEuroPerDay: '€/day',
+        unitEuroPerWeek: '€/week',
+        unitEuroPerMonth: '€/month',
+        unitEuroPerYear: '€/year',
+        warnDotAria: 'Below minimum wage',
+        warnDotTitle: 'Below minimum wage 2026',
+        alertMinWageHtml:
+          '<strong>Below minimum wage 2026:</strong> The German statutory minimum wage from January 2026 is <strong>{amount} €/h</strong>.',
+        alertMinijobHtml:
+          '<strong>Minijob range:</strong> Monthly value below the 2026 minijob threshold (€ {amount}/month). Special rules for social-security contributions and taxes apply.',
+        minPreview2027Html:
+          'Preview: From 1 Jan 2027 the minimum wage will rise to <strong>{amount} €/h</strong> (planned).',
+        bruttoHintHtml:
+          'All values are <strong>gross</strong> — taxes and social-security contributions not yet deducted. Use a separate gross-to-net calculator for the net amount.',
+        emptyStateToSalary: 'Enter hourly wage — yearly, monthly, weekly and daily values appear instantly.',
+        emptyStateToHourly: 'Enter annual salary — hourly wage and all periods appear instantly.',
+        privacyBadge: 'All calculations run locally in your browser · Your salary data never leaves your device · No tracking',
       },
     },
   },
