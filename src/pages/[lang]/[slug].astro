@@ -282,7 +282,7 @@ const jsonLd = buildToolJsonLd(
 // Format dateModified for UI stamp
 const dateModifiedFormatted = entry.data.dateModified
   ? new Intl.DateTimeFormat(
-      entry.data.language === 'de' ? 'de-DE' : 'en-US',
+      INTL_LOCALE_MAP[entry.data.language as Lang],
       { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' },
     ).format(new Date(entry.data.dateModified + 'T00:00:00Z'))
   : null;
@@ -339,7 +339,7 @@ const dateModifiedFormatted = entry.data.dateModified
             <VideoHintergrundEntfernenTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && (
-            <FileTool config={config} client:load />
+            <FileTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (
             <ColorConverter config={config} lang={entry.data.language as Lang} client:load />
@@ -438,6 +438,7 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'analyzer' && (
             <Analyzer
               config={config}
+              lang={entry.data.language as Lang}
               placeholder={config.placeholder ?? ''}
               client:load
             />
@@ -449,6 +450,7 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'validator' && config.id !== REGEX_TESTER_TOOL_ID && (
             <Validator
               config={config}
+              lang={entry.data.language as Lang}
               placeholder={config.placeholder ?? ''}
               client:load
             />
@@ -495,7 +497,7 @@ const dateModifiedFormatted = entry.data.dateModified
               </ol>
             </section>
             <section class="tool-aside__privacy" aria-labelledby="tool-aside-privacy-heading">
-              <h3 id="tool-aside-privacy-heading">Datenschutz</h3>
+              <h3 id="tool-aside-privacy-heading">{strings.footer.privacyLabel}</h3>
               <p>{resolvedAside.privacy}</p>
             </section>
           </div>

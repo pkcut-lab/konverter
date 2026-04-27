@@ -4,15 +4,21 @@
   import { decodeHeicIfNeeded } from '../../lib/tools/heic-decode';
   import Loader from '../Loader.svelte';
   import { dispatchToolUsed } from '../../lib/tracking';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
+  import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
+  import { resolveLabel } from '../../lib/tools/label';
 
   interface Props {
     config: FileToolConfig;
+    lang: Lang;
   }
   type Phase = 'idle' | 'preparing' | 'converting' | 'done' | 'error';
   type Dims = { w: number; h: number } | null;
   type ClipboardState = 'idle' | 'copied' | 'error';
 
-  let { config }: Props = $props();
+  let { config, lang }: Props = $props();
+  const strings = $derived(t(lang));
 
   let phase = $state<Phase>('idle');
   let quality = $state<number>(85);
@@ -52,19 +58,18 @@
   }
 
   const acceptAttr = $derived(config.accept.join(','));
-  // Dropzone title adapts to the tool's category: "Video hierher ziehen",
-  // "Bild hierher ziehen", etc. Falls back to the generic "Datei" when the
-  // category is not recognised. Kept config-driven so a new category
-  // (e.g. "audio", "document") flows through without template edits.
-  const dropzoneSubjectByCategoryId: Record<string, string> = {
-    video: 'Video',
-    image: 'Bild',
-    audio: 'Audio',
-    document: 'Dokument',
-  };
-  const dropzoneSubject = $derived(
-    dropzoneSubjectByCategoryId[config.categoryId] ?? 'Datei',
-  );
+  // Dropzone title adapts to the tool's category. Falls back to the generic
+  // subject when the category is not recognised.
+  const dropzoneSubject = $derived.by(() => {
+    const s = strings.fileTool;
+    const map: Record<string, string> = {
+      video: s.subjectVideo,
+      image: s.subjectImage,
+      audio: s.subjectAudio,
+      document: s.subjectDocument,
+    };
+    return map[config.categoryId] ?? s.subjectFile;
+  });
   const runtime = $derived(getRuntime(config.id));
   const processor = $derived(runtime?.process);
   const reencoder = $derived(runtime?.reencode);
@@ -75,9 +80,9 @@
     sourceSize > 0 ? Math.round((1 - outputSize / sourceSize) * 100) : 0,
   );
   const clipboardLabel = $derived(
-    clipboardState === 'copied' ? 'Kopiert'
-    : clipboardState === 'error' ? 'Nicht unterstützt'
-    : 'In Zwischenablage',
+    clipboardState === 'copied' ? strings.toolsCommon.copied
+    : clipboardState === 'error' ? strings.fileTool.clipboardError
+    : strings.fileTool.clipboardCopy,
   );
   // navigator.clipboard.write([ClipboardItem]) only supports image/* MIME types,
   // not application/pdf. Hide the copy button for PDF output.
@@ -201,12 +206,12 @@
   async function processFile(file: File) {
     if (preflightError) return; // Browser gap blocks the tool entirely.
     if (!config.accept.includes(file.type)) {
-      errorMessage = `Dateityp nicht unterstützt. Erlaubt: ${config.accept.join(', ')}.`;
+      errorMessage = strings.fileTool.errorUnsupportedType.replace('{types}', config.accept.join(', '));
       phase = 'error';
       return;
     }
     if (file.size > config.maxSizeMb * 1024 * 1024) {
-      errorMessage = `Datei zu groß. Maximal ${config.maxSizeMb}\u00A0MB erlaubt.`;
+      errorMessage = strings.fileTool.errorTooLarge.replace('{size}', String(config.maxSizeMb));
       phase = 'error';
       return;
     }
@@ -219,7 +224,7 @@
     outputFormat = config.defaultFormat ?? 'webp';
 
     if (!processor) {
-      errorMessage = `Kein Prozessor registriert für „${config.id}”.`;
+      errorMessage = strings.fileTool.errorNoProcessor.replace('{id}', config.id);
       phase = 'error';
       return;
     }
@@ -230,7 +235,7 @@
         const dec = await decodeHeicIfNeeded(bytes, file.type);
         bytes = dec.bytes as Uint8Array<ArrayBuffer>;
       } catch (err) {
-        errorMessage = err instanceof Error ? `HEIC-Decode-Fehler: ${err.message}` : 'HEIC-Decode-Fehler.';
+        errorMessage = err instanceof Error ? strings.fileTool.errorHeicDecode.replace('{msg}', err.message) : strings.fileTool.errorHeicDecode.replace('{msg}', '');
         phase = 'error';
         return;
       }
@@ -248,7 +253,7 @@
       try {
         await runtime.prepare((e) => { prepareProgress = e; });
       } catch (err) {
-        errorMessage = err instanceof Error ? `Modell-Lade-Fehler: ${err.message}` : 'Modell-Lade-Fehler.';
+        errorMessage = err instanceof Error ? strings.fileTool.errorModelLoad.replace('{msg}', err.message) : strings.fileTool.errorModelLoad.replace('{msg}', '');
         phase = 'error';
         return;
       }
@@ -283,10 +288,7 @@
     } catch (err) {
       progress = null;
       convertStartMs = null;
-      errorMessage =
-        err instanceof Error
-          ? `Konvertierung fehlgeschlagen: ${err.message}`
-          : 'Konvertierung fehlgeschlagen.';
+      errorMessage = err instanceof Error ? strings.fileTool.errorConversion.replace('{msg}', err.message) : strings.fileTool.errorConversion.replace('{msg}', '');
       phase = 'error';
     }
   }
@@ -302,7 +304,7 @@
   $effect(() => {
     if (!_tracked && phase === 'done') {
       _tracked = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: INTL_LOCALE_MAP[lang] });
     }
   });
 
@@ -359,7 +361,7 @@
       }
       void measureDims(blob).then((d) => { outputDims = d; });
     } catch (err) {
-      errorMessage = err instanceof Error ? err.message : 'Format-Wechsel fehlgeschlagen.';
+      errorMessage = err instanceof Error ? err.message : strings.fileTool.errorFormatChange;
       phase = 'error';
     }
   }
@@ -464,7 +466,7 @@
       <div class="settings">
         {#if config.presets}
           <fieldset class="presets" data-testid="filetool-presets">
-            <legend class="presets__legend">Qualität</legend>
+            <legend class="presets__legend">{strings.fileTool.presetsLegend}</legend>
             <div class="presets__group">
               {#each config.presets.options as opt (opt.id)}
                 <label
@@ -479,9 +481,9 @@
                     checked={presetValue === opt.id}
                     onchange={() => { presetValue = opt.id; }}
                   />
-                  <span class="preset-pill__label">{opt.label}</span>
+                  <span class="preset-pill__label">{resolveLabel(opt.label, lang)}</span>
                   {#if opt.subLabel}
-                    <span class="preset-pill__sub">{opt.subLabel}</span>
+                    <span class="preset-pill__sub">{resolveLabel(opt.subLabel ?? '', lang)}</span>
                   {/if}
                 </label>
               {/each}
@@ -501,7 +503,7 @@
                     toggleValues = { ...toggleValues, [t.id]: (e.currentTarget as HTMLInputElement).checked };
                   }}
                 />
-                <span>{t.label}</span>
+                <span>{resolveLabel(t.label, lang)}</span>
               </label>
             {/each}
           </div>
@@ -519,7 +521,7 @@
       ondrop={onDrop}
       onclick={onDropzoneClick}
       role="region"
-      aria-label="Dateien hierher ziehen oder auswählen"
+      aria-label={strings.fileTool.dropzoneAria}
     >
       <div class="dropzone__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="22" height="22">
@@ -533,7 +535,7 @@
           />
         </svg>
       </div>
-      <p class="dropzone__title">{dropzoneSubject} hierher ziehen</p>
+      <p class="dropzone__title">{strings.fileTool.dragHere.replace('{subject}', dropzoneSubject)}</p>
       <p class="dropzone__hint" data-testid="filetool-meta">
         <span class="dropzone__formats">{config.accept.map(mimeToExt).join(', ')}</span>
         <span class="dropzone__sep" aria-hidden="true">·</span>
@@ -546,7 +548,7 @@
       </ul>
       <div class="dropzone__actions">
         <label class="btn btn--primary dropzone__browse">
-          <span>Datei wählen</span>
+          <span>{strings.toolsCommon.pickFile}</span>
           <input
             bind:this={fileInputEl}
             class="dropzone__input"
@@ -567,7 +569,7 @@
             <path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
               fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
           </svg>
-          <span>{pasteStatus === 'error' ? 'Nichts Passendes' : 'Einfügen'}</span>
+          <span>{pasteStatus === 'error' ? strings.fileTool.pasteError : strings.fileTool.pasteBtn}</span>
           <kbd class="btn__kbd">⌘V</kbd>
         </button>
       </div>
@@ -582,14 +584,14 @@
           hidden
           onchange={onFileChange}
         />
-        <span>Foto aufnehmen</span>
+        <span>{strings.fileTool.camera}</span>
       </label>
     {/if}
   {/if}
 
   {#if phase === 'preparing'}
     <div class="preparing" data-testid="filetool-preparing" aria-live="polite">
-      <p class="preparing__title">Lädt einmalig Modell …</p>
+      <p class="preparing__title">{strings.fileTool.modelLoading}</p>
       <Loader
         variant="progress"
         value={prepareProgress.total > 0 ? prepareProgress.loaded / prepareProgress.total : 0}
@@ -602,7 +604,7 @@
 
   {#if phase === 'converting'}
     <div class="converting" data-testid="filetool-status" aria-live="polite">
-      <Loader variant="spinner" ariaLabel="Konvertiert" />
+      <Loader variant="spinner" ariaLabel={strings.fileTool.convertingAria} />
       {#if progress !== null}
         {@const percent = Math.round(progress * 100)}
         {@const elapsedMs = convertStartMs !== null ? performance.now() - convertStartMs : 0}
@@ -614,25 +616,25 @@
           <span class="progress__pct">{percent}&nbsp;%</span>
           {#if etaStr}
             <span class="progress__sep" aria-hidden="true"> · </span>
-            <span class="progress__eta">{etaStr}&nbsp;verbleibend</span>
+            <span class="progress__eta">{strings.fileTool.etaRemaining.replace('{eta}', etaStr)}</span>
           {/if}
         </span>
       {:else}
-        <span>Konvertiert …</span>
+        <span>{strings.fileTool.converting}</span>
       {/if}
     </div>
   {/if}
 
   {#if phase === 'done' && outputUrl}
     <article class="card" data-testid="filetool-status">
-      <span class="badge" aria-label="Status: fertig">
+      <span class="badge" aria-label={strings.fileTool.doneAria}>
         <span class="badge__dot" aria-hidden="true"></span>
-        <span class="badge__text">FERTIG</span>
+        <span class="badge__text">{strings.fileTool.done}</span>
       </span>
 
       <div class="compare">
         <figure class="compare__col">
-          <figcaption class="compare__cap">ORIGINAL</figcaption>
+          <figcaption class="compare__cap">{strings.fileTool.original}</figcaption>
           <!-- svelte-ignore a11y_no_static_element_interactions -->
           <div
             class="frame"
@@ -641,16 +643,16 @@
           >
             {#if sourceUrl}
               {#if config.categoryId === 'audio'}
-                <audio controls src={sourceUrl} class="audio-player">Dein Browser unterstützt kein Audio.</audio>
+                <audio controls src={sourceUrl} class="audio-player">{strings.fileTool.audioFallback}</audio>
               {:else if config.categoryId === 'document'}
-                <object data={sourceUrl} type="application/pdf" class="frame__pdf" aria-label="Quelldatei (PDF-Vorschau)"><p class="frame__pdf-fallback">PDF-Vorschau</p></object>
+                <object data={sourceUrl} type="application/pdf" class="frame__pdf" aria-label={strings.fileTool.sourcePdfAria}><p class="frame__pdf-fallback">{strings.fileTool.pdfFallback}</p></object>
               {:else}
                 <img
                   class="frame__img"
                   class:frame__img--zoomed={isZooming}
                   style={isZooming ? `transform-origin: ${zoomX}% ${zoomY}%;` : ''}
                   src={sourceUrl}
-                  alt="Quelldatei"
+                  alt={strings.fileTool.sourceAlt}
                 />
               {/if}
             {/if}
@@ -658,19 +660,19 @@
         </figure>
 
         <figure class="compare__col">
-          <figcaption class="compare__cap">ERGEBNIS</figcaption>
+          <figcaption class="compare__cap">{strings.fileTool.result}</figcaption>
           <div class="preview" class:preview--text={outputFormat === 'txt'} class:preview--audio={config.categoryId === 'audio'}>
             {#if outputFormat === 'txt'}
-              <textarea class="preview__text" readonly value={outputText} aria-label="Erkannter Text"></textarea>
+              <textarea class="preview__text" readonly value={outputText} aria-label={strings.fileTool.ocrTextAria}></textarea>
             {:else if config.categoryId === 'audio'}
-              <audio controls src={outputUrl} class="audio-player" data-testid="filetool-preview">Dein Browser unterstützt kein Audio.</audio>
+              <audio controls src={outputUrl} class="audio-player" data-testid="filetool-preview">{strings.fileTool.audioFallback}</audio>
             {:else if config.categoryId === 'document'}
-              <object data={outputUrl} type="application/pdf" class="preview__pdf" aria-label="Ergebnis (PDF-Vorschau)" data-testid="filetool-preview"><p class="frame__pdf-fallback">PDF-Vorschau</p></object>
+              <object data={outputUrl} type="application/pdf" class="preview__pdf" aria-label={strings.fileTool.resultPdfAria} data-testid="filetool-preview"><p class="frame__pdf-fallback">{strings.fileTool.pdfFallback}</p></object>
             {:else}
               <img
                 class="preview__img"
                 src={outputUrl}
-                alt="Vorschau des Ergebnisses"
+                alt={strings.fileTool.resultAlt}
                 data-testid="filetool-preview"
               />
             {/if}
@@ -699,7 +701,7 @@
             class="btn btn--ghost"
             data-testid="filetool-reset"
             onclick={reset}
-          >{config.resetLabel ?? 'Neues Bild'}</button>
+          >{resolveLabel(config.resetLabel ?? '', lang) || strings.toolsCommon.reset}</button>
 
           {#if canCopyToClipboard}
           <button
@@ -726,7 +728,7 @@
                 stroke-linejoin="round"
               />
             </svg>
-            <span>Herunterladen</span>
+            <span>{strings.toolsCommon.download}</span>
           </a>
         </div>
       </footer>
@@ -735,7 +737,7 @@
 
   {#if phase === 'done' && reencoder}
     <fieldset class="formats" data-testid="filetool-format-chooser">
-      <legend class="formats__legend">Format</legend>
+      <legend class="formats__legend">{strings.fileTool.formatLegend}</legend>
       <label class="formats__opt">
         <input
           type="radio"
@@ -745,7 +747,7 @@
           checked={outputFormat === 'png'}
           onchange={() => onFormatChange('png')}
         />
-        <span>PNG <span class="formats__hint">(Transparenz)</span></span>
+        <span>PNG <span class="formats__hint">({strings.fileTool.transparency})</span></span>
       </label>
       <label class="formats__opt">
         <input
@@ -756,7 +758,7 @@
           checked={outputFormat === 'webp'}
           onchange={() => onFormatChange('webp')}
         />
-        <span>WebP <span class="formats__hint">(Transparenz)</span></span>
+        <span>WebP <span class="formats__hint">({strings.fileTool.transparency})</span></span>
       </label>
       <label class="formats__opt">
         <input
@@ -767,7 +769,7 @@
           checked={outputFormat === 'jpg'}
           onchange={() => onFormatChange('jpg')}
         />
-        <span>JPG <span class="formats__hint">(weißer Hintergrund)</span></span>
+        <span>JPG <span class="formats__hint">({strings.fileTool.whiteBackground})</span></span>
       </label>
     </fieldset>
   {/if}
@@ -775,7 +777,7 @@
   {#if config.showQuality ?? true}
     <div class="quality" hidden={phase === 'preparing' || phase === 'converting' || phase === 'done'}>
       <div class="quality__head">
-        <label for="filetool-quality" class="quality__label">Qualität</label>
+        <label for="filetool-quality" class="quality__label">{strings.fileTool.qualityLabel}</label>
         <span class="quality__value" translate="no">{quality}</span>
       </div>
       <input
@@ -789,8 +791,8 @@
         data-testid="filetool-quality"
       />
       <div class="quality__scale">
-        <span>kleiner</span>
-        <span>schärfer</span>
+        <span>{strings.fileTool.qualityMin}</span>
+        <span>{strings.fileTool.qualityMax}</span>
       </div>
     </div>
   {/if}

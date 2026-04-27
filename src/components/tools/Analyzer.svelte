@@ -1,12 +1,17 @@
 <script lang="ts">
   import type { AnalyzerConfig } from '../../lib/tools/schemas';
   import { loadAnalyze, type AnalyzeFn } from '../../lib/tools/type-runtime-registry';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
+  import { resolveLabel } from '../../lib/tools/label';
 
   interface Props {
     config: AnalyzerConfig;
+    lang: Lang;
     placeholder?: string;
   }
-  let { config, placeholder = '' }: Props = $props();
+  let { config, lang, placeholder = '' }: Props = $props();
+  const strings = $derived(t(lang));
 
   // Lazy-load the analyzer module so only this tool's chunk ships.
   let analyze = $state<AnalyzeFn | undefined>(undefined);
@@ -36,7 +41,7 @@
 
 <div class="analyzer" data-testid="analyzer">
   <div class="analyzer__panel">
-    <label class="analyzer__label" for="analyzer-input">Eingabe</label>
+    <label class="analyzer__label" for="analyzer-input">{strings.toolsCommon.inputLabel}</label>
     <textarea
       id="analyzer-input"
       class="analyzer__field"
@@ -52,7 +57,7 @@
   <div class="analyzer__metrics" aria-live="polite">
     {#each config.metrics as m}
       <div class="analyzer__metric">
-        <span class="analyzer__metric-label">{m.label}</span>
+        <span class="analyzer__metric-label">{resolveLabel(m.label, lang)}</span>
         <span class="analyzer__metric-value">{metrics[m.id] ?? '0'}</span>
       </div>
     {/each}

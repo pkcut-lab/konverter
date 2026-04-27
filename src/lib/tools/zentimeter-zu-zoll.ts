@@ -1,12 +1,13 @@
 import type { ConverterConfig } from './schemas';
+import { unit } from '../i18n/units';
 
 export const zentimeterZuZoll: ConverterConfig = {
   id: 'cm-to-inch',
   type: 'converter',
   categoryId: 'laengen',
   units: {
-    from: { id: 'cm', label: 'Zentimeter' },
-    to: { id: 'in', label: 'Zoll' },
+    from: { id: 'cm', label: unit('cm') },
+    to: { id: 'in', label: unit('in') },
   },
   formula: { type: 'linear', factor: 0.3937007874 },
   decimals: 4,

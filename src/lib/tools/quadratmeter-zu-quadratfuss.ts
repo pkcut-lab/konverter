@@ -1,4 +1,5 @@
 import type { ConverterConfig } from './schemas';
+import { unit } from '../i18n/units';
 
 /**
  * Note on formula: 1 m² = 10.7639 ft² is the already-squared linear factor
@@ -11,8 +12,8 @@ export const quadratmeterZuQuadratfuss: ConverterConfig = {
   type: 'converter',
   categoryId: 'flaeche',
   units: {
-    from: { id: 'm2', label: 'Quadratmeter' },
-    to: { id: 'ft2', label: 'Quadratfuß' },
+    from: { id: 'm2', label: unit('m2') },
+    to: { id: 'ft2', label: unit('ft2') },
   },
   formula: { type: 'linear', factor: 10.7639104 },
   decimals: 4,

@@ -1,12 +1,16 @@
 <script lang="ts">
   import type { ValidatorConfig } from '../../lib/tools/schemas';
   import { loadValidate, type ValidateFn } from '../../lib/tools/type-runtime-registry';
+  import { t } from '../../lib/i18n/strings';
+  import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
     config: ValidatorConfig;
+    lang: Lang;
     placeholder?: string;
   }
-  let { config, placeholder = '' }: Props = $props();
+  let { config, lang, placeholder = '' }: Props = $props();
+  const strings = $derived(t(lang));
 
   // Lazy-load the validator module so only this tool's chunk ships.
   let validate = $state<ValidateFn | undefined>(undefined);
@@ -40,7 +44,7 @@
 
 <div class="validator" data-testid="validator">
   <div class="validator__panel">
-    <label class="validator__label" for="validator-input">Eingabe</label>
+    <label class="validator__label" for="validator-input">{strings.toolsCommon.inputLabel}</label>
     <textarea
       id="validator-input"
       class="validator__field"
@@ -57,13 +61,13 @@
 
   <div class="validator__status" aria-live="polite">
     {#if status === 'empty'}
-      <span class="validator__badge validator__badge--neutral">Bereit</span>
+      <span class="validator__badge validator__badge--neutral">{strings.validator.ready}</span>
       <span class="validator__rule">{config.rule}</span>
     {:else if status === 'valid'}
-      <span class="validator__badge validator__badge--valid">Gültig</span>
+      <span class="validator__badge validator__badge--valid">{strings.validator.valid}</span>
       <span class="validator__rule">{config.rule}</span>
     {:else}
-      <span class="validator__badge validator__badge--invalid">Ungültig</span>
+      <span class="validator__badge validator__badge--invalid">{strings.validator.invalid}</span>
       <span class="validator__rule">{config.rule}</span>
     {/if}
   </div>

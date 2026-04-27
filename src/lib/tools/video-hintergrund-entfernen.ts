@@ -31,13 +31,13 @@ export const videoBgRemove: FileToolConfig = {
     options: [
       {
         id: 'quality',
-        label: 'Qualität',
-        subLabel: 'beste Haarkanten',
+        label: { de: 'Qualität', en: 'Quality' },
+        subLabel: { de: 'beste Haarkanten', en: 'best hair edges' },
       },
       {
         id: 'speed',
-        label: 'Schnell',
-        subLabel: 'nahezu Echtzeit',
+        label: { de: 'Schnell', en: 'Fast' },
+        subLabel: { de: 'nahezu Echtzeit', en: 'near real-time' },
       },
     ],
     default: 'quality',

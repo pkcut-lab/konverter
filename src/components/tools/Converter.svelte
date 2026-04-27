@@ -5,6 +5,7 @@
   import { t } from '../../lib/i18n/strings';
   import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
   import type { Lang } from '../../lib/i18n/lang';
+  import { resolveLabel } from '../../lib/tools/label';
 
   interface Props {
     config: ConverterConfig;
@@ -21,10 +22,10 @@
   let copyState = $state<CopyState>('idle');
 
   const fromLabel = $derived(
-    direction === 'forward' ? config.units.from.label : config.units.to.label,
+    resolveLabel(direction === 'forward' ? config.units.from.label : config.units.to.label, lang),
   );
   const toLabel = $derived(
-    direction === 'forward' ? config.units.to.label : config.units.from.label,
+    resolveLabel(direction === 'forward' ? config.units.to.label : config.units.from.label, lang),
   );
   const fromUnit = $derived(
     direction === 'forward' ? config.units.from.id : config.units.to.id,

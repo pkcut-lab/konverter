@@ -163,6 +163,58 @@ export interface UiStrings {
     genericError: string;
   };
 
+  // ── Validator component ────────────────────────────────────────────
+  validator: {
+    ready: string;
+    valid: string;
+    invalid: string;
+  };
+
+  // ── FileTool component ─────────────────────────────────────────────
+  fileTool: {
+    presetsLegend: string;
+    formatLegend: string;
+    dropzoneAria: string;
+    dragHere: string;
+    subjectVideo: string;
+    subjectImage: string;
+    subjectAudio: string;
+    subjectDocument: string;
+    subjectFile: string;
+    pasteBtn: string;
+    pasteError: string;
+    camera: string;
+    modelLoading: string;
+    convertingAria: string;
+    converting: string;
+    etaRemaining: string;
+    done: string;
+    doneAria: string;
+    original: string;
+    result: string;
+    sourceAlt: string;
+    resultAlt: string;
+    audioFallback: string;
+    pdfFallback: string;
+    sourcePdfAria: string;
+    resultPdfAria: string;
+    ocrTextAria: string;
+    clipboardCopy: string;
+    clipboardError: string;
+    transparency: string;
+    whiteBackground: string;
+    qualityLabel: string;
+    qualityMin: string;
+    qualityMax: string;
+    errorUnsupportedType: string;
+    errorTooLarge: string;
+    errorNoProcessor: string;
+    errorHeicDecode: string;
+    errorModelLoad: string;
+    errorConversion: string;
+    errorFormatChange: string;
+  };
+
   // ── Validation / error messages ────────────────────────────────
   errors: {
     required: string;
@@ -339,6 +391,56 @@ const strings: Record<Lang, UiStrings> = {
       genericError: 'Etwas ist schiefgelaufen.',
     },
 
+    validator: {
+      ready: 'Bereit',
+      valid: 'Gültig',
+      invalid: 'Ungültig',
+    },
+
+    fileTool: {
+      presetsLegend: 'Einstellungen',
+      formatLegend: 'Format',
+      dropzoneAria: 'Dateien hierher ziehen oder auswählen',
+      dragHere: '{subject} hierher ziehen',
+      subjectVideo: 'Video',
+      subjectImage: 'Bild',
+      subjectAudio: 'Audio',
+      subjectDocument: 'Dokument',
+      subjectFile: 'Datei',
+      pasteBtn: 'Einfügen',
+      pasteError: 'Nichts Passendes',
+      camera: 'Foto aufnehmen',
+      modelLoading: 'Lädt einmalig Modell …',
+      convertingAria: 'Konvertiert',
+      converting: 'Konvertiert …',
+      etaRemaining: '{eta} verbleibend',
+      done: 'FERTIG',
+      doneAria: 'Status: fertig',
+      original: 'ORIGINAL',
+      result: 'ERGEBNIS',
+      sourceAlt: 'Quelldatei',
+      resultAlt: 'Vorschau des Ergebnisses',
+      audioFallback: 'Dein Browser unterstützt kein Audio.',
+      pdfFallback: 'PDF-Vorschau',
+      sourcePdfAria: 'Quelldatei (PDF-Vorschau)',
+      resultPdfAria: 'Ergebnis (PDF-Vorschau)',
+      ocrTextAria: 'Erkannter Text',
+      clipboardCopy: 'In Zwischenablage',
+      clipboardError: 'Nicht unterstützt',
+      transparency: 'Transparenz',
+      whiteBackground: 'weißer Hintergrund',
+      qualityLabel: 'Qualität',
+      qualityMin: 'kleiner',
+      qualityMax: 'schärfer',
+      errorUnsupportedType: 'Dateityp nicht unterstützt. Erlaubt: {types}.',
+      errorTooLarge: 'Datei zu groß. Maximal {size} MB erlaubt.',
+      errorNoProcessor: 'Kein Prozessor registriert für „{id}“.',
+      errorHeicDecode: 'HEIC-Decode-Fehler: {msg}',
+      errorModelLoad: 'Modell-Lade-Fehler: {msg}',
+      errorConversion: 'Konvertierung fehlgeschlagen: {msg}',
+      errorFormatChange: 'Format-Wechsel fehlgeschlagen.',
+    },
+
     errors: {
       required: 'Pflichtfeld',
       invalidNumber: 'Bitte eine gültige Zahl eingeben.',
@@ -511,6 +613,56 @@ const strings: Record<Lang, UiStrings> = {
       fileTooLarge: 'File is too large.',
       invalidFormat: 'Invalid format.',
       genericError: 'Something went wrong.',
+    },
+
+    validator: {
+      ready: 'Ready',
+      valid: 'Valid',
+      invalid: 'Invalid',
+    },
+
+    fileTool: {
+      presetsLegend: 'Settings',
+      formatLegend: 'Format',
+      dropzoneAria: 'Drag files here or select',
+      dragHere: 'Drop {subject} here',
+      subjectVideo: 'video',
+      subjectImage: 'image',
+      subjectAudio: 'audio',
+      subjectDocument: 'document',
+      subjectFile: 'file',
+      pasteBtn: 'Paste',
+      pasteError: 'Nothing suitable',
+      camera: 'Take photo',
+      modelLoading: 'Loading model …',
+      convertingAria: 'Converting',
+      converting: 'Converting …',
+      etaRemaining: '{eta} remaining',
+      done: 'DONE',
+      doneAria: 'Status: done',
+      original: 'ORIGINAL',
+      result: 'RESULT',
+      sourceAlt: 'Source file',
+      resultAlt: 'Preview of result',
+      audioFallback: 'Your browser does not support audio.',
+      pdfFallback: 'PDF preview',
+      sourcePdfAria: 'Source file (PDF preview)',
+      resultPdfAria: 'Result (PDF preview)',
+      ocrTextAria: 'Recognized text',
+      clipboardCopy: 'Copy to clipboard',
+      clipboardError: 'Not supported',
+      transparency: 'Transparency',
+      whiteBackground: 'white background',
+      qualityLabel: 'Quality',
+      qualityMin: 'smaller',
+      qualityMax: 'sharper',
+      errorUnsupportedType: 'Unsupported file type. Allowed: {types}.',
+      errorTooLarge: 'File too large. Maximum {size} MB.',
+      errorNoProcessor: 'No processor registered for "{id}".',
+      errorHeicDecode: 'HEIC decode error: {msg}',
+      errorModelLoad: 'Model load error: {msg}',
+      errorConversion: 'Conversion failed: {msg}',
+      errorFormatChange: 'Format change failed.',
     },
 
     errors: {

@@ -1,4 +1,5 @@
 import type { ConverterConfig } from './schemas';
+import { unit } from '../i18n/units';
 
 /**
  * Formula is affine because temperature conversions require both scale and
@@ -10,8 +11,8 @@ export const celsiusZuFahrenheit: ConverterConfig = {
   type: 'converter',
   categoryId: 'temperatur',
   units: {
-    from: { id: 'c', label: 'Celsius' },
-    to: { id: 'f', label: 'Fahrenheit' },
+    from: { id: 'c', label: unit('c') },
+    to: { id: 'f', label: unit('f') },
   },
   formula: { type: 'affine', factor: 1.8, offset: 32 },
   decimals: 2,

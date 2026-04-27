@@ -17,16 +17,16 @@ export const hevcZuH264: FileToolConfig = {
   presets: {
     id: 'preset',
     options: [
-      { id: 'original', label: 'Original', subLabel: 'CRF 18 · größte Datei' },
-      { id: 'balanced', label: 'Balanced', subLabel: 'CRF 23 · empfohlen' },
-      { id: 'small', label: 'Klein', subLabel: 'CRF 28 · kleinste Datei' },
+      { id: 'original', label: { de: 'Original', en: 'Original' }, subLabel: { de: 'CRF 18 · größte Datei', en: 'CRF 18 · largest file' } },
+      { id: 'balanced', label: { de: 'Ausgewogen', en: 'Balanced' }, subLabel: { de: 'CRF 23 · empfohlen', en: 'CRF 23 · recommended' } },
+      { id: 'small', label: { de: 'Klein', en: 'Small' }, subLabel: { de: 'CRF 28 · kleinste Datei', en: 'CRF 28 · smallest file' } },
     ],
     default: 'balanced',
   },
   toggles: [
     {
       id: 'downscaleTo1080p',
-      label: 'Auf 1080p verkleinern',
+      label: { de: 'Auf 1080p verkleinern', en: 'Downscale to 1080p' },
       visibleIf: 'source-gt-1080p',
     },
   ],
