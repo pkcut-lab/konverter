@@ -14,12 +14,22 @@ html {
   line-height: var(--font-lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Defense-in-depth gegen versehentlichen horizontalen Scroll auf Mobile.
+     `clip` (statt `hidden`) verhindert NICHT Position-Sticky am <header>,
+     im Gegensatz zu `overflow: hidden` welches einen Scroll-Container
+     erzeugt und dadurch Sticky-Positionierung neutralisiert. */
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   background: inherit;
   color: inherit;
+  /* Lange unbrechbare Strings (URLs, Compound-Wörter wie
+     „Datenschutzerklärung") dürfen das Layout auf engen Viewports nicht
+     sprengen. `break-word` bricht nur, wenn nötig — normaler Wortfluss
+     bleibt intakt. */
+  overflow-wrap: break-word;
 }
 
 h1, h2, h3 {

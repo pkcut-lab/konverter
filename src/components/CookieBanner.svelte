@@ -107,6 +107,9 @@
     font-size: var(--font-size-small);
     line-height: var(--font-lh-small);
     color: var(--color-text-muted);
+    /* Lange Compound-Wörter („Datenschutzerklärung") + URLs dürfen das
+       Banner auf engen Mobile-Viewports nicht sprengen. */
+    overflow-wrap: anywhere;
   }
 
   .body :global(a) {
@@ -191,6 +194,9 @@
       right: var(--space-4);
       bottom: var(--space-4);
       max-width: none;
+      /* Mobile: kompakteres Padding, damit Buttons + Body-Text auch auf
+         320px-Viewports atmen können. 24px → 16px L/R + 20px T/B. */
+      padding: var(--space-5) var(--space-4);
     }
   }
 

@@ -352,6 +352,10 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     .inner {
       grid-template-columns: 1fr auto auto;
       row-gap: var(--space-2);
+      /* Mobile: kompakteres Padding + Gap, damit Brand + Lang-Chips +
+         Toggle auch auf 320px-Viewports (iPhone SE) ohne Overflow passen. */
+      padding: var(--space-3) var(--space-4);
+      gap: var(--space-3);
     }
     .nav {
       display: none;

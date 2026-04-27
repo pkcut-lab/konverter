@@ -251,4 +251,13 @@ const websiteJsonLd = {
     margin: 0 auto;
     padding: var(--space-8) var(--space-6);
   }
+  @media (max-width: 40rem) {
+    /* Mobile: kompakteres horizontales Padding, damit Tool-UIs (FileTool-
+       Dropzones, Comparer-Spalten, lange Code-Outputs) bis ~320px-Viewports
+       atmen, ohne dass Inhalt am Rand klebt. Vertikales Padding bleibt
+       großzügig für editorialen Rhythmus. */
+    .site-main {
+      padding: var(--space-6) var(--space-4);
+    }
+  }
 </style>

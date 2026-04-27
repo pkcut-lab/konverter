@@ -84,7 +84,10 @@ const brandAria = strings.footer.brandAria;
   .inner {
     max-width: 72rem;
     margin: 0 auto;
-    padding: var(--space-10) var(--space-6) var(--space-6);
+    /* var(--space-10) existiert nicht in tokens.css → die Shorthand wäre
+       komplett invalid und Padding fiele auf 0 zurück. --space-12 (3rem)
+       gibt dem Footer den großzügigen editorialen Top-Abstand zurück. */
+    padding: var(--space-12) var(--space-6) var(--space-6);
     display: flex;
     flex-direction: column;
     gap: 0;
