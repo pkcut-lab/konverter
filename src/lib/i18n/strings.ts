@@ -396,6 +396,67 @@ export interface UiStrings {
       disclaimer: string;
       privacyBadge: string;
     };
+    compoundInterestCalculator: {
+      // Inputs / fieldset
+      legend: string;
+      initialCapitalLabel: string;
+      initialCapitalPlaceholder: string;
+      initialCapitalAria: string;
+      monthlyContributionLabel: string;
+      monthlyContributionPlaceholder: string;
+      monthlyContributionAria: string;
+      interestRateLabel: string;
+      interestRatePlaceholder: string;
+      interestRateAria: string;
+      termLabel: string;
+      termPlaceholder: string;
+      termAria: string;
+      inflationLabel: string;
+      inflationPlaceholder: string;
+      inflationAria: string;
+      terLabel: string;
+      terPlaceholder: string;
+      terAria: string;
+      optionalBadge: string;
+      unitEuroPerMonth: string;
+      unitYears: string;
+      unitPctPerYear: string;
+      // Validation
+      errEnterNumber: string;
+      errInitialNegative: string;
+      errInitialMax: string;
+      errContribNegative: string;
+      errContribMax: string;
+      errInterestRequired: string;
+      errInterestMin: string;
+      errInterestMax: string;
+      errTermRequired: string;
+      errTermMin: string;
+      errTermMax: string;
+      errInflationNegative: string;
+      errInflationMax: string;
+      errTerNegative: string;
+      errTerMax: string;
+      // Result cards
+      resultsAria: string;
+      cardNominalLabel: string;
+      cardNominalAria: string;
+      cardNominalDesc: string;
+      cardAfterTaxLabel: string;
+      cardAfterTaxAria: string;
+      cardAfterTaxDesc: string;
+      cardRealLabel: string;
+      cardRealAria: string;
+      /** {inflation} */
+      cardRealDescTemplate: string;
+      // Detail strip
+      detailContributions: string;
+      detailGrossInterest: string;
+      detailTaxesTotal: string;
+      // Hint / privacy
+      hintFillCorrectly: string;
+      privacyBadge: string;
+    };
   };
 }
 
@@ -767,6 +828,61 @@ const strings: Record<Lang, UiStrings> = {
           'Diese Berechnung dient ausschließlich zur unverbindlichen Information und ersetzt keine Bankberatung. Tatsächliche Konditionen hängen von Ihrer Bonität und dem jeweiligen Kreditvertrag ab.',
         privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal in Ihrem Browser',
       },
+      compoundInterestCalculator: {
+        legend: 'Sparplan-Parameter',
+        initialCapitalLabel: 'Anfangskapital',
+        initialCapitalPlaceholder: 'z.B. 10.000',
+        initialCapitalAria: 'Anfangskapital in Euro',
+        monthlyContributionLabel: 'Monatliche Sparrate',
+        monthlyContributionPlaceholder: 'z.B. 200',
+        monthlyContributionAria: 'Monatliche Sparrate in Euro',
+        interestRateLabel: 'Zinssatz p. a.',
+        interestRatePlaceholder: 'z.B. 7',
+        interestRateAria: 'Jahreszinssatz in Prozent',
+        termLabel: 'Laufzeit',
+        termPlaceholder: 'z.B. 20',
+        termAria: 'Laufzeit in Jahren',
+        inflationLabel: 'Inflationsrate',
+        inflationPlaceholder: 'Standard: 2',
+        inflationAria: 'Inflationsrate in Prozent',
+        terLabel: 'Kosten / TER',
+        terPlaceholder: 'Standard: 0',
+        terAria: 'Jährliche Kostenquote TER in Prozent',
+        optionalBadge: 'optional',
+        unitEuroPerMonth: '€/Mo',
+        unitYears: 'Jahre',
+        unitPctPerYear: '% p. a.',
+        errEnterNumber: 'Bitte eine Zahl eingeben.',
+        errInitialNegative: 'Anfangskapital muss ≥ 0 € sein.',
+        errInitialMax: 'Maximal 100.000.000 €',
+        errContribNegative: 'Sparrate muss ≥ 0 € sein.',
+        errContribMax: 'Maximal 1.000.000 €/Monat',
+        errInterestRequired: 'Bitte einen Zinssatz eingeben.',
+        errInterestMin: 'Zinssatz minimal −20 %',
+        errInterestMax: 'Zinssatz maximal 50 %',
+        errTermRequired: 'Bitte eine Laufzeit eingeben.',
+        errTermMin: 'Mindestens 1 Jahr',
+        errTermMax: 'Maximal 80 Jahre',
+        errInflationNegative: 'Inflationsrate muss ≥ 0 % sein.',
+        errInflationMax: 'Maximal 30 %',
+        errTerNegative: 'TER muss ≥ 0 % sein.',
+        errTerMax: 'Maximal 5 %',
+        resultsAria: 'Berechnungsergebnis',
+        cardNominalLabel: 'Endkapital nominal',
+        cardNominalAria: 'Endkapital nominal: {amount} Euro',
+        cardNominalDesc: 'Brutto vor Steuern und Inflationsbereinigung',
+        cardAfterTaxLabel: 'Nach Steuer',
+        cardAfterTaxAria: 'Endkapital nach Steuer: {amount} Euro',
+        cardAfterTaxDesc: 'Abzgl. Abgeltungssteuer 26,375 % (Sparerpauschbetrag 1.000 €/Jahr)',
+        cardRealLabel: 'Reale Kaufkraft',
+        cardRealAria: 'Reale Kaufkraft: {amount} Euro',
+        cardRealDescTemplate: 'Kaufkraft in heutigen € nach Fisher-Gleichung ({inflation} % Inflation)',
+        detailContributions: 'Gesamteinzahlungen',
+        detailGrossInterest: 'Zinserträge brutto',
+        detailTaxesTotal: 'Steuern gesamt',
+        hintFillCorrectly: 'Bitte alle Pflichtfelder korrekt ausfüllen.',
+        privacyBadge: 'Kein Server-Upload · Kein Tracking · Rechnet lokal im Browser',
+      },
     },
   },
 
@@ -1136,6 +1252,61 @@ const strings: Record<Lang, UiStrings> = {
         emptyStateFillFields: 'Enter loan amount, interest rate, and term to start the calculation.',
         disclaimer:
           'This calculation is for informational purposes only and does not constitute financial advice. Actual terms depend on your creditworthiness and loan agreement.',
+        privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
+      },
+      compoundInterestCalculator: {
+        legend: 'Savings plan parameters',
+        initialCapitalLabel: 'Initial capital',
+        initialCapitalPlaceholder: 'e.g. 10,000',
+        initialCapitalAria: 'Initial capital in euros',
+        monthlyContributionLabel: 'Monthly contribution',
+        monthlyContributionPlaceholder: 'e.g. 200',
+        monthlyContributionAria: 'Monthly contribution in euros',
+        interestRateLabel: 'Interest rate p. a.',
+        interestRatePlaceholder: 'e.g. 7',
+        interestRateAria: 'Annual interest rate in percent',
+        termLabel: 'Term',
+        termPlaceholder: 'e.g. 20',
+        termAria: 'Term in years',
+        inflationLabel: 'Inflation rate',
+        inflationPlaceholder: 'default: 2',
+        inflationAria: 'Inflation rate in percent',
+        terLabel: 'Costs / TER',
+        terPlaceholder: 'default: 0',
+        terAria: 'Annual total expense ratio (TER) in percent',
+        optionalBadge: 'optional',
+        unitEuroPerMonth: '€/mo',
+        unitYears: 'years',
+        unitPctPerYear: '% p. a.',
+        errEnterNumber: 'Please enter a number.',
+        errInitialNegative: 'Initial capital must be ≥ 0 €.',
+        errInitialMax: 'Maximum 100,000,000 €',
+        errContribNegative: 'Contribution must be ≥ 0 €.',
+        errContribMax: 'Maximum 1,000,000 €/month',
+        errInterestRequired: 'Please enter an interest rate.',
+        errInterestMin: 'Interest rate minimum −20 %',
+        errInterestMax: 'Interest rate maximum 50 %',
+        errTermRequired: 'Please enter a term.',
+        errTermMin: 'Minimum 1 year',
+        errTermMax: 'Maximum 80 years',
+        errInflationNegative: 'Inflation rate must be ≥ 0 %.',
+        errInflationMax: 'Maximum 30 %',
+        errTerNegative: 'TER must be ≥ 0 %.',
+        errTerMax: 'Maximum 5 %',
+        resultsAria: 'Calculation result',
+        cardNominalLabel: 'Final capital (nominal)',
+        cardNominalAria: 'Nominal final capital: {amount} euros',
+        cardNominalDesc: 'Gross before taxes and inflation adjustment',
+        cardAfterTaxLabel: 'After tax',
+        cardAfterTaxAria: 'Final capital after tax: {amount} euros',
+        cardAfterTaxDesc: 'Less German capital-gains tax 26.375 % (saver allowance 1,000 €/year)',
+        cardRealLabel: 'Real purchasing power',
+        cardRealAria: 'Real purchasing power: {amount} euros',
+        cardRealDescTemplate: 'Purchasing power in today\'s € via Fisher equation ({inflation} % inflation)',
+        detailContributions: 'Total contributions',
+        detailGrossInterest: 'Gross interest earnings',
+        detailTaxesTotal: 'Total taxes',
+        hintFillCorrectly: 'Please fill in all required fields correctly.',
         privacyBadge: 'No server upload · No tracking · Runs locally in your browser',
       },
     },

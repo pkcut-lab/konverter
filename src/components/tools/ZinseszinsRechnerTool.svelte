@@ -13,6 +13,7 @@
   let { config, lang }: Props = $props();
   void config;
   const strings = $derived(t(lang));
+  const T = $derived(strings.tools.compoundInterestCalculator);
 
   // ---- Formatierung ----
   function fmt(n: number, decimals = 2): string {
@@ -47,47 +48,47 @@
   // ---- Validierung ----
   const anfangskapitalError = $derived.by<string | null>(() => {
     if (anfangskapitalStr.trim() === '') return null;
-    if (!Number.isFinite(anfangskapital)) return 'Bitte eine Zahl eingeben.';
-    if (anfangskapital < 0) return 'Anfangskapital muss ≥ 0 € sein.';
-    if (anfangskapital > 100_000_000) return 'Maximal 100.000.000 €';
+    if (!Number.isFinite(anfangskapital)) return T.errEnterNumber;
+    if (anfangskapital < 0) return T.errInitialNegative;
+    if (anfangskapital > 100_000_000) return T.errInitialMax;
     return null;
   });
 
   const sparrateError = $derived.by<string | null>(() => {
     if (sparrateStr.trim() === '') return null;
-    if (!Number.isFinite(sparrate)) return 'Bitte eine Zahl eingeben.';
-    if (sparrate < 0) return 'Sparrate muss ≥ 0 € sein.';
-    if (sparrate > 1_000_000) return 'Maximal 1.000.000 €/Monat';
+    if (!Number.isFinite(sparrate)) return T.errEnterNumber;
+    if (sparrate < 0) return T.errContribNegative;
+    if (sparrate > 1_000_000) return T.errContribMax;
     return null;
   });
 
   const zinssatzError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(zinssatz)) return 'Bitte einen Zinssatz eingeben.';
-    if (zinssatz < -20) return 'Zinssatz minimal −20 %';
-    if (zinssatz > 50) return 'Zinssatz maximal 50 %';
+    if (!Number.isFinite(zinssatz)) return T.errInterestRequired;
+    if (zinssatz < -20) return T.errInterestMin;
+    if (zinssatz > 50) return T.errInterestMax;
     return null;
   });
 
   const laufzeitError = $derived.by<string | null>(() => {
-    if (!Number.isFinite(laufzeit)) return 'Bitte eine Laufzeit eingeben.';
-    if (laufzeit < 1) return 'Mindestens 1 Jahr';
-    if (laufzeit > 80) return 'Maximal 80 Jahre';
+    if (!Number.isFinite(laufzeit)) return T.errTermRequired;
+    if (laufzeit < 1) return T.errTermMin;
+    if (laufzeit > 80) return T.errTermMax;
     return null;
   });
 
   const inflationsrateError = $derived.by<string | null>(() => {
     if (inflationsrateStr.trim() === '') return null;
-    if (!Number.isFinite(inflationsrate)) return 'Bitte eine Zahl eingeben.';
-    if (inflationsrate < 0) return 'Inflationsrate muss ≥ 0 % sein.';
-    if (inflationsrate > 30) return 'Maximal 30 %';
+    if (!Number.isFinite(inflationsrate)) return T.errEnterNumber;
+    if (inflationsrate < 0) return T.errInflationNegative;
+    if (inflationsrate > 30) return T.errInflationMax;
     return null;
   });
 
   const terError = $derived.by<string | null>(() => {
     if (terStr.trim() === '') return null;
-    if (!Number.isFinite(ter)) return 'Bitte eine Zahl eingeben.';
-    if (ter < 0) return 'TER muss ≥ 0 % sein.';
-    if (ter > 5) return 'Maximal 5 %';
+    if (!Number.isFinite(ter)) return T.errEnterNumber;
+    if (ter < 0) return T.errTerNegative;
+    if (ter > 5) return T.errTerMax;
     return null;
   });
 
@@ -118,7 +119,7 @@
   $effect(() => {
     if (!_firstResult && result !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: 'de' });
+      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
     }
   });
 
@@ -150,11 +151,11 @@
 
   <!-- Eingabefelder -->
   <fieldset class="input-grid">
-    <legend class="sr-only">Sparplan-Parameter</legend>
+    <legend class="sr-only">{T.legend}</legend>
 
     <!-- Anfangskapital -->
     <div class="field" class:field--error={anfangskapitalError !== null}>
-      <label class="field__label" for="zins-anfangskapital">Anfangskapital</label>
+      <label class="field__label" for="zins-anfangskapital">{T.initialCapitalLabel}</label>
       <div class="field__input-wrap" class:field__input-wrap--error={anfangskapitalError !== null}>
         <input
           id="zins-anfangskapital"
@@ -162,8 +163,8 @@
           inputmode="decimal"
           class="field__input"
           bind:value={anfangskapitalStr}
-          placeholder="z.B. 10.000"
-          aria-label="Anfangskapital in Euro"
+          placeholder={T.initialCapitalPlaceholder}
+          aria-label={T.initialCapitalAria}
           aria-invalid={anfangskapitalError !== null}
           autocomplete="off"
         />
@@ -176,7 +177,7 @@
 
     <!-- Monatliche Sparrate -->
     <div class="field" class:field--error={sparrateError !== null}>
-      <label class="field__label" for="zins-sparrate">Monatliche Sparrate</label>
+      <label class="field__label" for="zins-sparrate">{T.monthlyContributionLabel}</label>
       <div class="field__input-wrap" class:field__input-wrap--error={sparrateError !== null}>
         <input
           id="zins-sparrate"
@@ -184,12 +185,12 @@
           inputmode="decimal"
           class="field__input"
           bind:value={sparrateStr}
-          placeholder="z.B. 200"
-          aria-label="Monatliche Sparrate in Euro"
+          placeholder={T.monthlyContributionPlaceholder}
+          aria-label={T.monthlyContributionAria}
           aria-invalid={sparrateError !== null}
           autocomplete="off"
         />
-        <span class="field__unit" aria-hidden="true">€/Mo</span>
+        <span class="field__unit" aria-hidden="true">{T.unitEuroPerMonth}</span>
       </div>
       {#if sparrateError}
         <p class="field-error" role="alert">{sparrateError}</p>
@@ -198,7 +199,7 @@
 
     <!-- Zinssatz -->
     <div class="field" class:field--error={zinssatzError !== null}>
-      <label class="field__label" for="zins-zinssatz">Zinssatz p.&nbsp;a.</label>
+      <label class="field__label" for="zins-zinssatz">{T.interestRateLabel}</label>
       <div class="field__input-wrap" class:field__input-wrap--error={zinssatzError !== null}>
         <input
           id="zins-zinssatz"
@@ -206,8 +207,8 @@
           inputmode="decimal"
           class="field__input"
           bind:value={zinssatzStr}
-          placeholder="z.B. 7"
-          aria-label="Jahreszinssatz in Prozent"
+          placeholder={T.interestRatePlaceholder}
+          aria-label={T.interestRateAria}
           aria-invalid={zinssatzError !== null}
           autocomplete="off"
         />
@@ -220,7 +221,7 @@
 
     <!-- Laufzeit -->
     <div class="field" class:field--error={laufzeitError !== null}>
-      <label class="field__label" for="zins-laufzeit">Laufzeit</label>
+      <label class="field__label" for="zins-laufzeit">{T.termLabel}</label>
       <div class="field__input-wrap" class:field__input-wrap--error={laufzeitError !== null}>
         <input
           id="zins-laufzeit"
@@ -228,12 +229,12 @@
           inputmode="numeric"
           class="field__input"
           bind:value={laufzeitStr}
-          placeholder="z.B. 20"
-          aria-label="Laufzeit in Jahren"
+          placeholder={T.termPlaceholder}
+          aria-label={T.termAria}
           aria-invalid={laufzeitError !== null}
           autocomplete="off"
         />
-        <span class="field__unit" aria-hidden="true">Jahre</span>
+        <span class="field__unit" aria-hidden="true">{T.unitYears}</span>
       </div>
       {#if laufzeitError}
         <p class="field-error" role="alert">{laufzeitError}</p>
@@ -243,8 +244,8 @@
     <!-- Inflationsrate (optional) -->
     <div class="field" class:field--error={inflationsrateError !== null}>
       <label class="field__label" for="zins-inflation">
-        Inflationsrate
-        <span class="field__optional">optional</span>
+        {T.inflationLabel}
+        <span class="field__optional">{T.optionalBadge}</span>
       </label>
       <div class="field__input-wrap" class:field__input-wrap--error={inflationsrateError !== null}>
         <input
@@ -253,8 +254,8 @@
           inputmode="decimal"
           class="field__input"
           bind:value={inflationsrateStr}
-          placeholder="Standard: 2"
-          aria-label="Inflationsrate in Prozent"
+          placeholder={T.inflationPlaceholder}
+          aria-label={T.inflationAria}
           aria-invalid={inflationsrateError !== null}
           autocomplete="off"
         />
@@ -268,8 +269,8 @@
     <!-- TER (optional) -->
     <div class="field" class:field--error={terError !== null}>
       <label class="field__label" for="zins-ter">
-        Kosten&nbsp;/&nbsp;TER
-        <span class="field__optional">optional</span>
+        {T.terLabel}
+        <span class="field__optional">{T.optionalBadge}</span>
       </label>
       <div class="field__input-wrap" class:field__input-wrap--error={terError !== null}>
         <input
@@ -278,12 +279,12 @@
           inputmode="decimal"
           class="field__input"
           bind:value={terStr}
-          placeholder="Standard: 0"
-          aria-label="Jährliche Kostenquote TER in Prozent"
+          placeholder={T.terPlaceholder}
+          aria-label={T.terAria}
           aria-invalid={terError !== null}
           autocomplete="off"
         />
-        <span class="field__unit" aria-hidden="true">%&nbsp;p.&nbsp;a.</span>
+        <span class="field__unit" aria-hidden="true">{T.unitPctPerYear}</span>
       </div>
       {#if terError}
         <p class="field-error" role="alert">{terError}</p>
@@ -293,14 +294,14 @@
 
   <!-- Ergebnis-Karten -->
   {#if result && !hasErrors}
-    <div class="results" aria-live="polite" aria-label="Berechnungsergebnis">
+    <div class="results" aria-live="polite" aria-label={T.resultsAria}>
 
       <!-- Drei Szenarien -->
       <div class="scenario-grid">
         <!-- Nominal -->
         <div class="scenario-card">
           <div class="scenario-card__header">
-            <span class="scenario-card__label">Endkapital nominal</span>
+            <span class="scenario-card__label">{T.cardNominalLabel}</span>
             <button
               type="button"
               class="copy-btn"
@@ -315,16 +316,16 @@
               {/if}
             </button>
           </div>
-          <div class="scenario-card__value" aria-label="Endkapital nominal: {fmt(result.endkapital_nominal)} Euro">
+          <div class="scenario-card__value" aria-label={T.cardNominalAria.replace('{amount}', fmt(result.endkapital_nominal))}>
             {fmt(result.endkapital_nominal)}&nbsp;€
           </div>
-          <p class="scenario-card__desc">Brutto vor Steuern und Inflationsbereinigung</p>
+          <p class="scenario-card__desc">{T.cardNominalDesc}</p>
         </div>
 
         <!-- Nach Steuer -->
         <div class="scenario-card scenario-card--primary">
           <div class="scenario-card__header">
-            <span class="scenario-card__label">Nach Steuer</span>
+            <span class="scenario-card__label">{T.cardAfterTaxLabel}</span>
             <button
               type="button"
               class="copy-btn"
@@ -339,16 +340,16 @@
               {/if}
             </button>
           </div>
-          <div class="scenario-card__value" aria-label="Endkapital nach Steuer: {fmt(result.endkapital_netto)} Euro">
+          <div class="scenario-card__value" aria-label={T.cardAfterTaxAria.replace('{amount}', fmt(result.endkapital_netto))}>
             {fmt(result.endkapital_netto)}&nbsp;€
           </div>
-          <p class="scenario-card__desc">Abzgl. Abgeltungssteuer 26,375&nbsp;% (Sparerpauschbetrag 1.000&nbsp;€/Jahr)</p>
+          <p class="scenario-card__desc">{T.cardAfterTaxDesc}</p>
         </div>
 
         <!-- Real / Kaufkraft -->
         <div class="scenario-card">
           <div class="scenario-card__header">
-            <span class="scenario-card__label">Reale Kaufkraft</span>
+            <span class="scenario-card__label">{T.cardRealLabel}</span>
             <button
               type="button"
               class="copy-btn"
@@ -363,25 +364,25 @@
               {/if}
             </button>
           </div>
-          <div class="scenario-card__value" aria-label="Reale Kaufkraft: {fmt(result.endkapital_real)} Euro">
+          <div class="scenario-card__value" aria-label={T.cardRealAria.replace('{amount}', fmt(result.endkapital_real))}>
             {fmt(result.endkapital_real)}&nbsp;€
           </div>
-          <p class="scenario-card__desc">Kaufkraft in heutigen € nach Fisher-Gleichung ({fmt(inflationsrate, 1)}&nbsp;% Inflation)</p>
+          <p class="scenario-card__desc">{T.cardRealDescTemplate.replace('{inflation}', fmt(inflationsrate, 1))}</p>
         </div>
       </div>
 
       <!-- Detail-Strip -->
       <dl class="detail-strip">
         <div class="detail-item">
-          <dt class="detail-item__label">Gesamteinzahlungen</dt>
+          <dt class="detail-item__label">{T.detailContributions}</dt>
           <dd class="detail-item__value">{fmt(result.gesamteinzahlungen)}&nbsp;€</dd>
         </div>
         <div class="detail-item">
-          <dt class="detail-item__label">Zinserträge brutto</dt>
+          <dt class="detail-item__label">{T.detailGrossInterest}</dt>
           <dd class="detail-item__value">{fmt(result.zinsen_brutto)}&nbsp;€</dd>
         </div>
         <div class="detail-item">
-          <dt class="detail-item__label">Steuern gesamt</dt>
+          <dt class="detail-item__label">{T.detailTaxesTotal}</dt>
           <dd class="detail-item__value">{fmt(result.steuern_gesamt)}&nbsp;€</dd>
         </div>
       </dl>
@@ -389,12 +390,12 @@
   {/if}
 
   {#if hasErrors}
-    <p class="calc-hint" role="status">Bitte alle Pflichtfelder korrekt ausfüllen.</p>
+    <p class="calc-hint" role="status">{T.hintFillCorrectly}</p>
   {/if}
 
   <!-- Privacy badge -->
   <div class="privacy-badge" aria-label={strings.toolsCommon.privacyBadgeAria}>
-    Kein Server-Upload · Kein Tracking · Rechnet lokal im Browser
+    {T.privacyBadge}
   </div>
 </div>
 
