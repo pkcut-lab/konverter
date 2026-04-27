@@ -379,10 +379,10 @@ const dateModifiedFormatted = entry.data.dateModified
             <MehrwertsteuerRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === HOURLY_ANNUAL_TOOL_ID && (
-            <StundenlohnJahresgehaltTool config={config} lang={entry.data.language as Lang} client:load />
+            <StundenlohnJahresgehaltTool toolId={config.id} categoryId={config.categoryId} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === AMORTIZATION_TOOL_ID && (
-            <TilgungsplanRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <TilgungsplanRechnerTool toolId={config.id} categoryId={config.categoryId} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === GROSS_NET_TOOL_ID && entry.data.language === 'en' && (
             <GrossNetEnTool config={config} client:load />
@@ -391,10 +391,10 @@ const dateModifiedFormatted = entry.data.dateModified
             <BruttoNettoRechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === LOAN_CALCULATOR_TOOL_ID && (
-            <KreditrechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <KreditrechnerTool toolId={config.id} categoryId={config.categoryId} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === DISCOUNT_CALCULATOR_TOOL_ID && (
-            <RabattRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <RabattRechnerTool toolId={config.id} categoryId={config.categoryId} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === INTEREST_CALCULATOR_TOOL_ID && entry.data.language === 'en' && (
             <InterestCalculatorEnTool config={config} client:load />
@@ -403,22 +403,22 @@ const dateModifiedFormatted = entry.data.dateModified
             <ZinsrechnerTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === COMPOUND_INTEREST_TOOL_ID && (
-            <ZinseszinsRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <ZinseszinsRechnerTool toolId={config.id} categoryId={config.categoryId} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === ROI_CALCULATOR_TOOL_ID && (
-            <RoiRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <RoiRechnerTool lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === CASH_DISCOUNT_TOOL_ID && (
-            <SkontoRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <SkontoRechnerTool toolId={config.id} categoryId={config.categoryId} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === CASH_FLOW_TOOL_ID && (
-            <CashflowRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <CashflowRechnerTool lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === LEASING_FACTOR_TOOL_ID && (
-            <LeasingFaktorRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <LeasingFaktorRechnerTool lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === INHERITANCE_TAX_TOOL_ID && (
-            <ErbschaftsteuerRechnerTool config={config} lang={entry.data.language as Lang} client:load />
+            <ErbschaftsteuerRechnerTool lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'ki-text-detektor' && (
             <KiTextDetektorTool config={config} client:load />
@@ -427,7 +427,7 @@ const dateModifiedFormatted = entry.data.dateModified
             <KiBildDetektorTool config={config} client:load />
           )}
           {config.type === 'formatter' && config.id === 'audio-transkription' && (
-            <AudioTranskriptionTool config={config} lang={entry.data.language as Lang} client:load />
+            <AudioTranskriptionTool lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'pdf-merge' && (
             <PdfZusammenfuehrenTool config={config} client:load />

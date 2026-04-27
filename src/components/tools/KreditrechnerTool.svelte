@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { FormatterConfig } from '../../lib/tools/schemas';
   import {
     computeKreditErgebnis,
     buildTilgungsplan,
@@ -11,11 +10,11 @@
   import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
-    config: FormatterConfig;
+    toolId: string;
+    categoryId: string;
     lang: Lang;
   }
-  let { config, lang }: Props = $props();
-  void config;
+  let { toolId, categoryId, lang }: Props = $props();
   const strings = $derived(t(lang));
   const T = $derived(strings.tools.loanCalculator);
 
@@ -89,7 +88,7 @@
   $effect(() => {
     if (!_firstResult && ergebnis !== null) {
       _firstResult = true;
-      dispatchToolUsed({ slug: config.id, category: config.categoryId, locale: lang });
+      dispatchToolUsed({ slug: toolId, category: categoryId, locale: lang });
     }
   });
 

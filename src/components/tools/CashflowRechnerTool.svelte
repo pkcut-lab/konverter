@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { FormatterConfig } from '../../lib/tools/schemas';
   import { parseDE } from '../../lib/tools/parse-de';
   import {
     computeCashflowDirekt,
@@ -12,11 +11,9 @@
   import type { Lang } from '../../lib/i18n/lang';
 
   interface Props {
-    config: FormatterConfig;
     lang: Lang;
   }
-  let { config, lang }: Props = $props();
-  void config;
+  let { lang }: Props = $props();
   const strings = $derived(t(lang));
   const T = $derived(strings.tools.cashFlowCalculator);
 
