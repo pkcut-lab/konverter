@@ -17,7 +17,7 @@ faq:
   - q: "Is there a file size limit?"
     a: "No server-side limit exists. Large files simply require more browser memory. For best performance, keep total combined input size under 500 MB."
   - q: "Are files uploaded to a server?"
-    a: "No. Everything runs in your browser using PDF-lib. Your files never leave your device."
+    a: "No. Everything runs in your browser. Your files never leave your device."
   - q: "Will bookmarks and hyperlinks survive the merge?"
     a: "Hyperlinks within pages are preserved. Top-level bookmarks from individual PDFs are retained as sections in the merged document's outline where the PDF structure allows."
   - q: "Can I merge password-protected PDFs?"

@@ -13,7 +13,7 @@ howToUse:
   - "Click 'Split' and download the resulting file(s) as a ZIP or individual PDFs."
 faq:
   - q: "Does my PDF get uploaded to a server?"
-    a: "No. Processing runs entirely in your browser using PDF-lib. Your file never leaves your device."
+    a: "No. Processing runs entirely in your browser. Your file never leaves your device."
   - q: "Can I extract non-consecutive pages?"
     a: "Yes. Enter a comma-separated list such as 1, 3, 7–10 and the tool will extract exactly those pages."
   - q: "What is the maximum file size?"

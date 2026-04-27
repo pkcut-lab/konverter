@@ -263,7 +263,7 @@
             label="KI-Modell lädt..."
           />
           <p class="audio-tool__loading-note">
-            Das {selectedModel === 'tiny' ? 'schnelle' : selectedModel === 'small' ? 'große' : 'ausgewogene'} Whisper-Modell ({selectedModel === 'tiny' ? '~150 MB' : selectedModel === 'small' ? '~1 GB' : '~450 MB'}) wird geladen und im Browser vorbereitet.
+            Das {selectedModel === 'tiny' ? 'schnelle' : selectedModel === 'small' ? 'große' : 'ausgewogene'} Spracherkennungs-Modell ({selectedModel === 'tiny' ? '~150 MB' : selectedModel === 'small' ? '~1 GB' : '~450 MB'}) wird geladen und im Browser vorbereitet.
           </p>
         {:else}
           <div class="analyzing-indicator">

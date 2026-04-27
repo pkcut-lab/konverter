@@ -15,7 +15,7 @@ faq:
   - q: "Can this tool crack or guess a PDF password?"
     a: "No. This tool only decrypts PDFs when you provide the correct password yourself. It does not attempt brute-force or dictionary attacks."
   - q: "Is the PDF uploaded to a server?"
-    a: "No. Decryption runs entirely in your browser using PDF-lib. The file and password never leave your device."
+    a: "No. Decryption runs entirely in your browser. The file and password never leave your device."
   - q: "Is it legal to remove a PDF password?"
     a: "It is legal to remove password protection from PDFs you own or have authorization to access — for example, your own bank statements, tax documents, or files your employer shared with you. Do not use this tool to circumvent access controls on documents you are not authorized to view."
   - q: "What encryption standards does this tool support?"
@@ -43,10 +43,10 @@ This tool is designed for a straightforward scenario: you have a PDF, you know t
 
 ## How It Works
 
-PDF encryption wraps the document's content streams in a symmetric cipher. When a user-password is set, every page must be decrypted before display. PDF-lib, a pure-JavaScript PDF library running in a browser Web Worker, handles the decryption:
+PDF encryption wraps the document's content streams in a symmetric cipher. When a user-password is set, every page must be decrypted before display. A pure-JavaScript PDF library running in a browser Web Worker handles the decryption:
 
 1. **Load** — the browser reads the PDF binary and detects the encryption dictionary.
-2. **Derive key** — PDF-lib uses the password you provide to derive the decryption key following the PDF specification (RC4 or AES depending on the security handler version).
+2. **Derive key** — the password you provide is used to derive the decryption key following the PDF specification (RC4 or AES depending on the security handler version).
 3. **Decrypt** — all content streams, cross-reference tables, and embedded objects are decrypted in memory.
 4. **Rewrite** — the decrypted content is serialized into a new PDF with the encryption dictionary removed.
 5. **Download** — the unlocked PDF is offered as a download. No data is transmitted to any server.
@@ -71,6 +71,6 @@ PDF encryption wraps the document's content streams in a symmetric cipher. When 
 
 **Can I unlock a PDF that only has edit/print restrictions (no open password)?** Yes. Some PDFs have no open password but restrict printing or copying text. These are called owner-password-restricted PDFs. If you encounter this type, the tool can remove those restrictions when you provide the owner password.
 
-**What happens if I enter the wrong password?** PDF-lib will return a decryption error and the tool will display a clear message. Nothing is downloaded.
+**What happens if I enter the wrong password?** The decryption library returns an error and the tool displays a clear message. Nothing is downloaded.
 
 **Does the tool log or store passwords?** No. The password field value exists only in your browser's memory for the duration of the decryption operation and is never transmitted or stored anywhere.

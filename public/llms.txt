@@ -1,12 +1,12 @@
 # kittokit
 
-> kittokit is a multilingual platform of fast browser-based tools — converters, calculators, file utilities. Every tool runs fully on the user's device: no upload, no sign-in, no tracking, no ads in Phase 1.
+> kittokit is a multilingual platform of fast browser-based tools — converters, calculators, file utilities. Every tool runs fully on the user's device: no upload, no sign-in, no tracking.
 
 ## About
 
 - Domain: https://kittokit.com
-- Languages: German (live). English (Phase 3, live).
-- Tech stack: Astro 5 SSG + Svelte 5 + Tailwind. Pure-client compute (WebCodecs, transformers.js worker fallback for ML tools).
+- Languages: German and English are live; more languages in development.
+- Tech stack: Astro 5 SSG + Svelte 5 + Tailwind. Pure-client compute (WebCodecs, WebGPU/WebAssembly worker fallback for ML tools).
 - Privacy posture: zero server-side processing for user input. No analytics without explicit consent. No third-party fonts or scripts on critical path.
 - License of content: tool descriptions and how-to articles are CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 - Generated: 2026-04-26

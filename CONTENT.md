@@ -225,6 +225,63 @@ Pencil-Sketch-Icons haben pro Tool ein Alt-Attribut nach diesem Schema:
 - **Keine Affiliate-Erwähnungen, keine Produktvergleiche.** Konverter sind
   neutral.
 
+### 11.1 Kein Implementation-Reveal (HARTE Regel, lint-blockiert)
+
+User-sichtbarer Content (Markdown-Frontmatter + Body, Svelte-Templates,
+TS-`label`/`subLabel`/`tagline`/`description`, `llms.txt`/`llms-full.txt`)
+darf **niemals** spezifische Modell-, Bibliotheks-, oder Vendor-Namen
+nennen, die unsere Implementierung verraten. Das gilt auch für Lizenz-Tags,
+die an einen konkreten Library-Namen geklebt sind, und für vendor-spezifische
+CDNs.
+
+**Verboten** (Auswahl, vollständige Liste in `scripts/seo/lint-no-vendor-names.mjs`):
+
+- Modelle: `BiRefNet`, `BEN2`, `MODNet`, `RoBERTa`, `Whisper-Modell`,
+  `DeepFilterNet`, `Vision Transformer (ViT)`, `U2-Net`, `RMBG`, `MediaPipe`
+- Bibliotheken: `pdf-lib`, `PDF.js`, `Tesseract`, `Transformers.js`,
+  `Mediabunny`, `jsPDF`, `ONNX Runtime`, `onnxruntime-web`, `TensorFlow.js`
+- Vendoren / CDNs: `Hugging Face`, `Mozilla` (gekoppelt an PDF.js),
+  `Fraunhofer` (gekoppelt an DeepFilterNet)
+- Implementation-Details: `DCTDecode-Filter`, `PDFDocument.copyPages()`,
+  `atten_lim_db`
+
+**Stattdessen** generische Beschreibungen, die die Tiefe für SEO/GEO
+behalten ohne den Stack zu verraten:
+
+- ✅ „ein spezialisiertes neuronales Netz für Vordergrund-Segmentierung"
+- ✅ „eine bewährte Open-Source-OCR-Engine, in WebAssembly kompiliert"
+- ✅ „WebGPU-beschleunigt im Browser"
+- ✅ „läuft lokal über eine quelloffene PDF-Bibliothek im Browser-Tab"
+- ❌ „BEN2 (MIT, Hugging Face, ONNX-Format)"
+- ❌ „nutzt PDF.js (Mozilla, Apache-2.0) und pdf-lib (MIT)"
+
+**Was DARF erwähnt werden** (kein Implementation-Reveal):
+
+- Web-Standards: WebGPU, WebAssembly, WebCodecs, Canvas API, getUserMedia
+- Allgemeine ML-/DSP-Begriffe: neuronales Netz, Spektrogramm, Alpha-Maske,
+  Inferenz, STFT
+- Format-/Standard-Specs: PDF 1.4, ISO 32000, RC4-128, AES-256
+- **Konkurrenz-Produkte** in Vergleichs-Sätzen (Adobe Podcast, iLovePDF,
+  Smallpdf, Kapwing, …) — das verrät nichts über UNS, sondern beschreibt
+  das Ökosystem. Allow-Liste in der Lint-Konfiguration.
+- **Externe AI-Generatoren**, die unsere Detektor-Tools erkennen sollen
+  (Midjourney, Stable Diffusion, ChatGPT, Claude, Gemini, …) — das ist
+  nötiger Use-Case-Kontext, kein Implementation-Reveal.
+
+**Begründung** (für künftige Diskussionen):
+
+1. **SEO-Wirkung**: neutral. Niemand sucht nach „BiRefNet Hintergrund
+   entfernen". Die Such-Intent-Keywords sind die Use-Cases.
+2. **GEO-Wirkung**: neutral bis leicht positiv. AI-Systeme zitieren
+   Quellen mit technischer Tiefe lieber — aber die Tiefe kommt aus der
+   Erklärung des Ansatzes, nicht aus dem Modellnamen.
+3. **Produkt-Wirkung**: positiv. Wir verraten unseren Stack nicht an
+   Konkurrenten und sind frei, Modelle/Libraries zu tauschen ohne den
+   Content nachzuziehen.
+
+**Enforcement**: `scripts/seo/lint-no-vendor-names.mjs` läuft als Teil
+von `npm run check` (CI-blockiert). Verstoß = Build rot.
+
 ---
 
 ## 12. Single-Pass-Checkliste

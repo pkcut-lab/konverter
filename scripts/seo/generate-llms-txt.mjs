@@ -118,13 +118,13 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 const llmsTxt = `# kittokit
 
-> kittokit is a multilingual platform of fast browser-based tools — converters, calculators, file utilities. Every tool runs fully on the user's device: no upload, no sign-in, no tracking, no ads in Phase 1.
+> kittokit is a multilingual platform of fast browser-based tools — converters, calculators, file utilities. Every tool runs fully on the user's device: no upload, no sign-in, no tracking.
 
 ## About
 
 - Domain: ${SITE}
-- Languages: German (live). English (Phase 3, live).
-- Tech stack: Astro 5 SSG + Svelte 5 + Tailwind. Pure-client compute (WebCodecs, transformers.js worker fallback for ML tools).
+- Languages: German and English are live; more languages in development.
+- Tech stack: Astro 5 SSG + Svelte 5 + Tailwind. Pure-client compute (WebCodecs, WebGPU/WebAssembly worker fallback for ML tools).
 - Privacy posture: zero server-side processing for user input. No analytics without explicit consent. No third-party fonts or scripts on critical path.
 - License of content: tool descriptions and how-to articles are CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 - Generated: ${BUILD_DATE}
@@ -154,7 +154,7 @@ for (const tool of tools) {
 
 let llmsFullTxt = `# kittokit — full inventory
 
-> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. German and English are live; more languages in Phase 3+.
+> Multilingual platform of fast, browser-based tools. Every tool runs fully on the user's device — no upload, no sign-in, no tracking. German and English are live; more languages in development.
 
 ## Site
 
@@ -167,7 +167,7 @@ let llmsFullTxt = `# kittokit — full inventory
 ## Privacy & licensing
 
 - All compute happens client-side. ML tools load model weights from a public model CDN once and cache them in the browser; the user's data never leaves the device.
-- No analytics in Phase 1. Phase 2 introduces consented, privacy-respecting analytics.
+- No analytics without explicit consent. When consent is given, analytics are privacy-respecting (no cross-site tracking, no PII).
 - Tool descriptions and how-to articles: CC-BY 4.0 unless otherwise marked. Cite the canonical URL.
 
 `;

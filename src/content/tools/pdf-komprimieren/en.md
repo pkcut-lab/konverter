@@ -13,7 +13,7 @@ howToUse:
   - "Review the before/after file size comparison, then download your compressed PDF."
 faq:
   - q: "Is my PDF sent to a server for compression?"
-    a: "No. All compression runs in your browser using PDF-lib and image re-encoding libraries. Your file never leaves your device."
+    a: "No. All compression runs in your browser using on-device libraries. Your file never leaves your device."
   - q: "Will compression affect text readability?"
     a: "Text and vector content are not re-encoded, so they remain perfectly crisp. Only raster images are compressed, and Low/Medium modes keep them sharp for screen and print."
   - q: "How much smaller will my file get?"

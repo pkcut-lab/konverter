@@ -112,6 +112,7 @@ Muss green sein. `DennisJedlicka` ist in diesem Workspace **verboten**.
 6. Design-Approval vor Template-Extraction
 7. Keine externen Network-Dependencies zur Runtime (Ausnahme 7a: ML-File-Tools mit Worker-Fallback, 6 Bedingungen)
 8. Kein thin Content (<300 Wörter abgelehnt)
+9. **Kein Implementation-Reveal in user-sichtbarem Content** (CONTENT.md §11.1, lint-blockiert via `scripts/seo/lint-no-vendor-names.mjs`). Modell-, Bibliotheks- und Vendor-Namen (BiRefNet, BEN2, Whisper, RoBERTa, Tesseract, pdf-lib, PDF.js, MODNet, Mediabunny, DeepFilterNet, Hugging Face, Mozilla/Fraunhofer-an-Modell-gekoppelt, ONNX Runtime, Transformers.js, …) gehören nicht in `.md`-Frontmatter/-Body, Svelte-Templates oder UI-Strings (`label`/`subLabel`/`tagline`). Stattdessen generisch: „spezialisiertes neuronales Netz", „bewährte Open-Source-Bibliothek", „WebGPU-beschleunigt". Web-Standards (WebGPU, WebAssembly, WebCodecs), allgemeine ML-/DSP-Begriffe und Format-Specs sind erlaubt. Konkurrenz-Produkte in Vergleichs-Sätzen ebenfalls. Wenn der Lint rot wird → Wording ändern, nicht den Lint anfassen.
 
 ## graphify
 
