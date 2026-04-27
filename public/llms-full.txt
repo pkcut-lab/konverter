@@ -8,7 +8,7 @@
 - Home (English): https://kittokit.com/en
 - Sitemap index: https://kittokit.com/sitemap-index.xml
 - Brand spelling: kittokit (lowercase, one word).
-- Generated: 2026-04-26
+- Generated: 2026-04-27
 
 ## Privacy & licensing
 
