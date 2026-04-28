@@ -565,6 +565,111 @@ Refactor auf Worker-Pattern wäre Scope-Creep:
 Diese bleiben Main-Thread bis ein konkreter UX-Pain auftritt
 (>5 unabhängige User-Reports zu „UI-Freeze" pro Tool).
 
+### 10.9 Mobile-Awareness-Pattern (gelockt 2026-04-28)
+
+ML-Tools laufen auf Mobilgeräten in einer harten Umgebung: iOS Safari
+crasht reproduzierbar bei ~100-200 MB WASM-Allokation
+([lapcatsoftware Jan 2026](https://lapcatsoftware.com/articles/2026/1/7.html)),
+Hugging-Face-CDN hat Carrier-NAT-Range-Bugs, und `navigator.deviceMemory`
+existiert nur in Chromium. Der bisherige Default „Modell laden, sehen
+was passiert" produziert kryptische `Failed to fetch`-Fehler ohne
+Recovery-Pfad. Ab 2026-04-28 ist jede neue ML-Tool-Implementation
+verpflichtet, dem Mobile-Awareness-Pattern zu folgen.
+
+**Drei Foundation-Module** liefern die Bausteine:
+
+- **`src/lib/tools/ml-device-detect.ts`** — `detectMlDevice()` →
+  `DeviceProbe` mit `class: 'fast-mobile' | 'capable-mobile' | 'desktop'`,
+  `hasWebGPU`, `hasReducedRam`, `isSlowConnection`, `isMobileUA`. Pure,
+  keine Side-Effects, voll testbar mit Mock-Navigator.
+- **`src/lib/tools/ml-variants.ts`** — `ML_VARIANTS[toolId]: MlVariant[]`
+  mit `id: 'fast' | 'quality' | 'pro'`, `modelId`, `dtype`, `sizeBytes`,
+  `license`, `allowedFor: DeviceClass[]`. Sizes sind **am Hugging-Face-Repo
+  verifiziert**, keine Schätzungen. License muss MIT/Apache-2.0/BSD/CC-BY
+  sein — AGPL/CC-BY-NC sind KO (AdSense-inkompatibel).
+- **`src/lib/tools/ml-mirror.ts`** — `applyMlMirrorIfConfigured(env)`
+  schaltet `env.remoteHost` von `@huggingface/transformers` auf einen
+  Cloudflare-R2-Mirror, wenn `PUBLIC_ML_MIRROR_HOST` (Build-Time) oder
+  `window.__KITTOKIT_ML_MIRROR_HOST__` (Runtime) gesetzt ist. R2 ist
+  Pflicht-Plan, kein Pages-Static (25-MiB-Asset-Limit).
+
+**Vier Pflichten pro neuem ML-Tool:**
+
+1. **Variant-Map deklarieren** in `ml-variants.ts`. Mindestens 1 Eintrag
+   (auch für Single-Variant-Tools — der Eintrag treibt die Banner-
+   Größenanzeige). Größen direkt aus dem HF-Repo Files-Tab ablesen.
+2. **Lizenz-Field korrekt setzen.** Vor dem ersten Commit das Modell-
+   README öffnen und die SPDX-Lizenz exakt eintragen. AGPL / CC-BY-NC /
+   non-commercial / share-alike → KO, alternatives Modell suchen.
+3. **`runtime.variants` exposen** in `tool-runtime-registry.ts`. Der
+   FileTool-Component (oder Custom-Component) liest das Feld und rendert
+   automatisch den Banner mit Größe + (optional) Variant-Switcher.
+4. **`prepare(onProgress, opts)` akzeptieren.** Tool muss `opts.variant`
+   zur Modell-Wahl benutzen und `opts.stallTimeoutMs` an seinen
+   Watchdog weiterreichen. Mobile-Default ist 240 s, Desktop 60 s
+   (`pickStallTimeout(probe)` in `ml-device-detect.ts`).
+
+**Anti-Patterns (CI lehnt ab):**
+
+- Hartcodierte Modell-IDs ohne ML_VARIANTS-Eintrag in einem neuen Tool.
+- `dtype: 'fp32'` ohne expliziten Begründungs-Kommentar — FP32 ist auf
+  Mobile praktisch immer das falsche Default. Stattdessen Q4F16 / Q8 /
+  FP16, je nach Modell. Kommentar zwingend, wenn FP32 doch nötig ist.
+- Modell-Größe `>200 MB` ohne `allowedFor: ['desktop']`-Constraint —
+  iOS-Crash-Garant.
+- WebGPU-Forcing (`device: 'webgpu'`) auf Mobile-Variants — `'fast'`
+  variants laufen explizit `wasm`, weil iOS-Safari-WebGPU unter
+  Memory-Druck fragil bleibt.
+- Hex-CDN-Pfade direkt im Tool-Code (`https://huggingface.co/...`) — der
+  Mirror-Switch greift nur über `env.remoteHost`. Wer per `fetch()`
+  am `pipeline()`-Setup vorbei direkt von HF lädt, umgeht den
+  R2-Fallback und hängt User in DE im Carrier-Range-Bug fest.
+
+**FileTool-Component-Verträge (für FileTool-typed Tools):**
+
+- Banner zeigt `formatVariantSize(activeVariant.sizeBytes)` als
+  „6,6 MB" / „115 MB" / „219 MB" — NBSP zwischen Zahl und Einheit.
+- Variant-Switcher rendert nur, wenn `runtime.variants.length > 1`.
+  Single-Variant-Tools sehen nur die Größenangabe ohne Buttons.
+- Stall-Recovery: bei `StallError` → „Erneut versuchen" + (falls
+  `activeVariant.id !== 'fast'`) „Zur Schnell-Variante wechseln".
+- `runtime.isPreparedFor(variant)` ist die Variant-aware Cache-Probe;
+  Variant-Switch invalidiert die alte Pipeline via
+  `runtime.clearVariantCache(variant)`.
+
+**Custom-Component-Verträge (für `formatter` / Custom-typed Tools):**
+
+`AudioTranskriptionTool`, `KiTextDetektorTool`, `KiBildDetektorTool` und
+ähnliche eigene UIs müssen den Banner selbst rendern — die generische
+FileTool-Logik greift nicht. Pflicht-Inhalte:
+
+- Modell-Größe via `formatVariantSize(...)` aus `ML_VARIANTS[toolId]`.
+- Banner-Copy: `t(lang).fileTool.mlBannerOneTime` mit `{size}` ersetzen.
+- Variant-Switcher (falls mehrere Varianten): `t(lang).fileTool.mlBannerSwitchFast`
+  / `mlBannerSwitchQuality` / `mlBannerSwitchPro`.
+- Stall-Recovery analog: `mlStalledTitle` + `mlStalledRetry` +
+  `mlStalledFallback` aus dem `fileTool`-i18n-Namespace.
+
+**Bestehende Tools — Migrations-Status (2026-04-28):**
+
+| Tool | Komp | Variants | dtype-fix | Banner-UI | Notes |
+|---|---|---|---|---|---|
+| `remove-background` | FileTool | ✅ 3 | n/a | ✅ FileTool | MODNet/BiRefNet_lite/BEN2 |
+| `video-bg-remove` | FileTool | ✅ 2 | n/a | ✅ FileTool | iOS≤25 Hard-Block via preflight |
+| `image-to-text` | FileTool | ✅ 2 | n/a | ✅ FileTool | Tesseract Lazy-Lang |
+| `speech-enhancer` | FileTool | ✅ 1 | n/a | ✅ FileTool | DFN3 ~10 MB |
+| `audio-transkription` | Custom | ✅ 3 | ✅ FP32→Q4F16 | ⏳ Custom-Component-Banner offen | Whisper Q4F16 |
+| `ki-text-detektor` | Custom | ✅ 1 | ✅ default→Q4F16 | ⏳ Custom-Component-Banner offen | TMR Q4F16 |
+| `ki-bild-detektor` | Custom | ✅ 1 | ✅ License-Migration | ⏳ Custom-Component-Banner offen | Deep-Fake-Detector-v2 |
+
+Custom-Component-Banner ist offene Schuld; verfolgt in PROGRESS.md.
+
+**Hosting-Strategie:** HF-CDN bleibt Default (90 % der User stabil). R2-
+Mirror ist Code-Ready, **Provisioning** (Bucket, Custom-Domain
+`models.kittokit.tld`, CORS) macht der User vor AdSense-Phase-2-Launch.
+Nach Provisioning: `PUBLIC_ML_MIRROR_HOST=https://models.kittokit.tld`
+in den CF-Pages-Build-Env.
+
 ## 11. Phase-3 Prep — vor dem Hinzufügen einer dritten Sprache
 
 > **Wann lesen:** Bevor du `es`, `fr`, `pt-br` oder eine andere Sprache zu
@@ -635,6 +740,102 @@ grep -rn "TODO(phase-3)" src/ astro.config.mjs
 - Refactor ohne konkreten Test-Case (= echte dritte Sprache) kann Bugs
   einführen, die niemand bemerkt. Diese Liste arbeitest du im selben
   PR ab, in dem du die neue Sprache hinzufügst.
+
+## 12. Mobile-Overflow-Defense (4-Layer-Pattern, gelockt 2026-04-28)
+
+> **Wann lesen:** Vor jedem neuen Tool-Component, Layout-Refactor oder
+> wenn Mobile-Layout-Bugs auftreten. Diese vier Schichten greifen
+> ineinander; das Entfernen einer Schicht öffnet einen Klassen-Bug.
+> Quelle: `PROGRESS.md`-Eintrag 2026-04-28 + Commits `7b7a941`..`12657a2`.
+
+Mobile-Viewports (320–430 px) sind unforgiving: ein einzelner
+unbreakable String (Datei-Hash, lange URL, Compound-Word) sprengt das
+Layout, und die Folge ist horizontaler Scroll auf der ganzen Seite. Wir
+verteidigen uns auf vier orthogonalen Ebenen, von „Browser sieht
+zuerst" bis „CI fängt Regressionen".
+
+### 12.1 Die vier Schichten
+
+**Layer 1 — Viewport-Meta** (`src/layouts/BaseLayout.astro:91`):
+`viewport-fit=cover` aktiviert iOS-Notch-Awareness, ohne das greifen
+`env(safe-area-inset-*)`-Werte nicht. Pflicht-Set für jede Layout-Page.
+
+**Layer 2 — Globaler CSS-Reset** (`src/styles/global.css:8-65`):
+
+```css
+html { scrollbar-gutter: stable; }   /* Desktop-CLS-Schutz */
+body {
+  overflow-x: clip;                  /* maskiert horizontalen Scroll */
+  overflow-wrap: anywhere;           /* zählt Bruchstellen in min-content */
+}
+pre { overflow-wrap: normal; overflow-x: auto; }
+img, video, iframe, canvas, picture { max-inline-size: 100%; block-size: auto; }
+svg { max-inline-size: 100%; }
+svg:not([width]):not([height]) { block-size: auto; }
+```
+
+Drei Entscheidungen sind nicht verhandelbar:
+- **`clip` statt `hidden`, auf `<body>` statt `<html>`.** `hidden` erzeugt
+  einen neuen Scroll-Container und bricht `position: sticky` am Header.
+  `clip` nicht. Auf `<body>` (nicht `<html>`) damit iOS-Rubber-Band
+  sauber bleibt.
+- **`overflow-wrap: anywhere`, nicht `break-word`.** `anywhere` zählt
+  Soft-Break-Punkte in der `min-content`-Berechnung — nur damit sprengen
+  lange URLs/Hashes/Compounds Flex-/Grid-Items NICHT mehr. `break-word`
+  ist non-standard und wirkt zu spät.
+- **SVG-Split:** generisches `block-size: auto` würde explizite
+  `width="26"`-Attribute überschreiben (Brand-Mark, ThemeToggle-Icons).
+  Daher Cap immer (`max-inline-size: 100%`), aber `block-size: auto`
+  nur, wenn keine expliziten Dimensionen am SVG hängen.
+
+**Layer 3 — Tactical Leaf-Fixes** (Komponente-lokal):
+- `safe-area-inset` auf jedem `position: sticky`/`fixed`-Element gepaart
+  mit `max(var(--space-*), env(safe-area-inset-*))`-Padding. Beispiele:
+  `.site-main`, `.skip-to-content` (`BaseLayout.astro`), `.popular-bar`
+  (`Header.astro`), `.banner` (`CookieBanner.svelte`).
+- `min-width: 0` auf JEDES Flex-/Grid-Item, dessen 1fr-Track potentiell
+  unbreakable Content trägt (Filenames, Hashes, lange Werte). Ohne das
+  expandiert das `1fr`-Track auf den längsten unteilbaren String.
+- `overflow-x: clip` (nicht `hidden`) auf jedem Wrapper, der
+  `position: sticky`-Eltern hat und ein eigener Layer-Container werden
+  könnte (z.B. `.popular-bar` unter dem sticky `.site-header`).
+
+**Layer 4 — Playwright-Gate**
+(`tests/e2e/no-horizontal-overflow.spec.ts`):
+12 repräsentative Routen × 6 Mobile-Viewports = 72 Tests. Vor der
+Messung wird der Layer-2-Mask temporär gelifted (`overflow-x: visible`
+auf `<html>` + `<body>`), dann `scrollWidth - clientWidth` am `<html>`
+gemessen. Bei Overflow > 0 listet der Error die Top-10 offending
+Elements (tag/id/class/overshoot-px) als direkten Fix-Hint. Eingebunden
+via `npm run test:overflow`. CI-Schritt in
+`.github/workflows/deploy.yml` (Job `verify`) blockt Mobile-Layout-
+Regressionen vor Merge.
+
+### 12.2 Pflichten beim Bauen einer neuen Komponente
+
+- Jedes Flex/Grid-Item, das `1fr`-Track + Text mit potentiell langen
+  Strings (Filenames, Hashes, URLs, Compound-Words) trägt, bekommt
+  `min-width: 0`.
+- Jedes `position: sticky`/`fixed`-Element koppelt sein Padding mit
+  `safe-area-inset` über den `max(var(--space-*), env(safe-area-inset-*))`
+  -Pattern.
+- Component-lokales `overflow-wrap: break-word` oder `word-break:
+  break-word` ist verboten — der globale Reset aus §12.1 deckt das ab.
+  `word-break: break-all` ist erlaubt **nur** für Generator-Output
+  (Passwords, Hashes), wo jeder Char ein gültiger Break-Punkt ist.
+- Bei einem neuen Layout-Pattern (anderer struktureller Container als
+  bestehende Tools): Route in `tests/e2e/no-horizontal-overflow.spec.ts`
+  → `ROUTES` ergänzen. Bei einem neuen Tool desselben Typs **nicht**
+  ergänzen — die Pattern-Repräsentation reicht.
+
+### 12.3 Bei Mobile-Layout-Bug — Debug-Reihenfolge
+
+1. `npm run test:overflow` lokal — Error-Output listet Tag/Klasse/
+   Overshoot-px der offending Elements direkt.
+2. Im Inspector: Lift Layer 2 manuell (`document.body.style.overflowX =
+   'visible'`) und scroll horizontal — was sprengt das Layout?
+3. Fix nach §12.2-Pflichten am offending Element. Niemals den globalen
+   Layer-2-Reset abschwächen.
 
 ## Build-Gates
 

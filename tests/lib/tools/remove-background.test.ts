@@ -13,6 +13,7 @@ vi.mock('@huggingface/transformers', () => ({
   RawImage: {
     fromBlob: vi.fn(async () => ({ data: new Uint8Array(64 * 64 * 4), width: 64, height: 64, channels: 4 })),
   },
+  env: { remoteHost: 'https://huggingface.co' },
 }));
 
 function makeImageBytes(): Uint8Array {
@@ -185,6 +186,68 @@ describe('remove-background pure module', () => {
     await vi.advanceTimersByTimeAsync(1100);
     await expect(p).rejects.toThrow(/stall/i);
     vi.useRealTimers();
+  });
+
+  it('prepareBackgroundRemovalModel routes the configured variant to pipeline()', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'fast' });
+    expect(pipelineSpy.mock.calls[0][1]).toBe('Xenova/modnet');
+    const opts = pipelineSpy.mock.calls[0][2] as Record<string, unknown>;
+    expect(opts.dtype).toBe('q8');
+    // fast forces wasm even if WebGPU is available.
+    expect(opts.device).toBe('wasm');
+  });
+
+  it('prepareBackgroundRemovalModel quality variant uses BiRefNet_lite-FP16', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'quality' });
+    expect(pipelineSpy.mock.calls[0][1]).toBe('onnx-community/BiRefNet_lite-ONNX');
+    const opts = pipelineSpy.mock.calls[0][2] as Record<string, unknown>;
+    expect(opts.dtype).toBe('fp16');
+  });
+
+  it('prepareBackgroundRemovalModel pro variant uses BEN2-FP16', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'pro' });
+    expect(pipelineSpy.mock.calls[0][1]).toBe('onnx-community/BEN2-ONNX');
+  });
+
+  it('isPreparedFor distinguishes variants', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    expect(m.isPreparedFor('fast')).toBe(false);
+    expect(m.isPreparedFor('quality')).toBe(false);
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'fast' });
+    expect(m.isPreparedFor('fast')).toBe(true);
+    expect(m.isPreparedFor('quality')).toBe(false);
+    expect(m.getActiveVariant()).toBe('fast');
+  });
+
+  it('switching variant loads a new pipeline instance', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'fast' });
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'quality' });
+    expect(pipelineSpy).toHaveBeenCalledTimes(2);
+    expect(m.isPreparedFor('fast')).toBe(true);
+    expect(m.isPreparedFor('quality')).toBe(true);
+  });
+
+  it('clearVariantCache drops the named variant only', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'fast' });
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'quality' });
+    m.clearVariantCache('fast');
+    expect(m.isPreparedFor('fast')).toBe(false);
+    expect(m.isPreparedFor('quality')).toBe(true);
+  });
+
+  it('clearVariantCache() with no arg drops all variants', async () => {
+    const m = await import('../../../src/lib/tools/remove-background');
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'fast' });
+    await m.prepareBackgroundRemovalModel(() => undefined, { variant: 'quality' });
+    m.clearVariantCache();
+    expect(m.isPreparedFor('fast')).toBe(false);
+    expect(m.isPreparedFor('quality')).toBe(false);
+    expect(m.getActiveVariant()).toBe(null);
   });
 
   it('progress events reset the stall watchdog', async () => {

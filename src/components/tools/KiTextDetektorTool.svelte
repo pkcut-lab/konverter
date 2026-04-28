@@ -3,12 +3,20 @@
   import { loadKiTextDetektor } from '../../lib/tools/type-runtime-registry';
   import Loader from '../Loader.svelte';
   import type { ProgressEvent, KiTextResult } from '../../lib/tools/ki-text-detektor';
+  import type { Lang } from '../../lib/i18n/lang';
+  import MlBanner from '../MlBanner.svelte';
+  import { ML_VARIANTS } from '../../lib/tools/ml-variants';
 
   interface Props {
     config: FormatterConfig;
     placeholder?: string;
+    lang?: Lang;
   }
-  let { config, placeholder = 'Füge den Text ein, den du auf KI prüfen möchtest...' }: Props = $props();
+  let {
+    config,
+    placeholder = 'Füge den Text ein, den du auf KI prüfen möchtest...',
+    lang = 'de',
+  }: Props = $props();
 
   let rawInput = $state<string>('');
   let phase = $state<'idle' | 'preparing' | 'analyzing' | 'done' | 'error'>('idle');
@@ -17,6 +25,8 @@
   let prepareProgress = $state<ProgressEvent>({ loaded: 0, total: 0 });
 
   let module: typeof import('../../lib/tools/ki-text-detektor') | null = null;
+  // Single-variant tool — banner just discloses the size; no switcher.
+  const variants = ML_VARIANTS['ki-text-detektor'] ?? [];
 
   async function analyze() {
     if (!rawInput.trim()) return;
@@ -86,6 +96,9 @@
 
 <div class="ki-tool">
   {#if phase === 'idle' || phase === 'error'}
+    {#if variants.length > 0}
+      <MlBanner {lang} {variants} />
+    {/if}
     <div class="ki-tool__input-panel">
       <div class="ki-tool__label-row">
         <label class="ki-tool__label" for="ki-input">Text eingeben</label>

@@ -213,6 +213,18 @@ export interface UiStrings {
     errorModelLoad: string;
     errorConversion: string;
     errorFormatChange: string;
+    // Mobile-aware ML banner & retry UI (added 2026-04-28).
+    mlBannerOneTime: string;       // "Lädt einmalig {size}-Modell. …"
+    mlBannerSwitchQuality: string; // "Qualität wechseln ({size})"
+    mlBannerSwitchFast: string;    // "Schnell-Variante ({size})"
+    mlBannerSwitchPro: string;     // "Maximale Qualität ({size})"
+    mlStalledTitle: string;        // "Download stockt."
+    mlStalledRetry: string;        // "Erneut versuchen"
+    mlStalledFallback: string;     // "Zur Schnell-Variante wechseln"
+    mlVariantFast: string;         // "Schnell"
+    mlVariantQuality: string;      // "Qualität"
+    mlVariantPro: string;          // "Maximum"
+    mlActiveVariant: string;       // "Aktiv: {variant} · {size}"
   };
 
   // ── Validation / error messages ────────────────────────────────
@@ -1242,6 +1254,17 @@ const strings: Record<Lang, UiStrings> = {
       errorModelLoad: 'Modell-Lade-Fehler: {msg}',
       errorConversion: 'Konvertierung fehlgeschlagen: {msg}',
       errorFormatChange: 'Format-Wechsel fehlgeschlagen.',
+      mlBannerOneTime: 'Lädt einmalig ein {size}-Modell. Datenverbrauch nur beim ersten Mal — danach offline nutzbar.',
+      mlBannerSwitchQuality: 'Qualität wechseln ({size})',
+      mlBannerSwitchFast: 'Schnell-Variante ({size})',
+      mlBannerSwitchPro: 'Maximale Qualität ({size})',
+      mlStalledTitle: 'Download stockt.',
+      mlStalledRetry: 'Erneut versuchen',
+      mlStalledFallback: 'Zur Schnell-Variante wechseln',
+      mlVariantFast: 'Schnell',
+      mlVariantQuality: 'Qualität',
+      mlVariantPro: 'Maximum',
+      mlActiveVariant: 'Aktiv: {variant} · {size}',
     },
 
     errors: {
@@ -2163,6 +2186,17 @@ const strings: Record<Lang, UiStrings> = {
       errorModelLoad: 'Model load error: {msg}',
       errorConversion: 'Conversion failed: {msg}',
       errorFormatChange: 'Format change failed.',
+      mlBannerOneTime: 'One-time {size} model download. Mobile data only on the first run — after that the tool works offline.',
+      mlBannerSwitchQuality: 'Switch to quality ({size})',
+      mlBannerSwitchFast: 'Switch to fast variant ({size})',
+      mlBannerSwitchPro: 'Maximum quality ({size})',
+      mlStalledTitle: 'Download stalled.',
+      mlStalledRetry: 'Retry',
+      mlStalledFallback: 'Switch to fast variant',
+      mlVariantFast: 'Fast',
+      mlVariantQuality: 'Quality',
+      mlVariantPro: 'Maximum',
+      mlActiveVariant: 'Active: {variant} · {size}',
     },
 
     errors: {

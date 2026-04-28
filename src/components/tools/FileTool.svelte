@@ -8,6 +8,17 @@
   import type { Lang } from '../../lib/i18n/lang';
   import { INTL_LOCALE_MAP } from '../../lib/i18n/locale-maps';
   import { resolveLabel } from '../../lib/tools/label';
+  import {
+    detectMlDevice,
+    pickStallTimeout,
+    type DeviceProbe,
+  } from '../../lib/tools/ml-device-detect';
+  import {
+    pickDefaultVariant,
+    formatVariantSize,
+    type VariantId,
+    type MlVariant,
+  } from '../../lib/tools/ml-variants';
 
   interface Props {
     config: FileToolConfig;
@@ -46,6 +57,15 @@
   let isDragging = $state<boolean>(false);
   let pasteStatus = $state<'idle' | 'error'>('idle');
   let fileInputEl: HTMLInputElement | undefined = $state();
+  // Mobile-aware ML state. `deviceProbe` is null until the WebGPU adapter
+  // probe resolves (one-shot, runs on first $effect tick — does not block
+  // the dropzone render). `selectedVariant` defaults to the auto-picked
+  // variant for the device class; the variant-switcher banner overrides it.
+  // `stalled` flips on `StallError` and unblocks the retry-recovery banner.
+  let deviceProbe = $state<DeviceProbe | null>(null);
+  let selectedVariant = $state<VariantId | null>(null);
+  let stalled = $state<boolean>(false);
+  let lastFileForRetry = $state<File | null>(null);
   const initialToggles: Record<string, boolean> = {};
   for (const t of config.toggles ?? []) initialToggles[t.id] = false;
   let toggleValues = $state<Record<string, boolean>>(initialToggles);
@@ -58,6 +78,33 @@
   }
 
   const acceptAttr = $derived(config.accept.join(','));
+  // ML-variant-derived UI helpers.
+  const variants = $derived<MlVariant[] | undefined>(getRuntime(config.id)?.variants);
+  const activeVariant = $derived<MlVariant | undefined>(
+    variants && selectedVariant
+      ? variants.find((v) => v.id === selectedVariant)
+      : variants?.[0],
+  );
+  const fastVariant = $derived<MlVariant | undefined>(
+    variants?.find((v) => v.id === 'fast'),
+  );
+  // Variants the user can switch to from the active one (excluding the active).
+  const switchableVariants = $derived.by<MlVariant[]>(() => {
+    if (!variants || !activeVariant) return [];
+    return variants.filter((v) => v.id !== activeVariant.id);
+  });
+
+  $effect(() => {
+    let cancelled = false;
+    void detectMlDevice().then((probe) => {
+      if (cancelled) return;
+      deviceProbe = probe;
+      if (variants && variants.length > 0 && !selectedVariant) {
+        selectedVariant = pickDefaultVariant(config.id, probe);
+      }
+    });
+    return () => { cancelled = true; };
+  });
   // Dropzone title adapts to the tool's category. Falls back to the generic
   // subject when the category is not recognised.
   const dropzoneSubject = $derived.by(() => {
@@ -171,6 +218,42 @@
     progress = null;
     convertStartMs = null;
     clipboardState = 'idle';
+    stalled = false;
+    lastFileForRetry = null;
+  }
+
+  // Drop the cached pipeline for the active variant so retry actually re-fetches.
+  // Used after a StallError when the user wants to try the same variant again,
+  // and when switching to the fast-fallback variant.
+  function clearActiveVariantCache() {
+    if (selectedVariant && runtime?.clearVariantCache) {
+      runtime.clearVariantCache(selectedVariant);
+    }
+  }
+
+  async function retryAfterStall() {
+    stalled = false;
+    errorMessage = '';
+    clearActiveVariantCache();
+    if (lastFileForRetry) {
+      void processFile(lastFileForRetry);
+    }
+  }
+
+  async function fallbackToFastVariant() {
+    stalled = false;
+    errorMessage = '';
+    clearActiveVariantCache();
+    selectedVariant = 'fast';
+    if (lastFileForRetry) {
+      void processFile(lastFileForRetry);
+    }
+  }
+
+  function chooseVariant(id: VariantId) {
+    if (selectedVariant === id) return;
+    clearActiveVariantCache();
+    selectedVariant = id;
   }
 
   // ETA formatter — MM:SS when <1 h, HH:MM:SS otherwise. Zero-padded.
@@ -247,13 +330,34 @@
       sourceDims = await probeVideoDims(bytes);
     }
 
-    const alreadyReady = runtime?.isPrepared?.() ?? false;
+    // Variant-aware cache check: if the runtime exposes isPreparedFor and we
+    // have a selected variant, prefer the per-variant flag. Otherwise fall
+    // back to the global isPrepared. This skips the preparing-phase on
+    // revisit only when the *same* variant is cached.
+    const alreadyReady =
+      selectedVariant && runtime?.isPreparedFor
+        ? runtime.isPreparedFor(selectedVariant)
+        : runtime?.isPrepared?.() ?? false;
     if (runtime?.prepare && !alreadyReady) {
       phase = 'preparing';
+      stalled = false;
+      // Mobile-aware watchdog (240s mobile, 60s desktop) plus the user-picked
+      // variant flow through to the runtime.
+      const stallTimeoutMs = deviceProbe ? pickStallTimeout(deviceProbe) : undefined;
+      const prepOpts: { variant?: VariantId; stallTimeoutMs?: number } = {};
+      if (selectedVariant) prepOpts.variant = selectedVariant;
+      if (stallTimeoutMs !== undefined) prepOpts.stallTimeoutMs = stallTimeoutMs;
       try {
-        await runtime.prepare((e) => { prepareProgress = e; });
+        await runtime.prepare((e) => { prepareProgress = e; }, prepOpts);
       } catch (err) {
-        errorMessage = err instanceof Error ? strings.fileTool.errorModelLoad.replace('{msg}', err.message) : strings.fileTool.errorModelLoad.replace('{msg}', '');
+        const isStall = err instanceof Error && err.name === 'StallError';
+        if (isStall) {
+          stalled = true;
+          lastFileForRetry = file;
+        }
+        errorMessage = err instanceof Error
+          ? strings.fileTool.errorModelLoad.replace('{msg}', err.message)
+          : strings.fileTool.errorModelLoad.replace('{msg}', '');
         phase = 'error';
         return;
       }
@@ -262,10 +366,14 @@
     phase = 'converting';
     progress = null;
     convertStartMs = performance.now();
-    // Merged runtime-config: base slider (quality), chosen preset, all toggle values.
+    // Merged runtime-config: base slider (quality), chosen preset, all toggle
+    // values, plus the resolved ML variant. Tools that don't read mlVariant
+    // ignore it; the few ML-aware ones (`remove-background`, `image-to-text`,
+    // `video-bg-remove`) branch on it inside their process/prepare paths.
     const mergedConfig: Record<string, unknown> = { quality };
     if (config.presets) mergedConfig[config.presets.id] = presetValue;
     for (const t of config.toggles ?? []) mergedConfig[t.id] = toggleValues[t.id] ?? false;
+    if (selectedVariant) mergedConfig.mlVariant = selectedVariant;
     try {
       const outBytes = await processor(
         bytes,
@@ -456,6 +564,30 @@
 </script>
 
 <div class="filetool">
+  {#if (phase === 'idle' || phase === 'error') && !preflightError && variants && activeVariant}
+    <aside class="ml-banner" data-testid="filetool-ml-banner" aria-live="polite">
+      <p class="ml-banner__msg">
+        {strings.fileTool.mlBannerOneTime.replace('{size}', formatVariantSize(activeVariant.sizeBytes))}
+      </p>
+      {#if switchableVariants.length > 0}
+        <div class="ml-banner__actions">
+          {#each switchableVariants as v (v.id)}
+            {@const labelKey =
+              v.id === 'fast' ? 'mlBannerSwitchFast'
+              : v.id === 'pro' ? 'mlBannerSwitchPro'
+              : 'mlBannerSwitchQuality'}
+            <button
+              type="button"
+              class="ml-banner__switch"
+              data-testid="filetool-ml-switch-{v.id}"
+              onclick={() => chooseVariant(v.id)}
+            >{strings.fileTool[labelKey].replace('{size}', formatVariantSize(v.sizeBytes))}</button>
+          {/each}
+        </div>
+      {/if}
+    </aside>
+  {/if}
+
   {#if (phase === 'idle' || phase === 'error') && !preflightError}
     {@const visibleToggles = (config.toggles ?? []).filter((t) =>
       t.visibleIf === undefined ||
@@ -800,6 +932,27 @@
   <div class="result" data-testid="filetool-result" aria-live="polite">
     {#if phase === 'error'}
       <p class="error" data-testid="filetool-error">{errorMessage}</p>
+      {#if stalled}
+        <div class="stall-recovery" data-testid="filetool-stall-recovery">
+          <p class="stall-recovery__title">{strings.fileTool.mlStalledTitle}</p>
+          <div class="stall-recovery__actions">
+            <button
+              type="button"
+              class="btn btn--ghost"
+              data-testid="filetool-stall-retry"
+              onclick={retryAfterStall}
+            >{strings.fileTool.mlStalledRetry}</button>
+            {#if fastVariant && activeVariant && activeVariant.id !== 'fast'}
+              <button
+                type="button"
+                class="btn btn--primary"
+                data-testid="filetool-stall-fallback"
+                onclick={fallbackToFastVariant}
+              >{strings.fileTool.mlStalledFallback}</button>
+            {/if}
+          </div>
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
@@ -1494,6 +1647,76 @@
     font-size: var(--font-size-small);
     color: var(--color-text-subtle);
     letter-spacing: 0.02em;
+  }
+
+  /* ---------- Mobile-aware ML banner (size-disclosure + variant switcher) ----------
+     Sits above the settings/dropzone in idle/error. Refined-Minimalism: no
+     Emoji, no "Tipp:" prefix, no exclamation marks — direct numerics with a
+     mono-tabular label, monospace switcher links. Variant-switcher renders
+     0–N "Schnell-Variante (6,6 MB)" buttons depending on tool's variant matrix. */
+  .ml-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface-sunk);
+  }
+  .ml-banner__msg {
+    margin: 0;
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  .ml-banner__actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .ml-banner__switch {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+  }
+  .ml-banner__switch:hover {
+    color: var(--color-text);
+  }
+  .ml-banner__switch:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------- Stall-Recovery (after model-download timeout) ---------- */
+  .stall-recovery {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3) 0 0;
+  }
+  .stall-recovery__title {
+    margin: 0;
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+  }
+  .stall-recovery__actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
 
   /* ---------- Error container ---------- */

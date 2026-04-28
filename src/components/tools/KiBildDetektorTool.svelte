@@ -3,11 +3,17 @@
   import { loadKiBildDetektor } from '../../lib/tools/type-runtime-registry';
   import Loader from '../Loader.svelte';
   import type { ProgressEvent, KiImageResult } from '../../lib/tools/ki-bild-detektor';
+  import type { Lang } from '../../lib/i18n/lang';
+  import MlBanner from '../MlBanner.svelte';
+  import { ML_VARIANTS } from '../../lib/tools/ml-variants';
 
   interface Props {
     config: FormatterConfig;
+    lang?: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang = 'de' }: Props = $props();
+  // Single-variant tool — banner just discloses the size; no switcher.
+  const variants = ML_VARIANTS['ki-bild-detektor'] ?? [];
 
   let file = $state<File | null>(null);
   let previewUrl = $state<string | null>(null);
@@ -73,19 +79,18 @@
   const aiScore = $derived.by(() => {
     if (!results || results.length === 0) return 0;
     
-    // The SMOGY model output handling
-    // LABEL_1 is usually 'fake' / 'ai'
-    const aiResult = results.find(r => 
-      r.label.toLowerCase().includes('fake') || 
+    // Label resolution covers Deep-Fake-Detector-v2 ("Realism"/"Deepfake")
+    // and any backup model returning common synonyms / LABEL_n fallbacks.
+    const aiResult = results.find(r =>
+      r.label.toLowerCase().includes('fake') ||
       r.label.toLowerCase().includes('ai') ||
       r.label === 'LABEL_1'
     );
-    
+
     if (aiResult) return Math.round(aiResult.score * 100);
-    
-    // Fallback: LABEL_0 is usually 'real' / 'human'
-    const humanResult = results.find(r => 
-      r.label.toLowerCase().includes('real') || 
+
+    const humanResult = results.find(r =>
+      r.label.toLowerCase().includes('real') ||
       r.label.toLowerCase().includes('human') ||
       r.label === 'LABEL_0'
     );
@@ -104,6 +109,9 @@
 
 <div class="ki-tool">
   {#if phase === 'idle' || phase === 'error'}
+    {#if variants.length > 0}
+      <MlBanner {lang} {variants} />
+    {/if}
     <div class="ki-tool__input-panel">
       <div class="upload-area {file ? 'upload-area--has-file' : ''}">
         {#if previewUrl}

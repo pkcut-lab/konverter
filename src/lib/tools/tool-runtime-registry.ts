@@ -1,4 +1,6 @@
 import { processWebp } from './process-webp';
+import { ML_VARIANTS, type VariantId, type MlVariant } from './ml-variants';
+import type { DeviceProbe } from './ml-device-detect';
 
 /**
  * Client-side runtime registry for FileTools.
@@ -81,8 +83,21 @@ export type ProcessFn = (
   onProgress?: ProgressCallback,
 ) => Uint8Array | Promise<Uint8Array>;
 
+/**
+ * Mobile-aware preparation options. Existing tools that don't care about
+ * variants can ignore `opts` entirely — the second arg is optional. New
+ * mobile-aware tools read `opts.variant` to pick a model and
+ * `opts.stallTimeoutMs` to size the watchdog (typically 240s mobile / 60s
+ * desktop, derived via `pickStallTimeout(probe)`).
+ */
+export interface PrepareOpts {
+  variant?: VariantId;
+  stallTimeoutMs?: number;
+}
+
 export type PrepareFn = (
   onProgress: (e: { loaded: number; total: number }) => void,
+  opts?: PrepareOpts,
 ) => Promise<void>;
 
 export type ReencodeFn = (format: string) => Promise<Uint8Array>;
@@ -92,8 +107,24 @@ export interface ToolRuntime {
   prepare?: PrepareFn;
   reencode?: ReencodeFn;
   isPrepared?: () => boolean;
+  /** Variant-aware cache check. Optional — only for mobile-aware tools. */
+  isPreparedFor?: (variant: VariantId) => boolean;
+  /** Drop a cached pipeline so a subsequent prepare() actually re-fetches. */
+  clearVariantCache?: (variant?: VariantId) => void;
   clearLastResult?: () => void;
   preflightCheck?: () => string | null;
+  /**
+   * Mobile-aware variant matrix. When present, the FileTool component shows
+   * the variant-switcher banner and routes the user-picked variant through
+   * `prepare(onProgress, { variant })`. When absent, the tool is treated as
+   * single-variant (the prepare path receives no `opts.variant`).
+   */
+  variants?: MlVariant[];
+  /**
+   * Per-tool override for default-variant selection. Falls back to
+   * `pickDefaultVariant(toolId, probe)` when omitted.
+   */
+  pickDefaultVariant?: (probe: DeviceProbe) => VariantId;
 }
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
@@ -110,6 +141,7 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     },
     isPrepared: () => speechEnhancerModule?.isPrepared() ?? false,
     clearLastResult: () => speechEnhancerModule?.clearLastResult(),
+    variants: ML_VARIANTS['speech-enhancer']!,
   },
   'png-jpg-to-webp': {
     process: (input, config) =>
@@ -120,17 +152,26 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
   'remove-background': {
     process: async (input, config) => {
       const m = await loadRemoveBg();
-      return m.removeBackground(input, {
-        format:
-          typeof config?.format === 'string' &&
-          (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
-            ? config.format
-            : 'png',
-      });
+      const format =
+        typeof config?.format === 'string' &&
+        (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
+          ? config.format
+          : 'png';
+      const removeOpts: { format: 'png' | 'webp' | 'jpg'; variant?: VariantId } = { format };
+      if (
+        typeof config?.mlVariant === 'string' &&
+        (config.mlVariant === 'fast' || config.mlVariant === 'quality' || config.mlVariant === 'pro')
+      ) {
+        removeOpts.variant = config.mlVariant as VariantId;
+      }
+      return m.removeBackground(input, removeOpts);
     },
-    prepare: async (onProgress) => {
+    prepare: async (onProgress, opts) => {
       const m = await loadRemoveBg();
-      return m.prepareBackgroundRemovalModel(onProgress);
+      const prepOpts: { variant?: VariantId; stallTimeoutMs?: number } = {};
+      if (opts?.variant) prepOpts.variant = opts.variant;
+      if (opts?.stallTimeoutMs !== undefined) prepOpts.stallTimeoutMs = opts.stallTimeoutMs;
+      return m.prepareBackgroundRemovalModel(onProgress, prepOpts);
     },
     reencode: async (format) => {
       const m = await loadRemoveBg();
@@ -142,7 +183,10 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     // is `false` (correct: no model in memory) and clearLastResult is a no-op
     // (correct: no cached bitmap yet).
     isPrepared: () => removeBgModule?.isPrepared() ?? false,
+    isPreparedFor: (variant) => removeBgModule?.isPreparedFor(variant) ?? false,
+    clearVariantCache: (variant) => removeBgModule?.clearVariantCache(variant),
     clearLastResult: () => removeBgModule?.clearLastResult(),
+    variants: ML_VARIANTS['remove-background']!,
   },
   'hevc-to-h264': {
     process: async (input, config, onProgress) => {
@@ -157,7 +201,7 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     },
     preflightCheck: () => {
       if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
-        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';
+        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder iOS 26 / Safari 26+.';
       }
       return null;
     },
@@ -193,23 +237,34 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     isPrepared: () => videoBgRemoveModule?.isVideoBgRemovePrepared() ?? false,
     clearLastResult: () => videoBgRemoveModule?.clearVideoBgRemoveLastResult(),
     preflightCheck: () => {
+      // iOS Safari ≤25 lacks `VideoEncoder` (only Decoder partial since 16.4) —
+      // VP9+Alpha-Encoding via Mediabunny needs both, so the tool is hard-blocked
+      // there. iOS 26+ (Sept 2025) ships full WebCodecs. Audit:
+      // inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md §1.3.
       if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
-        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';
+        return 'Dein Browser unterstützt kein WebCodecs. Auf dem iPhone benötigst du iOS 26 (Safari 26) oder neuer; auf dem Desktop Chrome, Firefox oder Edge.';
       }
       return null;
     },
+    variants: ML_VARIANTS['video-bg-remove']!,
   },
   'image-to-text': {
     process: async (input, config, onProgress) => {
       const m = await import('./bild-zu-text');
       return m.bildZuText.process(input, config, onProgress);
     },
-    prepare: async (onProgress) => {
+    prepare: async (onProgress, opts) => {
       const m = await import('./bild-zu-text');
-      if (m.bildZuText.prepare) {
-        return m.bildZuText.prepare(onProgress);
+      const prepareFn = m.bildZuText.prepare as
+        | ((cb: (e: { loaded: number; total: number }) => void, opts?: { variant?: string }) => Promise<void>)
+        | undefined;
+      if (prepareFn) {
+        const passOpts: { variant?: string } = {};
+        if (opts?.variant) passOpts.variant = opts.variant;
+        return prepareFn(onProgress, passOpts);
       }
     },
+    variants: ML_VARIANTS['image-to-text']!,
   },
   'jpg-to-pdf': {
     process: async (input, config) => {

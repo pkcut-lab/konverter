@@ -336,8 +336,7 @@
     font-size: var(--font-size-body);
     color: var(--color-text);
     font-variant-numeric: tabular-nums;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     min-width: 0;
   }
 

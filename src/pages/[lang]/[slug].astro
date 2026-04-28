@@ -421,10 +421,10 @@ const dateModifiedFormatted = entry.data.dateModified
             <ErbschaftsteuerRechnerTool lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'ki-text-detektor' && (
-            <KiTextDetektorTool config={config} client:load />
+            <KiTextDetektorTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'ki-bild-detektor' && (
-            <KiBildDetektorTool config={config} client:load />
+            <KiBildDetektorTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === 'audio-transkription' && (
             <AudioTranskriptionTool lang={entry.data.language as Lang} client:load />
