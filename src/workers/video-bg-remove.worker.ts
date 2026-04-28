@@ -80,7 +80,9 @@ async function detectDevice(): Promise<'webgpu' | 'wasm'> {
 async function loadPipeline(modelKey: ModelKey, onProgress: (loaded: number, total: number) => void): Promise<Pipe> {
   if (pipelinePromise && pipelineModelKey === modelKey) return pipelinePromise;
   pipelineModelKey = modelKey;
-  const { pipeline } = await import('@huggingface/transformers');
+  const { pipeline, env } = await import('@huggingface/transformers');
+  const { applyOrtSelfHost } = await import('../lib/tools/ml-mirror');
+  applyOrtSelfHost(env as unknown as Parameters<typeof applyOrtSelfHost>[0]);
   const device = await detectDevice();
   pipelinePromise = (async () => {
     const pipe = await pipeline('image-segmentation', MODEL_BY_KEY[modelKey], {

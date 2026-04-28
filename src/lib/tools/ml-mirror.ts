@@ -87,3 +87,50 @@ export function applyMlMirrorIfConfigured(env: TransformersEnv): {
   env.remoteHost = host;
   return { mirrored: true, host };
 }
+
+/**
+ * Point ONNX-Runtime-Web at our self-hosted copy of `ort-wasm-*.{mjs,wasm}`
+ * instead of letting Transformers.js dynamic-import them from `cdn.jsdelivr
+ * .net`. The runtime files are copied into `dist/ort/` by
+ * `scripts/copy-ort-web.mjs` at build-time.
+ *
+ * Why this matters:
+ *   The default Transformers.js v4 fetch path hits `cdn.jsdelivr.net` for
+ *   `ort-wasm-simd-threaded.{,asyncify,jsep,jspi}.{mjs,wasm}`. On a strict-
+ *   CSP site this requires both `script-src https://cdn.jsdelivr.net` and
+ *   `connect-src https://cdn.jsdelivr.net` — third-party CDN exposure +
+ *   widened CSP for every visitor whether or not they use an ML tool.
+ *   Self-hosting drops both grants from the CSP allow-list and removes the
+ *   single-point-of-failure on jsdelivr.
+ *
+ * Transformers.js consults `env.backends.onnx.wasm.wasmPaths` for the prefix.
+ * The trailing slash is required (string concatenation, not URL-join).
+ *
+ * Idempotent. SSR-safe (checks for window before reading runtime overrides).
+ */
+interface TransformersOnnxBackend {
+  wasm?: { wasmPaths?: string };
+}
+interface TransformersBackends {
+  onnx?: TransformersOnnxBackend;
+}
+interface TransformersEnvWithBackends {
+  backends?: TransformersBackends;
+}
+
+export function applyOrtSelfHost(env: TransformersEnvWithBackends): void {
+  // Default to `/ort/` — the path `scripts/copy-ort-web.mjs` writes into
+  // `dist/`. Override-able via window for tests / staged rollouts where a
+  // CDN path might be wanted back temporarily.
+  let path = '/ort/';
+  if (typeof window !== 'undefined') {
+    const w = window as Window & { __KITTOKIT_ORT_PATH__?: string };
+    if (typeof w.__KITTOKIT_ORT_PATH__ === 'string' && w.__KITTOKIT_ORT_PATH__.length > 0) {
+      path = w.__KITTOKIT_ORT_PATH__;
+    }
+  }
+  env.backends = env.backends ?? {};
+  env.backends.onnx = env.backends.onnx ?? {};
+  env.backends.onnx.wasm = env.backends.onnx.wasm ?? {};
+  env.backends.onnx.wasm.wasmPaths = path;
+}

@@ -29,7 +29,7 @@
  */
 
 import { pipeline, RawImage, env } from '@huggingface/transformers';
-import { applyMlMirrorIfConfigured } from './ml-mirror';
+import { applyMlMirrorIfConfigured, applyOrtSelfHost } from './ml-mirror';
 import { getVariant, type VariantId } from './ml-variants';
 
 export type RemoveBackgroundFormat = 'png' | 'webp' | 'jpg';
@@ -101,10 +101,27 @@ let mirrorApplied = false;
 async function detectDevice(allowWebGpu: boolean): Promise<'webgpu' | 'wasm'> {
   if (!allowWebGpu) return 'wasm';
   try {
-    const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+    const gpu = (navigator as Navigator & {
+      gpu?: {
+        requestAdapter: (opts?: { powerPreference?: 'high-performance' | 'low-power' }) => Promise<{
+          isFallbackAdapter?: boolean;
+          features?: { has?: (k: string) => boolean };
+        } | null>;
+      };
+    }).gpu;
     if (!gpu) return 'wasm';
-    const adapter = await gpu.requestAdapter();
-    return adapter ? 'webgpu' : 'wasm';
+    // Mirror the hardened probe in `ml-device-detect.ts`: bias toward dGPU,
+    // reject Dawn-fallback (CPU-routed, OOMs on FP16), require shader-f16
+    // (FP16 ops in hardware, not emulated). Disagreement between this
+    // dispatcher and the FileTool's variant-picker is the failure mode we
+    // saw in prod where the picker said "you have WebGPU, take BiRefNet
+    // FP16" and the runtime then ran it on a software adapter and OOMed.
+    const adapter = await gpu.requestAdapter({ powerPreference: 'high-performance' });
+    if (!adapter) return 'wasm';
+    if (adapter.isFallbackAdapter === true) return 'wasm';
+    const has = adapter.features?.has;
+    if (typeof has !== 'function' || !has.call(adapter.features, 'shader-f16')) return 'wasm';
+    return 'webgpu';
   } catch {
     return 'wasm';
   }
@@ -156,6 +173,9 @@ export async function prepareBackgroundRemovalModel(
 
   if (!mirrorApplied) {
     applyMlMirrorIfConfigured(env as unknown as { remoteHost: string });
+    // Self-host ORT-Web runtime files so the dynamic-import doesn't hit
+    // `cdn.jsdelivr.net` — drops the third-party CDN from our CSP allow-list.
+    applyOrtSelfHost(env as unknown as Parameters<typeof applyOrtSelfHost>[0]);
     mirrorApplied = true;
   }
 

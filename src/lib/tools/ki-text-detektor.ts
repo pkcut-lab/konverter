@@ -2,7 +2,10 @@
  * KI Text Detector module.
  * Uses Transformers.js with Xenova/roberta-base-openai-detector.
  */
-import { pipeline } from '@huggingface/transformers';
+import { pipeline, env } from '@huggingface/transformers';
+import { applyOrtSelfHost } from './ml-mirror';
+
+let envConfigured = false;
 
 export interface ProgressEvent {
   loaded: number;
@@ -28,7 +31,12 @@ export async function prepareModel(onProgress: (e: ProgressEvent) => void): Prom
     await pipelinePromise;
     return;
   }
-  
+
+  if (!envConfigured) {
+    applyOrtSelfHost(env as unknown as Parameters<typeof applyOrtSelfHost>[0]);
+    envConfigured = true;
+  }
+
   // Without an explicit `dtype` Transformers.js loads the default ONNX file
   // for the repo, which is FP32 = 499 MB for tmr-ai-text-detector-ONNX.
   // Q4F16 is 128 MB — still meaningful on mobile but fits within iOS-Safari

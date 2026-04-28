@@ -61,9 +61,19 @@ describe('remove-background pure module', () => {
     // inside their own body. Defaulting to "available" matches the production
     // happy path on modern Chrome / Edge / Android — the FP16 variants are
     // designed for that environment.
+    //
+    // The adapter must satisfy the hardened probe: NOT a fallback adapter +
+    // exposes the `shader-f16` feature. Earlier tests stubbed `{}` which
+    // was enough for the looser `adapter !== null` check but silently fails
+    // the new shader-f16 gate. Use a realistic adapter shape.
     vi.stubGlobal('navigator', {
       ...globalThis.navigator,
-      gpu: { requestAdapter: vi.fn(async () => ({})) },
+      gpu: {
+        requestAdapter: vi.fn(async () => ({
+          isFallbackAdapter: false,
+          features: new Set(['shader-f16']),
+        })),
+      },
     });
   });
 

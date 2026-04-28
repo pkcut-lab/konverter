@@ -123,6 +123,13 @@ const websiteJsonLd = {
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    {/*
+      `mobile-web-app-capable` is the spec-canonical replacement for the
+      Safari-prefixed `apple-mobile-web-app-capable`, deprecated since
+      Chrome 132. Ship both — Safari still reads only the apple- prefix on
+      iOS ≤ 18.x; Chromium / Firefox already read the unprefixed one.
+    */}
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="kittokit" />
     <meta name="application-name" content="kittokit" />

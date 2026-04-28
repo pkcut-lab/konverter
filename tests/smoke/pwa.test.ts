@@ -87,11 +87,13 @@ describe('PWA — Manifest + Icons', () => {
     expect(config).toMatch(/@vite-pwa\/astro/);
     expect(config).toMatch(/registerType:\s*['"]autoUpdate['"]/);
     expect(config).toMatch(/manifestFilename:\s*['"]manifest\.webmanifest['"]/);
-    // Model + pagefind runtime caching are the two non-precache paths
-    // that matter for offline BG-Remover + search latency.
-    // Cache names are the stable anchor — regex literals escape the dot
-    // as `\.` in source, so we assert on the name, not the hostname.
-    expect(config).toMatch(/cacheName:\s*['"]hf-model-cache['"]/);
+    // Pagefind runtime cache stays — the search index is small and benefits
+    // from StaleWhileRevalidate for repeat queries. The Hugging Face rule
+    // was REMOVED 2026-04-29: Transformers.js v4 owns model caching via
+    // its own `transformers-cache` CacheStorage bucket and our Workbox
+    // CacheFirst layer was double-caching every model file (230-438 MB)
+    // plus intercepting the `huggingface.co` → `*.xethub.hf.co` redirect
+    // in ways that swallowed CSP-block failures as `no-response` errors.
     expect(config).toMatch(/cacheName:\s*['"]pagefind-index['"]/);
     // Lazy chunks must be excluded — otherwise precache balloons and
     // every visitor pays the transformers.js download even on /styleguide.

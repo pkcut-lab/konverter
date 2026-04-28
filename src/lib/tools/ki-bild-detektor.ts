@@ -15,7 +15,10 @@
  *
  * Audit: inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md §6.5
  */
-import { pipeline, type RawImage } from '@huggingface/transformers';
+import { pipeline, env, type RawImage } from '@huggingface/transformers';
+import { applyOrtSelfHost } from './ml-mirror';
+
+let envConfigured = false;
 
 export interface ProgressEvent {
   status: string;
@@ -45,7 +48,12 @@ export async function prepareModel(onProgress: (e: any) => void): Promise<void> 
     await pipelinePromise;
     return;
   }
-  
+
+  if (!envConfigured) {
+    applyOrtSelfHost(env as unknown as Parameters<typeof applyOrtSelfHost>[0]);
+    envConfigured = true;
+  }
+
   pipelinePromise = new Promise<Pipe>((resolve, reject) => {
     pipeline(
       'image-classification',

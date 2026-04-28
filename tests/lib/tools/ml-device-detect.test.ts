@@ -6,11 +6,19 @@ interface MockNavigatorParts {
   userAgent?: string;
   deviceMemory?: number;
   connection?: { effectiveType?: string; saveData?: boolean };
-  gpu?: { requestAdapter: () => Promise<unknown> };
+  gpu?: { requestAdapter: (opts?: { powerPreference?: string }) => Promise<unknown> };
 }
 
 function makeNav(parts: MockNavigatorParts): Navigator {
   return parts as unknown as Navigator;
+}
+
+/** Adapter shape that passes the hardened probe (non-fallback, shader-f16). */
+function realAdapter(): unknown {
+  return {
+    isFallbackAdapter: false,
+    features: new Set(['shader-f16']),
+  };
 }
 
 describe('detectMlDevice', () => {
@@ -27,15 +35,63 @@ describe('detectMlDevice', () => {
     expect(probe.isMobileUA).toBe(false);
   });
 
-  it('returns desktop with hasWebGPU=true when adapter resolves', async () => {
+  it('returns desktop with hasWebGPU=true when a real (non-fallback, shader-f16) adapter resolves', async () => {
     const nav = makeNav({
       userAgent:
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-      gpu: { requestAdapter: async () => ({}) },
+      gpu: { requestAdapter: async () => realAdapter() },
     });
     const probe = await detectMlDevice(nav);
     expect(probe.class).toBe('desktop');
     expect(probe.hasWebGPU).toBe(true);
+  });
+
+  it('returns hasWebGPU=false when the adapter is a fallback (CPU/SwiftShader)', async () => {
+    // Chrome's CPU-side Dawn-fallback advertises WebGPU but routes ML work
+    // through software paths that OOM on FP16 segmentation networks. Treat
+    // it as no-WebGPU so variant selection stays on MODNet-Q8 in WASM.
+    const nav = makeNav({
+      userAgent: 'Mozilla/5.0 (X11; Linux x86_64) Chrome/132',
+      gpu: {
+        requestAdapter: async () => ({
+          isFallbackAdapter: true,
+          features: new Set(['shader-f16']),
+        }),
+      },
+    });
+    const probe = await detectMlDevice(nav);
+    expect(probe.hasWebGPU).toBe(false);
+  });
+
+  it('returns hasWebGPU=false when adapter lacks shader-f16', async () => {
+    // Without shader-f16 the FP16 ops are emulated in software inside the
+    // GPU pipeline — correctness fragile, perf worse than WASM-SIMD-threads.
+    const nav = makeNav({
+      userAgent: 'Mozilla/5.0 (Macintosh) Safari/17.0',
+      gpu: {
+        requestAdapter: async () => ({
+          isFallbackAdapter: false,
+          features: new Set([]),
+        }),
+      },
+    });
+    const probe = await detectMlDevice(nav);
+    expect(probe.hasWebGPU).toBe(false);
+  });
+
+  it('passes powerPreference: high-performance to requestAdapter', async () => {
+    let observedOpts: { powerPreference?: string } | undefined;
+    const nav = makeNav({
+      userAgent: 'Mozilla/5.0 Chrome/132',
+      gpu: {
+        requestAdapter: async (opts) => {
+          observedOpts = opts;
+          return realAdapter();
+        },
+      },
+    });
+    await detectMlDevice(nav);
+    expect(observedOpts?.powerPreference).toBe('high-performance');
   });
 
   it('returns desktop with hasWebGPU=false when adapter rejects', async () => {

@@ -201,18 +201,15 @@ export default defineConfig({
         // generated chunks in Phase 1 as tool count grows.
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         runtimeCaching: [
-          {
-            // Hugging Face CDN — model weights for BG-Remover. Cache-first
-            // with long expiration because these immutable artifacts never
-            // change per version.
-            urlPattern: /^https:\/\/(?:huggingface\.co|cdn-lfs\.huggingface\.co)\/.*$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'hf-model-cache',
-              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
+          // No HF rule. Transformers.js v4 maintains its own `CacheStorage`
+          // bucket (`transformers-cache`) with `useBrowserCache: true`
+          // semantics — adding a Workbox CacheFirst layer on top of that
+          // double-caches every model file (230 MB for `quality`, 438 MB
+          // for `pro`) and intercepts the cross-origin 302 from
+          // `huggingface.co` → `*.xethub.hf.co` in ways that swallowed
+          // failures as `no-response` during the XetHub-CSP block. Letting
+          // Transformers.js own model caching keeps storage usage halved
+          // and the redirect path SW-transparent.
           {
             urlPattern: /\/pagefind\/.*$/,
             handler: 'StaleWhileRevalidate',

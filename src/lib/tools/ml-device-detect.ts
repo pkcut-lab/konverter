@@ -26,7 +26,15 @@ export type DeviceClass = 'fast-mobile' | 'capable-mobile' | 'desktop';
 export interface DeviceProbe {
   /** Coarse class — drives the default variant choice. */
   class: DeviceClass;
-  /** WebGPU adapter is available and returns a non-null adapter. */
+  /**
+   * WebGPU adapter is available, NOT a fallback (software-rendered) adapter,
+   * and `shader-f16` is supported. We tighten the bar to match what the FP16
+   * segmentation models actually need: a fallback adapter (Chrome's CPU-side
+   * Dawn-fallback) advertises WebGPU but in practice routes work to WASM-like
+   * paths and OOMs on FP16; a non-shader-f16 adapter executes FP16 ops in
+   * software with poor performance and unreliable correctness. Both cases are
+   * treated as "no WebGPU" for variant selection.
+   */
   hasWebGPU: boolean;
   /** `navigator.deviceMemory < 4` — Chromium-only signal, defaults to false. */
   hasReducedRam: boolean;
@@ -36,8 +44,21 @@ export interface DeviceProbe {
   isMobileUA: boolean;
 }
 
+/**
+ * Minimal slice of the WebGPU adapter shape we read in the probe. Treats every
+ * field as optional because shader-f16 detection runs against an interim
+ * `GPUSupportedFeatures`-style `Set<string>` that not every Chromium build
+ * exposes identically. Keep this typed-loose-on-purpose and validate at runtime.
+ */
+interface MinimalGpuAdapter {
+  isFallbackAdapter?: boolean;
+  features?: { has: (feature: string) => boolean } | Set<string>;
+}
+interface MinimalGpu {
+  requestAdapter: (opts?: { powerPreference?: 'low-power' | 'high-performance' }) => Promise<MinimalGpuAdapter | null>;
+}
 interface NavigatorWithGpu extends Navigator {
-  gpu?: { requestAdapter: () => Promise<unknown> };
+  gpu?: MinimalGpu;
 }
 interface NavigatorWithDeviceMemory extends Navigator {
   deviceMemory?: number;
@@ -52,12 +73,43 @@ interface NavigatorWithConnection extends Navigator {
 const MOBILE_UA_RE = /iPhone|iPad|iPod|Android|Mobile|Tablet/i;
 const SLOW_NET_RE = /^(slow-2g|2g|3g)$/;
 
+function adapterHasFeature(adapter: MinimalGpuAdapter, feature: string): boolean {
+  const f = adapter.features;
+  if (!f) return false;
+  // Branch on the runtime shape — `GPUSupportedFeatures` is a `Set` in spec
+  // but some early Chromium builds shipped a `Set`-compatible object that
+  // only exposes `.has()`. Both paths converge here.
+  if (typeof (f as { has?: (k: string) => boolean }).has === 'function') {
+    return (f as { has: (k: string) => boolean }).has(feature);
+  }
+  return false;
+}
+
+/**
+ * Probe WebGPU with the same constraints the FP16 segmentation models impose:
+ * 1. `navigator.gpu.requestAdapter({ powerPreference: 'high-performance' })`
+ *    — biases toward the dGPU on hybrid laptops; on integrated-only systems
+ *    the dispatcher falls back to the iGPU automatically.
+ * 2. Reject `adapter.isFallbackAdapter === true` — that's Chrome's CPU-side
+ *    Dawn-fallback, advertised as WebGPU but routes ML work through software
+ *    paths that OOM on FP16 segmentation networks (BiRefNet_lite, BEN2).
+ * 3. Require `shader-f16` feature — without it FP16 ops are emulated in
+ *    software inside the GPU pipeline; correctness is fragile and perf is
+ *    worse than WASM with SIMD+threads. Documented requirement in the
+ *    Transformers.js v4 / ORT-Web 1.20+ FP16 path.
+ *
+ * Any failure (no adapter, fallback, missing feature, exception) returns
+ * `false` so callers route to MODNet-Q8 in WASM, which works everywhere.
+ */
 async function probeWebGPU(nav: Navigator): Promise<boolean> {
   try {
     const gpu = (nav as NavigatorWithGpu).gpu;
     if (!gpu) return false;
-    const adapter = await gpu.requestAdapter();
-    return adapter !== null && adapter !== undefined;
+    const adapter = await gpu.requestAdapter({ powerPreference: 'high-performance' });
+    if (adapter === null || adapter === undefined) return false;
+    if (adapter.isFallbackAdapter === true) return false;
+    if (!adapterHasFeature(adapter, 'shader-f16')) return false;
+    return true;
   } catch {
     return false;
   }

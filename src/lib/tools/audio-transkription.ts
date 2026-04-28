@@ -2,7 +2,10 @@
  * Audio Transkription module.
  * Uses Transformers.js with Whisper models.
  */
-import { pipeline } from '@huggingface/transformers';
+import { pipeline, env } from '@huggingface/transformers';
+import { applyOrtSelfHost } from './ml-mirror';
+
+let envConfigured = false;
 
 export type ModelSize = 'tiny' | 'base' | 'small';
 
@@ -40,6 +43,11 @@ export async function prepareModel(modelSize: ModelSize, onProgress: (e: any) =>
   
   pipelineReady = false;
   currentModelSize = modelSize;
+
+  if (!envConfigured) {
+    applyOrtSelfHost(env as unknown as Parameters<typeof applyOrtSelfHost>[0]);
+    envConfigured = true;
+  }
   
   let modelId = 'Xenova/whisper-base';
   if (modelSize === 'tiny') modelId = 'Xenova/whisper-tiny';
