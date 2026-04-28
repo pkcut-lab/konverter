@@ -1,16 +1,24 @@
 import { defineConfig, devices } from 'playwright/test';
 
 /**
- * Playwright config — a11y test suite only.
+ * Playwright config — Browser-Test-Suiten (a11y + Mobile-Overflow-Gate).
  * Serves the pre-built `dist/` via a static file server.
- * Run: npx playwright test tests/a11y/
+ *
+ * Subsuiten:
+ *   tests/a11y/  — axe-core WCAG-AAA Audits (Headed-Smoke, langsam)
+ *   tests/e2e/   — Layer-4 Overflow-Gate (mobile Viewport × Routen)
+ *
+ * Run:
+ *   npx playwright test                  # alle Suiten
+ *   npx playwright test tests/a11y/      # nur a11y (= npm run a11y:test)
+ *   npx playwright test tests/e2e/       # nur Overflow (= npm run test:overflow)
  */
 export default defineConfig({
-  testDir: 'tests/a11y',
-  testMatch: '**/*.spec.ts',
+  testDir: 'tests',
+  testMatch: ['a11y/**/*.spec.ts', 'e2e/**/*.spec.ts'],
   timeout: 30_000,
   retries: 1,
-  reporter: [['list'], ['json', { outputFile: 'tests/a11y/results.json' }]],
+  reporter: [['list'], ['json', { outputFile: 'tests/playwright-results.json' }]],
 
   use: {
     baseURL: 'http://localhost:4173',

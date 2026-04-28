@@ -20,6 +20,7 @@
     "stitch:generate": "node --env-file=.env scripts/stitch/generate.mjs",
     "a11y:test": "npx playwright test tests/a11y/",
     "a11y:audit": "node scripts/a11y-audit.mjs",
+    "test:overflow": "npx playwright test tests/e2e/",
     "lint:trailing-slash": "node scripts/seo/lint-trailing-slash.mjs",
     "lint:i18n": "node scripts/i18n/lint-no-de-in-ui.mjs"
   },
