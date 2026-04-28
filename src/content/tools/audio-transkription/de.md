@@ -44,14 +44,43 @@ dateModified: '2026-04-25'
 
 ## Wie funktioniert die Audio-Transkription?
 
-Das Tool nutzt ein spezialisiertes Spracherkennungs-Modell, das in WebAssembly kompiliert wurde und direkt in modernen Browsern läuft. Die Audio-Datei wird vor der Analyse automatisch auf das vom Modell benötigte Format (16 kHz Mono) umgewandelt. Das geschieht über die Web Audio API – ebenfalls komplett lokal.
+Die Verarbeitung läuft in zwei Stufen. Zuerst normalisiert die Web Audio API deine Audiodatei: Sie wird auf 16 kHz Mono heruntergerechnet, weil Spracherkennungs-Modelle dieses Format als Eingangsformat erwarten. Der gesamte Resampling-Schritt findet dabei lokal im Browser statt – kein Byte verlässt dein Gerät.
 
-### 100 % Datenschutz
+Im zweiten Schritt übernimmt eine in WebAssembly kompilierte Spracherkennungs-Engine die Inferenz. WebAssembly ermöglicht es, rechenintensive Algorithmen mit nahezu nativer Geschwindigkeit im Browser auszuführen. Beim ersten Aufruf wird das Modell einmalig in den Browser-Cache heruntergeladen. Ab dem zweiten Aufruf läuft die Transkription vollständig offline – auch ohne aktive Internetverbindung.
 
-Da die Analyse auf deinem eigenen Gerät stattfindet, ist dieses Transkriptions-Tool ideal für vertrauliche Aufnahmen wie Meetings, Interviews oder persönliche Sprachnotizen. Es gibt keinen Cloud-Upload und keine Datenspeicherung.
+## 100 % Datenschutz
 
-### Tipps für optimale Ergebnisse
+Das Tool nimmt zu keinem Zeitpunkt Kontakt zu einem externen Server auf. Es ist kein Account erforderlich, keine Anmeldung, keine Einwilligung in irgendeine Datenweitergabe. Deine Audiodatei verlässt dein Gerät nicht. Schließt du den Browser-Tab, sind keine Daten mehr vorhanden – weder lokal gespeichert noch irgendwo in einer Cloud. Das macht das Tool besonders geeignet für vertrauliche Aufnahmen wie Meetings, Arzt-Gespräche oder interne Unternehmens-Interviews.
 
-- **Klare Aufnahme:** Je weniger Hintergrundgeräusche, desto besser die Erkennung.
-- **Deutliche Sprache:** Langsames, deutliches Sprechen verbessert die Genauigkeit erheblich.
-- **Dateigröße:** Für längere Aufnahmen empfiehlt sich ein komprimiertes Format wie MP3, um die Verarbeitungszeit zu verkürzen.
+## Tipps für optimale Ergebnisse
+
+- **Klare Aufnahme:** Je weniger Hintergrundgeräusche, desto präziser die Erkennung. Ein stiller Raum hilft mehr als nachträgliche Filter.
+- **Mikrofon-Abstand:** Ein Abstand von 20–30 cm zum Mikrofon reduziert Verzerrungen und Plosivlaute.
+- **Deutliche Aussprache:** Langsames, deutliches Sprechen erhöht die Erkennungsrate spürbar – besonders bei Fachbegriffen.
+- **Format für große Dateien:** MP3 mit mittlerer Bitrate (128 kbps) komprimiert eine Stunde Sprache auf unter 60 MB und verkürzt die Ladezeit erheblich.
+- **Maximale Länge:** Aufnahmen bis ca. 60 Minuten laufen auf modernen Geräten zuverlässig. Längere Dateien können den Browser-Arbeitsspeicher belasten.
+- **Lange Aufnahmen aufteilen:** Trenne mehrstündige Interviews in 30–60-Minuten-Segmente und transkribiere sie einzeln – das ist stabiler und gibt dir natürliche Gliederungspunkte.
+
+## Wann lohnt sich Browser-Transkription?
+
+Browser-basierte Transkription eignet sich besonders dann, wenn Vertraulichkeit oder Datenschutz-Compliance eine Rolle spielen.
+
+**Meeting-Protokolle:** Aufnahmen von internen Besprechungen müssen oft vertraulich bleiben. Da keine Audiodaten nach außen übertragen werden, ist das Risiko eines ungewollten Datenlecks ausgeschlossen.
+
+**Interview-Transkripte:** Journalistische Interviews, Marktforschungs-Gespräche oder HR-Interviews lassen sich direkt nach dem Gespräch transkribieren – ohne dass eine dritte Partei Zugriff auf den Inhalt erhält.
+
+**Persönliche Sprachnotizen digitalisieren:** Gesprochene Ideen, Einkaufslisten oder Tagebucheinträge lassen sich schnell verschriftlichen und in Texteditoren oder Notiz-Apps weiterverarbeiten.
+
+**Barrierefreie Untertitel für eigene Videos erstellen:** Wer eigene Lehrvideos, Tutorials oder Social-Content produziert, kann die Transkription als Ausgangsbasis für Untertitel nutzen. Das verbessert die Zugänglichkeit für Gehörlose und Menschen, die Videos ohne Ton konsumieren.
+
+## Unterstützte Formate
+
+Das Tool akzeptiert die gängigsten Audio-Formate: **MP3**, **WAV**, **M4A**, **OGG** und **FLAC**. WAV-Dateien liefern die beste Ausgangsqualität für die Erkennung, sind aber deutlich größer. MP3 bietet einen guten Kompromiss aus Dateigröße und Qualität. Sehr große Dateien über 500 MB können auf älteren Geräten oder in Browsern mit begrenztem Arbeitsspeicher zu Problemen führen. In diesem Fall empfiehlt sich das vorherige Aufteilen der Datei.
+
+## Verwandte Audio-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[HEVC zu H.264](/de/hevc-zu-h264)** — Konvertiere moderne Video-Codecs in das weit verbreitete H.264-Format, damit deine Videos auf allen Geräten und Plattformen abspielbar sind.
+- **[Bild zu Text](/de/bild-zu-text)** — Extrahiere Text aus Fotos, Screenshots oder gescannten Dokumenten direkt im Browser – ohne Upload und ohne Cloud-Dienst.
+- **[KI-Text-Detektor](/de/ki-text-detektor)** — Prüfe, ob ein Text von einer KI oder einem Menschen verfasst wurde, anhand statistischer Sprachmuster wie Perplexity und Burstiness.

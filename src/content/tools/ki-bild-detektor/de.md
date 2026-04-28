@@ -44,20 +44,34 @@ dateModified: '2026-04-25'
 
 ## Wie erkennt das Tool KI-generierte Bilder?
 
-In einer Zeit von Deepfakes und täuschend echten KI-Bildern ist Transparenz wichtiger denn je. Unser Tool nutzt ein spezialisiertes neuronales Netz, das auf Bildklassifikation trainiert ist, um mikroskopische Unstimmigkeiten in Bildern zu finden, die für das menschliche Auge oft unsichtbar sind.
+In einer Zeit von Deepfakes und täuschend echten KI-Bildern ist Transparenz wichtiger denn je. Das Tool nutzt ein spezialisiertes neuronales Netz, das auf Bildklassifikation trainiert ist, um mikroskopische Unstimmigkeiten in Bildern zu finden, die für das menschliche Auge oft unsichtbar sind.
 
 KI-Generatoren wie Midjourney oder Stable Diffusion hinterlassen charakteristische Muster in den Pixeln: unnatürliche Texturen, subtile Artefakte in Haaren, Händen oder Hintergründen und eine typische statistische Verteilung von Bildfrequenzen. Das Modell wurde auf tausenden echten und generierten Bildern trainiert und hat gelernt, genau diese Muster zuverlässig zu erkennen.
 
+Besonders aufschlussreich ist die Frequenzdomänen-Analyse. KI-Generatoren erzeugen in gleichmäßigen Flächen — glatten Hauttönen, bewölktem Himmel, Farbverläufen — charakteristische Artefakte, weil kein echtes Kamerasensor-Rauschen vorhanden ist. Eine echte Kamera erzeugt in diesen Bereichen natürliches, unregelmäßiges Rauschen. Das Modell analysiert die statistische Pixelverteilung und die räumlichen Frequenzmuster, um genau diesen Unterschied zu quantifizieren und eine Wahrscheinlichkeit auszugeben.
+
 ## 100 % Datenschutz — kein Upload
 
-Da die Analyse komplett in deinem Browser läuft, musst du dir keine Sorgen um deine Privatsphäre machen. Im Gegensatz zu vielen Online-Tools laden wir dein Bild **niemals** auf einen Server hoch. Das Modell wird einmalig in deinen Browser-Cache geladen und läuft danach auch offline — dein Bild verlässt dein Gerät zu keinem Zeitpunkt.
+Da die Analyse komplett in deinem Browser läuft, musst du dir keine Sorgen um deine Privatsphäre machen. Im Gegensatz zu vielen Online-Tools wird das Bild nicht auf einen Server hochgeladen. Das Modell wird einmalig in deinen Browser-Cache geladen und läuft danach auch offline — dein Bild verlässt dein Gerät zu keinem Zeitpunkt.
 
 ## Welche KI-Generatoren werden erkannt?
 
-Unser Detektor ist darauf trainiert, Artefakte und Muster von führenden KI-Generatoren wie **DALL-E 3, Midjourney, Stable Diffusion** und **Adobe Firefly** zu erkennen. Je nach Komplexität des Bildes kann die Analyse ein paar Sekunden dauern, liefert dafür aber ein fundiertes Ergebnis basierend auf moderner ML-Technologie.
+Das Modell ist darauf trainiert, Artefakte und Muster von führenden KI-Generatoren wie **DALL-E 3, Midjourney, Stable Diffusion** und **Adobe Firefly** zu erkennen. Je nach Komplexität des Bildes kann die Analyse ein paar Sekunden dauern, liefert dafür aber ein fundiertes Ergebnis.
 
 ## Wie erhalte ich zuverlässigere Ergebnisse?
 
 - **Originaldatei verwenden:** Stark komprimierte oder mehrfach hochgeladene Bilder können die Analyse erschweren.
 - **Ergebnis als Hinweis verstehen:** Ein Wert über 70 % ist ein starkes Indiz, kein Beweis. Stark bearbeitete echte Fotos oder hochwertige KI-Bilder können den Detektor täuschen.
 - **Mehrere Bilder testen:** Bei wichtigen Entscheidungen lohnt es sich, verschiedene Ausschnitte oder Versionen des Bildes zu prüfen.
+
+## Grenzen der Erkennung
+
+Das Modell liefert eine Wahrscheinlichkeit, keinen Beweis. Stark nachbearbeitete echte Fotos — zum Beispiel durch intensive Retusche oder Compositing — können falsch-positive Ergebnisse auslösen, weil ihre statistischen Muster echten Kameraaufnahmen weniger ähneln. Umgekehrt können KI-Bilder, die ausgedruckt und erneut fotografiert wurden, oder Bilder, die durch starke Komprimierung und Filtereffekte bearbeitet wurden, der Erkennung entgehen. Das gilt auch für hochaufgelöste Bilder mit ungewöhnlichen Motiven, die das Modell nicht in seinen Trainingsdaten gesehen hat. Nutze das Ergebnis daher als unterstützendes Indiz innerhalb einer breiteren Einschätzung — in Kombination mit Metadaten, Kontext und weiteren visuellen Hinweisen. Ein einzelnes Ergebnis ersetzt keine fundierte Prüfung.
+
+## Verwandte Bild-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[HEVC zu H.264](/de/hevc-zu-h264)** — Konvertiere Videos aus KI-Workflows in ein universell kompatibles Format für Weitergabe und Archivierung.
+- **[WebP-Konverter](/de/webp-konverter)** — Wandle Bilder in WebP oder andere Formate um, bevor du sie analysierst oder weiterverwendest.
+- **[Bild-Diff](/de/bild-diff)** — Vergleiche zwei Bilder pixelgenau und mache Unterschiede zwischen Original und bearbeitetem Bild sichtbar.

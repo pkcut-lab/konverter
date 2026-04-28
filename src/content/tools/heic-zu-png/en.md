@@ -2,7 +2,7 @@
 toolId: "heic-to-png"
 language: "en"
 title: "Convert HEIC to PNG — Lossless, Local, No Upload"
-metaDescription: "Convert HEIC and HEIF files to lossless PNG in your browser — no server upload, no tracking, GDPR-compliant by design. Perfect for web design, screenshots, and images requiring transparency."
+metaDescription: "Convert HEIC and HEIF files to lossless PNG in your browser — no upload, GDPR-compliant. Perfect for web design, screenshots, and images with transparency."
 tagline: "Convert iPhone HEIC photos to lossless PNG — batch folders, no upload, 100% private"
 intro: "Convert HEIC and HEIF files from iPhone, iPad, and Mac directly in your browser to the lossless PNG format. Ideal for web design, screenshots, images requiring transparency, and applications that require exact pixel accuracy. No upload, no account required, fully offline-capable."
 category: "image"

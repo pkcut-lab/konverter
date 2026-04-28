@@ -45,7 +45,48 @@ dateModified: '2026-04-25'
 
 ---
 
-Da wir wissen, wie wichtig Vertraulichkeit bei Dokumenten, Hausarbeiten oder Geschäftstexten ist, haben wir dieses Tool so entwickelt, dass es **komplett offline in deinem Browser** läuft. Wir laden ein speziell quantisiertes Sprachmodell direkt in deinen Browser-Cache. Wenn du auf "Prüfen" klickst, analysiert dein Computer den Text selbst – ganz ohne Server-Anfragen.
+## Wie funktioniert die KI-Erkennung?
 
-### Darauf solltest du achten
-Die Erkennung von KI-Texten ist Wahrscheinlichkeitsrechnung. Das Modell vergleicht den Text mit Mustern, die typisch für maschinell generierte Texte sind. Zeigt der Detektor eine Wahrscheinlichkeit von über 80 % an, ist die Chance sehr hoch, dass eine KI am Werk war. Dennoch solltest du das Ergebnis immer als Hilfsmittel und nicht als absolutes Urteil betrachten.
+Das Tool analysiert zwei statistische Signale, die sich in menschlichem und maschinell generiertem Text systematisch unterscheiden.
+
+Das erste Signal ist **Perplexity** – ein Maß dafür, wie vorhersehbar jedes nächste Wort in einer Sequenz ist. Sprachmodelle wählen statistisch wahrscheinliche Fortsetzungen, was zu niedrigen Perplexity-Werten führt. Menschen greifen häufiger zu unerwarteten Formulierungen, was die Perplexity erhöht.
+
+Das zweite Signal ist **Burstiness** – die Variation in der Satzlänge. Menschen schreiben abwechselnd kurze und lange Sätze. Sprachmodelle neigen zu gleichmäßigeren Satzlängen, was zu einer geringeren Burstiness führt.
+
+Das Modell, das beide Signale auswertet, ist in WebAssembly kompiliert und läuft vollständig lokal im Browser. Es findet kein Server-Kontakt statt.
+
+## Worauf du achten solltest
+
+Das Ergebnis ist eine Wahrscheinlichkeit, kein Urteil. Zwei Fehlertypen sind möglich.
+
+**False Positives** entstehen, wenn formeller oder akademischer Menschentext mit niedrigen Perplexity-Werten bewertet wird – etwa bei stark strukturierten Fachartikeln oder juristischen Texten. Das Modell stuft ihn fälschlicherweise als KI-generiert ein.
+
+**False Negatives** entstehen, wenn KI-Text intensiv nachbearbeitet wurde oder die KI mit gezielten Stil-Anweisungen gesteuert wurde, die die Burstiness künstlich erhöhen. In diesem Fall kann das Modell den KI-Ursprung nicht zuverlässig erkennen.
+
+Nutze das Ergebnis daher als ein Signal unter mehreren. Bei Unsicherheit empfiehlt es sich, einzelne Absätze separat zu prüfen, weil die statistische Signalstärke bei kürzeren Texten pro Abschnitt oft aussagekräftiger ist.
+
+## Typische Anwendungsfälle
+
+**Hausarbeiten und Seminararbeiten** vor der Abgabe prüfen ist der häufigste Anwendungsfall – sowohl für Studierende, die ihre eigenen Texte absichern wollen, als auch für Lehrende, die eingereichte Arbeiten kontrollieren.
+
+**Journalistische Texte verifizieren:** Redaktionen, die Gastbeiträge oder Agenturmaterial erhalten, können einen ersten automatisierten Check durchführen, bevor ein Mensch den Text bewertet.
+
+**Bewerbungsschreiben überprüfen:** HR-Abteilungen und Recruiter setzen den Detektor ein, um zu prüfen, ob Motivationsschreiben vollständig KI-generiert sind.
+
+**Content-Marketing-Prozesse überwachen:** Unternehmen, die externe Texter beauftragen, können regelmäßig prüfen, ob die gelieferten Texte den vereinbarten Qualitätsstandard eines menschlichen Autors erfüllen.
+
+**Redaktionen als Qualitätscheck:** Größere Medienhäuser integrieren solche Prüfungen in den Freigabe-Workflow, bevor Artikel veröffentlicht werden.
+
+## 100 % Datenschutz — kein Upload
+
+Das Sprachmodell wird beim ersten Aufruf einmalig in den Browser-Cache geladen. Ab diesem Zeitpunkt läuft die gesamte Analyse offline – kein Text wird an einen Server gesendet. Nach dem Schließen des Tabs sind alle eingegebenen Texte vollständig gelöscht, es bleibt kein lokaler Speicher zurück.
+
+Damit eignet sich das Tool auch für sensible Inhalte: Verträge, interne Geschäftsberichte, personenbezogene Dokumente oder vertrauliche Kommunikation können bedenkenlos geprüft werden, ohne dass ein Dritter Zugriff auf den Inhalt erhält.
+
+## Verwandte Text-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[Text-Diff](/de/text-diff)** — Vergleiche zwei Texte zeichengenau und siebe hinzugefügte oder entfernte Passagen auf einen Blick heraus.
+- **[Zeichenzähler](/de/zeichenzaehler)** — Zähle Zeichen, Wörter, Sätze und Absätze in einem Text – nützlich vor der Übergabe an einen Detektor, um die optimale Textlänge zu bestimmen.
+- **[Regex-Tester](/de/regex-tester)** — Teste reguläre Ausdrücke direkt im Browser und extrahiere Muster aus Texten ohne externe Abhängigkeiten.

@@ -48,16 +48,39 @@ dateModified: '2026-04-25'
 
 ## Wie funktioniert die Bild-zu-Text Erkennung?
 
-Das Tool nutzt eine bewährte Open-Source-OCR-Engine, die in WebAssembly kompiliert wurde und direkt in modernen Browsern laufen kann. Anstatt Bilder mühsam auf einen Server hochzuladen, zu verarbeiten und das Ergebnis zurückzuschicken, macht dein Gerät die komplette Arbeit.
+Das Tool nutzt eine bewährte Open-Source-OCR-Engine, die in WebAssembly kompiliert wurde und direkt in modernen Browsern läuft. Dein Gerät übernimmt die gesamte Verarbeitung — kein Server ist beteiligt.
 
-Sobald du ein Bild hochlädst, versucht die Engine, Kontraste und Formen zu erkennen, Zeilen zu identifizieren und letztendlich die einzelnen Buchstaben zusammenzusetzen. Die Ausgabe erfolgt dann als normaler Text, den du weiterbearbeiten kannst.
+Nach dem Hochladen durchläuft das Bild mehrere Verarbeitungsstufen. Zuerst erfolgt die Binarisierung: Das Bild wird in ein kontraststark schwarz-weißes Abbild umgewandelt, damit Zeichen klar vom Hintergrund trennbar werden. Dann identifiziert die Engine Textzeilen durch Zeilensegmentierung und unterteilt diese weiter in einzelne Wörter. Im letzten Schritt klassifiziert ein neuronales Netz, das auf gedruckten Schriften trainiert wurde, jeden Buchstaben und setzt den Text zusammen. Das Ergebnis erscheint als normaler Klartext, den du sofort kopieren oder weiterbearbeiten kannst. Die Engine erkennt deutsche und englische Texte. Zu keinem Zeitpunkt findet ein Serverkontakt statt.
 
 ## 100 % Datenschutz
 
-Da die Analyse lokal erfolgt, ist dieses OCR-Tool ideal für Rechnungen, Verträge, persönliche Notizen oder andere sensible Dokumente. Es gibt keinen Cloud-Upload. Nach dem Schließen der Seite ist alles restlos weg.
+Die gesamte Verarbeitung findet lokal auf deinem Gerät statt. Es gibt keinen Cloud-Upload, kein Konto, keine Registrierung. Nachdem du den Tab schließt, bleiben keinerlei Daten zurück — weder auf einem Server noch im Browser-Verlauf. Das macht das Tool besonders geeignet für Steuerdokumente, Verträge, Arztbriefe und private Korrespondenz, bei denen ein Upload an einen Fremddienst keine Option ist.
 
 ## Wie erhalte ich optimale Ergebnisse?
 
-- **Guter Kontrast:** Schwarze Schrift auf weißem Grund funktioniert am besten.
-- **Scharfes Bild:** Achte darauf, dass das Bild nicht verwackelt ist.
-- **Gerade Ausrichtung:** Wenn der Text extrem schief steht, kann das die Erkennung erschweren. Schneide das Bild vorher gegebenenfalls etwas zu.
+- **Guter Kontrast:** Schwarze Schrift auf weißem Grund liefert die zuverlässigsten Ergebnisse. Schwacher Kontrast erhöht die Fehlerquote.
+- **Scharfes Bild:** Verwackelte oder unscharfe Aufnahmen erschweren die Zeichenerkennung erheblich. Fotografiere Dokumente bei ausreichend Licht.
+- **Gerade Ausrichtung:** Stark geneigter Text senkt die Erkennungsgenauigkeit. Schneide das Bild vorher zu oder richte es digital aus.
+- **Mindestbreite ~400 px:** Sehr kleine Bilder liefern oft ungenaue Ergebnisse. Zoome beim Abfotografieren nah genug heran.
+- **Farbige Hintergründe:** Wenn möglich, konvertiere das Bild vor dem Upload in Graustufen — das vereinfacht die Binarisierungsstufe.
+- **Mehrseitige Dokumente:** Verarbeite jede Seite einzeln. Das gibt dir mehr Kontrolle über die Reihenfolge und Qualität des extrahierten Texts.
+
+## Typische Anwendungsfälle
+
+**Rechnungen und Belege digitalisieren:** Papierbelege lassen sich per Foto abfotografieren und der Text direkt in eine Buchhaltungs-Tabelle einfügen — ohne Abtippen.
+
+**Visitenkarten erfassen:** Statt Kontaktdaten manuell einzugeben, lädst du ein Foto der Karte hoch und kopierst Name, Telefonnummer und E-Mail-Adresse direkt.
+
+**Text aus Buchseiten oder Druckdokumenten extrahieren:** Scans von Büchern, Broschüren oder gedruckten Berichten lassen sich so in bearbeitbaren Text umwandeln.
+
+**Screenshots mit Text auslesen:** Wenn Text in einem Screenshot steckt und sich nicht markieren lässt, liefert die OCR-Erkennung den reinen Textinhalt.
+
+**Gedruckte Formulare übertragen:** Ausgefüllte Formulare auf Papier lassen sich digitalisieren und der Inhalt in andere Systeme übernehmen — ohne händisches Abtippen.
+
+## Verwandte Text-Tools
+
+Weitere Tools aus dem Konverter-Ökosystem, die zum Thema passen:
+
+- **[WebP-Konverter](/de/webp-konverter)** — Wandle Bilder in WebP oder andere Formate um, bevor du sie zur Texterkennung verwendest.
+- **[Hintergrund entfernen](/de/hintergrund-entfernen)** — Isoliere Motive aus Bildern, um Textelemente in Fotos besser freizustellen.
+- **[Zeichenzähler](/de/zeichenzaehler)** — Zähle Zeichen, Wörter und Sätze im extrahierten Text direkt im Browser.

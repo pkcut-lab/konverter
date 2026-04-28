@@ -2,7 +2,7 @@
 toolId: "heic-to-jpg"
 language: "de"
 title: "HEIC in JPG umwandeln — kostenlos, lokal, ohne Upload"
-metaDescription: "HEIC und HEIF Dateien direkt im Browser in JPG konvertieren — kein Server-Upload, kein Tracking, DSGVO-konform. Einzelbilder, Batch und ganze Ordner. iPhone-Fotos sofort öffnen."
+metaDescription: "HEIC und HEIF direkt im Browser in JPG konvertieren — kein Upload, kein Tracking, DSGVO-konform. Einzelbilder, Batch und ganze Ordner. iPhone-Fotos öffnen."
 tagline: "iPhone-Fotos im HEIC-Format blitzschnell in JPG umwandeln — ganze Ordner, kein Upload, 100 % lokal"
 intro: "Konvertiere HEIC- und HEIF-Dateien von iPhone, iPad und Mac direkt im Browser in das universelle JPG-Format. Kein Account, kein Upload auf fremde Server, keine Cloud. Die Bilder verlassen dein Gerät nicht — DSGVO-konform durch Architektur, nicht durch Policy."
 category: "image"
