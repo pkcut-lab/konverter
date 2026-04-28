@@ -141,6 +141,7 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     },
     isPrepared: () => speechEnhancerModule?.isPrepared() ?? false,
     clearLastResult: () => speechEnhancerModule?.clearLastResult(),
+    variants: ML_VARIANTS['speech-enhancer']!,
   },
   'png-jpg-to-webp': {
     process: (input, config) =>
@@ -200,7 +201,7 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     },
     preflightCheck: () => {
       if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
-        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';
+        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder iOS 26 / Safari 26+.';
       }
       return null;
     },
@@ -236,23 +237,34 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     isPrepared: () => videoBgRemoveModule?.isVideoBgRemovePrepared() ?? false,
     clearLastResult: () => videoBgRemoveModule?.clearVideoBgRemoveLastResult(),
     preflightCheck: () => {
+      // iOS Safari ≤25 lacks `VideoEncoder` (only Decoder partial since 16.4) —
+      // VP9+Alpha-Encoding via Mediabunny needs both, so the tool is hard-blocked
+      // there. iOS 26+ (Sept 2025) ships full WebCodecs. Audit:
+      // inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md §1.3.
       if (typeof VideoEncoder === 'undefined' || typeof VideoDecoder === 'undefined') {
-        return 'Dein Browser unterstützt kein WebCodecs. Nutze Desktop-Chrome/Firefox/Edge oder Safari 16+.';
+        return 'Dein Browser unterstützt kein WebCodecs. Auf dem iPhone benötigst du iOS 26 (Safari 26) oder neuer; auf dem Desktop Chrome, Firefox oder Edge.';
       }
       return null;
     },
+    variants: ML_VARIANTS['video-bg-remove']!,
   },
   'image-to-text': {
     process: async (input, config, onProgress) => {
       const m = await import('./bild-zu-text');
       return m.bildZuText.process(input, config, onProgress);
     },
-    prepare: async (onProgress) => {
+    prepare: async (onProgress, opts) => {
       const m = await import('./bild-zu-text');
-      if (m.bildZuText.prepare) {
-        return m.bildZuText.prepare(onProgress);
+      const prepareFn = m.bildZuText.prepare as
+        | ((cb: (e: { loaded: number; total: number }) => void, opts?: { variant?: string }) => Promise<void>)
+        | undefined;
+      if (prepareFn) {
+        const passOpts: { variant?: string } = {};
+        if (opts?.variant) passOpts.variant = opts.variant;
+        return prepareFn(onProgress, passOpts);
       }
     },
+    variants: ML_VARIANTS['image-to-text']!,
   },
   'jpg-to-pdf': {
     process: async (input, config) => {

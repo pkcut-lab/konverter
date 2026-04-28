@@ -2,7 +2,25 @@ import type { FileToolConfig } from './schemas';
 import { createWorker, type Worker } from 'tesseract.js';
 import { decodeHeicIfNeeded } from './heic-decode';
 
+// Worker is cached per-language so switching variant invalidates the cache
+// (rather than carrying both lang-traineddata in memory). Mobile-fast loads
+// only the user's display-language pack (~17-22 MB); quality loads DE+EN
+// together (~39 MB).
 let worker: Worker | null = null;
+let workerLang: string | null = null;
+
+function pickTesseractLang(variant?: string): string {
+  if (variant === 'quality') return 'deu+eng';
+  if (variant === 'fast') {
+    // Detect from navigator.language at call time. iOS Safari does expose
+    // `navigator.language`, so this works on every platform.
+    const ua = typeof navigator !== 'undefined' ? navigator.language ?? '' : '';
+    return ua.toLowerCase().startsWith('de') ? 'deu' : 'eng';
+  }
+  // Backward-compat default: when no variant is passed, fall back to the
+  // pre-mobile-aware behavior so existing call-sites don't regress.
+  return 'deu+eng';
+}
 
 export const bildZuText: FileToolConfig = {
   id: 'image-to-text',
@@ -13,28 +31,38 @@ export const bildZuText: FileToolConfig = {
   defaultFormat: 'txt',
   filenameSuffix: '_text',
   showQuality: false,
-  prepare: async (onProgress) => {
-    if (!worker) {
-      // Loading German and English.
-      worker = await createWorker('deu+eng', 1, {
-        logger: ((m: { status: string; progress: number }) => {
-          // Progress reported by tesseract ranges from 0 to 1.
-          if (
-            m.status === 'loading tesseract core' ||
-            m.status === 'downloading language traineddata' ||
-            m.status === 'loading language traineddata' ||
-            m.status === 'initializing tesseract' ||
-            m.status === 'initializing api'
-          ) {
-            onProgress({ loaded: Math.round(m.progress * 100), total: 100 });
-          }
-        }) as any,
-      });
+  prepare: async (onProgress, opts?: { variant?: string }) => {
+    const lang = pickTesseractLang(opts?.variant);
+    if (worker && workerLang === lang) return;
+    if (worker && workerLang !== lang) {
+      // Variant switch: terminate the old worker so a fresh one loads the
+      // new lang pack. Without this, switching from `eng` to `deu+eng`
+      // would silently keep the smaller pack.
+      await worker.terminate().catch(() => undefined);
+      worker = null;
+      workerLang = null;
     }
+    worker = await createWorker(lang, 1, {
+      logger: ((m: { status: string; progress: number }) => {
+        if (
+          m.status === 'loading tesseract core' ||
+          m.status === 'downloading language traineddata' ||
+          m.status === 'loading language traineddata' ||
+          m.status === 'initializing tesseract' ||
+          m.status === 'initializing api'
+        ) {
+          onProgress({ loaded: Math.round(m.progress * 100), total: 100 });
+        }
+      }) as any,
+    });
+    workerLang = lang;
   },
-  process: async (input, _config, _onProgress) => {
-    if (!worker) {
-      worker = await createWorker('deu+eng');
+  process: async (input, config, _onProgress) => {
+    const variant = typeof config?.mlVariant === 'string' ? config.mlVariant : undefined;
+    const lang = pickTesseractLang(variant);
+    if (!worker || workerLang !== lang) {
+      worker = await createWorker(lang);
+      workerLang = lang;
     }
 
     // Pre-process HEIC/HEIF images (Apple format) — Tesseract cannot read them

@@ -366,10 +366,14 @@
     phase = 'converting';
     progress = null;
     convertStartMs = performance.now();
-    // Merged runtime-config: base slider (quality), chosen preset, all toggle values.
+    // Merged runtime-config: base slider (quality), chosen preset, all toggle
+    // values, plus the resolved ML variant. Tools that don't read mlVariant
+    // ignore it; the few ML-aware ones (`remove-background`, `image-to-text`,
+    // `video-bg-remove`) branch on it inside their process/prepare paths.
     const mergedConfig: Record<string, unknown> = { quality };
     if (config.presets) mergedConfig[config.presets.id] = presetValue;
     for (const t of config.toggles ?? []) mergedConfig[t.id] = toggleValues[t.id] ?? false;
+    if (selectedVariant) mergedConfig.mlVariant = selectedVariant;
     try {
       const outBytes = await processor(
         bytes,
