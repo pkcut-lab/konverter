@@ -1,0 +1,12 @@
+{
+  "name": "bildwerkzeuge",
+  "version": "1.0.0",
+  "description": "Client-side image tools: background removal, image-to-text (OCR), image difference analysis, AI image detection, HEIC to JPG/PNG conversion, and contrast checker. All processing happens locally in the browser — no upload to any server.",
+  "type": "tool",
+  "privacy": "client-side-only",
+  "entrypoint": "https://kittokit.com/de/hintergrund-entfernen",
+  "languages": ["de"],
+  "capabilities": ["background-removal", "ocr", "image-diff", "ai-detection", "heic-conversion", "contrast-check", "batch-processing", "exif-strip"],
+  "license": "free",
+  "category": "image-processing"
+}

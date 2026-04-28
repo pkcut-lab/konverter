@@ -24,19 +24,27 @@
 #     Svelte-Runtime-style-Injection erzeugen inline <style>-Blöcke.
 #   - connect-src 'self' + Huggingface-CDNs: remove-background (ONNX) +
 #     hevc-zu-h264 (Transformers.js). Spec Section 7a ML-Worker-Exception.
+#     Hugging Face migrated large-file delivery from cdn-lfs.huggingface.co
+#     to *.xethub.hf.co (XetHub CDN) in 2026 — the model URL is on
+#     huggingface.co but a 302 redirects to e.g. cas-bridge.xethub.hf.co.
+#     Both hosts must be on the connect-src allow-list or the redirect is
+#     blocked and the model download fails with `no-response` after the
+#     ServiceWorker swallows the rejection. Wildcard `*.xethub.hf.co`
+#     covers cas-bridge plus any future XetHub subdomains HF rolls out.
 #   - worker-src 'self' blob:: @vite-pwa/astro + File-Tool Worker-Boundary.
 #   - frame-ancestors 'none': Clickjacking-Hard-Stop.
 #   - COOP same-origin (2026-04-26): closes Spectre-class side-channels.
 #   - Permissions-Policy (2026-04-26): browsing-topics, interest-cohort,
 #     attribution-reporting, usb, serial, bluetooth explicitly blocked.
 /*
+  Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="https://agentskills.io/rel/skills-index"
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), browsing-topics=(), interest-cohort=(), attribution-reporting=(), usb=(), serial=(), bluetooth=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.xethub.hf.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 # Service Worker must never be cached by the browser itself — otherwise
 # users get stuck on an old build even after Workbox skipWaiting fires.
@@ -76,3 +84,13 @@
 
 /icon.svg
   Cache-Control: public, max-age=86400
+
+# Agent-readiness: correct Content-Type for well-known discovery endpoints.
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+
+/.well-known/agent-skills/index.json
+  Content-Type: application/json
+
+/.well-known/agent-skills/skills/*.json
+  Content-Type: application/json

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+  "skills": [
+    {
+      "name": "einheitenumrechnung",
+      "type": "tool",
+      "description": "Convert between units of measurement (length, weight, temperature, area, volume) — client-side, no upload.",
+      "url": "https://kittokit.com/.well-known/agent-skills/skills/einheitenumrechnung.json",
+      "sha256": "b13d6e3547ad9e971b224e73b1245f024f5d7c95c094617c58b41ac3401e72ed"
+    },
+    {
+      "name": "bildwerkzeuge",
+      "type": "tool",
+      "description": "Client-side image tools: background removal, OCR, image diff, AI detection, HEIC conversion, contrast check.",
+      "url": "https://kittokit.com/.well-known/agent-skills/skills/bildwerkzeuge.json",
+      "sha256": "67709e91a41af20def5c06762b39fa0a15d28a55a613578a382d01b6019917c6"
+    },
+    {
+      "name": "entwicklerwerkzeuge",
+      "type": "tool",
+      "description": "Developer utilities in the browser: JSON/CSS formatter, Base64, JWT decoder, hash generator, password generator.",
+      "url": "https://kittokit.com/.well-known/agent-skills/skills/entwicklerwerkzeuge.json",
+      "sha256": "cfbac2ff6f1746749b8fef69bc19ce066978cf6c7c52811f75e4184e2c84849d"
+    }
+  ]
+}

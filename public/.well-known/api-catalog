@@ -1,0 +1,22 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://kittokit.com",
+      "service-doc": [
+        {
+          "href": "https://kittokit.com/de/"
+        }
+      ],
+      "describedby": [
+        {
+          "href": "https://kittokit.com/sitemap-index.xml",
+          "type": "application/xml"
+        },
+        {
+          "href": "https://kittokit.com/.well-known/agent-skills/index.json",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

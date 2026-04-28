@@ -1,0 +1,12 @@
+{
+  "name": "entwicklerwerkzeuge",
+  "version": "1.0.0",
+  "description": "Developer utilities running entirely in the browser: JSON formatter and validator, JSON diff, JSON to CSV conversion, Base64 encoder/decoder, JWT decoder, CSS formatter, hash generator (MD5, SHA-1, SHA-256, SHA-512), password generator, and Lorem Ipsum generator.",
+  "type": "tool",
+  "privacy": "client-side-only",
+  "entrypoint": "https://kittokit.com/de/json-formatter",
+  "languages": ["de"],
+  "capabilities": ["json-format", "json-diff", "json-to-csv", "base64-encode", "base64-decode", "jwt-decode", "css-format", "hash-generate", "password-generate", "lorem-ipsum"],
+  "license": "free",
+  "category": "developer-tools"
+}
