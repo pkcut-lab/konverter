@@ -61,7 +61,7 @@ const VIEWPORTS: readonly Viewport[] = [
 const ROUTES: readonly string[] = [
   '/de',                       // DE homepage (card grid + hero)
   '/de/werkzeuge',             // Tools-Index (filter-grid)
-  '/de/hex-zu-rgb',            // ColorConverter (swatch + input row)
+  '/de/hex-rgb-konverter',     // ColorConverter (swatch + input row)
   '/de/jpg-zu-pdf',            // File-Tool (multi-image grid)
   '/de/kreditrechner',         // Calculator + wide tilgungsplan-table
   '/de/meter-zu-fuss',         // Simple Converter (two-panel-stack)
