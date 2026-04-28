@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Post-build: copy onnxruntime-web's runtime files to dist/ort/ so the
+ * Postinstall: copy onnxruntime-web's runtime files to public/ort/ so the
  * Transformers.js loader can fetch them from our origin instead of from
  * `cdn.jsdelivr.net`.
  *
@@ -16,6 +16,17 @@
  *
  *   Trade-off: we re-ship ~20 MB of ORT files per deploy (cached at the
  *   edge after first request). On Cloudflare Pages this is free.
+ *
+ * Why public/ (not dist/):
+ *   `public/*` is served verbatim by both `astro dev` and `astro build`
+ *   (the latter copies it to `dist/` automatically). Writing to `dist/`
+ *   alone would only work in production — `npm run dev` would 404 on
+ *   `/ort/*` and break every ML tool locally with the same `Failed to
+ *   fetch dynamically imported module` error users would see if the
+ *   self-host step ever skipped.
+ *
+ *   `public/ort/` is gitignored — these files come from node_modules
+ *   and are recreated on every `npm install` via the `postinstall` hook.
  *
  * What we copy:
  *   Only `ort-wasm-simd-threaded.*.{mjs,wasm}` — the four backend variants
@@ -35,7 +46,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const SRC = join(ROOT, 'node_modules', 'onnxruntime-web', 'dist');
-const DEST = join(ROOT, 'dist', 'ort');
+const DEST = join(ROOT, 'public', 'ort');
 
 if (!existsSync(SRC)) {
   console.error(`[copy-ort] FATAL: ${SRC} does not exist.`);
@@ -67,4 +78,4 @@ for (const f of files) {
 }
 
 const mb = (totalBytes / 1024 / 1024).toFixed(1);
-console.log(`[copy-ort] Copied ${files.length} ORT-Web runtime file${files.length === 1 ? '' : 's'} (${mb} MB) to dist/ort/.`);
+console.log(`[copy-ort] Copied ${files.length} ORT-Web runtime file${files.length === 1 ? '' : 's'} (${mb} MB) to public/ort/.`);

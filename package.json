@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/seo/generate-llms-txt.mjs",
-    "build": "astro build && pagefind --site dist && node scripts/copy-ort-web.mjs && node scripts/patch-csp-hashes.mjs",
+    "postinstall": "node scripts/copy-ort-web.mjs",
+    "prebuild": "node scripts/seo/generate-llms-txt.mjs && node scripts/copy-ort-web.mjs",
+    "build": "astro build && pagefind --site dist && node scripts/patch-csp-hashes.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check && tsc --noEmit && node scripts/seo/lint-question-headers.mjs && npm run lint:intro && node scripts/seo/lint-trailing-slash.mjs && node scripts/seo/lint-no-vendor-names.mjs && npm run lint:i18n",

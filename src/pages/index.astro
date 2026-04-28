@@ -10,15 +10,20 @@
 // 200 ms before the meta-refresh kicked in — which looked like a broken
 // page. This is the state-of-the-art fix (4-layer defense, 2026):
 //
-//   1. Synchronous inline <script> in <head>: location.replace() mirrors
-//      the CF function logic (cookie → navigator.languages → DEFAULT_LANG)
+//   1. Synchronous inline script tag in head: location.replace() mirrors
+//      the CF function logic (cookie -> navigator.languages -> DEFAULT_LANG)
 //      and fires BEFORE first paint — no flash in 99 % of cases.
-//   2. Inline critical <style>: brand-matched palette + system-ui font (no
+//   2. Inline critical style tag: brand-matched palette + system-ui font (no
 //      FOUT). For the rare case the page DOES paint, it looks like a brief
 //      brand splash, not an error.
-//   3. <meta http-equiv="refresh"> 0 s: no-JS fallback.
+//   3. meta http-equiv refresh 0 s: no-JS fallback.
 //   4. Visible language picker: works without JS, without meta-refresh,
 //      without anything — accessible final fallback.
+//
+// Comment intentionally avoids literal HTML-tag syntax (script, style,
+// meta angle-brackets): vite's dep-scanner greps the file for tag-shaped
+// tokens and mis-extracts surrounding text as inline-script content,
+// which breaks `npm run dev` with a parse error.
 //
 // The SUPPORTED list, COOKIE_NAME and DEFAULT_LANG MUST stay in sync with
 // functions/index.js so behaviour is identical between local dev and

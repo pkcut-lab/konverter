@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync, createReadStream } from 'node:fs';
 import { join } from 'node:path';
 import svelte from '@astrojs/svelte';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
@@ -244,5 +244,42 @@ export default defineConfig({
       // "UMD and IIFE output formats are not supported for code-splitting").
       format: 'es',
     },
+    plugins: [
+      {
+        // Serve `/ort/*.mjs` and `/ort/*.wasm` as raw static files in
+        // dev-mode. Without this, Vite's module-graph resolver intercepts
+        // the runtime's dynamic `import('/ort/ort-wasm-...mjs')` call,
+        // appends `?import` to the URL, and then 404s because public/ort/
+        // files do not match the `?import`-suffixed path. The file is a
+        // pre-bundled ESM with WASM URL literals that must NOT be vite-
+        // transformed; passing through `sendFile` keeps it byte-identical
+        // to the production CF-Pages-served version. Production is
+        // unaffected (no Vite in the request path).
+        name: 'kittokit:serve-ort-raw',
+        enforce: 'pre',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            const url = req.url;
+            if (typeof url !== 'string' || !url.startsWith('/ort/')) return next();
+            const cleanPath = url.split('?')[0];
+            const filePath = `${server.config.publicDir}${cleanPath}`;
+            try {
+              const stat = statSync(filePath);
+              if (!stat.isFile()) return next();
+              const ext = cleanPath.endsWith('.wasm')
+                ? 'application/wasm'
+                : 'text/javascript';
+              res.statusCode = 200;
+              res.setHeader('Content-Type', ext);
+              res.setHeader('Content-Length', String(stat.size));
+              res.setHeader('Cache-Control', 'no-cache');
+              createReadStream(filePath).pipe(res);
+            } catch {
+              return next();
+            }
+          });
+        },
+      },
+    ],
   },
 });
