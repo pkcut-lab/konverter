@@ -82,8 +82,10 @@
 <style>
   .banner {
     position: fixed;
-    bottom: var(--space-6);
-    right: var(--space-6);
+    /* Safe-Area-Inset für iOS mit viewport-fit=cover: Banner sitzt nicht
+       hinter dem Home-Indicator (bottom) bzw. dem Notch (right im Landscape). */
+    bottom: max(var(--space-6), env(safe-area-inset-bottom));
+    right: max(var(--space-6), env(safe-area-inset-right));
     max-width: 24rem;
     padding: var(--space-6);
     background: var(--color-bg);

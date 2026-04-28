@@ -160,7 +160,12 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
   .inner {
     max-width: 72rem;
     margin: 0 auto;
-    padding: var(--space-3) var(--space-6);
+    /* Vertikales Padding über --space-3, horizontal mit safe-area-inset
+       gepaart für iPhone-Landscape-Notch (viewport-fit=cover, BaseLayout). */
+    padding-block: var(--space-3);
+    padding-inline:
+      max(var(--space-6), env(safe-area-inset-left))
+      max(var(--space-6), env(safe-area-inset-right));
     display: grid;
     grid-template-columns: auto auto 1fr auto auto;
     align-items: center;
@@ -271,12 +276,18 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
   .popular-bar {
     border-top: 1px solid var(--color-border);
     background: var(--color-bg);
-    overflow: hidden;
+    /* `clip` statt `hidden`: kein neuer Scroll-Container — vermeidet den
+       iOS-Safari-Compositor-Bug mit `position: sticky` + `backdrop-filter`
+       am `.site-header`-Eltern. */
+    overflow-x: clip;
+    max-inline-size: 100%;
   }
   .popular-bar__inner {
     max-width: 72rem;
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding-inline:
+      max(var(--space-6), env(safe-area-inset-left))
+      max(var(--space-6), env(safe-area-inset-right));
     display: flex;
     align-items: stretch;
     gap: var(--space-4);
@@ -354,7 +365,10 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
       row-gap: var(--space-2);
       /* Mobile: kompakteres Padding + Gap, damit Brand + Lang-Chips +
          Toggle auch auf 320px-Viewports (iPhone SE) ohne Overflow passen. */
-      padding: var(--space-3) var(--space-4);
+      padding-block: var(--space-3);
+      padding-inline:
+        max(var(--space-4), env(safe-area-inset-left))
+        max(var(--space-4), env(safe-area-inset-right));
       gap: var(--space-3);
     }
     .nav {
@@ -365,7 +379,9 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
       order: 3;
     }
     .popular-bar__inner {
-      padding: 0 var(--space-4);
+      padding-inline:
+        max(var(--space-4), env(safe-area-inset-left))
+        max(var(--space-4), env(safe-area-inset-right));
     }
     .popular-bar__label {
       display: none;

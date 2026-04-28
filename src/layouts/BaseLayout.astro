@@ -88,7 +88,7 @@ const websiteJsonLd = {
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{brandedTitle}</title>
     {description && <meta name="description" content={description} />}
     {!noindex && <link rel="canonical" href={canonical} />}
@@ -217,8 +217,8 @@ const websiteJsonLd = {
 <style>
   .skip-to-content {
     position: absolute;
-    top: var(--space-4);
-    left: var(--space-4);
+    top: max(var(--space-4), env(safe-area-inset-top));
+    left: max(var(--space-4), env(safe-area-inset-left));
     z-index: 9999;
     padding: var(--space-3) var(--space-5);
     border-radius: var(--r-md);

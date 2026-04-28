@@ -14,22 +14,43 @@ html {
   line-height: var(--font-lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Defense-in-depth gegen versehentlichen horizontalen Scroll auf Mobile.
-     `clip` (statt `hidden`) verhindert NICHT Position-Sticky am <header>,
-     im Gegensatz zu `overflow: hidden` welches einen Scroll-Container
-     erzeugt und dadurch Sticky-Positionierung neutralisiert. */
-  overflow-x: clip;
+  /* Reserviert die Desktop-Scrollbar-Spalte permanent, damit kein Layout-
+     Shift auftritt sobald Content über die erste Viewport-Höhe wächst.
+     Mobile (Overlay-Scrollbars): No-op. Baseline 2024. */
+  scrollbar-gutter: stable;
 }
 
 body {
   margin: 0;
   background: inherit;
   color: inherit;
-  /* Lange unbrechbare Strings (URLs, Compound-Wörter wie
-     „Datenschutzerklärung") dürfen das Layout auf engen Viewports nicht
-     sprengen. `break-word` bricht nur, wenn nötig — normaler Wortfluss
-     bleibt intakt. */
-  overflow-wrap: break-word;
+  /* Single Safety-Net: `clip` verhindert horizontalen Scroll OHNE neuen
+     Scroll-Container zu erzeugen — `position: sticky` am Header bleibt
+     funktional. Auf <body> (nicht <html>) damit iOS-Rubber-Band sauber
+     bleibt. Gepaart mit dem Playwright-Overflow-Gate (tests/e2e/) damit
+     dieser Net keine echten Bugs versteckt. */
+  overflow-x: clip;
+  /* `anywhere` (statt `break-word`) zählt Soft-Break-Punkte in min-content
+     mit ein — Folge: lange URLs/Hashes/Compounds („Datenschutzerklärung")
+     sprengen Flex-/Grid-Items NICHT mehr, weil der Eltern-Layout-Algorithmus
+     die Bruchstellen kennt. Baseline-Widely seit Safari 15.4. */
+  overflow-wrap: anywhere;
+}
+
+/* Code-Blöcke sollen NICHT mid-token brechen — sie scrollen seitlich in
+   ihrem eigenen Container. `<pre>` ist Block, daher overflow-x: auto.
+   Inline `<code>`/`<kbd>`/`<samp>` erben `anywhere` vom Body (gewollt:
+   lange Bezeichner sollen Zeilen umbrechen statt Layout zu sprengen). */
+pre {
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+/* Replaced Elements dürfen niemals breiter als ihr Container sein.
+   `block-size: auto` hält Aspect-Ratio bei `inline-size: 100%`. */
+img, video, iframe, svg, canvas, picture {
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 h1, h2, h3 {
