@@ -741,6 +741,102 @@ grep -rn "TODO(phase-3)" src/ astro.config.mjs
   einführen, die niemand bemerkt. Diese Liste arbeitest du im selben
   PR ab, in dem du die neue Sprache hinzufügst.
 
+## 12. Mobile-Overflow-Defense (4-Layer-Pattern, gelockt 2026-04-28)
+
+> **Wann lesen:** Vor jedem neuen Tool-Component, Layout-Refactor oder
+> wenn Mobile-Layout-Bugs auftreten. Diese vier Schichten greifen
+> ineinander; das Entfernen einer Schicht öffnet einen Klassen-Bug.
+> Quelle: `PROGRESS.md`-Eintrag 2026-04-28 + Commits `7b7a941`..`12657a2`.
+
+Mobile-Viewports (320–430 px) sind unforgiving: ein einzelner
+unbreakable String (Datei-Hash, lange URL, Compound-Word) sprengt das
+Layout, und die Folge ist horizontaler Scroll auf der ganzen Seite. Wir
+verteidigen uns auf vier orthogonalen Ebenen, von „Browser sieht
+zuerst" bis „CI fängt Regressionen".
+
+### 12.1 Die vier Schichten
+
+**Layer 1 — Viewport-Meta** (`src/layouts/BaseLayout.astro:91`):
+`viewport-fit=cover` aktiviert iOS-Notch-Awareness, ohne das greifen
+`env(safe-area-inset-*)`-Werte nicht. Pflicht-Set für jede Layout-Page.
+
+**Layer 2 — Globaler CSS-Reset** (`src/styles/global.css:8-65`):
+
+```css
+html { scrollbar-gutter: stable; }   /* Desktop-CLS-Schutz */
+body {
+  overflow-x: clip;                  /* maskiert horizontalen Scroll */
+  overflow-wrap: anywhere;           /* zählt Bruchstellen in min-content */
+}
+pre { overflow-wrap: normal; overflow-x: auto; }
+img, video, iframe, canvas, picture { max-inline-size: 100%; block-size: auto; }
+svg { max-inline-size: 100%; }
+svg:not([width]):not([height]) { block-size: auto; }
+```
+
+Drei Entscheidungen sind nicht verhandelbar:
+- **`clip` statt `hidden`, auf `<body>` statt `<html>`.** `hidden` erzeugt
+  einen neuen Scroll-Container und bricht `position: sticky` am Header.
+  `clip` nicht. Auf `<body>` (nicht `<html>`) damit iOS-Rubber-Band
+  sauber bleibt.
+- **`overflow-wrap: anywhere`, nicht `break-word`.** `anywhere` zählt
+  Soft-Break-Punkte in der `min-content`-Berechnung — nur damit sprengen
+  lange URLs/Hashes/Compounds Flex-/Grid-Items NICHT mehr. `break-word`
+  ist non-standard und wirkt zu spät.
+- **SVG-Split:** generisches `block-size: auto` würde explizite
+  `width="26"`-Attribute überschreiben (Brand-Mark, ThemeToggle-Icons).
+  Daher Cap immer (`max-inline-size: 100%`), aber `block-size: auto`
+  nur, wenn keine expliziten Dimensionen am SVG hängen.
+
+**Layer 3 — Tactical Leaf-Fixes** (Komponente-lokal):
+- `safe-area-inset` auf jedem `position: sticky`/`fixed`-Element gepaart
+  mit `max(var(--space-*), env(safe-area-inset-*))`-Padding. Beispiele:
+  `.site-main`, `.skip-to-content` (`BaseLayout.astro`), `.popular-bar`
+  (`Header.astro`), `.banner` (`CookieBanner.svelte`).
+- `min-width: 0` auf JEDES Flex-/Grid-Item, dessen 1fr-Track potentiell
+  unbreakable Content trägt (Filenames, Hashes, lange Werte). Ohne das
+  expandiert das `1fr`-Track auf den längsten unteilbaren String.
+- `overflow-x: clip` (nicht `hidden`) auf jedem Wrapper, der
+  `position: sticky`-Eltern hat und ein eigener Layer-Container werden
+  könnte (z.B. `.popular-bar` unter dem sticky `.site-header`).
+
+**Layer 4 — Playwright-Gate**
+(`tests/e2e/no-horizontal-overflow.spec.ts`):
+12 repräsentative Routen × 6 Mobile-Viewports = 72 Tests. Vor der
+Messung wird der Layer-2-Mask temporär gelifted (`overflow-x: visible`
+auf `<html>` + `<body>`), dann `scrollWidth - clientWidth` am `<html>`
+gemessen. Bei Overflow > 0 listet der Error die Top-10 offending
+Elements (tag/id/class/overshoot-px) als direkten Fix-Hint. Eingebunden
+via `npm run test:overflow`. CI-Schritt in
+`.github/workflows/deploy.yml` (Job `verify`) blockt Mobile-Layout-
+Regressionen vor Merge.
+
+### 12.2 Pflichten beim Bauen einer neuen Komponente
+
+- Jedes Flex/Grid-Item, das `1fr`-Track + Text mit potentiell langen
+  Strings (Filenames, Hashes, URLs, Compound-Words) trägt, bekommt
+  `min-width: 0`.
+- Jedes `position: sticky`/`fixed`-Element koppelt sein Padding mit
+  `safe-area-inset` über den `max(var(--space-*), env(safe-area-inset-*))`
+  -Pattern.
+- Component-lokales `overflow-wrap: break-word` oder `word-break:
+  break-word` ist verboten — der globale Reset aus §12.1 deckt das ab.
+  `word-break: break-all` ist erlaubt **nur** für Generator-Output
+  (Passwords, Hashes), wo jeder Char ein gültiger Break-Punkt ist.
+- Bei einem neuen Layout-Pattern (anderer struktureller Container als
+  bestehende Tools): Route in `tests/e2e/no-horizontal-overflow.spec.ts`
+  → `ROUTES` ergänzen. Bei einem neuen Tool desselben Typs **nicht**
+  ergänzen — die Pattern-Repräsentation reicht.
+
+### 12.3 Bei Mobile-Layout-Bug — Debug-Reihenfolge
+
+1. `npm run test:overflow` lokal — Error-Output listet Tag/Klasse/
+   Overshoot-px der offending Elements direkt.
+2. Im Inspector: Lift Layer 2 manuell (`document.body.style.overflowX =
+   'visible'`) und scroll horizontal — was sprengt das Layout?
+3. Fix nach §12.2-Pflichten am offending Element. Niemals den globalen
+   Layer-2-Reset abschwächen.
+
 ## Build-Gates
 
 - `npm run build` muss grün sein vor Commit
