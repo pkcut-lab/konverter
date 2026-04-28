@@ -53,10 +53,23 @@ export interface DeviceProbe {
 interface MinimalGpuAdapter {
   isFallbackAdapter?: boolean;
   features?: { has: (feature: string) => boolean } | Set<string>;
+  limits?: {
+    maxStorageBuffersPerShaderStage?: number;
+  };
 }
 interface MinimalGpu {
   requestAdapter: (opts?: { powerPreference?: 'low-power' | 'high-performance' }) => Promise<MinimalGpuAdapter | null>;
 }
+
+/**
+ * BiRefNet_lite-FP16 has shader stages that bind 17 storage buffers; BEN2
+ * shaders are similar. The WebGPU spec minimum is 8; Windows ANGLE caps at
+ * 16; only native Vulkan / Metal / D3D12 typically expose 32+. Adapters
+ * below 17 will throw `OrtRun ERROR_CODE: 1 — Too many storage buffers in
+ * shader (Current: 17, Max is 16)` mid-inference, so we gate WebGPU behind
+ * this limit and route those users to MODNet-Q8 in WASM.
+ */
+const MIN_STORAGE_BUFFERS_FOR_FP16 = 17;
 interface NavigatorWithGpu extends Navigator {
   gpu?: MinimalGpu;
 }
@@ -89,7 +102,9 @@ function adapterHasFeature(adapter: MinimalGpuAdapter, feature: string): boolean
  * Probe WebGPU with the same constraints the FP16 segmentation models impose:
  * 1. `navigator.gpu.requestAdapter({ powerPreference: 'high-performance' })`
  *    — biases toward the dGPU on hybrid laptops; on integrated-only systems
- *    the dispatcher falls back to the iGPU automatically.
+ *    the dispatcher falls back to the iGPU automatically. Note: Windows
+ *    Chrome ignores this hint as of crbug.com/369219127 — that's harmless,
+ *    we still get the correct adapter.
  * 2. Reject `adapter.isFallbackAdapter === true` — that's Chrome's CPU-side
  *    Dawn-fallback, advertised as WebGPU but routes ML work through software
  *    paths that OOM on FP16 segmentation networks (BiRefNet_lite, BEN2).
@@ -97,9 +112,18 @@ function adapterHasFeature(adapter: MinimalGpuAdapter, feature: string): boolean
  *    software inside the GPU pipeline; correctness is fragile and perf is
  *    worse than WASM with SIMD+threads. Documented requirement in the
  *    Transformers.js v4 / ORT-Web 1.20+ FP16 path.
+ * 4. Require `maxStorageBuffersPerShaderStage >= 17`. BiRefNet_lite has a
+ *    shader stage that binds 17 storage buffers; BEN2 is similar. The
+ *    WebGPU spec minimum is 8; Windows ANGLE caps at 16; Apple Metal /
+ *    Linux Mesa Vulkan typically expose 32+. Adapters below 17 throw
+ *    `OrtRun ERROR_CODE: 1 — Too many storage buffers in shader` mid-
+ *    inference, so we gate WebGPU behind this limit and route those
+ *    users to MODNet-Q8 in WASM. Observed in prod 2026-04-29 on a Windows
+ *    Chrome session that passed checks 1-3 but had only 16 buffers.
  *
- * Any failure (no adapter, fallback, missing feature, exception) returns
- * `false` so callers route to MODNet-Q8 in WASM, which works everywhere.
+ * Any failure (no adapter, fallback, missing feature, low limit, exception)
+ * returns `false` so callers route to MODNet-Q8 in WASM, which works
+ * everywhere.
  */
 async function probeWebGPU(nav: Navigator): Promise<boolean> {
   try {
@@ -109,6 +133,10 @@ async function probeWebGPU(nav: Navigator): Promise<boolean> {
     if (adapter === null || adapter === undefined) return false;
     if (adapter.isFallbackAdapter === true) return false;
     if (!adapterHasFeature(adapter, 'shader-f16')) return false;
+    const maxStorageBuffers = adapter.limits?.maxStorageBuffersPerShaderStage;
+    if (typeof maxStorageBuffers !== 'number' || maxStorageBuffers < MIN_STORAGE_BUFFERS_FOR_FP16) {
+      return false;
+    }
     return true;
   } catch {
     return false;

@@ -106,21 +106,26 @@ async function detectDevice(allowWebGpu: boolean): Promise<'webgpu' | 'wasm'> {
         requestAdapter: (opts?: { powerPreference?: 'high-performance' | 'low-power' }) => Promise<{
           isFallbackAdapter?: boolean;
           features?: { has?: (k: string) => boolean };
+          limits?: { maxStorageBuffersPerShaderStage?: number };
         } | null>;
       };
     }).gpu;
     if (!gpu) return 'wasm';
     // Mirror the hardened probe in `ml-device-detect.ts`: bias toward dGPU,
     // reject Dawn-fallback (CPU-routed, OOMs on FP16), require shader-f16
-    // (FP16 ops in hardware, not emulated). Disagreement between this
-    // dispatcher and the FileTool's variant-picker is the failure mode we
-    // saw in prod where the picker said "you have WebGPU, take BiRefNet
-    // FP16" and the runtime then ran it on a software adapter and OOMed.
+    // (FP16 ops in hardware, not emulated), AND require >=17 storage buffers
+    // per shader stage (BiRefNet_lite shaders need 17; Windows ANGLE caps
+    // at 16 → `OrtRun ERROR_CODE: 1 Too many storage buffers`). Disagreement
+    // between this dispatcher and the FileTool's variant-picker is the
+    // exact failure mode we saw in prod where the picker said "you have
+    // WebGPU, take BiRefNet FP16" and the runtime then crashed mid-inference.
     const adapter = await gpu.requestAdapter({ powerPreference: 'high-performance' });
     if (!adapter) return 'wasm';
     if (adapter.isFallbackAdapter === true) return 'wasm';
     const has = adapter.features?.has;
     if (typeof has !== 'function' || !has.call(adapter.features, 'shader-f16')) return 'wasm';
+    const maxStorageBuffers = adapter.limits?.maxStorageBuffersPerShaderStage;
+    if (typeof maxStorageBuffers !== 'number' || maxStorageBuffers < 17) return 'wasm';
     return 'webgpu';
   } catch {
     return 'wasm';

@@ -424,15 +424,28 @@
     } catch (err) {
       progress = null;
       convertStartMs = null;
-      // ONNX-WASM OOM recovery: if inference crashed with `std::bad_alloc` or
-      // `OrtRun ERROR_CODE: 6` and we are on a WebGPU-required variant, the
-      // adapter likely died after probe-time. Drop to `fast` (always runnable
-      // in WASM) and retry the file. The string-match is the only signal ONNX
-      // exposes — there is no error code on the JS side.
+      // ONNX runtime-failure recovery for WebGPU-required variants. Two
+      // distinct failure modes both translate to "this adapter cannot run
+      // FP16 BiRefNet/BEN2 — fall back to MODNet-Q8 in WASM":
+      //
+      //   ERROR_CODE: 1 — "Too many storage buffers in shader" — adapter's
+      //     `maxStorageBuffersPerShaderStage` is below the 17 BiRefNet_lite
+      //     needs. Windows ANGLE caps at 16, so most Windows users hit this
+      //     even though they pass our probe (which now also gates on this,
+      //     but old caches / pre-probe adapter probes can still leak through).
+      //
+      //   ERROR_CODE: 6 — `std::bad_alloc` — WASM OOM (heap exhaust on FP16
+      //     model inference). Less common now that the probe rejects no-
+      //     WebGPU adapters early, but defended in case the adapter dies
+      //     after probe-time.
+      //
+      // String-match is the only signal ONNX exposes — there is no error
+      // code on the JS side. Both error messages contain `OrtRun` plus the
+      // numeric code; we match either text-form for robustness.
       const errMsg = err instanceof Error ? err.message : '';
-      const isOOM = /bad_alloc|ERROR_CODE: 6|out of memory/i.test(errMsg);
+      const isWebGpuRuntimeFail = /bad_alloc|out of memory|ERROR_CODE:\s*[16]|Too many storage buffers/i.test(errMsg);
       const activeIsWebGpuOnly = activeVariant?.requiresWebGPU === true;
-      if (isOOM && activeIsWebGpuOnly && fastVariant && selectedVariant !== 'fast') {
+      if (isWebGpuRuntimeFail && activeIsWebGpuOnly && fastVariant && selectedVariant !== 'fast') {
         if (selectedVariant && runtime?.clearVariantCache) {
           runtime.clearVariantCache(selectedVariant);
         }

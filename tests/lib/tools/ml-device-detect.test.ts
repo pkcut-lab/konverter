@@ -13,11 +13,16 @@ function makeNav(parts: MockNavigatorParts): Navigator {
   return parts as unknown as Navigator;
 }
 
-/** Adapter shape that passes the hardened probe (non-fallback, shader-f16). */
+/**
+ * Adapter shape that passes the hardened probe: non-fallback, shader-f16,
+ * and 17+ storage buffers per shader stage (matches Apple Metal / Linux
+ * Vulkan defaults; Windows ANGLE typically reports 16 and is rejected).
+ */
 function realAdapter(): unknown {
   return {
     isFallbackAdapter: false,
     features: new Set(['shader-f16']),
+    limits: { maxStorageBuffersPerShaderStage: 32 },
   };
 }
 
@@ -72,11 +77,46 @@ describe('detectMlDevice', () => {
         requestAdapter: async () => ({
           isFallbackAdapter: false,
           features: new Set([]),
+          limits: { maxStorageBuffersPerShaderStage: 32 },
         }),
       },
     });
     const probe = await detectMlDevice(nav);
     expect(probe.hasWebGPU).toBe(false);
+  });
+
+  it('returns hasWebGPU=false when adapter has only 16 storage buffers per stage (Windows ANGLE)', async () => {
+    // Regression: BiRefNet_lite shaders bind 17 storage buffers; Windows
+    // ANGLE caps at 16, throwing `OrtRun ERROR_CODE: 1 Too many storage
+    // buffers` mid-inference. Probe must reject these adapters before the
+    // user is offered the FP16 variant.
+    const nav = makeNav({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0) Chrome/132',
+      gpu: {
+        requestAdapter: async () => ({
+          isFallbackAdapter: false,
+          features: new Set(['shader-f16']),
+          limits: { maxStorageBuffersPerShaderStage: 16 },
+        }),
+      },
+    });
+    const probe = await detectMlDevice(nav);
+    expect(probe.hasWebGPU).toBe(false);
+  });
+
+  it('returns hasWebGPU=true at exactly 17 storage buffers per stage (boundary)', async () => {
+    const nav = makeNav({
+      userAgent: 'Mozilla/5.0 (Macintosh) Safari/17.0',
+      gpu: {
+        requestAdapter: async () => ({
+          isFallbackAdapter: false,
+          features: new Set(['shader-f16']),
+          limits: { maxStorageBuffersPerShaderStage: 17 },
+        }),
+      },
+    });
+    const probe = await detectMlDevice(nav);
+    expect(probe.hasWebGPU).toBe(true);
   });
 
   it('passes powerPreference: high-performance to requestAdapter', async () => {

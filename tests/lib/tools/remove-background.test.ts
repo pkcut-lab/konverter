@@ -72,6 +72,10 @@ describe('remove-background pure module', () => {
         requestAdapter: vi.fn(async () => ({
           isFallbackAdapter: false,
           features: new Set(['shader-f16']),
+          // Apple Metal / Linux Vulkan default — well above the 17-buffer
+          // floor BiRefNet_lite needs. Windows ANGLE adapters (16) are
+          // covered by a dedicated "no-WebGPU" branch test elsewhere.
+          limits: { maxStorageBuffersPerShaderStage: 32 },
         })),
       },
     });
