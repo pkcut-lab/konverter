@@ -51,4 +51,7 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
+# Content usage preferences (contentsignals.org / IETF Draft).
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+
 Sitemap: https://kittokit.com/sitemap-index.xml

@@ -1,0 +1,12 @@
+{
+  "name": "einheitenumrechnung",
+  "version": "1.0.0",
+  "description": "Convert between units of measurement: length (meter, foot, mile, inch), weight (kg, lb, oz), temperature (°C, °F, K), area (m², ft², acre, hectare), and volume (l, gal, ml, fl oz). Runs entirely client-side — no data is uploaded.",
+  "type": "tool",
+  "privacy": "client-side-only",
+  "entrypoint": "https://kittokit.com/de/meter-zu-fuss",
+  "languages": ["de"],
+  "capabilities": ["length", "weight", "temperature", "area", "volume", "batch-conversion"],
+  "license": "free",
+  "category": "unit-conversion"
+}

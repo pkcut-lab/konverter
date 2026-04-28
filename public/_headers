@@ -30,6 +30,7 @@
 #   - Permissions-Policy (2026-04-26): browsing-topics, interest-cohort,
 #     attribution-reporting, usb, serial, bluetooth explicitly blocked.
 /*
+  Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="https://agentskills.io/rel/skills-index"
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
@@ -76,3 +77,13 @@
 
 /icon.svg
   Cache-Control: public, max-age=86400
+
+# Agent-readiness: correct Content-Type for well-known discovery endpoints.
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+
+/.well-known/agent-skills/index.json
+  Content-Type: application/json
+
+/.well-known/agent-skills/skills/*.json
+  Content-Type: application/json
