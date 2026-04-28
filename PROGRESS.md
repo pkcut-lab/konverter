@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-29 — HEIC-Konverter (heic-zu-jpg + heic-zu-png): Zwei neue File-Tools mit Batch/Ordner-Drop, EXIF-Privacy-Modi (Ohne GPS / Alles behalten / Alles entfernen), Auflösungs-Skalierung, Live-Photo-Erkennung und ZIP-Download. 2002/2002 Vitest grün · alle SEO-Lints grün.
+**Letztes Update:** 2026-04-29 — SEO/Agent-Readiness-Pass: 4× Meta-Description auf ≤160 Zeichen getrimmt, 4× Thin-Content auf 470–520 Wörter expandiert, Agent-Readiness-Dateien deployed (Content-Signal, Link-Header, api-catalog, agent-skills). Mozilla Observatory: A+ / 110/100. 2002/2002 Vitest grün.
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
 
 ---
