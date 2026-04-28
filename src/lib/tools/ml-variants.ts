@@ -42,6 +42,18 @@ export interface MlVariant {
   license: 'MIT' | 'Apache-2.0' | 'BSD-3-Clause' | 'CC-BY-4.0';
   /** Which device classes are allowed to auto-pick this variant. */
   allowedFor: DeviceClass[];
+  /**
+   * True if the model is too memory-hungry to survive ONNX-WASM inference
+   * (typically FP16/FP32 weights >50 MB). Without WebGPU the inference call
+   * crashes with `std::bad_alloc` (`OrtRun ERROR_CODE: 6`) — observed live on
+   * BiRefNet_lite-FP16 (115 MB) and BEN2-FP16 (219 MB). Variants without this
+   * flag are quantized (Q4/Q8) and run fine in WASM.
+   *
+   * `pickDefaultVariant` filters these out when `probe.hasWebGPU` is false,
+   * and `FileTool.svelte` hides the switcher button so the user cannot pick
+   * a variant the browser cannot run.
+   */
+  requiresWebGPU?: boolean;
 }
 
 /**
@@ -69,6 +81,7 @@ export const ML_VARIANTS: Record<string, MlVariant[]> = {
       sizeBytes: 115_000_000, // model_fp16.onnx 115 MB
       license: 'MIT',
       allowedFor: ['capable-mobile', 'desktop'],
+      requiresWebGPU: true,
     },
     {
       id: 'pro',
@@ -77,6 +90,7 @@ export const ML_VARIANTS: Record<string, MlVariant[]> = {
       sizeBytes: 219_000_000, // model_fp16.onnx 219 MB — ONLY desktop, opt-in
       license: 'MIT',
       allowedFor: ['desktop'],
+      requiresWebGPU: true,
     },
   ],
 
@@ -100,6 +114,7 @@ export const ML_VARIANTS: Record<string, MlVariant[]> = {
       sizeBytes: 115_000_000,
       license: 'MIT',
       allowedFor: ['capable-mobile', 'desktop'],
+      requiresWebGPU: true,
     },
   ],
 
@@ -216,23 +231,42 @@ export function pickDefaultVariant(
     throw new Error(`No variants registered for tool "${toolId}"`);
   }
 
-  // For mobile classes prefer the smallest variant.
+  // Variants that need WebGPU OOM in WASM. Filter them out when the probe says
+  // no WebGPU adapter — even on desktop class, since the class derivation does
+  // not yet consider WebGPU absence (a desktop Firefox / Linux Chromium falls
+  // through to `desktop` despite lacking WebGPU). This keeps the auto-default
+  // safe; users can still pick larger variants manually IF the FileTool
+  // surfaces them, which it only does when the probe confirms WebGPU.
+  const runnable = variants.filter(
+    (v) => probe.hasWebGPU || !v.requiresWebGPU,
+  );
+  if (runnable.length === 0) {
+    throw new Error(
+      `No variant of "${toolId}" is runnable on this browser ` +
+      `(WebGPU=${probe.hasWebGPU}). At least one variant must work without WebGPU.`,
+    );
+  }
+
+  // For mobile classes prefer the smallest applicable variant.
   if (probe.class === 'fast-mobile' || probe.class === 'capable-mobile') {
-    const mobileFirst = variants.find((v) => v.allowedFor.includes(probe.class));
+    const mobileFirst = runnable.find((v) => v.allowedFor.includes(probe.class));
     if (mobileFirst) return mobileFirst.id;
   }
 
   // For desktop prefer `quality` (middle option) — `pro` requires explicit opt-in.
-  const quality = variants.find((v) => v.id === 'quality' && v.allowedFor.includes(probe.class));
+  const quality = runnable.find((v) => v.id === 'quality' && v.allowedFor.includes(probe.class));
   if (quality) return quality.id;
 
-  // Fallback: any allowed variant.
-  const any = variants.find((v) => v.allowedFor.includes(probe.class));
+  // Fallback: smallest runnable variant allowed for this class. Variants are
+  // declared in size order (fast → quality → pro), so `find` picks the
+  // smallest one, which is also the lowest WASM-OOM risk.
+  const any = runnable.find((v) => v.allowedFor.includes(probe.class));
   if (any) return any.id;
 
-  throw new Error(
-    `No variant of "${toolId}" is allowed for device class "${probe.class}"`,
-  );
+  // Last-resort safety net: if no variant is `allowedFor` this class but at
+  // least one is runnable, pick the smallest runnable. Better to return a
+  // working tool than throw at the user.
+  return runnable[0]!.id;
 }
 
 /** Look up a specific variant. Returns `undefined` if not registered. */

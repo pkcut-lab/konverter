@@ -56,8 +56,15 @@ describe('remove-background pure module', () => {
       }
     }
     vi.stubGlobal('OffscreenCanvas', FakeOffscreenCanvas);
-    // navigator.gpu absent → forces wasm path in detectDevice
-    vi.stubGlobal('navigator', { ...globalThis.navigator, gpu: undefined });
+    // Default: WebGPU adapter is available. Tests that exercise the no-WebGPU
+    // branch (`WebGpuRequiredError`) re-stub navigator with `gpu: undefined`
+    // inside their own body. Defaulting to "available" matches the production
+    // happy path on modern Chrome / Edge / Android — the FP16 variants are
+    // designed for that environment.
+    vi.stubGlobal('navigator', {
+      ...globalThis.navigator,
+      gpu: { requestAdapter: vi.fn(async () => ({})) },
+    });
   });
 
   afterEach(() => {
@@ -248,6 +255,36 @@ describe('remove-background pure module', () => {
     expect(m.isPreparedFor('fast')).toBe(false);
     expect(m.isPreparedFor('quality')).toBe(false);
     expect(m.getActiveVariant()).toBe(null);
+  });
+
+  it('quality variant throws WebGpuRequiredError when no WebGPU adapter', async () => {
+    // Regression: BiRefNet_lite-FP16 (115 MB) crashes ONNX-WASM inference with
+    // `std::bad_alloc`. The `requiresWebGPU` flag plus this fail-fast guard
+    // prevent the user from waiting for a 115 MB download that ends in OOM.
+    vi.stubGlobal('navigator', { ...globalThis.navigator, gpu: undefined });
+    const m = await import('../../../src/lib/tools/remove-background');
+    await expect(
+      m.prepareBackgroundRemovalModel(() => undefined, { variant: 'quality' }),
+    ).rejects.toMatchObject({ name: 'WebGpuRequiredError' });
+    // pipeline() must NOT have been invoked — the guard fires before download.
+    expect(pipelineSpy).not.toHaveBeenCalled();
+  });
+
+  it('pro variant throws WebGpuRequiredError when no WebGPU adapter', async () => {
+    vi.stubGlobal('navigator', { ...globalThis.navigator, gpu: undefined });
+    const m = await import('../../../src/lib/tools/remove-background');
+    await expect(
+      m.prepareBackgroundRemovalModel(() => undefined, { variant: 'pro' }),
+    ).rejects.toMatchObject({ name: 'WebGpuRequiredError' });
+  });
+
+  it('fast variant succeeds without WebGPU (Q8 MODNet runs in WASM)', async () => {
+    vi.stubGlobal('navigator', { ...globalThis.navigator, gpu: undefined });
+    const m = await import('../../../src/lib/tools/remove-background');
+    await expect(
+      m.prepareBackgroundRemovalModel(() => undefined, { variant: 'fast' }),
+    ).resolves.toBeUndefined();
+    expect(pipelineSpy).toHaveBeenCalledTimes(1);
   });
 
   it('progress events reset the stall watchdog', async () => {

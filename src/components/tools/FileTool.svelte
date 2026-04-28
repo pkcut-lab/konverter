@@ -79,7 +79,18 @@
 
   const acceptAttr = $derived(config.accept.join(','));
   // ML-variant-derived UI helpers.
-  const variants = $derived<MlVariant[] | undefined>(getRuntime(config.id)?.variants);
+  const allVariants = $derived<MlVariant[] | undefined>(getRuntime(config.id)?.variants);
+  // Hide WebGPU-only variants on browsers without a WebGPU adapter. Picking a
+  // FP16 model (BiRefNet_lite, BEN2) without WebGPU forces ONNX-WASM, which
+  // OOMs during inference (`std::bad_alloc` / `OrtRun ERROR_CODE: 6`). The
+  // `deviceProbe` is null until detection resolves; while null we keep the full
+  // list so the UI does not flicker between counts. Once the probe lands, a
+  // missing-WebGPU result trims the list to runnable variants only.
+  const variants = $derived<MlVariant[] | undefined>(
+    allVariants && deviceProbe && !deviceProbe.hasWebGPU
+      ? allVariants.filter((v) => !v.requiresWebGPU)
+      : allVariants,
+  );
   const activeVariant = $derived<MlVariant | undefined>(
     variants && selectedVariant
       ? variants.find((v) => v.id === selectedVariant)
@@ -351,6 +362,23 @@
         await runtime.prepare((e) => { prepareProgress = e; }, prepOpts);
       } catch (err) {
         const isStall = err instanceof Error && err.name === 'StallError';
+        // WebGPU-required variant on a browser without adapter. The runtime
+        // throws BEFORE any download bytes flow, so this is cheap to recover
+        // from: drop the bad cache entry, switch to `fast` (which always runs
+        // in WASM), and re-enter processFile. The recursion is bounded — the
+        // fast variant has `requiresWebGPU=false`, so the second pass cannot
+        // hit this branch again. Without this fallback, the user sees a 115
+        // MB download eat their bandwidth and then crash with "std::bad_alloc".
+        const isWebGpuRequired =
+          err instanceof Error && err.name === 'WebGpuRequiredError';
+        if (isWebGpuRequired && fastVariant && selectedVariant !== 'fast') {
+          if (selectedVariant && runtime?.clearVariantCache) {
+            runtime.clearVariantCache(selectedVariant);
+          }
+          selectedVariant = 'fast';
+          void processFile(file);
+          return;
+        }
         if (isStall) {
           stalled = true;
           lastFileForRetry = file;
@@ -396,6 +424,22 @@
     } catch (err) {
       progress = null;
       convertStartMs = null;
+      // ONNX-WASM OOM recovery: if inference crashed with `std::bad_alloc` or
+      // `OrtRun ERROR_CODE: 6` and we are on a WebGPU-required variant, the
+      // adapter likely died after probe-time. Drop to `fast` (always runnable
+      // in WASM) and retry the file. The string-match is the only signal ONNX
+      // exposes — there is no error code on the JS side.
+      const errMsg = err instanceof Error ? err.message : '';
+      const isOOM = /bad_alloc|ERROR_CODE: 6|out of memory/i.test(errMsg);
+      const activeIsWebGpuOnly = activeVariant?.requiresWebGPU === true;
+      if (isOOM && activeIsWebGpuOnly && fastVariant && selectedVariant !== 'fast') {
+        if (selectedVariant && runtime?.clearVariantCache) {
+          runtime.clearVariantCache(selectedVariant);
+        }
+        selectedVariant = 'fast';
+        void processFile(file);
+        return;
+      }
       errorMessage = err instanceof Error ? strings.fileTool.errorConversion.replace('{msg}', err.message) : strings.fileTool.errorConversion.replace('{msg}', '');
       phase = 'error';
     }
