@@ -797,7 +797,7 @@
     font-family: var(--font-family-mono);
     color: var(--color-text-subtle);
     line-height: 1.4;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     min-width: 0;
   }
   .bd-row--header .bd-cell--formula {

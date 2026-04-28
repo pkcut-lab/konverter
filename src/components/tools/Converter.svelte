@@ -236,8 +236,7 @@
     line-height: var(--font-lh-h1);
     font-variant-numeric: tabular-nums;
     font-weight: 400;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   .panel__field--input {

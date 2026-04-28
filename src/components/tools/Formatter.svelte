@@ -316,8 +316,7 @@
   .formatter__error-message {
     font-family: var(--font-family-mono);
     color: var(--color-text-muted);
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   .formatter__ghost-btn {
