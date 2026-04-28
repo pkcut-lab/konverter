@@ -80,17 +80,19 @@
   const acceptAttr = $derived(config.accept.join(','));
   // ML-variant-derived UI helpers.
   const allVariants = $derived<MlVariant[] | undefined>(getRuntime(config.id)?.variants);
-  // Hide WebGPU-only variants on browsers without a WebGPU adapter. Picking a
-  // FP16 model (BiRefNet_lite, BEN2) without WebGPU forces ONNX-WASM, which
-  // OOMs during inference (`std::bad_alloc` / `OrtRun ERROR_CODE: 6`). The
-  // `deviceProbe` is null until detection resolves; while null we keep the full
-  // list so the UI does not flicker between counts. Once the probe lands, a
-  // missing-WebGPU result trims the list to runnable variants only.
-  const variants = $derived<MlVariant[] | undefined>(
-    allVariants && deviceProbe && !deviceProbe.hasWebGPU
-      ? allVariants.filter((v) => !v.requiresWebGPU)
-      : allVariants,
-  );
+  // Always show every variant in the switcher — let users opt into higher
+  // quality even on adapters where the probe is uncertain (Windows ANGLE
+  // 16-buffer adapters, low-end mobile, etc.). The auto-fallback in
+  // processFile catches `WebGpuRequiredError` at prepare-time and `OrtRun
+  // ERROR_CODE: 1/6` at inference-time, switching to MODNet-Q8 transparently
+  // on failure. The `pickDefaultVariant` call separately picks a SAFE
+  // default based on the probe — it stays conservative so first-time
+  // visitors never download 115/219 MB on hardware that can't run them. If
+  // the user then opts into a heavier variant and it crashes, they lose ~3
+  // seconds and an auto-fallback download of 6.6 MB (MODNet) on top — far
+  // better UX than the ones we hid them from before, where users with
+  // borderline adapters were stuck on MODNet with no way to try better.
+  const variants = $derived<MlVariant[] | undefined>(allVariants);
   const activeVariant = $derived<MlVariant | undefined>(
     variants && selectedVariant
       ? variants.find((v) => v.id === selectedVariant)
