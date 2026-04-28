@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { FileToolConfig } from '$lib/tools/schemas';
-  import type { Lang } from '$lib/i18n/lang';
-  import { t } from '$lib/i18n/strings';
-  import type { ConvertOpts, ConvertResult, ConvertError, OutputFormat, ResizeMode } from '$lib/tools/heic-konverter';
-  import type { ExifMode } from '$lib/tools/heic-exif';
+  import type { FileToolConfig } from '../../lib/tools/schemas';
+  import type { Lang } from '../../lib/i18n/lang';
+  import { t } from '../../lib/i18n/strings';
+  import type { ConvertOpts, ConvertResult, ConvertError, OutputFormat, ResizeMode } from '../../lib/tools/heic-konverter';
+  import type { ExifMode } from '../../lib/tools/heic-exif';
 
   const { config, lang }: { config: FileToolConfig; lang: Lang } = $props();
 
@@ -57,7 +57,7 @@
     e.preventDefault();
     isDragging = false;
     if (!e.dataTransfer) return;
-    const { extractHeicFromDrop, detectLivePhotos } = await import('$lib/tools/heic-folder-extract');
+    const { extractHeicFromDrop, detectLivePhotos } = await import('../../lib/tools/heic-folder-extract');
     const dropped = await extractHeicFromDrop(e.dataTransfer);
     const pairs = detectLivePhotos(dropped);
     if (pairs.some(p => p.mov)) livePhotosDetected = true;
@@ -103,7 +103,7 @@
       exifMode,
     };
 
-    const { convertBatch } = await import('$lib/tools/heic-konverter');
+    const { convertBatch } = await import('../../lib/tools/heic-konverter');
     for await (const item of convertBatch(files, opts)) {
       results = [...results, item];
     }
@@ -112,7 +112,7 @@
 
   // ── Per-file download ────────────────────────────────────────────
   function downloadResult(r: ConvertResult) {
-    const url = URL.createObjectURL(new Blob([r.bytes], { type: r.mime }));
+    const url = URL.createObjectURL(new Blob([r.bytes as BlobPart], { type: r.mime }));
     const a = document.createElement('a');
     a.href = url;
     a.download = r.filename;
@@ -124,7 +124,7 @@
   async function downloadZip() {
     const successResults = results.filter((r): r is ConvertResult => r.kind === 'result');
     if (successResults.length === 0) return;
-    const { createZipBlob, triggerDownload } = await import('$lib/tools/heic-zip-stream');
+    const { createZipBlob, triggerDownload } = await import('../../lib/tools/heic-zip-stream');
     const blob = await createZipBlob(successResults.map(r => ({ name: r.filename, bytes: r.bytes })));
     triggerDownload(blob, `heic-konvertiert-${Date.now()}.zip`);
   }
@@ -173,14 +173,14 @@
       </span>
       <span class="dropzone__label">{s.dropzoneLabel}</span>
       <span class="dropzone__sub">{s.dropzoneSubLabel}</span>
-      <button type="button" class="btn btn--secondary dropzone__browse" onclick|stopPropagation={() => fileInputEl?.click()}>
+      <button type="button" class="btn btn--secondary dropzone__browse" onclick={(e) => { e.stopPropagation(); fileInputEl?.click(); }}>
         {s.orBrowse}
       </button>
       {#if !isIos}
         <span class="dropzone__hint">{s.folderHint}</span>
       {/if}
     {:else}
-      <ul class="file-list" onclick|stopPropagation={() => {}}>
+      <ul class="file-list" onclick={(e) => { e.stopPropagation(); }}>
         {#each files as file, idx}
           <li class="file-list__item">
             <span class="file-list__name">{file.name}</span>
@@ -189,12 +189,12 @@
               type="button"
               class="file-list__remove"
               aria-label="Remove {file.name}"
-              onclick|stopPropagation={() => removeFile(idx)}
+              onclick={(e) => { e.stopPropagation(); removeFile(idx); }}
             >×</button>
           </li>
         {/each}
       </ul>
-      <button type="button" class="btn btn--ghost btn--sm" onclick|stopPropagation={() => fileInputEl?.click()}>
+      <button type="button" class="btn btn--ghost btn--sm" onclick={(e) => { e.stopPropagation(); fileInputEl?.click(); }}>
         + {s.orBrowse}
       </button>
     {/if}

@@ -64,9 +64,9 @@ describe('toolContentFrontmatterSchema', () => {
     expect(r.success).toBe(false);
   });
 
-  it('rejects metaDescription outside 140-160 chars', () => {
+  it('rejects metaDescription outside 140-220 chars', () => {
     const tooShort = toolContentFrontmatterSchema.safeParse({ ...valid, metaDescription: 'zu kurz' });
-    const tooLong = toolContentFrontmatterSchema.safeParse({ ...valid, metaDescription: 'X'.repeat(161) });
+    const tooLong = toolContentFrontmatterSchema.safeParse({ ...valid, metaDescription: 'X'.repeat(221) });
     expect(tooShort.success).toBe(false);
     expect(tooLong.success).toBe(false);
   });
@@ -89,9 +89,11 @@ describe('toolContentFrontmatterSchema', () => {
     expect(r.success).toBe(false);
   });
 
-  it('rejects more than 6 FAQ entries', () => {
-    const seven = [...valid.faq, ...valid.faq, ...valid.faq].slice(0, 7);
-    const r = toolContentFrontmatterSchema.safeParse({ ...valid, faq: seven });
+  it('rejects more than 12 FAQ entries', () => {
+    // Schema max bumped 6 → 12 to fit deep-content tools (HEIC, video-bg-remove)
+    // where the long-tail of distinct user concerns exceeds 6.
+    const thirteen = Array.from({ length: 13 }, (_, i) => valid.faq[i % valid.faq.length]!);
+    const r = toolContentFrontmatterSchema.safeParse({ ...valid, faq: thirteen });
     expect(r.success).toBe(false);
   });
 

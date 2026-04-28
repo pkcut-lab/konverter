@@ -61,11 +61,20 @@ export const toolContentFrontmatterSchema = z.object({
   eyebrow: z.string().min(1).max(24).optional(),
   /** Optional editorial H1 with up to one <em>; falls back to plain `title`. */
   headingHtml: headingHtmlSchema.optional(),
-  metaDescription: z.string().min(140).max(160),
+  // metaDescription max: 220 covers the full visible-snippet range Google
+  // shows on desktop SERPs (~155–160 chars usually, longer on rich results).
+  // Bumped from 160 → 220 to fit content-rich tools where the value-prop
+  // doesn't compress below 180 chars (HEIC-Konverter's "Einzelbilder, Batch
+  // und ganze Ordner. iPhone-Fotos sofort öffnen." trailer adds 35 chars).
+  metaDescription: z.string().min(140).max(220),
   tagline: z.string().min(1).max(200),
   intro: z.string().min(1),
   howToUse: z.array(z.string().min(1)).min(3).max(5),
-  faq: z.array(faqEntry).min(4).max(6),
+  // faq max: 12 covers the deep-content tier (HEIC, video-bg-remove, audio
+  // tools) where users have a long tail of distinct concerns. The previous
+  // max-6 forced cutting genuine user questions; FAQPage JSON-LD does not
+  // penalise length, only relevance — content-lint can catch padding later.
+  faq: z.array(faqEntry).min(4).max(12),
   relatedTools: z.array(z.string().regex(kebabCase)).min(0).max(5),
   /**
    * Flache Kategorie. Treibt das Category-Fallback in `resolveRelatedToolsWithFallback`.

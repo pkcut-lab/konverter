@@ -71,16 +71,28 @@ describe('Cross-Links — Footer + RelatedTools', () => {
       }
     });
 
-    it('webp-konverter resolves the bar via category-fallback (image → hintergrund-entfernen)', () => {
+    it('webp-konverter resolves the bar via category-fallback (image-category tool fills in)', () => {
       // Bis C2 (category-Frontmatter + Fallback) blieb die Bar hier leer, weil
       // alle drei relatedSlugs (jpg-zu-png, bild-komprimieren, bild-groesse-aendern)
       // noch nicht existieren. Seit C3 (`category: image` required) füllt das
-      // Category-Fallback die Bar mit anderen image-Tools auf — aktuell
-      // hintergrund-entfernen. Verifiziert den Fallback-Pfad Ende-zu-Ende.
+      // Category-Fallback die Bar mit anderen image-Tools auf. Welche genau —
+      // hintergrund-entfernen, bild-diff oder die HEIC-Tools — hängt von der
+      // Sortierreihenfolge ab; relevant ist nur DASS gefüllt wird (mind. 1
+      // image-Tool ≠ webp-konverter selbst).
       const html = readDist('de/webp-konverter/index.html');
       expect(html).toMatch(/<nav[^>]*class="related-bar"[^>]*aria-label="Verwandte Werkzeuge"/);
       const section = html.split('class="related-bar"')[1]?.split('</nav>')[0] ?? '';
-      expect(section).toMatch(/href="\/de\/hintergrund-entfernen"/);
+      const imageSlugs = [
+        'hintergrund-entfernen',
+        'bild-diff',
+        'heic-zu-jpg',
+        'heic-zu-png',
+        'jpg-zu-pdf',
+      ];
+      const matchedAny = imageSlugs.some((slug) =>
+        new RegExp(`href="/de/${slug}"`).test(section),
+      );
+      expect(matchedAny, `Expected at least one image-category fallback in: ${section.slice(0, 400)}`).toBe(true);
     });
   });
 });
