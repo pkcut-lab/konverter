@@ -29,6 +29,10 @@ export async function prepareModel(onProgress: (e: ProgressEvent) => void): Prom
     return;
   }
   
+  // Without an explicit `dtype` Transformers.js loads the default ONNX file
+  // for the repo, which is FP32 = 499 MB for tmr-ai-text-detector-ONNX.
+  // Q4F16 is 128 MB — still meaningful on mobile but fits within iOS-Safari
+  // memory limits. Audit: inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md §5.5
   pipelinePromise = new Promise<Pipe>((resolve, reject) => {
     pipeline(
       'text-classification',
@@ -36,6 +40,7 @@ export async function prepareModel(onProgress: (e: ProgressEvent) => void): Prom
       {
         progress_callback: onProgress as unknown as (info: unknown) => void,
         device: 'wasm',
+        dtype: 'q4f16',
       }
     ).then(pipe => resolve(pipe as unknown as Pipe)).catch(reject);
   });

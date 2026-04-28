@@ -1,6 +1,19 @@
 /**
  * KI Bild Detector module.
- * Uses Transformers.js with onnx-community/SMOGY-Ai-images-detector-ONNX.
+ *
+ * Migrated 2026-04-28 from `onnx-community/SMOGY-Ai-images-detector-ONNX`
+ * (CC-BY-NC-4.0 — incompatible with AdSense Phase 2) to
+ * `onnx-community/Deep-Fake-Detector-v2-Model-ONNX` (Apache-2.0,
+ * ViT-base, Q4F16 49.7 MB).
+ *
+ * The new model is trained on a curated 56k face-manipulation dataset
+ * (28k real + 28k fake) and reports 92.12 % accuracy / F1 0.9249. Use-case
+ * coverage shifts slightly: SMOGY was tuned for AI-art detection
+ * (SDXL/Midjourney style transfer), Deep-Fake-Detector-v2 is tuned for
+ * realism manipulation including faces and synthetic photos. Both are
+ * acceptable as "AI-image-detector" — surface UI label as such.
+ *
+ * Audit: inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md §6.5
  */
 import { pipeline, type RawImage } from '@huggingface/transformers';
 
@@ -36,10 +49,11 @@ export async function prepareModel(onProgress: (e: any) => void): Promise<void> 
   pipelinePromise = new Promise<Pipe>((resolve, reject) => {
     pipeline(
       'image-classification',
-      'onnx-community/SMOGY-Ai-images-detector-ONNX',
+      'onnx-community/Deep-Fake-Detector-v2-Model-ONNX',
       {
         progress_callback: onProgress,
         device: 'wasm',
+        dtype: 'q4f16',
       }
     ).then(pipe => resolve(pipe as unknown as Pipe)).catch(reject);
   });

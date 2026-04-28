@@ -151,26 +151,26 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
   'remove-background': {
     process: async (input, config) => {
       const m = await loadRemoveBg();
-      const variant =
+      const format =
+        typeof config?.format === 'string' &&
+        (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
+          ? config.format
+          : 'png';
+      const removeOpts: { format: 'png' | 'webp' | 'jpg'; variant?: VariantId } = { format };
+      if (
         typeof config?.mlVariant === 'string' &&
         (config.mlVariant === 'fast' || config.mlVariant === 'quality' || config.mlVariant === 'pro')
-          ? (config.mlVariant as VariantId)
-          : undefined;
-      return m.removeBackground(input, {
-        format:
-          typeof config?.format === 'string' &&
-          (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
-            ? config.format
-            : 'png',
-        variant,
-      });
+      ) {
+        removeOpts.variant = config.mlVariant as VariantId;
+      }
+      return m.removeBackground(input, removeOpts);
     },
     prepare: async (onProgress, opts) => {
       const m = await loadRemoveBg();
-      return m.prepareBackgroundRemovalModel(onProgress, {
-        variant: opts?.variant,
-        stallTimeoutMs: opts?.stallTimeoutMs,
-      });
+      const prepOpts: { variant?: VariantId; stallTimeoutMs?: number } = {};
+      if (opts?.variant) prepOpts.variant = opts.variant;
+      if (opts?.stallTimeoutMs !== undefined) prepOpts.stallTimeoutMs = opts.stallTimeoutMs;
+      return m.prepareBackgroundRemovalModel(onProgress, prepOpts);
     },
     reencode: async (format) => {
       const m = await loadRemoveBg();
@@ -185,7 +185,7 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     isPreparedFor: (variant) => removeBgModule?.isPreparedFor(variant) ?? false,
     clearVariantCache: (variant) => removeBgModule?.clearVariantCache(variant),
     clearLastResult: () => removeBgModule?.clearLastResult(),
-    variants: ML_VARIANTS['remove-background'],
+    variants: ML_VARIANTS['remove-background']!,
   },
   'hevc-to-h264': {
     process: async (input, config, onProgress) => {

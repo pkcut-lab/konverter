@@ -73,19 +73,18 @@
   const aiScore = $derived.by(() => {
     if (!results || results.length === 0) return 0;
     
-    // The SMOGY model output handling
-    // LABEL_1 is usually 'fake' / 'ai'
-    const aiResult = results.find(r => 
-      r.label.toLowerCase().includes('fake') || 
+    // Label resolution covers Deep-Fake-Detector-v2 ("Realism"/"Deepfake")
+    // and any backup model returning common synonyms / LABEL_n fallbacks.
+    const aiResult = results.find(r =>
+      r.label.toLowerCase().includes('fake') ||
       r.label.toLowerCase().includes('ai') ||
       r.label === 'LABEL_1'
     );
-    
+
     if (aiResult) return Math.round(aiResult.score * 100);
-    
-    // Fallback: LABEL_0 is usually 'real' / 'human'
-    const humanResult = results.find(r => 
-      r.label.toLowerCase().includes('real') || 
+
+    const humanResult = results.find(r =>
+      r.label.toLowerCase().includes('real') ||
       r.label.toLowerCase().includes('human') ||
       r.label === 'LABEL_0'
     );

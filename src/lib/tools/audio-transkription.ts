@@ -45,14 +45,18 @@ export async function prepareModel(modelSize: ModelSize, onProgress: (e: any) =>
   if (modelSize === 'tiny') modelId = 'Xenova/whisper-tiny';
   if (modelSize === 'small') modelId = 'Xenova/whisper-small';
 
-  // Using fp32 to bypass the DequantizeLinear ONNX bug present in WebAssembly for quantized models
+  // Q4F16 (4-bit weights + FP16 activations) is immune to the closed
+  // WebGPU-int8 bug (transformers.js #1512) AND keeps the model under iOS
+  // memory limits: tiny ~52 MB, base ~83 MB, small ~200 MB. The previous
+  // fp32 default loaded 152/291/968 MB respectively — `small` crashed iOS
+  // Safari consistently. Audit: inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md §2.6
   pipelinePromise = pipeline(
     'automatic-speech-recognition',
     modelId,
     {
       progress_callback: onProgress,
       device: 'wasm',
-      dtype: 'fp32'
+      dtype: 'q4f16'
     }
   );
   
