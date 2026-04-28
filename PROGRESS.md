@@ -1,7 +1,50 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-28 — 4-Layer Mobile-Overflow-Defense komplett (6 Commits, +Playwright-Gate 12×6=72 Tests) · 1928/1928 Vitest grün · 16/16 a11y-Test grün · 72/72 Overflow-Gate grün · Commit `d02b8ab`
+**Letztes Update:** 2026-04-28 — Mobile-ML-Hardening komplett für FileTool-Tools (6 Commits b1747b2…3cba24c) · License-Migration ki-bild (CC-BY-NC→Apache-2.0) · Q4F16 Whisper/TMR · 3-Modell-Switch remove-background · CONVENTIONS §10.9 Mobile-Awareness gelockt · 1979/1979 Vitest grün · astro check 0/0/0
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
+
+---
+
+## Mobile-ML-Hardening 2026-04-28 — 7 ML-Tools auf Mobile + Desktop gehärtet
+
+User-Report: Bild-Hintergrund-Entferner crasht auf Mobile mit „Model load error: Failed to fetch". Zwei Deep-Research-Subagenten (BG-Remover + 6 weitere ML-Tools, ~80 Quellen kombiniert), neue Foundation-Module, 3-Modell-Switch, Lizenz-Migration und Mobile-aware UI.
+
+**Foundation (Commit `b1747b2`):**
+- `src/lib/tools/ml-device-detect.ts` — `DeviceProbe` (WebGPU + deviceMemory + connection.effectiveType + UA-Fallback) → `class: 'fast-mobile' | 'capable-mobile' | 'desktop'`. `pickStallTimeout(probe)` liefert 240 s Mobile / 60 s Desktop.
+- `src/lib/tools/ml-mirror.ts` — `applyMlMirrorIfConfigured(env)` schaltet `env.remoteHost` auf Cloudflare R2 (`PUBLIC_ML_MIRROR_HOST` Build-Time oder `__KITTOKIT_ML_MIRROR_HOST__` Runtime-Override). HF-CDN bleibt Default.
+- `src/lib/tools/ml-variants.ts` — `ML_VARIANTS[toolId]: MlVariant[]` mit verifizierten HF-Sizes + SPDX-Lizenzen + `allowedFor: DeviceClass[]`.
+- 44 Vitest-Tests; alle 7 ML-Tools im `ML_VARIANTS`-Map registriert.
+
+**i18n + UI (Commits `5f04979`, `557701c`):**
+- 11 neue Banner-Strings DE/EN: `mlBannerOneTime`, `mlBannerSwitchFast/Quality/Pro`, `mlStalledTitle/Retry/Fallback`, `mlVariantFast/Quality/Pro`, `mlActiveVariant`.
+- FileTool.svelte komplett mobile-aware: Device-Probe via `$effect`, Variant-Switcher-Banner über Dropzone, Stall-Recovery-Buttons (Retry + Schnell-Variante), Mobile-aware Watchdog, `runtime.isPreparedFor(variant)` für Variant-Cache-Hit.
+
+**3-Modell-Switch remove-background (Commit `c37b5d8`):**
+- Per-Variant-Pipeline-Cache: `fast` = MODNet-Q8 (6,6 MB Apache-2.0, mobile-default), `quality` = BiRefNet_lite-FP16 (115 MB MIT, desktop-default), `pro` = BEN2-FP16 (219 MB MIT, desktop opt-in).
+- `prepare(onProgress, opts?)` mit `variant` + `stallTimeoutMs`, `removeBackground(input, { format, variant? })`, `isPreparedFor`, `getActiveVariant`, `clearVariantCache`. 7 neue Variant-Switch-Tests.
+- Mobile-`fast` erzwingt `device: 'wasm'` (WebGPU auf iOS Safari fragil unter Memory-Druck).
+
+**License + dtype Hardening (Commit `3681ff5`):**
+- 🔴 **ki-bild-detektor**: `onnx-community/SMOGY-Ai-images-detector-ONNX` (CC-BY-NC-4.0, AdSense-KO) → `onnx-community/Deep-Fake-Detector-v2-Model-ONNX` (Apache-2.0, ViT-base, Q4F16 49,7 MB). Label-Mapping in KiBildDetektorTool.svelte deckt neue „Realism"/„Deepfake"-Outputs via existierendes `includes('fake')`/`includes('real')`-Fallback ab.
+- 🟠 **audio-transkription**: `dtype: 'fp32'` (152/291/968 MB iOS-Crash für tiny/base/small) → `dtype: 'q4f16'` (52/83/200 MB). Q4F16 ist immun gegen geschlossenes WebGPU-Int8-Issue #1512 (WASM-only, nicht betroffen).
+- 🟡 **ki-text-detektor**: ohne `dtype` lud Default-FP32 = 499 MB → explizit `dtype: 'q4f16'` = 128 MB.
+
+**Runtime-Adapter + Tesseract-Lazy-Lang (Commit `3cba24c`):**
+- `speech-enhancer`, `image-to-text`, `video-bg-remove` haben `runtime.variants` exposed → Banner sichtbar auf allen FileTool-typed ML-Tools.
+- `bild-zu-text.ts`: Worker-Cache jetzt per-Lang. `fast`-Variant lädt nur DE oder EN je `navigator.language` (~17-22 MB), `quality` lädt DE+EN (~39 MB). Variant-Switch terminiert+rebuildet den Worker.
+- `video-bg-remove` + `hevc-to-h264` preflight-Message korrigiert: „iOS 26 / Safari 26+" (vorher: irreführend „Safari 16+", weil VideoEncoder erst ab iOS 26).
+- FileTool.svelte gibt `mlVariant` durch den Process-Config-Merge an variant-aware Tools.
+
+**Spec-Lock CONVENTIONS.md §10.9:** Mobile-Awareness-Pattern gelockt — Pflicht für jedes neue ML-Tool: Variant-Map + Lizenz-Field + `runtime.variants` + `prepare(opts)`. Anti-Patterns (Hardcoded Modell-IDs, FP32 ohne Begründung, >200 MB ohne Desktop-Constraint, WebGPU-Forcing auf Mobile, Hex-CDN-Bypass) dokumentiert. Bestehende ML-Tool-Migrationsstatus tabelliert.
+
+**Bewusste offene Schulden:**
+- 🟡 **Custom-Component-Banner** für `audio-transkription` / `ki-text-detektor` / `ki-bild-detektor` — die drei Custom-Komponenten haben dtype/license-Fix, aber den Mobile-Banner noch nicht (FileTool-Logik greift dort nicht). Nächster Sprint.
+- 🟡 **Cloudflare-R2-Provisioning**: Code-Pfad ist drin (`PUBLIC_ML_MIRROR_HOST`), Bucket-Setup + Custom-Domain `models.kittokit.tld` + CORS macht der User vor AdSense-Phase-2.
+- 🟡 **iPhone-Smoke-Test** auf realem Gerät (Sauce Labs / BrowserStack): Transformers.js v3 hatte iOS-Crash (Issue #1242), v4 nicht explizit als gefixt dokumentiert. Vor Phase-2-Launch validieren.
+
+**Spec-Quellen:** `inbox/to-claude/2026-04-28-mobile-ml-bg-removal-research.md` (~50 Quellen), `inbox/to-claude/2026-04-28-mobile-ml-tools-audit.md` (~28 Quellen), Plan: `docs/superpowers/plans/2026-04-28-mobile-ml-hardening.md`.
+
+**Commits:** `b1747b2` (Foundation) · `5f04979` (i18n DE/EN) · `c37b5d8` (3-Modell-Switch) · `3681ff5` (License + dtype) · `557701c` (FileTool UI) · `3cba24c` (Runtime-Adapter + Tesseract).
 
 ---
 

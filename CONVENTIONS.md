@@ -565,6 +565,111 @@ Refactor auf Worker-Pattern wäre Scope-Creep:
 Diese bleiben Main-Thread bis ein konkreter UX-Pain auftritt
 (>5 unabhängige User-Reports zu „UI-Freeze" pro Tool).
 
+### 10.9 Mobile-Awareness-Pattern (gelockt 2026-04-28)
+
+ML-Tools laufen auf Mobilgeräten in einer harten Umgebung: iOS Safari
+crasht reproduzierbar bei ~100-200 MB WASM-Allokation
+([lapcatsoftware Jan 2026](https://lapcatsoftware.com/articles/2026/1/7.html)),
+Hugging-Face-CDN hat Carrier-NAT-Range-Bugs, und `navigator.deviceMemory`
+existiert nur in Chromium. Der bisherige Default „Modell laden, sehen
+was passiert" produziert kryptische `Failed to fetch`-Fehler ohne
+Recovery-Pfad. Ab 2026-04-28 ist jede neue ML-Tool-Implementation
+verpflichtet, dem Mobile-Awareness-Pattern zu folgen.
+
+**Drei Foundation-Module** liefern die Bausteine:
+
+- **`src/lib/tools/ml-device-detect.ts`** — `detectMlDevice()` →
+  `DeviceProbe` mit `class: 'fast-mobile' | 'capable-mobile' | 'desktop'`,
+  `hasWebGPU`, `hasReducedRam`, `isSlowConnection`, `isMobileUA`. Pure,
+  keine Side-Effects, voll testbar mit Mock-Navigator.
+- **`src/lib/tools/ml-variants.ts`** — `ML_VARIANTS[toolId]: MlVariant[]`
+  mit `id: 'fast' | 'quality' | 'pro'`, `modelId`, `dtype`, `sizeBytes`,
+  `license`, `allowedFor: DeviceClass[]`. Sizes sind **am Hugging-Face-Repo
+  verifiziert**, keine Schätzungen. License muss MIT/Apache-2.0/BSD/CC-BY
+  sein — AGPL/CC-BY-NC sind KO (AdSense-inkompatibel).
+- **`src/lib/tools/ml-mirror.ts`** — `applyMlMirrorIfConfigured(env)`
+  schaltet `env.remoteHost` von `@huggingface/transformers` auf einen
+  Cloudflare-R2-Mirror, wenn `PUBLIC_ML_MIRROR_HOST` (Build-Time) oder
+  `window.__KITTOKIT_ML_MIRROR_HOST__` (Runtime) gesetzt ist. R2 ist
+  Pflicht-Plan, kein Pages-Static (25-MiB-Asset-Limit).
+
+**Vier Pflichten pro neuem ML-Tool:**
+
+1. **Variant-Map deklarieren** in `ml-variants.ts`. Mindestens 1 Eintrag
+   (auch für Single-Variant-Tools — der Eintrag treibt die Banner-
+   Größenanzeige). Größen direkt aus dem HF-Repo Files-Tab ablesen.
+2. **Lizenz-Field korrekt setzen.** Vor dem ersten Commit das Modell-
+   README öffnen und die SPDX-Lizenz exakt eintragen. AGPL / CC-BY-NC /
+   non-commercial / share-alike → KO, alternatives Modell suchen.
+3. **`runtime.variants` exposen** in `tool-runtime-registry.ts`. Der
+   FileTool-Component (oder Custom-Component) liest das Feld und rendert
+   automatisch den Banner mit Größe + (optional) Variant-Switcher.
+4. **`prepare(onProgress, opts)` akzeptieren.** Tool muss `opts.variant`
+   zur Modell-Wahl benutzen und `opts.stallTimeoutMs` an seinen
+   Watchdog weiterreichen. Mobile-Default ist 240 s, Desktop 60 s
+   (`pickStallTimeout(probe)` in `ml-device-detect.ts`).
+
+**Anti-Patterns (CI lehnt ab):**
+
+- Hartcodierte Modell-IDs ohne ML_VARIANTS-Eintrag in einem neuen Tool.
+- `dtype: 'fp32'` ohne expliziten Begründungs-Kommentar — FP32 ist auf
+  Mobile praktisch immer das falsche Default. Stattdessen Q4F16 / Q8 /
+  FP16, je nach Modell. Kommentar zwingend, wenn FP32 doch nötig ist.
+- Modell-Größe `>200 MB` ohne `allowedFor: ['desktop']`-Constraint —
+  iOS-Crash-Garant.
+- WebGPU-Forcing (`device: 'webgpu'`) auf Mobile-Variants — `'fast'`
+  variants laufen explizit `wasm`, weil iOS-Safari-WebGPU unter
+  Memory-Druck fragil bleibt.
+- Hex-CDN-Pfade direkt im Tool-Code (`https://huggingface.co/...`) — der
+  Mirror-Switch greift nur über `env.remoteHost`. Wer per `fetch()`
+  am `pipeline()`-Setup vorbei direkt von HF lädt, umgeht den
+  R2-Fallback und hängt User in DE im Carrier-Range-Bug fest.
+
+**FileTool-Component-Verträge (für FileTool-typed Tools):**
+
+- Banner zeigt `formatVariantSize(activeVariant.sizeBytes)` als
+  „6,6 MB" / „115 MB" / „219 MB" — NBSP zwischen Zahl und Einheit.
+- Variant-Switcher rendert nur, wenn `runtime.variants.length > 1`.
+  Single-Variant-Tools sehen nur die Größenangabe ohne Buttons.
+- Stall-Recovery: bei `StallError` → „Erneut versuchen" + (falls
+  `activeVariant.id !== 'fast'`) „Zur Schnell-Variante wechseln".
+- `runtime.isPreparedFor(variant)` ist die Variant-aware Cache-Probe;
+  Variant-Switch invalidiert die alte Pipeline via
+  `runtime.clearVariantCache(variant)`.
+
+**Custom-Component-Verträge (für `formatter` / Custom-typed Tools):**
+
+`AudioTranskriptionTool`, `KiTextDetektorTool`, `KiBildDetektorTool` und
+ähnliche eigene UIs müssen den Banner selbst rendern — die generische
+FileTool-Logik greift nicht. Pflicht-Inhalte:
+
+- Modell-Größe via `formatVariantSize(...)` aus `ML_VARIANTS[toolId]`.
+- Banner-Copy: `t(lang).fileTool.mlBannerOneTime` mit `{size}` ersetzen.
+- Variant-Switcher (falls mehrere Varianten): `t(lang).fileTool.mlBannerSwitchFast`
+  / `mlBannerSwitchQuality` / `mlBannerSwitchPro`.
+- Stall-Recovery analog: `mlStalledTitle` + `mlStalledRetry` +
+  `mlStalledFallback` aus dem `fileTool`-i18n-Namespace.
+
+**Bestehende Tools — Migrations-Status (2026-04-28):**
+
+| Tool | Komp | Variants | dtype-fix | Banner-UI | Notes |
+|---|---|---|---|---|---|
+| `remove-background` | FileTool | ✅ 3 | n/a | ✅ FileTool | MODNet/BiRefNet_lite/BEN2 |
+| `video-bg-remove` | FileTool | ✅ 2 | n/a | ✅ FileTool | iOS≤25 Hard-Block via preflight |
+| `image-to-text` | FileTool | ✅ 2 | n/a | ✅ FileTool | Tesseract Lazy-Lang |
+| `speech-enhancer` | FileTool | ✅ 1 | n/a | ✅ FileTool | DFN3 ~10 MB |
+| `audio-transkription` | Custom | ✅ 3 | ✅ FP32→Q4F16 | ⏳ Custom-Component-Banner offen | Whisper Q4F16 |
+| `ki-text-detektor` | Custom | ✅ 1 | ✅ default→Q4F16 | ⏳ Custom-Component-Banner offen | TMR Q4F16 |
+| `ki-bild-detektor` | Custom | ✅ 1 | ✅ License-Migration | ⏳ Custom-Component-Banner offen | Deep-Fake-Detector-v2 |
+
+Custom-Component-Banner ist offene Schuld; verfolgt in PROGRESS.md.
+
+**Hosting-Strategie:** HF-CDN bleibt Default (90 % der User stabil). R2-
+Mirror ist Code-Ready, **Provisioning** (Bucket, Custom-Domain
+`models.kittokit.tld`, CORS) macht der User vor AdSense-Phase-2-Launch.
+Nach Provisioning: `PUBLIC_ML_MIRROR_HOST=https://models.kittokit.tld`
+in den CF-Pages-Build-Env.
+
 ## 11. Phase-3 Prep — vor dem Hinzufügen einer dritten Sprache
 
 > **Wann lesen:** Bevor du `es`, `fr`, `pt-br` oder eine andere Sprache zu
