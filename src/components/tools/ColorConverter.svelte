@@ -284,8 +284,8 @@
 
   .swatch {
     flex: 0 0 auto;
-    width: 120px;
-    height: 120px;
+    width: var(--color-swatch-size);
+    height: var(--color-swatch-size);
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     display: flex;
@@ -514,7 +514,7 @@
     }
     .swatch {
       width: 100%;
-      height: 80px;
+      height: var(--color-swatch-size-mobile-h);
     }
     .input-panel__field {
       font-size: 1.875rem;
