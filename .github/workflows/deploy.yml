@@ -55,6 +55,11 @@ jobs:
         env:
           CI: true
 
+      - name: Mobile-Overflow-Gate (Layer 4 of 4-Layer-Defense)
+        run: npx playwright test tests/e2e/no-horizontal-overflow.spec.ts
+        env:
+          CI: true
+
       # Handoff to the deploy job — dist/ already contains the Pagefind
       # index, Workbox SW, and the manifest + icons; nothing else is
       # regenerated downstream.
