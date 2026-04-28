@@ -7,10 +7,10 @@ import {
 } from '../../../src/lib/tools/ml-variants';
 import type { DeviceProbe } from '../../../src/lib/tools/ml-device-detect';
 
-function probeFor(cls: DeviceProbe['class']): DeviceProbe {
+function probeFor(cls: DeviceProbe['class'], hasWebGPU = cls === 'desktop'): DeviceProbe {
   return {
     class: cls,
-    hasWebGPU: cls === 'desktop',
+    hasWebGPU,
     hasReducedRam: cls === 'fast-mobile',
     isSlowConnection: cls === 'fast-mobile',
     isMobileUA: cls !== 'desktop',
@@ -92,10 +92,54 @@ describe('pickDefaultVariant', () => {
     expect(pickDefaultVariant('remove-background', probeFor('desktop'))).toBe('quality');
   });
 
+  it('picks fast for desktop without WebGPU (BiRefNet/BEN2 OOM in WASM)', () => {
+    // Regression: a desktop Firefox/Linux user without WebGPU was getting the
+    // FP16 BiRefNet_lite default, which crashed inference with `std::bad_alloc`
+    // (`OrtRun ERROR_CODE: 6`). The default-picker must filter out variants
+    // marked `requiresWebGPU` when probe.hasWebGPU is false.
+    expect(pickDefaultVariant('remove-background', probeFor('desktop', false))).toBe('fast');
+  });
+
+  it('picks fast for capable-mobile without WebGPU', () => {
+    expect(pickDefaultVariant('remove-background', probeFor('capable-mobile', false))).toBe('fast');
+  });
+
   it('throws for an unregistered tool', () => {
     expect(() => pickDefaultVariant('does-not-exist', probeFor('desktop'))).toThrow(
       /No variants registered/,
     );
+  });
+});
+
+describe('requiresWebGPU flag', () => {
+  it('marks BiRefNet_lite (quality) and BEN2 (pro) as WebGPU-required for remove-background', () => {
+    const variants = ML_VARIANTS['remove-background']!;
+    const byId = Object.fromEntries(variants.map((v) => [v.id, v]));
+    expect(byId.fast!.requiresWebGPU).toBeFalsy();
+    expect(byId.quality!.requiresWebGPU).toBe(true);
+    expect(byId.pro!.requiresWebGPU).toBe(true);
+  });
+
+  it('marks BiRefNet_lite (quality) as WebGPU-required for video-bg-remove', () => {
+    const variants = ML_VARIANTS['video-bg-remove']!;
+    const byId = Object.fromEntries(variants.map((v) => [v.id, v]));
+    expect(byId.fast!.requiresWebGPU).toBeFalsy();
+    expect(byId.quality!.requiresWebGPU).toBe(true);
+  });
+
+  it('every WebGPU-required tool has at least one fallback variant runnable in WASM', () => {
+    // Invariant: pickDefaultVariant must never throw "no runnable variant"
+    // — for every tool with a WebGPU-required variant, there must be a Q4/Q8
+    // counterpart that runs in WASM.
+    for (const [toolId, variants] of Object.entries(ML_VARIANTS)) {
+      const hasWebGpuOnly = variants.some((v) => v.requiresWebGPU);
+      if (!hasWebGpuOnly) continue;
+      const wasmRunnable = variants.filter((v) => !v.requiresWebGPU);
+      expect(
+        wasmRunnable.length,
+        `${toolId} has WebGPU-required variants but no WASM-runnable fallback`,
+      ).toBeGreaterThan(0);
+    }
   });
 });
 

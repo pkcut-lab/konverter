@@ -94,6 +94,8 @@ const idToFile: Record<string, string> = {
   'pdf-to-jpg': 'pdf-zu-jpg',
   'pdf-password': 'pdf-passwort',
   'moon-phase': 'mondphasen-rechner',
+  'heic-to-jpg': 'heic-zu-jpg',
+  'heic-to-png': 'heic-zu-png',
 };
 
 // Tools where module import requires browser/WebGL/transformers.js — we still
@@ -119,11 +121,13 @@ const IMPORT_ONLY = new Set([
   'qr-code-generator',
   'contrast-checker',
   'image-diff',
+  'heic-to-jpg',
+  'heic-to-png',
 ]);
 
 const TOOL_IDS = Object.keys(slugMap);
 
-describe('Functional smoke — every tool in slug-map (72)', () => {
+describe('Functional smoke — every tool in slug-map (74)', () => {
   it('all tool-ids are mapped to a file', () => {
     const missing = TOOL_IDS.filter((id) => !idToFile[id]);
     expect(missing, `unmapped tool-ids: ${missing.join(', ')}`).toEqual([]);

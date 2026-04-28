@@ -67,6 +67,22 @@ export class StallError extends Error {
 }
 
 /**
+ * Thrown when a variant declares `requiresWebGPU` but the browser exposes no
+ * WebGPU adapter. The FP16 segmentation models (BiRefNet_lite, BEN2) crash with
+ * `std::bad_alloc` during ONNX-WASM inference, so we fail fast at prepare-time
+ * with a specific name the FileTool can branch on (auto-fallback to `fast`)
+ * instead of letting the user wait for a 115 MB download that ends in OOM.
+ */
+export class WebGpuRequiredError extends Error {
+  variant: VariantId;
+  constructor(variant: VariantId) {
+    super(`Variant "${variant}" needs WebGPU but no adapter is available.`);
+    this.name = 'WebGpuRequiredError';
+    this.variant = variant;
+  }
+}
+
+/**
  * image-segmentation pipeline output shape per Transformers.js v4 docs:
  * `Array<{ label: string; score: number | null; mask: RawImage }>`.
  * For BEN2 / MODNet / BiRefNet the array has at least one entry where
@@ -113,7 +129,12 @@ export async function prepareBackgroundRemovalModel(
   onProgress: (e: ProgressEvent) => void,
   opts: PrepareOpts = {},
 ): Promise<void> {
-  const variant: VariantId = opts.variant ?? 'quality';
+  // Default to `fast` (MODNet-Q8, 6.6 MB, runs in WASM everywhere). Callers
+  // that have a `DeviceProbe` should pass the result of `pickDefaultVariant`
+  // explicitly — the FileTool component does so. Defaulting to `quality` here
+  // would crash any caller that forgot to forward the variant on a browser
+  // without WebGPU (the exact regression `WebGpuRequiredError` defends).
+  const variant: VariantId = opts.variant ?? 'fast';
   const spec = getVariant('remove-background', variant);
   if (!spec) {
     throw new Error(`Unknown variant for remove-background: "${variant}"`);
@@ -171,6 +192,16 @@ export async function prepareBackgroundRemovalModel(
     };
     (async () => {
       const device = await detectDevice(allowWebGpu);
+      // Fail-fast guard: FP16 variants need WebGPU. Falling through to WASM
+      // crashes inference with `std::bad_alloc` AFTER the 115/219 MB download
+      // completes — which is the worst-case UX (long wait, then opaque error).
+      // Throwing here costs the user nothing and lets the FileTool auto-switch
+      // to `fast` before any bytes are downloaded. The defensive complement to
+      // the FileTool's `variants` filter (which already hides the switcher
+      // button), in case the probe and the actual adapter disagree.
+      if (spec.requiresWebGPU && device !== 'webgpu') {
+        throw new WebGpuRequiredError(variant);
+      }
       const pipelineOpts: Record<string, unknown> = {
         progress_callback: wrappedProgress as unknown as (info: unknown) => void,
         device,

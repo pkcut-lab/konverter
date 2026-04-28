@@ -54,6 +54,7 @@ import UnixTimestampTool from '../../components/tools/UnixTimestampTool.svelte';
 // generic single-input FileTool. The runtime convertImagesToPdf was already
 // multi-image-capable; only the UI was single. Audit P0-2.5 (2026-04-27).
 import JpgToPdfTool from '../../components/tools/JpgToPdfTool.svelte';
+import HeicKonverterTool from '../../components/tools/HeicKonverterTool.svelte';
 import ToolStats from '../../components/ToolStats.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
 import YouMightAlsoLike from '../../components/YouMightAlsoLike.astro';
@@ -124,6 +125,7 @@ const CUSTOM_FORMATTER_IDS = new Set<string>([
 const MOON_PHASE_TOOL_ID = 'moon-phase';
 const WEBCAM_BLUR_TOOL_ID = 'webcam-blur';
 const VIDEO_BG_REMOVE_TOOL_ID = 'video-bg-remove';
+const HEIC_TOOL_IDS = new Set(['heic-to-jpg', 'heic-to-png']);
 
 const componentByType = {
   converter: Converter,
@@ -357,7 +359,10 @@ const dateModifiedFormatted = entry.data.dateModified
           {config.type === 'file-tool' && config.id === 'jpg-to-pdf' && (
             <JpgToPdfTool config={config} lang={entry.data.language as Lang} client:load />
           )}
-          {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && config.id !== 'jpg-to-pdf' && (
+          {config.type === 'file-tool' && HEIC_TOOL_IDS.has(config.id) && (
+            <HeicKonverterTool config={config} lang={entry.data.language as Lang} client:load />
+          )}
+          {config.type === 'file-tool' && config.id !== VIDEO_BG_REMOVE_TOOL_ID && config.id !== 'jpg-to-pdf' && !HEIC_TOOL_IDS.has(config.id) && (
             <FileTool config={config} lang={entry.data.language as Lang} client:load />
           )}
           {config.type === 'formatter' && config.id === HEX_COLOR_TOOL_ID && (

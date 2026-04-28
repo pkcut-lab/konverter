@@ -1,7 +1,53 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-28 — Mobile-ML-Hardening komplett für FileTool-Tools (6 Commits b1747b2…3cba24c) · License-Migration ki-bild (CC-BY-NC→Apache-2.0) · Q4F16 Whisper/TMR · 3-Modell-Switch remove-background · CONVENTIONS §10.9 Mobile-Awareness gelockt · 1979/1979 Vitest grün · astro check 0/0/0
+**Letztes Update:** 2026-04-29 — HEIC-Konverter (heic-zu-jpg + heic-zu-png): Zwei neue File-Tools mit Batch/Ordner-Drop, EXIF-Privacy-Modi (Ohne GPS / Alles behalten / Alles entfernen), Auflösungs-Skalierung, Live-Photo-Erkennung und ZIP-Download. 2002/2002 Vitest grün · alle SEO-Lints grün.
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
+
+---
+
+## BG-Remover WebGPU-OOM-Fix 2026-04-29 — 4-Layer Defense
+
+User-Report: „der Remove Image Background funktioniert nicht, weder mobil noch auf dem Desktop." Live-Reproduktion mit Playwright (Headless Chromium, kein WebGPU-Adapter) zeigte: `quality`-Variante (BiRefNet_lite-FP16, 115 MB) lädt erfolgreich, aber die ONNX-Inferenz crasht mit:
+```
+failed to call OrtRun(). ERROR_CODE: 6, ERROR_MESSAGE: std::bad_alloc
+```
+Klassischer ONNX-WASM-OOM auf FP16-Modellen >50 MB. Trifft alle Browser ohne WebGPU: Firefox (außer Linux mit Flag), Safari (flaky), älteres Chrome, alle headless Browser.
+
+**Layer 1 — `requiresWebGPU`-Flag** (`src/lib/tools/ml-variants.ts`)
+- Neues `MlVariant.requiresWebGPU?: boolean` Feld.
+- `remove-background` / `quality` (BiRefNet_lite-FP16, 115 MB) → `true`
+- `remove-background` / `pro` (BEN2-FP16, 219 MB) → `true`
+- `video-bg-remove` / `quality` (BiRefNet_lite-FP16) → `true`
+- Quantisierte Q8/Q4-Varianten (`fast` = MODNet-Q8, 6,6 MB) bleiben WASM-tauglich → kein Flag.
+
+**Layer 2 — `pickDefaultVariant` Filter** (`src/lib/tools/ml-variants.ts`)
+- Filtert `requiresWebGPU`-Varianten heraus wenn `probe.hasWebGPU === false`.
+- Vorher: Desktop-Klasse → `quality` egal ob WebGPU vorhanden ist.
+- Nachher: Desktop-ohne-WebGPU → `fast` (MODNet-Q8, läuft überall in WASM).
+- Invariante: jedes Tool mit WebGPU-only-Variante muss mindestens eine WASM-runnable Fallback-Variante haben (per Test enforced).
+
+**Layer 3 — `WebGpuRequiredError` Fail-Fast** (`src/lib/tools/remove-background.ts`)
+- Neue Error-Klasse + Guard in `prepareBackgroundRemovalModel` vor dem `pipeline()`-Aufruf.
+- Wenn `spec.requiresWebGPU && device !== 'webgpu'` → throw bevor irgendein Byte heruntergeladen wird.
+- Source-Default geändert: `opts.variant ?? 'quality'` → `opts.variant ?? 'fast'`. Caller die kein Variant durchreichen bekommen das sicherste Modell statt einen 115-MB-Crash.
+
+**Layer 4 — FileTool Auto-Fallback** (`src/components/tools/FileTool.svelte`)
+- `variants`-Liste filtert `requiresWebGPU`-Einträge wenn `deviceProbe.hasWebGPU === false` → Switcher-Buttons für nicht-runnable Varianten verschwinden komplett aus der UI.
+- Im `prepare`-Catch: `WebGpuRequiredError` → `clearVariantCache(selectedVariant)` + `selectedVariant = 'fast'` + `processFile(file)` rekursiv (Rekursion ist bounded weil `fast.requiresWebGPU !== true`).
+- Im `processor`-Catch: Wenn Error-Message `bad_alloc` / `ERROR_CODE: 6` / `out of memory` enthält UND aktive Variant ist `requiresWebGPU` → gleiche Auto-Fallback-Logik. Schützt gegen späten Adapter-Tod (Probe sagt WebGPU OK, Inferenz crasht).
+
+**Tests** (`tests/lib/tools/ml-variants.test.ts` + `remove-background.test.ts`)
+- +3 `pickDefaultVariant`-Tests: Desktop-ohne-WebGPU → `fast`, Capable-Mobile-ohne-WebGPU → `fast`, originale Desktop-mit-WebGPU → `quality` bleibt.
+- +3 `requiresWebGPU`-Flag-Tests: Korrekte Markierung remove-background + video-bg-remove + Fallback-Invariante.
+- +3 `WebGpuRequiredError`-Tests: `quality` + `pro` werfen ohne Adapter, `fast` läuft durch.
+- `remove-background.test.ts` `beforeEach` stubt `navigator.gpu` jetzt mit Fake-Adapter (Default-Pfad = WebGPU vorhanden, matches Production-Happy-Path); No-WebGPU-Tests stubben gpu lokal als undefined.
+- 1987/1987 grün, astro check 0/0/0.
+
+**Verifikation:** Headless-Chromium-Reproduktion über `npm run dev` + Playwright. Vor Fix: `quality`-Variant lädt 109 MB, `phase=error` mit `Konvertierung fehlgeschlagen: failed to call OrtRun()…`. Nach Fix: Banner zeigt „6.6 MB-Modell", 0 Switcher-Buttons (kein Quality/Pro angeboten ohne WebGPU), Tool fertig in 4,4 s.
+
+**Bewusste offene Schulden:**
+- 🟡 **Real-Browser-Smoke-Test** auf Firefox-Desktop + Safari-Desktop um zu bestätigen dass deren WebGPU-Status korrekt erkannt wird.
+- 🟡 **i18n für Auto-Fallback-Hinweis**: aktuell wechselt der FileTool stillschweigend auf `fast` — User sieht nur dass das Tool funktioniert, nicht dass die Variant gewechselt wurde. Optional UI-Hinweis „Browser unterstützt keine GPU-beschleunigte Variante — schnelle Variante (6,6 MB) wird verwendet" als nächster Schritt.
 
 ---
 

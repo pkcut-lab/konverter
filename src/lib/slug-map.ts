@@ -47,6 +47,8 @@ export const slugMap: Record<string, Partial<Record<Lang, string>>> = {
   'image-diff':          { de: 'bild-diff',                        en: 'image-diff' },
   'qr-code-generator':   { de: 'qr-code-generator',               en: 'qr-code-generator' },
   'webcam-blur':         { de: 'webcam-hintergrund-unschaerfe',    en: 'webcam-background-blur' },
+  'heic-to-jpg':         { de: 'heic-zu-jpg',                      en: 'heic-to-jpg' },
+  'heic-to-png':         { de: 'heic-zu-png',                      en: 'heic-to-png' },
 
   // ── Video ────────────────────────────────────────────────────────────────
   'hevc-to-h264':        { de: 'hevc-zu-h264',                    en: 'hevc-to-h264' },
