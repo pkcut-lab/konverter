@@ -1,7 +1,34 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-29 — SEO/Agent-Readiness-Pass: 4× Meta-Description auf ≤160 Zeichen getrimmt, 4× Thin-Content auf 470–520 Wörter expandiert, Agent-Readiness-Dateien deployed (Content-Signal, Link-Header, api-catalog, agent-skills). Mozilla Observatory: A+ / 110/100. 2002/2002 Vitest grün.
+**Letztes Update:** 2026-04-29 — CSP + ORT-Self-Host: `media-src 'self' blob:` hinzugefügt (Audio-Transkription Player-Fix), ORT-Web runtime aus `node_modules` → `/ort/` self-hosted (entfernt cdn.jsdelivr.net aus CSP), Inbox 2026-04-28 vollständig verarbeitet (mobile-ml-bg-removal + mobile-ml-tools-audit).
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
+
+---
+
+## CSP + ORT-Self-Host 2026-04-29 — Audio-Transkription unblocked
+
+**Auslöser:** Browser-Console-CSP-Fehler auf kittokit.com: (1) `blob:`-Media blockiert → Audio-Player lud nicht; (2) cdn.jsdelivr.net blockiert in connect-src → ORT-WASM-Runtime 404; (3) Stale-SW-Artifact (altes Inline-Script-Hash) → transient, löst sich beim SW-Update selbst.
+
+**Fix 1 — `media-src 'self' blob:` (Commit `3314892`):**
+- `AudioTranskriptionTool.svelte:88`: `audioUrl = URL.createObjectURL(file)` → erzeugt `blob:https://kittokit.com/…`-URL für den Audio-Preview-Player.
+- Ohne explizites `media-src` fällt der Browser auf `default-src 'self'` zurück → blockiert `blob:`-Schema → Player lädt stumm nicht.
+- Fix: `media-src 'self' blob:` in `public/_headers` CSP-Zeile eingefügt (zwischen `img-src` und `font-src`).
+
+**Fix 2 — ORT-Web Self-Host (Commits `878c973` + `56f88f4`):**
+- SOTA-Audit (`inbox/processed/2026-04-29-bg-removal-sota-audit.md`) bestätigte: `env.backends.onnx.wasm.wasmPaths = '/ort/'` ist die kanonische API für ORT-Runtime-Pfad-Override.
+- `scripts/copy-ort-web.mjs`: kopiert 8 ORT-WASM/MJS-Files aus `node_modules/onnxruntime-web/dist/` nach `dist/ort/` beim Build.
+- `src/lib/tools/ml-mirror.ts` `applyOrtSelfHost(env)`: setzt `env.backends.onnx.wasm.wasmPaths = '/ort/'`.
+- Aufruf in `audio-transkription.ts`, `ki-bild-detektor.ts`, `ki-text-detektor.ts` eingebaut.
+- Vite-Dev-Plugin in `astro.config.mjs`: serviert `/ort/*.mjs|*.wasm` als Raw-Static-Files ohne `?import`-Suffix (verhindert 404 in Dev-Mode).
+- `postinstall`-Hook in `package.json`: `copy-ort-web.mjs` läuft nach `npm install` → `/public/ort/` in Dev-Mode vorhanden.
+- **Ergebnis:** `cdn.jsdelivr.net` komplett aus CSP entfernt (script-src + connect-src); ML-Tools hängen nicht mehr von jsdelivr ab.
+
+**WebGPU-Probe-Schärfung (Commit `878c973`):**
+- `remove-background.ts` `detectDevice()`: zusätzlicher Check `maxStorageBuffersPerShaderStage ≥ 17` (BiRefNet_lite braucht 17; Windows ANGLE cappt bei 16 → `OrtRun ERROR_CODE: 1 Too many storage buffers`).
+- Verhindert den Fall: WebGPU-Probe sagt „OK", Inferenz crasht mid-run wegen ANGLE-Limit.
+
+**Bewusste offene Schulden:**
+- 🟡 **Stale-SW-Artifact** (3. CSP-Fehler): veraltetes Inline-Script-Hash aus altem SW-Cache — löst sich automatisch wenn `skipWaiting: true`-SW die alten JS-Chunks ersetzt. Kein Code-Fix nötig.
 
 ---
 
