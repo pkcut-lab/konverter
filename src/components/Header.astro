@@ -190,6 +190,11 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
     font-weight: 600;
     font-size: 1.125rem;
     letter-spacing: var(--tracking-tight);
+    /* Schutz gegen body-Level `overflow-wrap: anywhere`: ohne nowrap
+       wäre min-content der Wordmark = 1 Zeichen, was den 1fr-Grid-Track
+       der Brand auf Mobile unter die natürliche Logo-Breite schrumpft
+       und „kit-to-kit" mid-character wickelt. */
+    white-space: nowrap;
   }
   .wordmark em {
     font-style: normal;
@@ -360,23 +365,43 @@ const popular: PopularEntry[] = POPULAR_TOOLS.flatMap((p) => {
   }
 
   @media (max-width: 40rem) {
+    /* Mobile: 3-Row-Layout damit Brand IMMER volle Sichtbarkeit hat.
+       Row 1: Brand (1fr) + Theme-Toggle (auto, rechts).
+       Row 2: Search (full-width).
+       Row 3: Lang-Chips (full-width, rechtsbündig).
+       Verhindert dass Lang-Slot bei mehreren aktiven Sprachen das
+       Brand-Logo eindrückt — Brand-Cell hat jetzt allen Resterraum. */
     .inner {
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "brand   toggle"
+        "search  search"
+        "lang    lang";
       row-gap: var(--space-2);
-      /* Mobile: kompakteres Padding + Gap, damit Brand + Lang-Chips +
-         Toggle auch auf 320px-Viewports (iPhone SE) ohne Overflow passen. */
       padding-block: var(--space-3);
       padding-inline:
         max(var(--space-4), env(safe-area-inset-left))
         max(var(--space-4), env(safe-area-inset-right));
       gap: var(--space-3);
     }
+    .brand {
+      grid-area: brand;
+      /* Sicherheitsgurt: kein Schrumpfen unter die natürliche Brand-
+         Breite, falls Lang-Slot mal sehr breit wird (fallback). */
+      min-width: max-content;
+    }
     .nav {
       display: none;
     }
     .search-slot {
-      grid-column: 1 / -1;
-      order: 3;
+      grid-area: search;
+    }
+    .lang-slot {
+      grid-area: lang;
+      justify-content: flex-end;
+    }
+    .toggle-slot {
+      grid-area: toggle;
     }
     .popular-bar__inner {
       padding-inline:
