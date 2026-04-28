@@ -5,6 +5,8 @@
   import { onDestroy } from 'svelte';
   import { t } from '../../lib/i18n/strings';
   import type { Lang } from '../../lib/i18n/lang';
+  import MlBanner from '../MlBanner.svelte';
+  import { ML_VARIANTS, type VariantId } from '../../lib/tools/ml-variants';
 
   interface Props {
     lang: Lang;
@@ -23,9 +25,47 @@
   let selectedModel = $state<ModelSize>('base');
   let selectedFormat = $state<'txt' | 'srt'>('txt');
   let selectedLanguage = $state<string>('german');
+  let stalled = $state<boolean>(false);
 
   let module: typeof import('../../lib/tools/audio-transkription') | null = null;
   let activeAudioCtx: AudioContext | null = null;
+
+  // Map ModelSize ↔ VariantId so the banner-switcher reuses the existing
+  // model-picker state. tiny=fast (52 MB), base=quality (83 MB), small=pro (200 MB).
+  const variants = ML_VARIANTS['audio-transkription'] ?? [];
+  const variantIdForModel: Record<ModelSize, VariantId> = {
+    tiny: 'fast',
+    base: 'quality',
+    small: 'pro',
+  };
+  const modelForVariantId: Record<VariantId, ModelSize> = {
+    fast: 'tiny',
+    quality: 'base',
+    pro: 'small',
+  };
+  const selectedVariantId = $derived<VariantId>(variantIdForModel[selectedModel]);
+
+  function onSwitchVariant(id: VariantId) {
+    if (selectedVariantId === id) return;
+    selectedModel = modelForVariantId[id];
+    // Module-level pipeline keys on modelSize — switching invalidates by
+    // construction (the module sees a different `currentModelSize`).
+    // No need to manually reset.
+    stalled = false;
+  }
+
+  function onRetry() {
+    stalled = false;
+    errorMessage = '';
+    if (file) void startTranscription();
+  }
+
+  function onFallbackToFast() {
+    stalled = false;
+    errorMessage = '';
+    selectedModel = 'tiny';
+    if (file) void startTranscription();
+  }
 
   const fileSizeWarningMb = $derived.by(() => {
     if (!file) return 0;
@@ -105,6 +145,13 @@
     } catch (err) {
       console.error(err);
       phase = 'error';
+      // Detect stall by error name (set by the underlying watchdog) or by
+      // the network 'Failed to fetch' message that mobile carriers produce.
+      if (err instanceof Error) {
+        const nameStall = err.name === 'StallError';
+        const msgFetch = /failed to fetch/i.test(err.message);
+        if (nameStall || msgFetch) stalled = true;
+      }
       errorMessage = err instanceof Error ? err.message : T.errorGeneric;
     } finally {
       // Always close AudioContext after use, regardless of success or failure.
@@ -173,6 +220,17 @@
 
 <div class="audio-tool">
   {#if phase === 'idle' || phase === 'error'}
+    {#if variants.length > 0}
+      <MlBanner
+        {lang}
+        {variants}
+        selectedVariantId={selectedVariantId}
+        onSwitch={onSwitchVariant}
+        showStall={stalled}
+        onRetry={onRetry}
+        onFallbackToFast={onFallbackToFast}
+      />
+    {/if}
     <div class="audio-tool__input">
       <div class="upload-area {file ? 'upload-area--has-file' : ''}">
         {#if file}

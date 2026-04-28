@@ -3,11 +3,17 @@
   import { loadKiBildDetektor } from '../../lib/tools/type-runtime-registry';
   import Loader from '../Loader.svelte';
   import type { ProgressEvent, KiImageResult } from '../../lib/tools/ki-bild-detektor';
+  import type { Lang } from '../../lib/i18n/lang';
+  import MlBanner from '../MlBanner.svelte';
+  import { ML_VARIANTS } from '../../lib/tools/ml-variants';
 
   interface Props {
     config: FormatterConfig;
+    lang?: Lang;
   }
-  let { config }: Props = $props();
+  let { config, lang = 'de' }: Props = $props();
+  // Single-variant tool — banner just discloses the size; no switcher.
+  const variants = ML_VARIANTS['ki-bild-detektor'] ?? [];
 
   let file = $state<File | null>(null);
   let previewUrl = $state<string | null>(null);
@@ -103,6 +109,9 @@
 
 <div class="ki-tool">
   {#if phase === 'idle' || phase === 'error'}
+    {#if variants.length > 0}
+      <MlBanner {lang} {variants} />
+    {/if}
     <div class="ki-tool__input-panel">
       <div class="upload-area {file ? 'upload-area--has-file' : ''}">
         {#if previewUrl}
