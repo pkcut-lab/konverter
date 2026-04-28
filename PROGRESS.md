@@ -1,7 +1,39 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-27 — SEO-Audit-Sweep komplett (6 Wellen, 22 Commits, +75 neue Tests) · 1928/1928 Tests grün · 0 errors · Commit `ef0e976`
+**Letztes Update:** 2026-04-28 — 4-Layer Mobile-Overflow-Defense komplett (6 Commits, +Playwright-Gate 12×6=72 Tests) · 1928/1928 Vitest grün · 16/16 a11y-Test grün · 72/72 Overflow-Gate grün · Commit `d02b8ab`
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
+
+---
+
+## Mobile-Overflow-Defense 2026-04-28 — 4-Layer-Architektur
+
+User-Report: leichter horizontaler Scroll auf Mobile, vorheriger Fix (`html { overflow-x: clip }`) maskierte nur am Seitenrand. Deep-Research + Forensic + Implementation.
+
+**Layer 1 — Viewport-Meta** (`BaseLayout.astro`)
+- `viewport-fit=cover` aktiviert iOS-Notch-Awareness; gepaart mit safe-area-inset auf allen `position: sticky`/`fixed`-Elementen.
+
+**Layer 2 — Globaler CSS-Reset** (`global.css`)
+- `body { overflow-x: clip }` (statt `<html>`) — kanonische 2026-Empfehlung; bricht `position: sticky` NICHT (clip ist kein Scroll-Container).
+- `body { overflow-wrap: anywhere }` (statt `break-word`) — zählt Soft-Breaks in `min-content` ein, sodass lange URLs/Hashes Flex-Items nicht mehr sprengen.
+- `html { scrollbar-gutter: stable }` — Desktop-CLS-Schutz.
+- Globaler `pre { overflow-wrap: normal; overflow-x: auto }` — Code-Blöcke scrollen statt zu brechen.
+- Replaced-Elements (img/video/iframe/canvas/picture) gecappt auf `max-inline-size: 100%`. SVG-Reset entkoppelt: `svg:not([width]):not([height]) { block-size: auto }` damit Brand-Mark-Attribute nicht überschrieben werden.
+
+**Layer 3 — Tactical Leaf-Fixes**
+- `Header.astro` `.popular-bar`: `overflow: hidden → clip` + `max-inline-size: 100%` (iOS-Sticky-Compositor-Bug).
+- `.site-main`/`.inner`/`.popular-bar__inner`/`.skip-to-content`/`.banner`: safe-area-inset-Padding via `max(var(--space-*), env(safe-area-inset-*))`.
+- `ColorConverter.swatch`: `120px`/`80px` → Tokens `--color-swatch-size`/`--color-swatch-size-mobile-h` (CONVENTIONS Tokens-only-Compliance).
+- `JpgToPdfTool.svelte` `.jpg-pdf__name`: `min-width: 0` damit `text-overflow: ellipsis` im 1fr-Grid-Track greift.
+
+**Layer 4 — Playwright-CI-Gate** (`tests/e2e/no-horizontal-overflow.spec.ts`)
+- 6 Viewport-Breiten (320/375/390/412/430/768) × 12 Routen (alle 7 Tool-Typen + idiosynkratische Renderpfade) = 72 Tests.
+- Lifte Layer-2-Mask temporär per `page.evaluate`, misst `scrollWidth - clientWidth` an `<html>`, listet Top-10-Offender bei Failure als direkten Fix-Hint.
+- `playwright.config.ts` erweitert (testDir 'tests/a11y' → 'tests', testMatch beide Subsuiten); `npm run test:overflow` als Script.
+- Result: 72/72 grün — bestätigt dass Mobile-Overflow als globale Klasse eliminiert ist.
+
+**Performance:** netto neutral. `overflow-x: clip` günstiger als `hidden` (kein neuer Scroll-Container). `scrollbar-gutter: stable` reduziert CLS auf Desktop. `anywhere` text-layout +0.05ms pro Text-Node bei einmaligem Layout — irrelevant zur Runtime. CI-Gate +~53s pro PR-Run.
+
+**Commits:** `7b7a941` (Foundation) · `c909370` (site-main safe-area) · `dda366f` (ColorConverter Tokens) · `e9f5fb8` (JpgToPdf min-width:0) · `8262385` (Layer-4 Gate) · `d02b8ab` (Reviewer-Follow-ups: SVG-Reset präziser + Gate auf 12 Routen).
 
 ---
 
