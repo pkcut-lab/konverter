@@ -39,6 +39,10 @@
 #     fetches the runtime from our origin instead of `cdn.jsdelivr.net`.
 #     Result: no third-party CDN in script-src or connect-src; CSP stays
 #     tight; ML tools stop depending on a single jsdelivr point-of-failure.
+#   - media-src 'self' blob:: AudioTranskriptionTool creates blob: URLs via
+#     URL.createObjectURL() for the in-page audio preview player. Without
+#     this directive, default-src 'self' blocks the blob: URL and the player
+#     silently fails to load the uploaded audio before transcription.
 #   - worker-src 'self' blob:: @vite-pwa/astro + File-Tool Worker-Boundary.
 #   - frame-ancestors 'none': Clickjacking-Hard-Stop.
 #   - COOP same-origin (2026-04-26): closes Spectre-class side-channels.
@@ -52,7 +56,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), browsing-topics=(), interest-cohort=(), attribution-reporting=(), usb=(), serial=(), bluetooth=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.xethub.hf.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.xethub.hf.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 # Service Worker must never be cached by the browser itself — otherwise
 # users get stuck on an old build even after Workbox skipWaiting fires.
