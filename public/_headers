@@ -31,6 +31,19 @@
 #     blocked and the model download fails with `no-response` after the
 #     ServiceWorker swallows the rejection. Wildcard `*.xethub.hf.co`
 #     covers cas-bridge plus any future XetHub subdomains HF rolls out.
+#   - cdn.jsdelivr.net (script-src + connect-src): Transformers.js v4
+#     dynamic-imports ONNX-Runtime from
+#     `cdn.jsdelivr.net/npm/onnxruntime-web@<version>/dist/ort-wasm-*.{mjs,wasm}`
+#     the first time a pipeline initialises. The .mjs needs script-src
+#     (it's loaded as a module-script) and the .wasm needs connect-src
+#     (fetch via streaming-instantiation). Without both, every ML tool
+#     (remove-background, video-bg-remove, audio-transkription, ki-text-
+#     detektor, ki-bild-detektor, image-to-text, speech-enhancer) fails
+#     with `no available backend found` regardless of the chosen variant.
+#     Future hardening: self-host onnxruntime-web by copying its dist/
+#     into public/onnxruntime-web/ at build-time and pointing
+#     `env.backends.onnx.wasm.wasmPaths` there — drops the third-party
+#     dependency at the cost of a postinstall copy step.
 #   - worker-src 'self' blob:: @vite-pwa/astro + File-Tool Worker-Boundary.
 #   - frame-ancestors 'none': Clickjacking-Hard-Stop.
 #   - COOP same-origin (2026-04-26): closes Spectre-class side-channels.
@@ -44,7 +57,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), browsing-topics=(), interest-cohort=(), attribution-reporting=(), usb=(), serial=(), bluetooth=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.xethub.hf.co https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.clarity.ms https://cdn.jsdelivr.net __CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://huggingface.co https://cdn-lfs.huggingface.co https://*.xethub.hf.co https://cdn.jsdelivr.net https://*.clarity.ms https://cloudflareinsights.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 # Service Worker must never be cached by the browser itself — otherwise
 # users get stuck on an old build even after Workbox skipWaiting fires.
