@@ -50,15 +50,27 @@ const VIEWPORTS: readonly Viewport[] = [
 /**
  * Repräsentative Routen, eine pro Tool-Typ + Layout-Pattern. NICHT
  * jede der ~1000 Tools — das wäre Build-Zeit-Verschwendung. Diese
- * Auswahl deckt die strukturell unterschiedlichen Render-Pfade ab.
+ * Auswahl deckt alle 7 generischen Tool-Typen (Converter, Calculator,
+ * Generator, Formatter, Validator, Analyzer, Comparer) plus die
+ * idiosynkratischen Renderpfade (KI-Detector circular-chart-SVG,
+ * Mondphasen 200×200-SVG, AudioTranskription wide-output-card) ab.
+ *
+ * Bei neuem Layout-Pattern hier eintragen. Bei neuem Tool desselben
+ * Typs reicht eine bestehende Route — die strukturelle Class deckt's ab.
  */
 const ROUTES: readonly string[] = [
-  '/de',                      // DE homepage (card grid + hero)
-  '/de/werkzeuge',            // Tools-Index (filter-grid)
-  '/de/hex-zu-rgb',           // ColorConverter (swatch + input row)
-  '/de/jpg-zu-pdf',           // File-Tool (multi-image grid)
-  '/de/kreditrechner',        // Calculator + wide tilgungsplan-table
-  '/de/meter-zu-fuss',        // Simple Converter (two-panel-stack)
+  '/de',                       // DE homepage (card grid + hero)
+  '/de/werkzeuge',             // Tools-Index (filter-grid)
+  '/de/hex-zu-rgb',            // ColorConverter (swatch + input row)
+  '/de/jpg-zu-pdf',            // File-Tool (multi-image grid)
+  '/de/kreditrechner',         // Calculator + wide tilgungsplan-table
+  '/de/meter-zu-fuss',         // Simple Converter (two-panel-stack)
+  '/de/json-formatter',        // Formatter <pre> output (white-space: pre)
+  '/de/passwort-generator',    // Generator <pre> + word-break: break-all
+  '/de/ki-text-detektor',      // SVG ohne width/height (circular-chart)
+  '/de/mondphasen-rechner',    // 200×200-SVG mit eigenem MQ
+  '/de/audio-transkription',   // wide result-card + transcription-text
+  '/de/bild-diff',             // wide-section (--wide 48rem) Comparer
 ];
 
 interface OverflowOffender {

@@ -46,10 +46,21 @@ pre {
   overflow-x: auto;
 }
 
-/* Replaced Elements dürfen niemals breiter als ihr Container sein.
-   `block-size: auto` hält Aspect-Ratio bei `inline-size: 100%`. */
-img, video, iframe, svg, canvas, picture {
+/* Replaced Elements dürfen niemals breiter als ihr Container sein. */
+img, video, iframe, canvas, picture {
   max-inline-size: 100%;
+  block-size: auto;
+}
+/* SVGs separat: nur cappen, NICHT block-size: auto erzwingen, damit
+   explizite `width="26" height="26"`-Attribute (Brand-Mark im Header/
+   Footer, ThemeToggle-Icons) erhalten bleiben. SVGs OHNE width+height
+   bekommen `block-size: auto` damit sie via viewBox-Aspect-Ratio sauber
+   skalieren statt UA-Default 300×150 (z.B. .circular-chart in den
+   KI-Detector-Tools). */
+svg {
+  max-inline-size: 100%;
+}
+svg:not([width]):not([height]) {
   block-size: auto;
 }
 
