@@ -26,6 +26,8 @@ const loaders: Record<string, ToolLoader> = {
   'png-jpg-to-webp': () => import('./tools/png-jpg-to-webp').then((m) => m.pngJpgToWebp),
   'remove-background': () =>
     import('./tools/hintergrund-entferner').then((m) => m.hintergrundEntferner),
+  'heic-to-jpg': () => import('./tools/heic-zu-jpg').then((m) => m.heicZuJpg),
+  'heic-to-png': () => import('./tools/heic-zu-png').then((m) => m.heicZuPng),
   'cm-to-inch': () => import('./tools/zentimeter-zu-zoll').then((m) => m.zentimeterZuZoll),
   'km-to-mile': () => import('./tools/kilometer-zu-meilen').then((m) => m.kilometerZuMeilen),
   'kg-to-lb': () => import('./tools/kilogramm-zu-pfund').then((m) => m.kilogrammZuPfund),

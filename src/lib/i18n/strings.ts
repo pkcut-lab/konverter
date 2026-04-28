@@ -1037,6 +1037,41 @@ export interface UiStrings {
       // Reset
       otherFileButton: string;
     };
+    heicKonverter: {
+      dropzoneLabel: string;
+      dropzoneSubLabel: string;
+      orBrowse: string;
+      folderHint: string;
+      iosHint: string;
+      convertBtn: string;
+      converting: string;
+      formatLabel: string;
+      qualityLabel: string;
+      qualityHigh: string;
+      qualityMid: string;
+      qualityLow: string;
+      resizeLabel: string;
+      resizeOriginal: string;
+      resize4k: string;
+      resize1080: string;
+      exifLabel: string;
+      exifStandard: string;
+      exifAll: string;
+      exifNone: string;
+      exifHint: string;
+      advancedToggle: string;
+      livePhotosBanner: string;
+      resultCount: string;
+      downloadAll: string;
+      downloadZip: string;
+      downloadFile: string;
+      privacyBadge: string;
+      errorHeicDecode: string;
+      errorNoFiles: string;
+      errorTooLarge: string;
+      statusDone: string;
+      statusError: string;
+    };
   };
 }
 
@@ -1970,6 +2005,41 @@ const strings: Record<Lang, UiStrings> = {
         errorGeneric: 'Fehler bei der Transkription.',
         otherFileButton: 'Andere Datei wählen',
       },
+      heicKonverter: {
+        dropzoneLabel: 'HEIC-Dateien hierher ziehen',
+        dropzoneSubLabel: 'oder Ordner ablegen',
+        orBrowse: 'Dateien auswählen',
+        folderHint: 'Ordner und Unterordner werden vollständig durchsucht',
+        iosHint: 'Auf dem iPhone: Mehrere Bilder gleichzeitig auswählen',
+        convertBtn: 'Konvertieren',
+        converting: 'Wird konvertiert…',
+        formatLabel: 'Format',
+        qualityLabel: 'Qualität',
+        qualityHigh: 'Hoch',
+        qualityMid: 'Mittel',
+        qualityLow: 'Klein',
+        resizeLabel: 'Auflösung',
+        resizeOriginal: 'Original',
+        resize4k: '4K (max)',
+        resize1080: 'Full HD',
+        exifLabel: 'Bilddaten',
+        exifStandard: 'Ohne GPS',
+        exifAll: 'Alles behalten',
+        exifNone: 'Alles entfernen',
+        exifHint: 'Standardmäßig werden GPS-Standortdaten entfernt',
+        advancedToggle: 'Erweiterte Optionen',
+        livePhotosBanner: 'Live Photos erkannt — die zugehörigen Videos werden nicht mitkonvertiert',
+        resultCount: '{count} Datei(en) konvertiert',
+        downloadAll: 'Alle herunterladen',
+        downloadZip: 'Als ZIP herunterladen',
+        downloadFile: 'Herunterladen',
+        privacyBadge: '100 % lokal — keine Bilder werden hochgeladen',
+        errorHeicDecode: 'HEIC-Datei konnte nicht gelesen werden',
+        errorNoFiles: 'Keine HEIC-Dateien gefunden',
+        errorTooLarge: 'Datei zu groß (max. 50 MB)',
+        statusDone: 'Fertig',
+        statusError: 'Fehler',
+      },
     },
   },
 
@@ -2902,6 +2972,41 @@ const strings: Record<Lang, UiStrings> = {
         downloadButton: 'Download',
         errorGeneric: 'Transcription failed.',
         otherFileButton: 'Choose another file',
+      },
+      heicKonverter: {
+        dropzoneLabel: 'Drop HEIC files here',
+        dropzoneSubLabel: 'or drop a folder',
+        orBrowse: 'Choose files',
+        folderHint: 'Folders and subfolders are scanned recursively',
+        iosHint: 'On iPhone: tap and select multiple photos at once',
+        convertBtn: 'Convert',
+        converting: 'Converting…',
+        formatLabel: 'Format',
+        qualityLabel: 'Quality',
+        qualityHigh: 'High',
+        qualityMid: 'Medium',
+        qualityLow: 'Small',
+        resizeLabel: 'Resolution',
+        resizeOriginal: 'Original',
+        resize4k: '4K (max)',
+        resize1080: 'Full HD',
+        exifLabel: 'Image data',
+        exifStandard: 'No GPS',
+        exifAll: 'Keep all',
+        exifNone: 'Remove all',
+        exifHint: 'By default, GPS location data is removed',
+        advancedToggle: 'Advanced options',
+        livePhotosBanner: 'Live Photos detected — the associated videos will not be converted',
+        resultCount: '{count} file(s) converted',
+        downloadAll: 'Download all',
+        downloadZip: 'Download as ZIP',
+        downloadFile: 'Download',
+        privacyBadge: '100% local — no images are uploaded',
+        errorHeicDecode: 'Could not read HEIC file',
+        errorNoFiles: 'No HEIC files found',
+        errorTooLarge: 'File too large (max 50 MB)',
+        statusDone: 'Done',
+        statusError: 'Error',
       },
     },
   },

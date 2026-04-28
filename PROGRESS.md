@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Letztes Update:** 2026-04-29 — BG-Remover WebGPU-OOM-Fix (4-Layer): Desktop-ohne-WebGPU (Firefox/Safari/Linux-Chrome/Headless) lud `quality` (BiRefNet_lite-FP16, 115 MB) und crashte mit `std::bad_alloc` (OrtRun ERROR_CODE: 6). `requiresWebGPU`-Flag + `pickDefaultVariant`-Filter + `WebGpuRequiredError` Fail-Fast + FileTool Auto-Fallback. 1987/1987 Vitest grün · astro check 0/0/0 · Live-Repro bestätigt (4,4 s mit `fast` statt OOM-Crash mit `quality`).
+**Letztes Update:** 2026-04-29 — HEIC-Konverter (heic-zu-jpg + heic-zu-png): Zwei neue File-Tools mit Batch/Ordner-Drop, EXIF-Privacy-Modi (Ohne GPS / Alles behalten / Alles entfernen), Auflösungs-Skalierung, Live-Photo-Erkennung und ZIP-Download. 2002/2002 Vitest grün · alle SEO-Lints grün.
 **Aktuelle Phase:** Phase 3 — EN live · DE + EN beide aktiv · CF Pages Function: Accept-Language + Cookie Redirect (DEFAULT=en) · 3 EN-Tools jetzt Region-Adaptive (US+UK)
 
 ---
