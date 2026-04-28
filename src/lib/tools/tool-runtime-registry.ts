@@ -1,4 +1,6 @@
 import { processWebp } from './process-webp';
+import { ML_VARIANTS, type VariantId, type MlVariant } from './ml-variants';
+import type { DeviceProbe } from './ml-device-detect';
 
 /**
  * Client-side runtime registry for FileTools.
@@ -81,8 +83,21 @@ export type ProcessFn = (
   onProgress?: ProgressCallback,
 ) => Uint8Array | Promise<Uint8Array>;
 
+/**
+ * Mobile-aware preparation options. Existing tools that don't care about
+ * variants can ignore `opts` entirely — the second arg is optional. New
+ * mobile-aware tools read `opts.variant` to pick a model and
+ * `opts.stallTimeoutMs` to size the watchdog (typically 240s mobile / 60s
+ * desktop, derived via `pickStallTimeout(probe)`).
+ */
+export interface PrepareOpts {
+  variant?: VariantId;
+  stallTimeoutMs?: number;
+}
+
 export type PrepareFn = (
   onProgress: (e: { loaded: number; total: number }) => void,
+  opts?: PrepareOpts,
 ) => Promise<void>;
 
 export type ReencodeFn = (format: string) => Promise<Uint8Array>;
@@ -92,8 +107,24 @@ export interface ToolRuntime {
   prepare?: PrepareFn;
   reencode?: ReencodeFn;
   isPrepared?: () => boolean;
+  /** Variant-aware cache check. Optional — only for mobile-aware tools. */
+  isPreparedFor?: (variant: VariantId) => boolean;
+  /** Drop a cached pipeline so a subsequent prepare() actually re-fetches. */
+  clearVariantCache?: (variant?: VariantId) => void;
   clearLastResult?: () => void;
   preflightCheck?: () => string | null;
+  /**
+   * Mobile-aware variant matrix. When present, the FileTool component shows
+   * the variant-switcher banner and routes the user-picked variant through
+   * `prepare(onProgress, { variant })`. When absent, the tool is treated as
+   * single-variant (the prepare path receives no `opts.variant`).
+   */
+  variants?: MlVariant[];
+  /**
+   * Per-tool override for default-variant selection. Falls back to
+   * `pickDefaultVariant(toolId, probe)` when omitted.
+   */
+  pickDefaultVariant?: (probe: DeviceProbe) => VariantId;
 }
 
 export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
@@ -120,17 +151,26 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
   'remove-background': {
     process: async (input, config) => {
       const m = await loadRemoveBg();
+      const variant =
+        typeof config?.mlVariant === 'string' &&
+        (config.mlVariant === 'fast' || config.mlVariant === 'quality' || config.mlVariant === 'pro')
+          ? (config.mlVariant as VariantId)
+          : undefined;
       return m.removeBackground(input, {
         format:
           typeof config?.format === 'string' &&
           (config.format === 'png' || config.format === 'webp' || config.format === 'jpg')
             ? config.format
             : 'png',
+        variant,
       });
     },
-    prepare: async (onProgress) => {
+    prepare: async (onProgress, opts) => {
       const m = await loadRemoveBg();
-      return m.prepareBackgroundRemovalModel(onProgress);
+      return m.prepareBackgroundRemovalModel(onProgress, {
+        variant: opts?.variant,
+        stallTimeoutMs: opts?.stallTimeoutMs,
+      });
     },
     reencode: async (format) => {
       const m = await loadRemoveBg();
@@ -142,7 +182,10 @@ export const toolRuntimeRegistry: Record<string, ToolRuntime> = {
     // is `false` (correct: no model in memory) and clearLastResult is a no-op
     // (correct: no cached bitmap yet).
     isPrepared: () => removeBgModule?.isPrepared() ?? false,
+    isPreparedFor: (variant) => removeBgModule?.isPreparedFor(variant) ?? false,
+    clearVariantCache: (variant) => removeBgModule?.clearVariantCache(variant),
     clearLastResult: () => removeBgModule?.clearLastResult(),
+    variants: ML_VARIANTS['remove-background'],
   },
   'hevc-to-h264': {
     process: async (input, config, onProgress) => {

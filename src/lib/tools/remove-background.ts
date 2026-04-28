@@ -1,23 +1,46 @@
 /**
- * BG-Remover pure module.
+ * BG-Remover pure module — three-tier mobile-aware model switch.
  *
- * Singleton-cached pipeline (Transformers.js v4 + onnx-community/BEN2-ONNX).
- * Entry-points are dynamic-imported by `tool-runtime-registry.ts` (thunk +
- * memoized module promise) so `@huggingface/transformers` splits into its
- * own chunk and never ships to pages that don't use it. Any static import
- * of this file from the shared bundle will re-introduce the regression.
+ * Variants (declared in `ml-variants.ts`):
+ * - `fast`   — Xenova/modnet (Q8, 6.6 MB, Apache-2.0) — mobile-default.
+ * - `quality`— onnx-community/BiRefNet_lite-ONNX (FP16, 115 MB, MIT) —
+ *              desktop-default + capable-mobile with WebGPU.
+ * - `pro`    — onnx-community/BEN2-ONNX (FP16, 219 MB, MIT) —
+ *              desktop-only opt-in for maximum hair/edge quality.
  *
- * Cache lifetime: pipeline + lastResultCanvas live at module scope. The
- * FileTool component calls `clearLastResult()` on its reset path to avoid
- * leaking large bitmaps when the user starts over.
+ * Pipeline-cache is per-variant: switching variants loads a new pipeline
+ * (idempotent within the same variant). `isPreparedFor(variant)` answers
+ * the variant-specific cache state synchronously so the FileTool component
+ * can skip the `preparing`-phase on revisit.
+ *
+ * Entry-points are dynamic-imported by `tool-runtime-registry.ts` so
+ * `@huggingface/transformers` splits into its own chunk and never ships
+ * to pages that don't use background-removal.
+ *
+ * Mobile WebGPU policy: `fast` variant forces `device: 'wasm'` because the
+ * Q8 model is small enough that WebGPU buys nothing and iOS Safari WebGPU
+ * remains fragile under memory pressure. `quality` and `pro` use WebGPU
+ * when available, WASM otherwise (matches CONVENTIONS §10.7).
+ *
+ * Mirror policy: `applyMlMirrorIfConfigured(env)` is called once before the
+ * first `pipeline()` call, switching `env.remoteHost` to a Cloudflare R2
+ * mirror when `PUBLIC_ML_MIRROR_HOST` (build-time) or
+ * `window.__KITTOKIT_ML_MIRROR_HOST__` (runtime) is set.
  */
 
-import { pipeline, RawImage } from '@huggingface/transformers';
+import { pipeline, RawImage, env } from '@huggingface/transformers';
+import { applyMlMirrorIfConfigured } from './ml-mirror';
+import { getVariant, type VariantId } from './ml-variants';
 
 export type RemoveBackgroundFormat = 'png' | 'webp' | 'jpg';
 
 export interface RemoveBackgroundOpts {
   format: RemoveBackgroundFormat;
+  /**
+   * Variant to use for the inference. If omitted, the variant of the most
+   * recently prepared model is used. Throws if no model is prepared.
+   */
+  variant?: VariantId;
 }
 
 export interface ProgressEvent {
@@ -26,10 +49,12 @@ export interface ProgressEvent {
 }
 
 export interface PrepareOpts {
+  /** Which model variant to load. Default `'quality'`. */
+  variant?: VariantId;
   /**
    * Watchdog timeout in ms. If no progress event arrives within this window
-   * the pipeline-promise rejects with `StallError`. Defaults to 120_000.
-   * Spec §10.
+   * the pipeline-promise rejects with `StallError`. Defaults to 120 000.
+   * Mobile callers should use `pickStallTimeout(probe)` from `ml-device-detect`.
    */
   stallTimeoutMs?: number;
 }
@@ -44,18 +69,21 @@ export class StallError extends Error {
 /**
  * image-segmentation pipeline output shape per Transformers.js v4 docs:
  * `Array<{ label: string; score: number | null; mask: RawImage }>`.
- * For BEN2 (binary foreground seg) the array has exactly one entry.
- * RawImage.data is `Uint8Array | Uint8ClampedArray` in the 0..255 range.
+ * For BEN2 / MODNet / BiRefNet the array has at least one entry where
+ * `mask.data` is `Uint8Array | Uint8ClampedArray` in 0..255 range.
  */
 type MaskImage = { data: Uint8Array | Uint8ClampedArray; width: number; height: number };
 type SegmentationResult = Array<{ mask: MaskImage }>;
 type Pipe = (input: unknown, opts?: unknown) => Promise<SegmentationResult>;
 
-let pipelinePromise: Promise<Pipe> | null = null;
-let pipelineReady = false;
+const pipelineCache = new Map<VariantId, Promise<Pipe>>();
+const readyVariants = new Set<VariantId>();
+let activeVariant: VariantId | null = null;
 let lastResultCanvas: OffscreenCanvas | null = null;
+let mirrorApplied = false;
 
-async function detectDevice(): Promise<'webgpu' | 'wasm'> {
+async function detectDevice(allowWebGpu: boolean): Promise<'webgpu' | 'wasm'> {
+  if (!allowWebGpu) return 'wasm';
   try {
     const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
     if (!gpu) return 'wasm';
@@ -66,20 +94,51 @@ async function detectDevice(): Promise<'webgpu' | 'wasm'> {
   }
 }
 
+/** True if any variant is prepared. Kept for backward-compat with existing callers. */
 export function isPrepared(): boolean {
-  return pipelineReady;
+  return readyVariants.size > 0;
+}
+
+/** True if the specific variant is prepared (cache-hit on revisit). */
+export function isPreparedFor(variant: VariantId): boolean {
+  return readyVariants.has(variant);
+}
+
+/** Variant of the most recently prepared model, or null. */
+export function getActiveVariant(): VariantId | null {
+  return activeVariant;
 }
 
 export async function prepareBackgroundRemovalModel(
   onProgress: (e: ProgressEvent) => void,
   opts: PrepareOpts = {},
 ): Promise<void> {
-  if (pipelinePromise) {
-    await pipelinePromise;
+  const variant: VariantId = opts.variant ?? 'quality';
+  const spec = getVariant('remove-background', variant);
+  if (!spec) {
+    throw new Error(`Unknown variant for remove-background: "${variant}"`);
+  }
+
+  // Cache-hit: this exact variant is already loaded.
+  if (readyVariants.has(variant)) {
+    activeVariant = variant;
     return;
   }
-  const stallTimeoutMs = opts.stallTimeoutMs ?? 120_000;
 
+  // In-flight load for this variant: await it and exit.
+  const inflight = pipelineCache.get(variant);
+  if (inflight) {
+    await inflight;
+    activeVariant = variant;
+    return;
+  }
+
+  if (!mirrorApplied) {
+    applyMlMirrorIfConfigured(env as unknown as { remoteHost: string });
+    mirrorApplied = true;
+  }
+
+  const stallTimeoutMs = opts.stallTimeoutMs ?? 120_000;
   let watchdog: ReturnType<typeof setTimeout> | null = null;
   let stallReject: ((err: Error) => void) | null = null;
   let settled = false;
@@ -98,28 +157,29 @@ export async function prepareBackgroundRemovalModel(
     onProgress(e);
   };
 
-  // Start the watchdog before the first progress event arrives — matches
-  // spec §10 (no-progress-within-window fires the stall).
+  // Start the watchdog before the first progress event arrives.
   watchdog = setTimeout(fireStall, stallTimeoutMs);
 
-  pipelinePromise = new Promise<Pipe>((resolve, reject) => {
+  // Mobile-fast (Q8 MODNet) forces WASM — WebGPU on iOS Safari adds
+  // memory-pressure failure modes for no quality gain at this size.
+  const allowWebGpu = variant !== 'fast';
+
+  const promise = new Promise<Pipe>((resolve, reject) => {
     stallReject = (err) => {
       if (watchdog) clearTimeout(watchdog);
       reject(err);
     };
     (async () => {
-      const device = await detectDevice();
+      const device = await detectDevice(allowWebGpu);
+      const pipelineOpts: Record<string, unknown> = {
+        progress_callback: wrappedProgress as unknown as (info: unknown) => void,
+        device,
+      };
+      if (spec.dtype) pipelineOpts.dtype = spec.dtype;
       const pipe = await pipeline(
         'image-segmentation',
-        'onnx-community/BEN2-ONNX',
-        // Cast: transformers.js's ProgressInfo is a superset (includes phase
-        // tags like 'initiate' / 'download' / 'progress'). We surface only
-        // the loaded/total fields to the consumer of our module — ProgressInfo
-        // forwards compatibly at runtime, so a cast is safe here.
-        {
-          progress_callback: wrappedProgress as unknown as (info: unknown) => void,
-          device,
-        },
+        spec.modelId,
+        pipelineOpts,
       );
       if (!settled) {
         settled = true;
@@ -134,18 +194,21 @@ export async function prepareBackgroundRemovalModel(
       }
     });
   });
+
   // Silent handler attached synchronously — without it, a watchdog that fires
   // before any awaiter microtask runs can be flagged as a transient
   // unhandled-rejection by Node (observed under vitest fake timers).
-  pipelinePromise.catch(() => { /* silent — re-thrown in the awaiter below */ });
+  promise.catch(() => { /* silent — re-thrown in the awaiter below */ });
+
+  pipelineCache.set(variant, promise);
 
   try {
-    await pipelinePromise;
-    pipelineReady = true;
+    await promise;
+    readyVariants.add(variant);
+    activeVariant = variant;
   } catch (err) {
     // Reset so a subsequent retry actually retries.
-    pipelinePromise = null;
-    pipelineReady = false;
+    pipelineCache.delete(variant);
     throw err;
   }
 }
@@ -195,10 +258,15 @@ export async function removeBackground(
   input: Uint8Array,
   opts: RemoveBackgroundOpts,
 ): Promise<Uint8Array> {
-  if (!pipelinePromise) {
+  const variant = opts.variant ?? activeVariant;
+  if (!variant) {
     throw new Error('Pipeline not prepared — prepareBackgroundRemovalModel() must run first.');
   }
-  const pipe = await pipelinePromise;
+  const inflight = pipelineCache.get(variant);
+  if (!inflight) {
+    throw new Error(`Pipeline not prepared for variant "${variant}".`);
+  }
+  const pipe = await inflight;
 
   const blob = new Blob([input as BlobPart]);
   const bitmap = await createImageBitmap(blob);
@@ -214,7 +282,9 @@ export async function removeBackground(
   if (!maskImage) throw new Error('Pipeline returned no mask.');
   const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
   // Mask data is a Uint8Array in 0..255 range, row-major matching the image.
-  // BEN2 returns the mask at the input resolution, so length === w*h.
+  // BEN2 / BiRefNet_lite return a binary-ish mask; MODNet returns a continuous
+  // alpha matte. Both fit the same alpha-channel write since they share the
+  // 0..255 range and image-resolution shape.
   for (let i = 0; i < maskImage.data.length; i++) {
     img.data[i * 4 + 3] = maskImage.data[i] ?? 0;
   }
@@ -235,4 +305,22 @@ export async function reencodeLastResult(
 
 export function clearLastResult(): void {
   lastResultCanvas = null;
+}
+
+/**
+ * Drop the in-memory pipeline for a specific variant. Used by the FileTool
+ * retry-after-stall path so a subsequent prepare() call actually re-fetches
+ * instead of resolving against a half-broken cached promise. Also useful in
+ * tests to reset state between cases.
+ */
+export function clearVariantCache(variant?: VariantId): void {
+  if (variant) {
+    pipelineCache.delete(variant);
+    readyVariants.delete(variant);
+    if (activeVariant === variant) activeVariant = null;
+    return;
+  }
+  pipelineCache.clear();
+  readyVariants.clear();
+  activeVariant = null;
 }
