@@ -407,6 +407,12 @@
     background: var(--color-bg);
   }
   .jpg-pdf__name {
+    /* `min-width: 0` lifts the Grid-`min-content`-Floor — ohne das würde
+       das `1fr`-Track auf den längsten unteilbaren Dateinamen (z.B.
+       "IMG_20260428_screenshot_long_filename.jpeg") expandieren und das
+       Grid in der Eltern-Box wider ausbreiten. Damit greift jetzt
+       text-overflow: ellipsis sauber statt das Layout zu sprengen. */
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
