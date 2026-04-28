@@ -246,15 +246,25 @@ const websiteJsonLd = {
   .site-main {
     max-width: 72rem;
     margin: 0 auto;
-    padding: var(--space-8) var(--space-6);
+    /* Vertikal über padding-block (editorialer Rhythmus), horizontal mit
+       safe-area-inset-Padding gepaart — auf iPhone-Landscape mit
+       viewport-fit=cover (BaseLayout-meta) bleibt der Content immer aus
+       dem Notch raus, auf nicht-Notch-Geräten ist env(...) = 0 und es
+       bleibt bei var(--space-6). */
+    padding-block: var(--space-8);
+    padding-inline:
+      max(var(--space-6), env(safe-area-inset-left))
+      max(var(--space-6), env(safe-area-inset-right));
   }
   @media (max-width: 40rem) {
     /* Mobile: kompakteres horizontales Padding, damit Tool-UIs (FileTool-
        Dropzones, Comparer-Spalten, lange Code-Outputs) bis ~320px-Viewports
-       atmen, ohne dass Inhalt am Rand klebt. Vertikales Padding bleibt
-       großzügig für editorialen Rhythmus. */
+       atmen, ohne dass Inhalt am Rand klebt. */
     .site-main {
-      padding: var(--space-6) var(--space-4);
+      padding-block: var(--space-6);
+      padding-inline:
+        max(var(--space-4), env(safe-area-inset-left))
+        max(var(--space-4), env(safe-area-inset-right));
     }
   }
 </style>
