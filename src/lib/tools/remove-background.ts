@@ -121,11 +121,13 @@ async function detectDevice(allowWebGpu: boolean): Promise<'webgpu' | 'wasm'> {
     // WebGPU, take BiRefNet FP16" and the runtime then crashed mid-inference.
     const adapter = await gpu.requestAdapter({ powerPreference: 'high-performance' });
     if (!adapter) return 'wasm';
-    if (adapter.isFallbackAdapter === true) return 'wasm';
+    
+    // Wir haben auf Nutzer-Wunsch die strikten Checks (z.B. maxStorageBuffers >= 17) 
+    // entfernt, da Nutzer bewusst große Modelle wählen wollen, auch wenn das 
+    // Absturz-Risiko auf bestimmten Windows-Geräten höher ist.
     const has = adapter.features?.has;
     if (typeof has !== 'function' || !has.call(adapter.features, 'shader-f16')) return 'wasm';
-    const maxStorageBuffers = adapter.limits?.maxStorageBuffersPerShaderStage;
-    if (typeof maxStorageBuffers !== 'number' || maxStorageBuffers < 17) return 'wasm';
+    
     return 'webgpu';
   } catch {
     return 'wasm';
@@ -336,15 +338,32 @@ export async function removeBackground(
   const segmentation = await pipe(rawImage);
   const maskImage = segmentation[0]?.mask;
   if (!maskImage) throw new Error('Pipeline returned no mask.');
-  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  // Mask data is a Uint8Array in 0..255 range, row-major matching the image.
-  // BEN2 / BiRefNet_lite return a binary-ish mask; MODNet returns a continuous
-  // alpha matte. Both fit the same alpha-channel write since they share the
-  // 0..255 range and image-resolution shape.
+
+  // Mask application: the pipeline often resizes the input (e.g. BiRefNet uses
+  // 1024x1024). We must scale the mask back to the original resolution before
+  // applying it as an alpha channel. We use a secondary OffscreenCanvas to
+  // perform the scaling via `drawImage` for maximum performance and quality.
+  const maskCanvas = new OffscreenCanvas(maskImage.width, maskImage.height);
+  const maskCtx = maskCanvas.getContext('2d');
+  if (!maskCtx) throw new Error('Mask OffscreenCanvas 2d context unavailable.');
+
+  // Prepare RGBA data for the mask canvas. We only care about the Alpha channel.
+  const maskData = maskCtx.createImageData(maskImage.width, maskImage.height);
   for (let i = 0; i < maskImage.data.length; i++) {
-    img.data[i * 4 + 3] = maskImage.data[i] ?? 0;
+    const val = maskImage.data[i] ?? 0;
+    const offset = i * 4;
+    maskData.data[offset] = 0;     // R
+    maskData.data[offset + 1] = 0; // G
+    maskData.data[offset + 2] = 0; // B
+    maskData.data[offset + 3] = val; // A
   }
-  ctx.putImageData(img, 0, 0);
+  maskCtx.putImageData(maskData, 0, 0);
+
+  // Apply the resized mask to the main canvas using 'destination-in'
+  // (retains destination colors but takes alpha from the source).
+  ctx.globalCompositeOperation = 'destination-in';
+  ctx.drawImage(maskCanvas, 0, 0, canvas.width, canvas.height);
+  ctx.globalCompositeOperation = 'source-over'; // reset to default
 
   lastResultCanvas = canvas;
   return encodeCanvas(canvas, opts.format);

@@ -1298,7 +1298,7 @@ const strings: Record<Lang, UiStrings> = {
       mlStalledFallback: 'Zur Schnell-Variante wechseln',
       mlVariantFast: 'Schnell',
       mlVariantQuality: 'Qualität',
-      mlVariantPro: 'Maximum',
+      mlVariantPro: 'Beste',
       mlActiveVariant: 'Aktiv: {variant} · {size}',
     },
 
@@ -2265,7 +2265,7 @@ const strings: Record<Lang, UiStrings> = {
       mlStalledFallback: 'Switch to fast variant',
       mlVariantFast: 'Fast',
       mlVariantQuality: 'Quality',
-      mlVariantPro: 'Maximum',
+      mlVariantPro: 'Best',
       mlActiveVariant: 'Active: {variant} · {size}',
     },
 

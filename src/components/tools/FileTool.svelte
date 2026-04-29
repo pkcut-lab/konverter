@@ -364,30 +364,25 @@
         await runtime.prepare((e) => { prepareProgress = e; }, prepOpts);
       } catch (err) {
         const isStall = err instanceof Error && err.name === 'StallError';
-        // WebGPU-required variant on a browser without adapter. The runtime
-        // throws BEFORE any download bytes flow, so this is cheap to recover
-        // from: drop the bad cache entry, switch to `fast` (which always runs
-        // in WASM), and re-enter processFile. The recursion is bounded — the
-        // fast variant has `requiresWebGPU=false`, so the second pass cannot
-        // hit this branch again. Without this fallback, the user sees a 115
-        // MB download eat their bandwidth and then crash with "std::bad_alloc".
         const isWebGpuRequired =
           err instanceof Error && err.name === 'WebGpuRequiredError';
-        if (isWebGpuRequired && fastVariant && selectedVariant !== 'fast') {
-          if (selectedVariant && runtime?.clearVariantCache) {
-            runtime.clearVariantCache(selectedVariant);
-          }
-          selectedVariant = 'fast';
-          void processFile(file);
-          return;
-        }
+        
         if (isStall) {
           stalled = true;
           lastFileForRetry = file;
         }
-        errorMessage = err instanceof Error
+        
+        let errMsg = err instanceof Error
           ? strings.fileTool.errorModelLoad.replace('{msg}', err.message)
           : strings.fileTool.errorModelLoad.replace('{msg}', '');
+          
+        if (isWebGpuRequired) {
+          errMsg = "Dein Browser oder Gerät unterstützt die Hardware-Beschleunigung (WebGPU) für dieses Modell nicht. Bitte wähle das schnelle Modell.";
+        } else if (err instanceof Error && err.message.includes('std::bad_alloc')) {
+           errMsg += " (Tipp: Arbeitsspeicher voll. Bitte wähle ein kleineres Modell.)";
+        }
+          
+        errorMessage = errMsg;
         phase = 'error';
         return;
       }
@@ -623,27 +618,32 @@
 </script>
 
 <div class="filetool">
-  {#if (phase === 'idle' || phase === 'error') && !preflightError && variants && activeVariant}
+  {#if (phase === 'idle' || phase === 'error') && !preflightError && variants && variants.length > 1 && activeVariant}
     <aside class="ml-banner" data-testid="filetool-ml-banner" aria-live="polite">
+      <div class="ml-picker" role="radiogroup" aria-label="Modellqualität">
+        {#each variants as v (v.id)}
+          {@const isActive = v.id === activeVariant.id}
+          <button
+            type="button"
+            class="ml-picker__btn"
+            class:ml-picker__btn--active={isActive}
+            data-testid="filetool-ml-switch-{v.id}"
+            role="radio"
+            aria-checked={isActive}
+            onclick={() => chooseVariant(v.id)}
+          >
+            <span class="ml-picker__label">
+              {v.id === 'fast' ? strings.fileTool.mlVariantFast 
+              : v.id === 'pro' ? strings.fileTool.mlVariantPro 
+              : strings.fileTool.mlVariantQuality}
+            </span>
+            <span class="ml-picker__size">{formatVariantSize(v.sizeBytes)}</span>
+          </button>
+        {/each}
+      </div>
       <p class="ml-banner__msg">
         {strings.fileTool.mlBannerOneTime.replace('{size}', formatVariantSize(activeVariant.sizeBytes))}
       </p>
-      {#if switchableVariants.length > 0}
-        <div class="ml-banner__actions">
-          {#each switchableVariants as v (v.id)}
-            {@const labelKey =
-              v.id === 'fast' ? 'mlBannerSwitchFast'
-              : v.id === 'pro' ? 'mlBannerSwitchPro'
-              : 'mlBannerSwitchQuality'}
-            <button
-              type="button"
-              class="ml-banner__switch"
-              data-testid="filetool-ml-switch-{v.id}"
-              onclick={() => chooseVariant(v.id)}
-            >{strings.fileTool[labelKey].replace('{size}', formatVariantSize(v.sizeBytes))}</button>
-          {/each}
-        </div>
-      {/if}
     </aside>
   {/if}
 
@@ -1709,54 +1709,79 @@
   }
 
   /* ---------- Mobile-aware ML banner (size-disclosure + variant switcher) ----------
-     Sits above the settings/dropzone in idle/error. Refined-Minimalism: no
-     Emoji, no "Tipp:" prefix, no exclamation marks — direct numerics with a
-     mono-tabular label, monospace switcher links. Variant-switcher renders
-     0–N "Schnell-Variante (6,6 MB)" buttons depending on tool's variant matrix. */
+     Minimalist segmented-control: all variants visible, active one highlighted.
+     Info text below shows download size + offline notice. */
   .ml-banner {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2) var(--space-4);
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
     margin: 0;
     padding: var(--space-3) var(--space-4);
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
     background: var(--color-surface-sunk);
   }
+  .ml-picker {
+    display: inline-flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: var(--r-md);
+    background: var(--color-border);
+  }
+  .ml-picker__btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: var(--space-1) var(--space-3);
+    border-radius: calc(var(--r-md) - 2px);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    transition: background var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .ml-picker__label {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+  .ml-picker__size {
+    font-family: var(--font-family-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    opacity: 0.7;
+    line-height: 1.2;
+  }
+  .ml-picker__btn--active {
+    background: var(--color-surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .ml-picker__btn--active .ml-picker__label {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .ml-picker__btn--active .ml-picker__size {
+    color: var(--color-accent);
+    opacity: 1;
+  }
+  .ml-picker__btn:hover:not(.ml-picker__btn--active) {
+    background: var(--color-surface);
+  }
+  .ml-picker__btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
   .ml-banner__msg {
     margin: 0;
     font-size: var(--font-size-small);
     color: var(--color-text-muted);
     line-height: 1.5;
-  }
-  .ml-banner__actions {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-  }
-  .ml-banner__switch {
-    appearance: none;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    font: inherit;
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-small);
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-    letter-spacing: 0.01em;
-  }
-  .ml-banner__switch:hover {
-    color: var(--color-text);
-  }
-  .ml-banner__switch:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
-    border-radius: 2px;
+    text-align: center;
   }
 
   /* ---------- Stall-Recovery (after model-download timeout) ---------- */
